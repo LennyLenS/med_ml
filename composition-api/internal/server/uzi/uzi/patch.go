@@ -2,10 +2,14 @@ package uzi
 
 import (
 	"context"
+	"errors"
+	"net/http"
+
+	"composition-api/internal/domain"
+	uzi_domain "composition-api/internal/domain/uzi"
 
 	"github.com/AlekSi/pointer"
 
-	domain "composition-api/internal/domain/uzi"
 	api "composition-api/internal/generated/http/api"
 	apimappers "composition-api/internal/server/mappers"
 	mappers "composition-api/internal/server/uzi/mappers"
@@ -13,9 +17,9 @@ import (
 )
 
 func (h *handler) UziIDPatch(ctx context.Context, req *api.UziIDPatchReq, params api.UziIDPatchParams) (api.UziIDPatchRes, error) {
-	var projection *domain.UziProjection
+	var projection *uzi_domain.UziProjection
 	if req.Projection.IsSet() {
-		projection = (*domain.UziProjection)(&req.Projection.Value)
+		projection = (*uzi_domain.UziProjection)(&req.Projection.Value)
 	}
 
 	uzi, err := h.services.UziService.Update(ctx, uziSrv.UpdateUziArg{
@@ -24,13 +28,37 @@ func (h *handler) UziIDPatch(ctx context.Context, req *api.UziIDPatchReq, params
 		Checked:    apimappers.FromOptBool(req.Checked),
 	})
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return &api.UziIDPatchNotFound{
+				StatusCode: http.StatusNotFound,
+				Response: api.Error{
+					Message: "УЗИ не найдено",
+				},
+			}, nil
+		case errors.Is(err, domain.ErrBadRequest):
+			return &api.UziIDPatchBadRequest{
+				StatusCode: http.StatusBadRequest,
+				Response: api.Error{
+					Message: "Неверный формат запроса",
+				},
+			}, nil
+		case errors.Is(err, domain.ErrUnprocessableEntity):
+			return &api.UziIDPatchUnprocessableEntity{
+				StatusCode: http.StatusUnprocessableEntity,
+				Response: api.Error{
+					Message: "Ошибка валидации данных",
+				},
+			}, nil
+		default:
+			return nil, err
+		}
 	}
 	return pointer.To(mappers.Uzi{}.Domain(uzi)), nil
 }
 
 func (h *handler) UziIDEchographicsPatch(ctx context.Context, req *api.Echographics, params api.UziIDEchographicsPatchParams) (api.UziIDEchographicsPatchRes, error) {
-	echographics, err := h.services.UziService.UpdateEchographics(ctx, domain.Echographic{
+	echographics, err := h.services.UziService.UpdateEchographics(ctx, uzi_domain.Echographic{
 		Id:              params.ID,
 		Contors:         apimappers.FromOptString(req.Contors),
 		LeftLobeLength:  apimappers.FromOptFloat64(req.LeftLobeLength),
@@ -52,7 +80,31 @@ func (h *handler) UziIDEchographicsPatch(ctx context.Context, req *api.Echograph
 		Conclusion:      apimappers.FromOptString(req.Conclusion),
 	})
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return &api.UziIDEchographicsPatchNotFound{
+				StatusCode: http.StatusNotFound,
+				Response: api.Error{
+					Message: "Эхографическое исследование не найдено",
+				},
+			}, nil
+		case errors.Is(err, domain.ErrBadRequest):
+			return &api.UziIDEchographicsPatchBadRequest{
+				StatusCode: http.StatusBadRequest,
+				Response: api.Error{
+					Message: "Неверный формат запроса",
+				},
+			}, nil
+		case errors.Is(err, domain.ErrUnprocessableEntity):
+			return &api.UziIDEchographicsPatchUnprocessableEntity{
+				StatusCode: http.StatusUnprocessableEntity,
+				Response: api.Error{
+					Message: "Ошибка валидации данных",
+				},
+			}, nil
+		default:
+			return nil, err
+		}
 	}
 	return pointer.To(mappers.Echographics(echographics)), nil
 }

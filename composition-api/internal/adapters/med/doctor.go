@@ -3,6 +3,7 @@ package med
 import (
 	"context"
 
+	adapter_errors "composition-api/internal/adapters/errors"
 	"composition-api/internal/adapters/med/mappers"
 	domain "composition-api/internal/domain/med"
 	pb "composition-api/internal/generated/grpc/clients/med"
@@ -28,7 +29,7 @@ func (a *adapter) GetDoctor(ctx context.Context, id uuid.UUID) (domain.Doctor, e
 		Id: id.String(),
 	})
 	if err != nil {
-		return domain.Doctor{}, err
+		return domain.Doctor{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Doctor{}.Domain(res.Doctor), nil

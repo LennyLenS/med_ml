@@ -3,11 +3,12 @@ package uzi
 import (
 	"context"
 
-	"github.com/google/uuid"
-
+	adapter_errors "composition-api/internal/adapters/errors"
 	"composition-api/internal/adapters/uzi/mappers"
 	domain "composition-api/internal/domain/uzi"
 	pb "composition-api/internal/generated/grpc/clients/uzi"
+
+	"github.com/google/uuid"
 )
 
 func (a *adapter) CreateSegment(ctx context.Context, in CreateSegmentIn) (uuid.UUID, error) {
@@ -44,7 +45,7 @@ func (a *adapter) UpdateSegment(ctx context.Context, in UpdateSegmentIn) (domain
 		Tirads_5:  in.Tirads_5,
 	})
 	if err != nil {
-		return domain.Segment{}, err
+		return domain.Segment{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Segment{}.Domain(res.Segment), nil

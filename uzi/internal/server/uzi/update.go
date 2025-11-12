@@ -2,6 +2,7 @@ package uzi
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -32,7 +33,16 @@ func (h *handler) UpdateUzi(ctx context.Context, in *pb.UpdateUziIn) (*pb.Update
 		Checked:    in.Checked,
 	})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return nil, status.Errorf(codes.NotFound, "УЗИ не найдено")
+		case errors.Is(err, domain.ErrConflict):
+			return nil, status.Errorf(codes.AlreadyExists, "Конфликт данных")
+		case errors.Is(err, domain.ErrUnprocessableEntity):
+			return nil, status.Errorf(codes.FailedPrecondition, "Ошибка валидации данных")
+		default:
+			return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+		}
 	}
 
 	out := new(pb.UpdateUziOut)
@@ -42,6 +52,10 @@ func (h *handler) UpdateUzi(ctx context.Context, in *pb.UpdateUziIn) (*pb.Update
 }
 
 func (h *handler) UpdateEchographic(ctx context.Context, in *pb.UpdateEchographicIn) (*pb.UpdateEchographicOut, error) {
+	if _, err := uuid.Parse(in.Echographic.Id); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "id is not a valid uuid: %s", err.Error())
+	}
+
 	echographic, err := h.services.Uzi.UpdateEchographic(
 		ctx,
 		uzi.UpdateEchographicArg{
@@ -67,7 +81,16 @@ func (h *handler) UpdateEchographic(ctx context.Context, in *pb.UpdateEchographi
 		},
 	)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return nil, status.Errorf(codes.NotFound, "Эхографическое исследование не найдено")
+		case errors.Is(err, domain.ErrConflict):
+			return nil, status.Errorf(codes.AlreadyExists, "Конфликт данных")
+		case errors.Is(err, domain.ErrUnprocessableEntity):
+			return nil, status.Errorf(codes.FailedPrecondition, "Ошибка валидации данных")
+		default:
+			return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+		}
 	}
 
 	out := new(pb.UpdateEchographicOut)

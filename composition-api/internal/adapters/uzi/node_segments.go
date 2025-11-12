@@ -3,11 +3,12 @@ package uzi
 import (
 	"context"
 
-	"github.com/google/uuid"
-
+	adapter_errors "composition-api/internal/adapters/errors"
 	"composition-api/internal/adapters/uzi/mappers"
 	domain "composition-api/internal/domain/uzi"
 	pb "composition-api/internal/generated/grpc/clients/uzi"
+
+	"github.com/google/uuid"
 )
 
 func (a *adapter) CreateNodeWithSegments(ctx context.Context, in CreateNodeWithSegmentsIn) (uuid.UUID, []uuid.UUID, error) {
@@ -48,7 +49,7 @@ func (a *adapter) CreateNodeWithSegments(ctx context.Context, in CreateNodeWithS
 func (a *adapter) GetNodesWithSegmentsByImageId(ctx context.Context, id uuid.UUID) ([]domain.Node, []domain.Segment, error) {
 	res, err := a.client.GetNodesWithSegmentsByImageId(ctx, &pb.GetNodesWithSegmentsByImageIdIn{Id: id.String()})
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, adapter_errors.HandleGRPCError(err)
 	}
 
 	nodes := mappers.Node{}.SliceDomain(res.Nodes)

@@ -2,20 +2,40 @@ package card
 
 import (
 	"context"
+	"errors"
+	"net/http"
 
-	domain "composition-api/internal/domain/med"
+	"composition-api/internal/domain"
+	med_domain "composition-api/internal/domain/med"
 	api "composition-api/internal/generated/http/api"
 	"composition-api/internal/server/mappers"
 )
 
 func (h *handler) MedCardPost(ctx context.Context, req *api.Card) (api.MedCardPostRes, error) {
-	err := h.services.CardService.CreateCard(ctx, domain.Card{
+	err := h.services.CardService.CreateCard(ctx, med_domain.Card{
 		PatientID: req.PatientID,
 		DoctorID:  req.DoctorID,
 		Diagnosis: mappers.FromOptString(req.Diagnosis),
 	})
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, domain.ErrBadRequest):
+			return &api.MedCardPostBadRequest{
+				StatusCode: http.StatusBadRequest,
+				Response: api.Error{
+					Message: "Неверный формат ОМС пациента",
+				},
+			}, nil
+		case errors.Is(err, domain.ErrUnprocessableEntity):
+			return &api.MedCardPostUnprocessableEntity{
+				StatusCode: http.StatusUnprocessableEntity,
+				Response: api.Error{
+					Message: "Ошибка валидации данных",
+				},
+			}, nil
+		default:
+			return nil, err
+		}
 	}
 
 	return &api.MedCardPostOK{}, nil

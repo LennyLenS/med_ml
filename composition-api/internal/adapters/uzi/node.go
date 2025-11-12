@@ -3,11 +3,12 @@ package uzi
 import (
 	"context"
 
-	"github.com/google/uuid"
-
+	adapter_errors "composition-api/internal/adapters/errors"
 	"composition-api/internal/adapters/uzi/mappers"
 	domain "composition-api/internal/domain/uzi"
 	pb "composition-api/internal/generated/grpc/clients/uzi"
+
+	"github.com/google/uuid"
 )
 
 var nodeValidationMap = map[domain.NodeValidation]pb.NodeValidation{
@@ -33,7 +34,7 @@ func (a *adapter) UpdateNode(ctx context.Context, in UpdateNodeIn) (domain.Node,
 		Tirads_5:   in.Tirads_5,
 	})
 	if err != nil {
-		return domain.Node{}, err
+		return domain.Node{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Node{}.Domain(res.Node), nil
@@ -41,8 +42,5 @@ func (a *adapter) UpdateNode(ctx context.Context, in UpdateNodeIn) (domain.Node,
 
 func (a *adapter) DeleteNode(ctx context.Context, id uuid.UUID) error {
 	_, err := a.client.DeleteNode(ctx, &pb.DeleteNodeIn{Id: id.String()})
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }

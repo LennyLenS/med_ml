@@ -2,7 +2,6 @@ package med
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"time"
 
@@ -12,8 +11,6 @@ import (
 	pb "composition-api/internal/generated/grpc/clients/med"
 
 	"github.com/google/uuid"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func (a *adapter) CreatePatient(ctx context.Context, arg CreatePatientArg) error {
@@ -26,7 +23,10 @@ func (a *adapter) CreatePatient(ctx context.Context, arg CreatePatientArg) error
 		Malignancy: arg.Malignancy,
 		BirthDate:  arg.BirthDate.Format(time.RFC3339),
 	})
-	return err
+	if err != nil {
+		return adapter_errors.HandleGRPCError(err)
+	}
+	return nil
 }
 
 func (a *adapter) GetPatient(ctx context.Context, id uuid.UUID) (domain.Patient, error) {
@@ -34,17 +34,7 @@ func (a *adapter) GetPatient(ctx context.Context, id uuid.UUID) (domain.Patient,
 		Id: id.String(),
 	})
 	if err != nil {
-		st, ok := status.FromError(err)
-		if !ok {
-			return domain.Patient{}, fmt.Errorf("unknown error: %w", err)
-		}
-
-		switch st.Code() {
-		case codes.NotFound:
-			return domain.Patient{}, adapter_errors.ErrNotFound
-		default:
-			return domain.Patient{}, err
-		}
+		return domain.Patient{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Patient{}.Domain(res.Patient), nil
@@ -56,17 +46,7 @@ func (a *adapter) GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID)
 	})
 	slog.Info("GetPatientsByDoctorID", "res", res, "err", err)
 	if err != nil {
-		st, ok := status.FromError(err)
-		if !ok {
-			return nil, fmt.Errorf("unknown error: %w", err)
-		}
-
-		switch st.Code() {
-		case codes.NotFound:
-			return nil, adapter_errors.ErrNotFound
-		default:
-			return nil, err
-		}
+		return nil, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Patient{}.SliceDomain(res.Patients), nil
@@ -86,7 +66,7 @@ func (a *adapter) UpdatePatient(ctx context.Context, arg UpdatePatientIn) (domai
 		LastUziDate: lastUziDate,
 	})
 	if err != nil {
-		return domain.Patient{}, err
+		return domain.Patient{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Patient{}.Domain(res.Patient), nil

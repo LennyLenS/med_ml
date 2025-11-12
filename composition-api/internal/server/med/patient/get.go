@@ -3,8 +3,9 @@ package patient
 import (
 	"context"
 	"errors"
+	"net/http"
 
-	adapter_errors "composition-api/internal/adapters/errors"
+	"composition-api/internal/domain"
 	api "composition-api/internal/generated/http/api"
 	"composition-api/internal/server/med/mappers"
 
@@ -15,12 +16,11 @@ func (h *handler) MedPatientIDGet(ctx context.Context, params api.MedPatientIDGe
 	patient, err := h.services.PatientService.GetPatient(ctx, params.ID)
 	if err != nil {
 		switch {
-		case errors.Is(err, adapter_errors.ErrNotFound):
+		case errors.Is(err, domain.ErrNotFound):
 			return &api.MedPatientIDGetNotFound{
-				StatusCode: 404,
+				StatusCode: http.StatusNotFound,
 				Response: api.Error{
-					Code:    404,
-					Message: err.Error(),
+					Message: "Пациент не найден",
 				},
 			}, nil
 		default:
@@ -33,7 +33,15 @@ func (h *handler) MedPatientIDGet(ctx context.Context, params api.MedPatientIDGe
 
 func (h *handler) MedDoctorIDPatientsGet(ctx context.Context, params api.MedDoctorIDPatientsGetParams) (api.MedDoctorIDPatientsGetRes, error) {
 	patients, err := h.services.PatientService.GetPatientsByDoctorID(ctx, params.ID)
-	if err != nil && !errors.Is(err, adapter_errors.ErrNotFound) {
+	if err != nil {
+		if errors.Is(err, domain.ErrNotFound) {
+			return &api.MedDoctorIDPatientsGetNotFound{
+				StatusCode: http.StatusNotFound,
+				Response: api.Error{
+					Message: "Врач не найден",
+				},
+			}, nil
+		}
 		return nil, err
 	}
 

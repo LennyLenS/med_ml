@@ -3,11 +3,12 @@ package uzi
 import (
 	"context"
 
-	"github.com/google/uuid"
-
+	adapter_errors "composition-api/internal/adapters/errors"
 	"composition-api/internal/adapters/uzi/mappers"
 	domain "composition-api/internal/domain/uzi"
 	pb "composition-api/internal/generated/grpc/clients/uzi"
+
+	"github.com/google/uuid"
 )
 
 var uziProjectionMap = map[domain.UziProjection]pb.UziProjection{
@@ -33,7 +34,7 @@ func (a *adapter) CreateUzi(ctx context.Context, in CreateUziIn) (uuid.UUID, err
 func (a *adapter) GetUziById(ctx context.Context, id uuid.UUID) (domain.Uzi, error) {
 	res, err := a.client.GetUziById(ctx, &pb.GetUziByIdIn{Id: id.String()})
 	if err != nil {
-		return domain.Uzi{}, err
+		return domain.Uzi{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Uzi{}.Domain(res.Uzi), nil
@@ -42,7 +43,7 @@ func (a *adapter) GetUziById(ctx context.Context, id uuid.UUID) (domain.Uzi, err
 func (a *adapter) GetUzisByExternalId(ctx context.Context, id uuid.UUID) ([]domain.Uzi, error) {
 	res, err := a.client.GetUzisByExternalId(ctx, &pb.GetUzisByExternalIdIn{ExternalId: id.String()})
 	if err != nil {
-		return nil, err
+		return nil, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Uzi{}.SliceDomain(res.Uzis), nil
@@ -51,7 +52,7 @@ func (a *adapter) GetUzisByExternalId(ctx context.Context, id uuid.UUID) ([]doma
 func (a *adapter) GetUzisByAuthor(ctx context.Context, id uuid.UUID) ([]domain.Uzi, error) {
 	res, err := a.client.GetUzisByAuthor(ctx, &pb.GetUzisByAuthorIn{Author: id.String()})
 	if err != nil {
-		return nil, err
+		return nil, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Uzi{}.SliceDomain(res.Uzis), nil
@@ -60,7 +61,7 @@ func (a *adapter) GetUzisByAuthor(ctx context.Context, id uuid.UUID) ([]domain.U
 func (a *adapter) GetEchographicByUziId(ctx context.Context, id uuid.UUID) (domain.Echographic, error) {
 	res, err := a.client.GetEchographicByUziId(ctx, &pb.GetEchographicByUziIdIn{UziId: id.String()})
 	if err != nil {
-		return domain.Echographic{}, err
+		return domain.Echographic{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Echographic{}.Domain(res.Echographic), nil
@@ -73,7 +74,7 @@ func (a *adapter) UpdateUzi(ctx context.Context, in UpdateUziIn) (domain.Uzi, er
 		Checked:    in.Checked,
 	})
 	if err != nil {
-		return domain.Uzi{}, err
+		return domain.Uzi{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Uzi{}.Domain(res.Uzi), nil
@@ -104,7 +105,7 @@ func (a *adapter) UpdateEchographic(ctx context.Context, in domain.Echographic) 
 		},
 	})
 	if err != nil {
-		return domain.Echographic{}, err
+		return domain.Echographic{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Echographic{}.Domain(res.Echographic), nil

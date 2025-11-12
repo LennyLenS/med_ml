@@ -322,7 +322,7 @@ components:
         tirads_23: 0.45
         tirads_4: 0.78
         tirads_5: 0.12
-    
+
     image:
       type: object
       description: изображение
@@ -413,7 +413,7 @@ components:
         active:
           type: boolean
           description: признак того, что пациент активен
-        malignancy: 
+        malignancy:
           type: boolean
           description: признак того, что пациент имеет злокачественную опухоль
         birth_date:
@@ -721,13 +721,9 @@ components:
       description: Ошибка
       type: object
       properties:
-        code:
-          type: integer
-          format: int64
         message:
           type: string
       required:
-        - code
         - message
 
   responses:
@@ -761,7 +757,7 @@ paths:
             schema:
               type: object
               required:
-                - email 
+                - email
                 - password
               properties:
                 email:
@@ -795,7 +791,14 @@ paths:
                     type: string
                     format: jwt
                     description: refresh токен
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '401':
+          description: Неверный email или пароль
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -840,7 +843,14 @@ paths:
                     type: string
                     format: jwt
                     description: refresh токен
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '401':
+          description: Неверный или истекший refresh токен
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -902,7 +912,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '409':
+          description: Пользователь с таким email уже существует
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -960,7 +980,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '409':
+          description: Пользователь с таким email уже существует
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -985,17 +1015,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/doctor"
+        '404':
+          description: Врач не найден
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
-     
+
   /med/patient:
     post:
       summary: зарегистрировать пациента
       tags:
         - med
-      
+
       requestBody:
         required: true
         content:
@@ -1040,7 +1074,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '409':
+          description: Пользователь с таким email уже существует
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1050,7 +1094,7 @@ paths:
       summary: получить пациента
       tags:
         - med
-      
+
       parameters:
         - name: id
           in: path
@@ -1067,8 +1111,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/patient"
         '404':
+          description: Пациент не найден
           $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1077,7 +1123,7 @@ paths:
       summary: обновить пациента
       tags:
         - med
-      
+
       parameters:
         - name: id
           in: path
@@ -1106,7 +1152,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/patient"
+        '404':
+          description: Пациент не найден
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1116,7 +1166,7 @@ paths:
       summary: получить пациентов врача
       tags:
         - med
-      
+
       parameters:
         - name: id
           in: path
@@ -1135,8 +1185,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/patient'
         '404':
+          description: Врач не найден
           $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1146,7 +1198,7 @@ paths:
       summary: создать карту пациента
       tags:
         - med
-      
+
       requestBody:
         required: true
         content:
@@ -1156,17 +1208,27 @@ paths:
       responses:
         '200':
           description: карта пациента создана
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Пациент не найден
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
-    
+
   /med/card/{doctor_id}/{patient_id}:
     get:
       summary: получить карту пациента
       tags:
         - med
-      
+
       parameters:
         - name: doctor_id
           in: path
@@ -1175,7 +1237,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: patient_id  
+        - name: patient_id
           in: path
           required: true
           description: id пациента
@@ -1189,7 +1251,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/card"
+        '404':
+          description: Карта пациента не найдена
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1198,7 +1264,7 @@ paths:
       summary: обновить карту пациента
       tags:
         - med
-      
+
       parameters:
         - name: doctor_id
           in: path
@@ -1207,7 +1273,7 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: patient_id  
+        - name: patient_id
           in: path
           required: true
           description: id пациента
@@ -1233,7 +1299,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/card"
+        '404':
+          description: Карта пациента не найдена
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1242,7 +1318,7 @@ paths:
       summary: загрузить узи на обработку
       tags:
         - uzi
-      
+
       requestBody:
         required: true
         content:
@@ -1282,7 +1358,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса или файла
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1292,7 +1375,7 @@ paths:
       summary: получить узи
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1308,16 +1391,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/uzi"
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
-    
+
     patch:
       summary: обновить узи
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1352,7 +1439,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/uzi"
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1361,7 +1458,7 @@ paths:
       summary: удалить узи
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1373,7 +1470,11 @@ paths:
       responses:
         '200':
           description: узи удалено
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1383,7 +1484,7 @@ paths:
       summary: получить узи по внешнему id
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1401,17 +1502,21 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/uzi'
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
-  
+
   /uzis/author/{id}:
     get:
       summary: получить узи по id автора
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1429,7 +1534,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/uzi'
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1439,7 +1548,7 @@ paths:
       summary: получить эхографику uzi
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1455,16 +1564,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/echographics'
+        '404':
+          description: Эхографическое исследование не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
-    
+
     patch:
       summary: обновить эхографику
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1486,7 +1599,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/echographics'
+        '404':
+          description: Эхографическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1496,7 +1619,7 @@ paths:
       summary: добавить uzi аппарат
       tags:
         - uzi
-      
+
       requestBody:
         required: true
         content:
@@ -1527,17 +1650,24 @@ paths:
                     description: id uzi аппарата
               example:
                 id: 1
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
 
-  /uzi/devices:              
+  /uzi/devices:
     get:
       summary: получит список uzi апппапапратов
       tags:
         - uzi
-      
+
       responses:
         '200':
           description: uzi аппараты
@@ -1548,6 +1678,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/device"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1557,7 +1688,7 @@ paths:
       summary: получает списк изображений uzi
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1575,7 +1706,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/image'
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1585,7 +1720,7 @@ paths:
       summary: получит узлы и сегменты на указанном изображении
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1610,7 +1745,11 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/segment'
+        '404':
+          description: Изображение не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1620,7 +1759,7 @@ paths:
       summary: добавить узел с сегментами
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1708,7 +1847,17 @@ paths:
                     items:
                       type: string
                       format: uuid
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1718,7 +1867,7 @@ paths:
       summary: получить все узлы узи
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1736,7 +1885,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/node'
+        '404':
+          description: УЗИ не найдено
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1746,7 +1899,7 @@ paths:
       summary: обновить узел
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1785,7 +1938,7 @@ paths:
                 tirads_23: 0.67
                 tirads_4: 0.23
                 tirads_5: 0.89
-            
+
       responses:
         '200':
           description: обновленный узел
@@ -1793,7 +1946,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/node'
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Узел не найден
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1803,7 +1966,7 @@ paths:
       description: сегменты узла будут также удалены
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1814,7 +1977,11 @@ paths:
       responses:
         '200':
           description: узел удален
+        '404':
+          description: Узел не найден
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1824,7 +1991,7 @@ paths:
       summary: получить сегменты узла
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1842,7 +2009,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/segment'
+        '404':
+          description: Узел не найден
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1852,7 +2023,7 @@ paths:
       summary: добавить новый сегмент
       tags:
         - uzi
-      
+
       requestBody:
         required: true
         content:
@@ -1894,7 +2065,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Изображение или узел не найдены
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1904,7 +2085,7 @@ paths:
       summary: обновить сегмент
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1950,7 +2131,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/segment'
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Сегмент не найден
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
@@ -1960,7 +2151,7 @@ paths:
       description: если у узла не останется сегментов, он будет **удален**
       tags:
         - uzi
-      
+
       parameters:
         - name: id
           in: path
@@ -1971,17 +2162,21 @@ paths:
       responses:
         '200':
           description: сегмент удален
+        '404':
+          description: Сегмент не найден
+          $ref: "#/components/responses/error"
         '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
-  
+
   /download/{uzi_id}/{image_id}:
     get:
       summary: получить кадр узи
       tags:
         - download
-      
+
       parameters:
         - name: uzi_id
           in: path

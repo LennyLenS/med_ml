@@ -2,7 +2,10 @@ package patient
 
 import (
 	"context"
+	"errors"
+	"net/http"
 
+	"composition-api/internal/domain"
 	api "composition-api/internal/generated/http/api"
 	apimappers "composition-api/internal/server/mappers"
 	"composition-api/internal/server/med/mappers"
@@ -18,7 +21,17 @@ func (h *handler) MedPatientIDPatch(ctx context.Context, req *api.MedPatientIDPa
 		Malignancy: apimappers.FromOptBool(req.Malignancy),
 	})
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return &api.MedPatientIDPatchNotFound{
+				StatusCode: http.StatusNotFound,
+				Response: api.Error{
+					Message: "Пациент не найден",
+				},
+			}, nil
+		default:
+			return nil, err
+		}
 	}
 
 	return pointer.To(mappers.Patient{}.Api(patient)), nil

@@ -3,6 +3,7 @@ package med
 import (
 	"context"
 
+	adapter_errors "composition-api/internal/adapters/errors"
 	"composition-api/internal/adapters/med/mappers"
 	domain "composition-api/internal/domain/med"
 	pb "composition-api/internal/generated/grpc/clients/med"
@@ -18,7 +19,10 @@ func (a *adapter) CreateCard(ctx context.Context, card domain.Card) error {
 			Diagnosis: card.Diagnosis,
 		},
 	})
-	return err
+	if err != nil {
+		return adapter_errors.HandleGRPCError(err)
+	}
+	return nil
 }
 
 func (a *adapter) GetCard(ctx context.Context, doctorID, patientID uuid.UUID) (domain.Card, error) {
@@ -27,7 +31,7 @@ func (a *adapter) GetCard(ctx context.Context, doctorID, patientID uuid.UUID) (d
 		PatientId: patientID.String(),
 	})
 	if err != nil {
-		return domain.Card{}, err
+		return domain.Card{}, adapter_errors.HandleGRPCError(err)
 	}
 	return mappers.Card{}.Domain(res.Card), nil
 }
@@ -41,7 +45,7 @@ func (a *adapter) UpdateCard(ctx context.Context, card domain.Card) (domain.Card
 		},
 	})
 	if err != nil {
-		return domain.Card{}, err
+		return domain.Card{}, adapter_errors.HandleGRPCError(err)
 	}
 
 	return mappers.Card{}.Domain(res.Card), nil

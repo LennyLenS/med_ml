@@ -2,11 +2,13 @@ package uzi
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"uzi/internal/domain"
 	echographicEntity "uzi/internal/repository/echographic/entity"
+	"uzi/internal/repository/entity"
 	uziEntity "uzi/internal/repository/uzi/entity"
 
 	"github.com/google/uuid"
@@ -32,10 +34,18 @@ func (s *service) CreateUzi(ctx context.Context, arg CreateUziArg) (uuid.UUID, e
 	}
 
 	if err := s.dao.NewUziQuery(ctx).InsertUzi(uziEntity.Uzi{}.FromDomain(uzi)); err != nil {
+		var valErr *entity.DBValidationError
+		if errors.As(err, &valErr) {
+			return uuid.Nil, domain.ErrUnprocessableEntity
+		}
 		return uuid.Nil, fmt.Errorf("insert uzi: %w", err)
 	}
 
 	if err := s.dao.NewEchographicQuery(ctx).InsertEchographic(echographicEntity.Echographic{Id: uzi.Id}); err != nil {
+		var valErr *entity.DBValidationError
+		if errors.As(err, &valErr) {
+			return uuid.Nil, domain.ErrUnprocessableEntity
+		}
 		return uuid.Nil, fmt.Errorf("insert echographic: %w", err)
 	}
 
