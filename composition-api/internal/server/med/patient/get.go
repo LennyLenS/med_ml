@@ -7,6 +7,7 @@ import (
 
 	"composition-api/internal/domain"
 	api "composition-api/internal/generated/http/api"
+	apimappers "composition-api/internal/server/mappers"
 	"composition-api/internal/server/med/mappers"
 
 	"github.com/AlekSi/pointer"
@@ -32,12 +33,7 @@ func (h *handler) MedPatientIDGet(ctx context.Context, params api.MedPatientIDGe
 }
 
 func (h *handler) MedDoctorIDPatientsGet(ctx context.Context, params api.MedDoctorIDPatientsGetParams) (api.MedDoctorIDPatientsGetRes, error) {
-	var status *bool
-	if params.Status.Set {
-		status = &params.Status.Value
-	}
-
-	patients, err := h.services.PatientService.GetPatientsByDoctorID(ctx, params.ID, status)
+	patients, err := h.services.PatientService.GetPatientsByDoctorID(ctx, params.ID, apimappers.FromOptBool(params.Status))
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
 			return &api.MedDoctorIDPatientsGetNotFound{
