@@ -19,8 +19,8 @@ func (s *service) GetPatient(ctx context.Context, id uuid.UUID) (domain.Patient,
 	return patient.ToDomain(), nil
 }
 
-func (s *service) GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID) ([]domain.Patient, error) {
-	patients, err := s.dao.NewPatientQuery(ctx).GetPatientsByDoctorID(doctorID)
+func (s *service) GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID, status *bool) ([]domain.Patient, error) {
+	patients, err := s.dao.NewPatientQuery(ctx).GetPatientsByDoctorID(doctorID, status)
 	if err != nil {
 		return nil, fmt.Errorf("get doctor patients: %w", err)
 	}

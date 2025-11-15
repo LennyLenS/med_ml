@@ -40,10 +40,18 @@ func (a *adapter) GetPatient(ctx context.Context, id uuid.UUID) (domain.Patient,
 	return mappers.Patient{}.Domain(res.Patient), nil
 }
 
-func (a *adapter) GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID) ([]domain.Patient, error) {
-	res, err := a.client.GetPatientsByDoctorID(ctx, &pb.GetPatientsByDoctorIDIn{
+func (a *adapter) GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID, status *bool) ([]domain.Patient, error) {
+	req := &pb.GetPatientsByDoctorIDIn{
 		Id: doctorID.String(),
-	})
+	}
+	if status != nil {
+		req.Status = &pb.OptBool{
+			Value: *status,
+			Set:   true,
+		}
+	}
+
+	res, err := a.client.GetPatientsByDoctorID(ctx, req)
 	slog.Info("GetPatientsByDoctorID", "res", res, "err", err)
 	if err != nil {
 		return nil, adapter_errors.HandleGRPCError(err)

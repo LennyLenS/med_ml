@@ -446,6 +446,9 @@ func decodeMedDoctorIDGetParams(args [1]string, argsEscaped bool, r *http.Reques
 type MedDoctorIDPatientsGetParams struct {
 	// Id врача.
 	ID uuid.UUID
+	// Фильтр по статусу пациента (true - активные, false -
+	// неактивные).
+	Status OptBool
 }
 
 func unpackMedDoctorIDPatientsGetParams(packed middleware.Parameters) (params MedDoctorIDPatientsGetParams) {
@@ -456,10 +459,20 @@ func unpackMedDoctorIDPatientsGetParams(packed middleware.Parameters) (params Me
 		}
 		params.ID = packed[key].(uuid.UUID)
 	}
+	{
+		key := middleware.ParameterKey{
+			Name: "status",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Status = v.(OptBool)
+		}
+	}
 	return params
 }
 
 func decodeMedDoctorIDPatientsGetParams(args [1]string, argsEscaped bool, r *http.Request) (params MedDoctorIDPatientsGetParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode path: id.
 	if err := func() error {
 		param := args[0]
@@ -502,6 +515,47 @@ func decodeMedDoctorIDPatientsGetParams(args [1]string, argsEscaped bool, r *htt
 		return params, &ogenerrors.DecodeParamError{
 			Name: "id",
 			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: status.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "status",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotStatusVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotStatusVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Status.SetTo(paramsDotStatusVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "status",
+			In:   "query",
 			Err:  err,
 		}
 	}

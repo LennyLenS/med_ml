@@ -13,7 +13,7 @@ type Service interface {
 	CreatePatient(ctx context.Context, arg CreatePatientArg) (uuid.UUID, error)
 
 	GetPatient(ctx context.Context, id uuid.UUID) (domain.Patient, error)
-	GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID) ([]domain.Patient, error)
+	GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID, status *bool) ([]domain.Patient, error)
 
 	UpdatePatient(ctx context.Context, id uuid.UUID, update UpdatePatientArg) (domain.Patient, error)
 }

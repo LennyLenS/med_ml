@@ -32,7 +32,12 @@ func (h *handler) MedPatientIDGet(ctx context.Context, params api.MedPatientIDGe
 }
 
 func (h *handler) MedDoctorIDPatientsGet(ctx context.Context, params api.MedDoctorIDPatientsGetParams) (api.MedDoctorIDPatientsGetRes, error) {
-	patients, err := h.services.PatientService.GetPatientsByDoctorID(ctx, params.ID)
+	var status *bool
+	if params.Status.Set {
+		status = &params.Status.Value
+	}
+
+	patients, err := h.services.PatientService.GetPatientsByDoctorID(ctx, params.ID, status)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
 			return &api.MedDoctorIDPatientsGetNotFound{

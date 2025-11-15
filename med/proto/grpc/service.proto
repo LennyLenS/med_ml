@@ -57,7 +57,10 @@ message GetPatientIn { string id = 100; }
 
 message GetPatientOut { Patient patient = 100; }
 
-message GetPatientsByDoctorIDIn { string id = 100; }
+message GetPatientsByDoctorIDIn {
+  string id = 100;
+  optional bool status = 200; // фильтр по статусу пациента (true - активные, false - неактивные)
+}
 
 message GetPatientsByDoctorIDOut { repeated Patient patients = 100; }
 
