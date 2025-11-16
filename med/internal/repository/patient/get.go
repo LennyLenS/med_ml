@@ -41,14 +41,6 @@ func (r *repo) GetPatientByID(id uuid.UUID) (pentity.Patient, error) {
 }
 
 func (r *repo) GetPatientsByDoctorID(id uuid.UUID, status *bool) ([]pentity.Patient, error) {
-	where := sq.Eq{
-		"card.doctor_id": id,
-	}
-
-	if status != nil {
-		where[fmt.Sprintf("%s.%s", table, columnActive)] = *status
-	}
-
 	query := r.QueryBuilder().
 		Select(
 			fmt.Sprintf("%s.%s", table, columnID),
@@ -62,8 +54,10 @@ func (r *repo) GetPatientsByDoctorID(id uuid.UUID, status *bool) ([]pentity.Pati
 		).
 		From(table).
 		InnerJoin("card ON card.patient_id = patient.id").
-		Where(where)
-
+		Where(sq.Eq{"card.doctor_id": id})
+	if status != nil {
+		query = query.Where(sq.Eq{columnActive: *status})
+	}
 	var patient []pentity.Patient
 	if err := r.Runner().Selectx(r.Context(), &patient, query); err != nil {
 		return nil, err
