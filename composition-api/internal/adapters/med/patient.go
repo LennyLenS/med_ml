@@ -42,13 +42,8 @@ func (a *adapter) GetPatient(ctx context.Context, id uuid.UUID) (domain.Patient,
 
 func (a *adapter) GetPatientsByDoctorID(ctx context.Context, doctorID uuid.UUID, status *bool) ([]domain.Patient, error) {
 	req := &pb.GetPatientsByDoctorIDIn{
-		Id: doctorID.String(),
-	}
-	if status != nil {
-		req.Status = &pb.OptBool{
-			Value: *status,
-			Set:   true,
-		}
+		Id:     doctorID.String(),
+		Status: status,
 	}
 
 	res, err := a.client.GetPatientsByDoctorID(ctx, req)
