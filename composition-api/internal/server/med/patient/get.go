@@ -39,7 +39,7 @@ func (h *handler) MedDoctorIDPatientsGet(ctx context.Context, params api.MedDoct
 			return &api.MedDoctorIDPatientsGetNotFound{
 				StatusCode: http.StatusNotFound,
 				Response: api.Error{
-					Message: "Врач не найден",
+					Message: "Пациенты не найдены",
 				},
 			}, nil
 		}
