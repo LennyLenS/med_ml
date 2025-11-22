@@ -38,7 +38,7 @@ func (h *handler) GetPatientsByDoctorID(ctx context.Context, in *pb.GetPatientsB
 		return nil, status.Errorf(codes.InvalidArgument, "Неверный формат ID врача: %s", err.Error())
 	}
 
-	patients, err := h.patientSrv.GetPatientsByDoctorID(ctx, doctorID)
+	patients, err := h.patientSrv.GetPatientsByDoctorID(ctx, doctorID, in.Status)
 	if err != nil {
 		switch {
 		case errors.Is(err, entity.ErrNotFound):

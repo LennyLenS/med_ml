@@ -1317,6 +1317,10 @@ func (s *Server) handleMedDoctorIDPatientsGetRequest(args [1]string, argsEscaped
 					Name: "id",
 					In:   "path",
 				}: params.ID,
+				{
+					Name: "status",
+					In:   "query",
+				}: params.Status,
 			},
 			Raw: r,
 		}

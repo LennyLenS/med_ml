@@ -23,7 +23,7 @@ type Repository interface {
 	InsertPatient(patient entity.Patient) error
 
 	GetPatientByID(id uuid.UUID) (entity.Patient, error)
-	GetPatientsByDoctorID(id uuid.UUID) ([]entity.Patient, error)
+	GetPatientsByDoctorID(id uuid.UUID, status *bool) ([]entity.Patient, error)
 
 	UpdatePatient(patient entity.Patient) error
 }
