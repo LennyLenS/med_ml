@@ -2,14 +2,10 @@ package cytology_image
 
 import (
 	"context"
-	"errors"
 
-	"cytology/internal/domain"
 	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/services"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

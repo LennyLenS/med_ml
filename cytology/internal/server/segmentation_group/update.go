@@ -3,8 +3,8 @@ package segmentation_group
 import (
 	"context"
 
-	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/domain"
+	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/services/segmentation_group"
 
 	"github.com/google/uuid"
@@ -41,5 +41,6 @@ func (h *handler) UpdateSegmentationGroup(ctx context.Context, in *pb.UpdateSegm
 	}
 
 	// TODO: добавить маппинг
+	_ = group
 	return &pb.UpdateSegmentationGroupOut{}, nil
 }

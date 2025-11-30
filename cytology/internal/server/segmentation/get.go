@@ -22,6 +22,7 @@ func (h *handler) GetSegmentationById(ctx context.Context, in *pb.GetSegmentatio
 	}
 
 	// TODO: добавить маппинг
+	_ = seg
 	return &pb.GetSegmentationByIdOut{}, nil
 }
 
@@ -37,5 +38,6 @@ func (h *handler) GetSegmentsByGroupId(ctx context.Context, in *pb.GetSegmentsBy
 	}
 
 	// TODO: добавить маппинг
+	_ = segs
 	return &pb.GetSegmentsByGroupIdOut{Segmentations: []*pb.Segmentation{}}, nil
 }

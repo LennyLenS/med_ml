@@ -20,25 +20,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CytologySrv_CreateCytologyImage_FullMethodName               = "/CytologySrv/CreateCytologyImage"
-	CytologySrv_GetCytologyImageById_FullMethodName              = "/CytologySrv/GetCytologyImageById"
-	CytologySrv_GetCytologyImagesByExternalId_FullMethodName     = "/CytologySrv/GetCytologyImagesByExternalId"
-	CytologySrv_GetCytologyImagesByPatientCardId_FullMethodName  = "/CytologySrv/GetCytologyImagesByPatientCardId"
-	CytologySrv_UpdateCytologyImage_FullMethodName               = "/CytologySrv/UpdateCytologyImage"
-	CytologySrv_DeleteCytologyImage_FullMethodName               = "/CytologySrv/DeleteCytologyImage"
-	CytologySrv_CreateOriginalImage_FullMethodName               = "/CytologySrv/CreateOriginalImage"
-	CytologySrv_GetOriginalImageById_FullMethodName              = "/CytologySrv/GetOriginalImageById"
-	CytologySrv_GetOriginalImagesByCytologyId_FullMethodName     = "/CytologySrv/GetOriginalImagesByCytologyId"
-	CytologySrv_UpdateOriginalImage_FullMethodName               = "/CytologySrv/UpdateOriginalImage"
-	CytologySrv_CreateSegmentationGroup_FullMethodName           = "/CytologySrv/CreateSegmentationGroup"
-	CytologySrv_GetSegmentationGroupsByCytologyId_FullMethodName = "/CytologySrv/GetSegmentationGroupsByCytologyId"
-	CytologySrv_UpdateSegmentationGroup_FullMethodName           = "/CytologySrv/UpdateSegmentationGroup"
-	CytologySrv_DeleteSegmentationGroup_FullMethodName           = "/CytologySrv/DeleteSegmentationGroup"
-	CytologySrv_CreateSegmentation_FullMethodName                = "/CytologySrv/CreateSegmentation"
-	CytologySrv_GetSegmentationById_FullMethodName               = "/CytologySrv/GetSegmentationById"
-	CytologySrv_GetSegmentsByGroupId_FullMethodName              = "/CytologySrv/GetSegmentsByGroupId"
-	CytologySrv_UpdateSegmentation_FullMethodName                = "/CytologySrv/UpdateSegmentation"
-	CytologySrv_DeleteSegmentation_FullMethodName                = "/CytologySrv/DeleteSegmentation"
+	CytologySrv_CreateCytologyImage_FullMethodName                     = "/CytologySrv/CreateCytologyImage"
+	CytologySrv_GetCytologyImageById_FullMethodName                    = "/CytologySrv/GetCytologyImageById"
+	CytologySrv_GetCytologyImagesByExternalId_FullMethodName           = "/CytologySrv/GetCytologyImagesByExternalId"
+	CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName = "/CytologySrv/GetCytologyImagesByDoctorIdAndPatientId"
+	CytologySrv_UpdateCytologyImage_FullMethodName                     = "/CytologySrv/UpdateCytologyImage"
+	CytologySrv_DeleteCytologyImage_FullMethodName                     = "/CytologySrv/DeleteCytologyImage"
+	CytologySrv_CreateOriginalImage_FullMethodName                     = "/CytologySrv/CreateOriginalImage"
+	CytologySrv_GetOriginalImageById_FullMethodName                    = "/CytologySrv/GetOriginalImageById"
+	CytologySrv_GetOriginalImagesByCytologyId_FullMethodName           = "/CytologySrv/GetOriginalImagesByCytologyId"
+	CytologySrv_UpdateOriginalImage_FullMethodName                     = "/CytologySrv/UpdateOriginalImage"
+	CytologySrv_CreateSegmentationGroup_FullMethodName                 = "/CytologySrv/CreateSegmentationGroup"
+	CytologySrv_GetSegmentationGroupsByCytologyId_FullMethodName       = "/CytologySrv/GetSegmentationGroupsByCytologyId"
+	CytologySrv_UpdateSegmentationGroup_FullMethodName                 = "/CytologySrv/UpdateSegmentationGroup"
+	CytologySrv_DeleteSegmentationGroup_FullMethodName                 = "/CytologySrv/DeleteSegmentationGroup"
+	CytologySrv_CreateSegmentation_FullMethodName                      = "/CytologySrv/CreateSegmentation"
+	CytologySrv_GetSegmentationById_FullMethodName                     = "/CytologySrv/GetSegmentationById"
+	CytologySrv_GetSegmentsByGroupId_FullMethodName                    = "/CytologySrv/GetSegmentsByGroupId"
+	CytologySrv_UpdateSegmentation_FullMethodName                      = "/CytologySrv/UpdateSegmentation"
+	CytologySrv_DeleteSegmentation_FullMethodName                      = "/CytologySrv/DeleteSegmentation"
 )
 
 // CytologySrvClient is the client API for CytologySrv service.
@@ -49,7 +49,7 @@ type CytologySrvClient interface {
 	CreateCytologyImage(ctx context.Context, in *CreateCytologyImageIn, opts ...grpc.CallOption) (*CreateCytologyImageOut, error)
 	GetCytologyImageById(ctx context.Context, in *GetCytologyImageByIdIn, opts ...grpc.CallOption) (*GetCytologyImageByIdOut, error)
 	GetCytologyImagesByExternalId(ctx context.Context, in *GetCytologyImagesByExternalIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByExternalIdOut, error)
-	GetCytologyImagesByPatientCardId(ctx context.Context, in *GetCytologyImagesByPatientCardIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByPatientCardIdOut, error)
+	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, in *GetCytologyImagesByDoctorIdAndPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(ctx context.Context, in *UpdateCytologyImageIn, opts ...grpc.CallOption) (*UpdateCytologyImageOut, error)
 	DeleteCytologyImage(ctx context.Context, in *DeleteCytologyImageIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ORIGINAL IMAGE
@@ -108,10 +108,10 @@ func (c *cytologySrvClient) GetCytologyImagesByExternalId(ctx context.Context, i
 	return out, nil
 }
 
-func (c *cytologySrvClient) GetCytologyImagesByPatientCardId(ctx context.Context, in *GetCytologyImagesByPatientCardIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByPatientCardIdOut, error) {
+func (c *cytologySrvClient) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, in *GetCytologyImagesByDoctorIdAndPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCytologyImagesByPatientCardIdOut)
-	err := c.cc.Invoke(ctx, CytologySrv_GetCytologyImagesByPatientCardId_FullMethodName, in, out, cOpts...)
+	out := new(GetCytologyImagesByDoctorIdAndPatientIdOut)
+	err := c.cc.Invoke(ctx, CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +276,7 @@ type CytologySrvServer interface {
 	CreateCytologyImage(context.Context, *CreateCytologyImageIn) (*CreateCytologyImageOut, error)
 	GetCytologyImageById(context.Context, *GetCytologyImageByIdIn) (*GetCytologyImageByIdOut, error)
 	GetCytologyImagesByExternalId(context.Context, *GetCytologyImagesByExternalIdIn) (*GetCytologyImagesByExternalIdOut, error)
-	GetCytologyImagesByPatientCardId(context.Context, *GetCytologyImagesByPatientCardIdIn) (*GetCytologyImagesByPatientCardIdOut, error)
+	GetCytologyImagesByDoctorIdAndPatientId(context.Context, *GetCytologyImagesByDoctorIdAndPatientIdIn) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(context.Context, *UpdateCytologyImageIn) (*UpdateCytologyImageOut, error)
 	DeleteCytologyImage(context.Context, *DeleteCytologyImageIn) (*emptypb.Empty, error)
 	// ORIGINAL IMAGE
@@ -314,8 +314,8 @@ func (UnimplementedCytologySrvServer) GetCytologyImageById(context.Context, *Get
 func (UnimplementedCytologySrvServer) GetCytologyImagesByExternalId(context.Context, *GetCytologyImagesByExternalIdIn) (*GetCytologyImagesByExternalIdOut, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCytologyImagesByExternalId not implemented")
 }
-func (UnimplementedCytologySrvServer) GetCytologyImagesByPatientCardId(context.Context, *GetCytologyImagesByPatientCardIdIn) (*GetCytologyImagesByPatientCardIdOut, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetCytologyImagesByPatientCardId not implemented")
+func (UnimplementedCytologySrvServer) GetCytologyImagesByDoctorIdAndPatientId(context.Context, *GetCytologyImagesByDoctorIdAndPatientIdIn) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCytologyImagesByDoctorIdAndPatientId not implemented")
 }
 func (UnimplementedCytologySrvServer) UpdateCytologyImage(context.Context, *UpdateCytologyImageIn) (*UpdateCytologyImageOut, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateCytologyImage not implemented")
@@ -437,20 +437,20 @@ func _CytologySrv_GetCytologyImagesByExternalId_Handler(srv interface{}, ctx con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CytologySrv_GetCytologyImagesByPatientCardId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCytologyImagesByPatientCardIdIn)
+func _CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCytologyImagesByDoctorIdAndPatientIdIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CytologySrvServer).GetCytologyImagesByPatientCardId(ctx, in)
+		return srv.(CytologySrvServer).GetCytologyImagesByDoctorIdAndPatientId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CytologySrv_GetCytologyImagesByPatientCardId_FullMethodName,
+		FullMethod: CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CytologySrvServer).GetCytologyImagesByPatientCardId(ctx, req.(*GetCytologyImagesByPatientCardIdIn))
+		return srv.(CytologySrvServer).GetCytologyImagesByDoctorIdAndPatientId(ctx, req.(*GetCytologyImagesByDoctorIdAndPatientIdIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -745,8 +745,8 @@ var CytologySrv_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CytologySrv_GetCytologyImagesByExternalId_Handler,
 		},
 		{
-			MethodName: "GetCytologyImagesByPatientCardId",
-			Handler:    _CytologySrv_GetCytologyImagesByPatientCardId_Handler,
+			MethodName: "GetCytologyImagesByDoctorIdAndPatientId",
+			Handler:    _CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_Handler,
 		},
 		{
 			MethodName: "UpdateCytologyImage",

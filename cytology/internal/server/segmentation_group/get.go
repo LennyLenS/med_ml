@@ -22,5 +22,6 @@ func (h *handler) GetSegmentationGroupsByCytologyId(ctx context.Context, in *pb.
 	}
 
 	// TODO: добавить маппинг
+	_ = groups
 	return &pb.GetSegmentationGroupsByCytologyIdOut{SegmentationGroups: []*pb.SegmentationGroup{}}, nil
 }
