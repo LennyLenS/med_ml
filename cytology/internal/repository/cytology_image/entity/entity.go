@@ -11,22 +11,22 @@ import (
 )
 
 type CytologyImage struct {
-	Id                uuid.UUID       `db:"id"`
-	ExternalID        uuid.UUID       `db:"external_id"`
-	DoctorID          uuid.UUID       `db:"doctor_id"`
-	PatientID         uuid.UUID       `db:"patient_id"`
-	DiagnosticNumber  int             `db:"diagnostic_number"`
-	DiagnosticMarking sql.NullString  `db:"diagnostic_marking"`
-	MaterialType      sql.NullString  `db:"material_type"`
-	DiagnosDate       time.Time       `db:"diagnos_date"`
-	IsLast            bool            `db:"is_last"`
-	Calcitonin        sql.NullInt32   `db:"calcitonin"`
-	CalcitoninInFlush sql.NullInt32   `db:"calcitonin_in_flush"`
-	Thyroglobulin     sql.NullInt32   `db:"thyroglobulin"`
-	Details           json.RawMessage `db:"details"`
-	PrevID            uuid.NullUUID   `db:"prev_id"`
-	ParentPrevID      uuid.NullUUID   `db:"parent_prev_id"`
-	CreateAt          time.Time       `db:"create_at"`
+	Id                uuid.UUID      `db:"id"`
+	ExternalID        uuid.UUID      `db:"external_id"`
+	DoctorID          uuid.UUID      `db:"doctor_id"`
+	PatientID         uuid.UUID      `db:"patient_id"`
+	DiagnosticNumber  int            `db:"diagnostic_number"`
+	DiagnosticMarking sql.NullString `db:"diagnostic_marking"`
+	MaterialType      sql.NullString `db:"material_type"`
+	DiagnosDate       time.Time      `db:"diagnos_date"`
+	IsLast            bool           `db:"is_last"`
+	Calcitonin        sql.NullInt32  `db:"calcitonin"`
+	CalcitoninInFlush sql.NullInt32  `db:"calcitonin_in_flush"`
+	Thyroglobulin     sql.NullInt32  `db:"thyroglobulin"`
+	Details           sql.NullString `db:"details"`
+	PrevID            uuid.NullUUID  `db:"prev_id"`
+	ParentPrevID      uuid.NullUUID  `db:"parent_prev_id"`
+	CreateAt          time.Time      `db:"create_at"`
 }
 
 func (CytologyImage) FromDomain(d domain.CytologyImage) CytologyImage {
@@ -65,6 +65,12 @@ func (CytologyImage) FromDomain(d domain.CytologyImage) CytologyImage {
 		parentPrevID = uuid.NullUUID{UUID: *d.ParentPrevID, Valid: true}
 	}
 
+	// Конвертируем Details в sql.NullString для правильной обработки NULL
+	var details sql.NullString
+	if len(d.Details) > 0 {
+		details = sql.NullString{String: string(d.Details), Valid: true}
+	}
+
 	return CytologyImage{
 		Id:                d.Id,
 		ExternalID:        d.ExternalID,
@@ -78,7 +84,7 @@ func (CytologyImage) FromDomain(d domain.CytologyImage) CytologyImage {
 		Calcitonin:        calcitonin,
 		CalcitoninInFlush: calcitoninInFlush,
 		Thyroglobulin:     thyroglobulin,
-		Details:           d.Details,
+		Details:           details,
 		PrevID:            prevID,
 		ParentPrevID:      parentPrevID,
 		CreateAt:          d.CreateAt,
@@ -126,6 +132,12 @@ func (d CytologyImage) ToDomain() domain.CytologyImage {
 		parentPrevID = &d.ParentPrevID.UUID
 	}
 
+	// Конвертируем Details обратно в json.RawMessage
+	var details json.RawMessage
+	if d.Details.Valid {
+		details = json.RawMessage(d.Details.String)
+	}
+
 	return domain.CytologyImage{
 		Id:                d.Id,
 		ExternalID:        d.ExternalID,
@@ -139,7 +151,7 @@ func (d CytologyImage) ToDomain() domain.CytologyImage {
 		Calcitonin:        calcitonin,
 		CalcitoninInFlush: calcitoninInFlush,
 		Thyroglobulin:     thyroglobulin,
-		Details:           d.Details,
+		Details:           details,
 		PrevID:            prevID,
 		ParentPrevID:      parentPrevID,
 		CreateAt:          d.CreateAt,

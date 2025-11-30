@@ -27,8 +27,8 @@ func (q *repo) UpdateCytologyImage(img entity.CytologyImage) error {
 	if img.Thyroglobulin.Valid {
 		updateMap[columnThyroglobulin] = img.Thyroglobulin
 	}
-	if img.Details != nil {
-		updateMap[columnDetails] = img.Details
+	if img.Details.Valid {
+		updateMap[columnDetails] = img.Details.String
 	}
 
 	query := q.QueryBuilder().
