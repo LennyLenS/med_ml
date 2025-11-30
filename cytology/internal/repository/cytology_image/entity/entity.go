@@ -13,7 +13,8 @@ import (
 type CytologyImage struct {
 	Id                uuid.UUID       `db:"id"`
 	ExternalID        uuid.UUID       `db:"external_id"`
-	PatientCardID     uuid.UUID       `db:"patient_card_id"`
+	DoctorID          uuid.UUID       `db:"doctor_id"`
+	PatientID         uuid.UUID       `db:"patient_id"`
 	DiagnosticNumber  int             `db:"diagnostic_number"`
 	DiagnosticMarking sql.NullString  `db:"diagnostic_marking"`
 	MaterialType      sql.NullString  `db:"material_type"`
@@ -67,7 +68,8 @@ func (CytologyImage) FromDomain(d domain.CytologyImage) CytologyImage {
 	return CytologyImage{
 		Id:                d.Id,
 		ExternalID:        d.ExternalID,
-		PatientCardID:     d.PatientCardID,
+		DoctorID:          d.DoctorID,
+		PatientID:         d.PatientID,
 		DiagnosticNumber:  d.DiagnosticNumber,
 		DiagnosticMarking: diagnosticMarking,
 		MaterialType:      materialType,
@@ -127,7 +129,8 @@ func (d CytologyImage) ToDomain() domain.CytologyImage {
 	return domain.CytologyImage{
 		Id:                d.Id,
 		ExternalID:        d.ExternalID,
-		PatientCardID:     d.PatientCardID,
+		DoctorID:          d.DoctorID,
+		PatientID:         d.PatientID,
 		DiagnosticNumber:  d.DiagnosticNumber,
 		DiagnosticMarking: diagnosticMarking,
 		MaterialType:      materialType,

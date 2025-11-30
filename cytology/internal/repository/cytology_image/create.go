@@ -11,7 +11,8 @@ func (q *repo) InsertCytologyImage(img entity.CytologyImage) error {
 		Columns(
 			columnID,
 			columnExternalID,
-			columnPatientCardID,
+			columnDoctorID,
+			columnPatientID,
 			columnDiagnosticNumber,
 			columnDiagnosticMarking,
 			columnMaterialType,
@@ -28,7 +29,8 @@ func (q *repo) InsertCytologyImage(img entity.CytologyImage) error {
 		Values(
 			img.Id,
 			img.ExternalID,
-			img.PatientCardID,
+			img.DoctorID,
+			img.PatientID,
 			img.DiagnosticNumber,
 			img.DiagnosticMarking,
 			img.MaterialType,

@@ -12,7 +12,8 @@ import (
 func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyImageArg) (uuid.UUID, error) {
 	return s.adapters.Cytology.CreateCytologyImage(ctx, cytology.CreateCytologyImageIn{
 		ExternalID:        arg.ExternalID,
-		PatientCardID:     arg.PatientCardID,
+		DoctorID:          arg.DoctorID,
+		PatientID:         arg.PatientID,
 		DiagnosticNumber:  arg.DiagnosticNumber,
 		DiagnosticMarking: arg.DiagnosticMarking,
 		MaterialType:      arg.MaterialType,
@@ -33,8 +34,8 @@ func (s *service) GetCytologyImagesByExternalId(ctx context.Context, externalID 
 	return s.adapters.Cytology.GetCytologyImagesByExternalId(ctx, externalID)
 }
 
-func (s *service) GetCytologyImagesByPatientCardId(ctx context.Context, patientCardID uuid.UUID) ([]domain.CytologyImage, error) {
-	return s.adapters.Cytology.GetCytologyImagesByPatientCardId(ctx, patientCardID)
+func (s *service) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]domain.CytologyImage, error) {
+	return s.adapters.Cytology.GetCytologyImagesByDoctorIdAndPatientId(ctx, doctorID, patientID)
 }
 
 func (s *service) UpdateCytologyImage(ctx context.Context, arg UpdateCytologyImageArg) (domain.CytologyImage, error) {

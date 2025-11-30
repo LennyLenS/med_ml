@@ -19,9 +19,14 @@ func (h *handler) CreateCytologyImage(ctx context.Context, in *pb.CreateCytology
 		return nil, status.Errorf(codes.InvalidArgument, "external_id is not a valid uuid: %s", err.Error())
 	}
 
-	patientCardID, err := uuid.Parse(in.PatientCardId)
+	doctorID, err := uuid.Parse(in.DoctorId)
 	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "patient_card_id is not a valid uuid: %s", err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "doctor_id is not a valid uuid: %s", err.Error())
+	}
+
+	patientID, err := uuid.Parse(in.PatientId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "patient_id is not a valid uuid: %s", err.Error())
 	}
 
 	var prevID *uuid.UUID
@@ -42,7 +47,7 @@ func (h *handler) CreateCytologyImage(ctx context.Context, in *pb.CreateCytology
 		parentPrevID = &parsed
 	}
 
-	id, err := h.services.CytologyImage.CreateCytologyImage(ctx, mappers.CreateCytologyImageArgFromProto(in, externalID, patientCardID, prevID, parentPrevID))
+	id, err := h.services.CytologyImage.CreateCytologyImage(ctx, mappers.CreateCytologyImageArgFromProto(in, externalID, doctorID, patientID, prevID, parentPrevID))
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrUnprocessableEntity):

@@ -73,7 +73,8 @@ func (m CytologyImage) Domain(pb *pb.CytologyImage) domain.CytologyImage {
 	return domain.CytologyImage{
 		Id:                uuid.MustParse(pb.Id),
 		ExternalID:        uuid.MustParse(pb.ExternalId),
-		PatientCardID:     uuid.MustParse(pb.PatientCardId),
+		DoctorID:          uuid.MustParse(pb.DoctorId),
+		PatientID:         uuid.MustParse(pb.PatientId),
 		DiagnosticNumber:  int(pb.DiagnosticNumber),
 		DiagnosticMarking: diagnosticMarking,
 		MaterialType:      materialType,

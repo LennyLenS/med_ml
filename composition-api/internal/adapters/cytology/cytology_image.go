@@ -27,7 +27,8 @@ var materialTypeMap = map[domain.MaterialType]pb.MaterialType{
 func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImageIn) (uuid.UUID, error) {
 	req := &pb.CreateCytologyImageIn{
 		ExternalId:       in.ExternalID.String(),
-		PatientCardId:    in.PatientCardID.String(),
+		DoctorId:         in.DoctorID.String(),
+		PatientId:        in.PatientID.String(),
 		DiagnosticNumber: int32(in.DiagnosticNumber),
 	}
 
@@ -104,8 +105,11 @@ func (a *adapter) GetCytologyImagesByExternalId(ctx context.Context, id uuid.UUI
 	return mappers.CytologyImage{}.SliceDomain(res.CytologyImages), nil
 }
 
-func (a *adapter) GetCytologyImagesByPatientCardId(ctx context.Context, patientCardID uuid.UUID) ([]domain.CytologyImage, error) {
-	res, err := a.client.GetCytologyImagesByPatientCardId(ctx, &pb.GetCytologyImagesByPatientCardIdIn{PatientCardId: patientCardID.String()})
+func (a *adapter) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]domain.CytologyImage, error) {
+	res, err := a.client.GetCytologyImagesByDoctorIdAndPatientId(ctx, &pb.GetCytologyImagesByDoctorIdAndPatientIdIn{
+		DoctorId:  doctorID.String(),
+		PatientId: patientID.String(),
+	})
 	if err != nil {
 		return nil, adapter_errors.HandleGRPCError(err)
 	}

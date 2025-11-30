@@ -34,10 +34,11 @@ var MaterialTypeReverseMap = map[pb.MaterialType]domain.MaterialType{
 	pb.MaterialType_MATERIAL_TYPE_LNP: domain.MaterialTypeLNP,
 }
 
-func CreateCytologyImageArgFromProto(in *pb.CreateCytologyImageIn, externalID, patientCardID uuid.UUID, prevID, parentPrevID *uuid.UUID) cytology_image.CreateCytologyImageArg {
+func CreateCytologyImageArgFromProto(in *pb.CreateCytologyImageIn, externalID, doctorID, patientID uuid.UUID, prevID, parentPrevID *uuid.UUID) cytology_image.CreateCytologyImageArg {
 	arg := cytology_image.CreateCytologyImageArg{
 		ExternalID:       externalID,
-		PatientCardID:    patientCardID,
+		DoctorID:         doctorID,
+		PatientID:        patientID,
 		DiagnosticNumber: int(in.DiagnosticNumber),
 		PrevID:           prevID,
 		ParentPrevID:     parentPrevID,
@@ -120,7 +121,8 @@ func CytologyImageToProto(d domain.CytologyImage) *pb.CytologyImage {
 	pbImg := &pb.CytologyImage{
 		Id:               d.Id.String(),
 		ExternalId:       d.ExternalID.String(),
-		PatientCardId:    d.PatientCardID.String(),
+		DoctorId:         d.DoctorID.String(),
+		PatientId:        d.PatientID.String(),
 		DiagnosticNumber: int32(d.DiagnosticNumber),
 		IsLast:           d.IsLast,
 		DiagnosDate:      d.DiagnosDate.Format("2006-01-02T15:04:05Z07:00"),

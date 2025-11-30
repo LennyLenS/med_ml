@@ -23,7 +23,8 @@ func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyIma
 	img := domain.CytologyImage{
 		Id:                uuid.New(),
 		ExternalID:        arg.ExternalID,
-		PatientCardID:     arg.PatientCardID,
+		DoctorID:          arg.DoctorID,
+		PatientID:         arg.PatientID,
 		DiagnosticNumber:  arg.DiagnosticNumber,
 		DiagnosticMarking: arg.DiagnosticMarking,
 		MaterialType:      arg.MaterialType,

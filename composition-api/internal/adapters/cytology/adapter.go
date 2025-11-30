@@ -14,7 +14,7 @@ type Adapter interface {
 	CreateCytologyImage(ctx context.Context, in CreateCytologyImageIn) (uuid.UUID, error)
 	GetCytologyImageById(ctx context.Context, id uuid.UUID) (domain.CytologyImage, *domain.OriginalImage, error)
 	GetCytologyImagesByExternalId(ctx context.Context, id uuid.UUID) ([]domain.CytologyImage, error)
-	GetCytologyImagesByPatientCardId(ctx context.Context, patientCardID uuid.UUID) ([]domain.CytologyImage, error)
+	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]domain.CytologyImage, error)
 	UpdateCytologyImage(ctx context.Context, in UpdateCytologyImageIn) (domain.CytologyImage, error)
 	DeleteCytologyImage(ctx context.Context, id uuid.UUID) error
 

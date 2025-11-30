@@ -26,7 +26,8 @@ const (
 type CytologyImage struct {
 	Id                uuid.UUID
 	ExternalID        uuid.UUID
-	PatientCardID     uuid.UUID
+	DoctorID          uuid.UUID
+	PatientID         uuid.UUID
 	DiagnosticNumber  int
 	DiagnosticMarking *DiagnosticMarking
 	MaterialType      *MaterialType

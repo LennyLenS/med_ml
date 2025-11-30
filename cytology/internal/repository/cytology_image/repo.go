@@ -12,7 +12,8 @@ const (
 
 	columnID                = "id"
 	columnExternalID        = "external_id"
-	columnPatientCardID     = "patient_card_id"
+	columnDoctorID          = "doctor_id"
+	columnPatientID         = "patient_id"
 	columnDiagnosticNumber  = "diagnostic_number"
 	columnDiagnosticMarking = "diagnostic_marking"
 	columnMaterialType      = "material_type"
@@ -32,7 +33,7 @@ type Repository interface {
 	InsertCytologyImage(img entity.CytologyImage) error
 	GetCytologyImageByID(id uuid.UUID) (entity.CytologyImage, error)
 	GetCytologyImagesByExternalID(externalID uuid.UUID) ([]entity.CytologyImage, error)
-	GetCytologyImagesByPatientCardID(patientCardID uuid.UUID) ([]entity.CytologyImage, error)
+	GetCytologyImagesByDoctorIdAndPatientId(doctorID, patientID uuid.UUID) ([]entity.CytologyImage, error)
 	UpdateCytologyImage(img entity.CytologyImage) error
 	DeleteCytologyImage(id uuid.UUID) error
 }

@@ -13,7 +13,7 @@ type Service interface {
 	CreateCytologyImage(ctx context.Context, arg CreateCytologyImageArg) (uuid.UUID, error)
 	GetCytologyImageByID(ctx context.Context, id uuid.UUID) (domain.CytologyImage, error)
 	GetCytologyImagesByExternalID(ctx context.Context, externalID uuid.UUID) ([]domain.CytologyImage, error)
-	GetCytologyImagesByPatientCardID(ctx context.Context, patientCardID uuid.UUID) ([]domain.CytologyImage, error)
+	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]domain.CytologyImage, error)
 	UpdateCytologyImage(ctx context.Context, arg UpdateCytologyImageArg) (domain.CytologyImage, error)
 	DeleteCytologyImage(ctx context.Context, id uuid.UUID) error
 }

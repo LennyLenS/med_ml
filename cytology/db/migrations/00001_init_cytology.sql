@@ -4,7 +4,8 @@ CREATE TABLE cytology_image
 (
     id                  uuid            PRIMARY KEY,
     external_id         uuid            NOT NULL,
-    patient_card_id     uuid            NOT NULL,
+    doctor_id           uuid            NOT NULL,
+    patient_id          uuid            NOT NULL,
     diagnostic_number   integer         NOT NULL,
     diagnostic_marking  varchar(10),
     material_type       varchar(10),
@@ -21,7 +22,8 @@ CREATE TABLE cytology_image
 
 COMMENT ON TABLE cytology_image IS 'Хранилище цитологических исследований';
 COMMENT ON COLUMN cytology_image.external_id IS 'Внешний идентификатор исследования';
-COMMENT ON COLUMN cytology_image.patient_card_id IS 'ID карты пациента';
+COMMENT ON COLUMN cytology_image.doctor_id IS 'ID врача';
+COMMENT ON COLUMN cytology_image.patient_id IS 'ID пациента';
 COMMENT ON COLUMN cytology_image.diagnostic_number IS 'Номер диагностики';
 COMMENT ON COLUMN cytology_image.diagnostic_marking IS 'Маркировка диагностики (П11, Л23)';
 COMMENT ON COLUMN cytology_image.material_type IS 'Тип материала (GS, BP, TP, PTP, LNP)';
@@ -85,7 +87,7 @@ COMMENT ON COLUMN segmentation_point.y IS 'Координата Y';
 COMMENT ON COLUMN segmentation_point.uid IS 'Уникальный идентификатор точки';
 
 CREATE INDEX idx_cytology_image_external_id ON cytology_image(external_id);
-CREATE INDEX idx_cytology_image_patient_card_id ON cytology_image(patient_card_id);
+CREATE INDEX idx_cytology_image_doctor_id_patient_id ON cytology_image(doctor_id, patient_id);
 CREATE INDEX idx_original_image_cytology_id ON original_image(cytology_id);
 CREATE INDEX idx_segmentation_group_cytology_id ON segmentation_group(cytology_id);
 CREATE INDEX idx_segmentation_segmentation_group_id ON segmentation(segmentation_group_id);

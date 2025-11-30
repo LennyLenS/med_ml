@@ -9,7 +9,7 @@ service CytologySrv {
   rpc CreateCytologyImage(CreateCytologyImageIn) returns (CreateCytologyImageOut);
   rpc GetCytologyImageById(GetCytologyImageByIdIn) returns (GetCytologyImageByIdOut);
   rpc GetCytologyImagesByExternalId(GetCytologyImagesByExternalIdIn) returns (GetCytologyImagesByExternalIdOut);
-  rpc GetCytologyImagesByPatientCardId(GetCytologyImagesByPatientCardIdIn) returns (GetCytologyImagesByPatientCardIdOut);
+  rpc GetCytologyImagesByDoctorIdAndPatientId(GetCytologyImagesByDoctorIdAndPatientIdIn) returns (GetCytologyImagesByDoctorIdAndPatientIdOut);
   rpc UpdateCytologyImage(UpdateCytologyImageIn) returns (UpdateCytologyImageOut);
   rpc DeleteCytologyImage(DeleteCytologyImageIn) returns (google.protobuf.Empty);
 
@@ -53,33 +53,35 @@ enum MaterialType {
 message CytologyImage {
   string id = 100;
   string external_id = 200;
-  string patient_card_id = 300;
-  int32 diagnostic_number = 400;
-  optional DiagnosticMarking diagnostic_marking = 500;
-  optional MaterialType material_type = 600;
-  string diagnos_date = 700;
-  bool is_last = 800;
-  optional int32 calcitonin = 900;
-  optional int32 calcitonin_in_flush = 1000;
-  optional int32 thyroglobulin = 1100;
-  optional string details = 1200; // JSON string
-  optional string prev_id = 1300;
-  optional string parent_prev_id = 1400;
-  string create_at = 1500;
+  string doctor_id = 300;
+  string patient_id = 400;
+  int32 diagnostic_number = 500;
+  optional DiagnosticMarking diagnostic_marking = 600;
+  optional MaterialType material_type = 700;
+  string diagnos_date = 800;
+  bool is_last = 900;
+  optional int32 calcitonin = 1000;
+  optional int32 calcitonin_in_flush = 1100;
+  optional int32 thyroglobulin = 1200;
+  optional string details = 1300; // JSON string
+  optional string prev_id = 1400;
+  optional string parent_prev_id = 1500;
+  string create_at = 1600;
 }
 
 message CreateCytologyImageIn {
   string external_id = 100;
-  string patient_card_id = 200;
-  int32 diagnostic_number = 300;
-  optional DiagnosticMarking diagnostic_marking = 400;
-  optional MaterialType material_type = 500;
-  optional int32 calcitonin = 600;
-  optional int32 calcitonin_in_flush = 700;
-  optional int32 thyroglobulin = 800;
-  optional string details = 900; // JSON string
-  optional string prev_id = 1000;
-  optional string parent_prev_id = 1100;
+  string doctor_id = 200;
+  string patient_id = 300;
+  int32 diagnostic_number = 400;
+  optional DiagnosticMarking diagnostic_marking = 500;
+  optional MaterialType material_type = 600;
+  optional int32 calcitonin = 700;
+  optional int32 calcitonin_in_flush = 800;
+  optional int32 thyroglobulin = 900;
+  optional string details = 1000; // JSON string
+  optional string prev_id = 1100;
+  optional string parent_prev_id = 1200;
 }
 
 message CreateCytologyImageOut {
@@ -103,11 +105,12 @@ message GetCytologyImagesByExternalIdOut {
   repeated CytologyImage cytology_images = 100;
 }
 
-message GetCytologyImagesByPatientCardIdIn {
-  string patient_card_id = 100;
+message GetCytologyImagesByDoctorIdAndPatientIdIn {
+  string doctor_id = 100;
+  string patient_id = 200;
 }
 
-message GetCytologyImagesByPatientCardIdOut {
+message GetCytologyImagesByDoctorIdAndPatientIdOut {
   repeated CytologyImage cytology_images = 100;
 }
 

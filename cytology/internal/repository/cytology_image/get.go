@@ -16,7 +16,8 @@ func (q *repo) GetCytologyImageByID(id uuid.UUID) (entity.CytologyImage, error) 
 		Select(
 			columnID,
 			columnExternalID,
-			columnPatientCardID,
+			columnDoctorID,
+			columnPatientID,
 			columnDiagnosticNumber,
 			columnDiagnosticMarking,
 			columnMaterialType,
@@ -51,7 +52,8 @@ func (q *repo) GetCytologyImagesByExternalID(externalID uuid.UUID) ([]entity.Cyt
 		Select(
 			columnID,
 			columnExternalID,
-			columnPatientCardID,
+			columnDoctorID,
+			columnPatientID,
 			columnDiagnosticNumber,
 			columnDiagnosticMarking,
 			columnMaterialType,
@@ -82,12 +84,13 @@ func (q *repo) GetCytologyImagesByExternalID(externalID uuid.UUID) ([]entity.Cyt
 	return images, nil
 }
 
-func (q *repo) GetCytologyImagesByPatientCardID(patientCardID uuid.UUID) ([]entity.CytologyImage, error) {
+func (q *repo) GetCytologyImagesByDoctorIdAndPatientId(doctorID, patientID uuid.UUID) ([]entity.CytologyImage, error) {
 	query := q.QueryBuilder().
 		Select(
 			columnID,
 			columnExternalID,
-			columnPatientCardID,
+			columnDoctorID,
+			columnPatientID,
 			columnDiagnosticNumber,
 			columnDiagnosticMarking,
 			columnMaterialType,
@@ -103,7 +106,8 @@ func (q *repo) GetCytologyImagesByPatientCardID(patientCardID uuid.UUID) ([]enti
 		).
 		From(table).
 		Where(sq.Eq{
-			columnPatientCardID: patientCardID,
+			columnDoctorID:  doctorID,
+			columnPatientID: patientID,
 		})
 
 	var images []entity.CytologyImage

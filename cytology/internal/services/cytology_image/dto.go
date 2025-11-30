@@ -8,7 +8,8 @@ import (
 
 type CreateCytologyImageArg struct {
 	ExternalID        uuid.UUID
-	PatientCardID     uuid.UUID
+	DoctorID          uuid.UUID
+	PatientID         uuid.UUID
 	DiagnosticNumber  int
 	DiagnosticMarking *domain.DiagnosticMarking
 	MaterialType      *domain.MaterialType
