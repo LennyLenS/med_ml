@@ -1,8 +1,6 @@
 package mappers
 
 import (
-	"crypto/sha256"
-
 	"github.com/google/uuid"
 
 	api "composition-api/internal/generated/http/api"
@@ -10,30 +8,14 @@ import (
 	cytologySrv "composition-api/internal/services/cytology"
 )
 
-// GetPatientCardID generates a deterministic UUID from doctorID and patientID
-func GetPatientCardID(doctorID, patientID uuid.UUID) uuid.UUID {
-	hash := sha256.New()
-	hash.Write(doctorID[:])
-	hash.Write(patientID[:])
-	sum := hash.Sum(nil)
-
-	var uuidBytes [16]byte
-	copy(uuidBytes[:], sum[:16])
-
-	uuidBytes[6] = (uuidBytes[6] & 0x0f) | 0x40 // Version 4
-	uuidBytes[8] = (uuidBytes[8] & 0x3f) | 0x80 // Variant 10
-
-	return uuid.UUID(uuidBytes)
-}
-
 type CytologyImage struct{}
 
-func (CytologyImage) Domain(img domain.CytologyImage, doctorID, patientID uuid.UUID) api.CytologyImage {
+func (CytologyImage) Domain(img domain.CytologyImage) api.CytologyImage {
 	result := api.CytologyImage{
 		ID:               img.Id,
 		ExternalID:       img.ExternalID,
-		DoctorID:         doctorID,
-		PatientID:        patientID,
+		DoctorID:         img.DoctorID,
+		PatientID:        img.PatientID,
 		DiagnosticNumber: int(img.DiagnosticNumber),
 		DiagnosDate:      img.DiagnosDate,
 		IsLast:           img.IsLast,
@@ -78,20 +60,19 @@ func (CytologyImage) Domain(img domain.CytologyImage, doctorID, patientID uuid.U
 	return result
 }
 
-func (CytologyImage) SliceDomain(imgs []domain.CytologyImage, doctorID, patientID uuid.UUID) []api.CytologyImage {
+func (CytologyImage) SliceDomain(imgs []domain.CytologyImage) []api.CytologyImage {
 	result := make([]api.CytologyImage, 0, len(imgs))
 	for _, img := range imgs {
-		result = append(result, CytologyImage{}.Domain(img, doctorID, patientID))
+		result = append(result, CytologyImage{}.Domain(img))
 	}
 	return result
 }
 
 func (CytologyImage) CreateArg(req *api.CytologyPostReq) cytologySrv.CreateCytologyImageArg {
-	patientCardID := GetPatientCardID(req.DoctorID, req.PatientID)
-
 	arg := cytologySrv.CreateCytologyImageArg{
 		ExternalID:       req.ExternalID,
-		PatientCardID:    patientCardID,
+		DoctorID:         req.DoctorID,
+		PatientID:        req.PatientID,
 		DiagnosticNumber: int(req.DiagnosticNumber),
 	}
 

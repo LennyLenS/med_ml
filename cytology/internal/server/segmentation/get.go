@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "cytology/internal/generated/grpc/service"
+	"cytology/internal/server/mappers"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -21,9 +22,9 @@ func (h *handler) GetSegmentationById(ctx context.Context, in *pb.GetSegmentatio
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
 	}
 
-	// TODO: добавить маппинг
-	_ = seg
-	return &pb.GetSegmentationByIdOut{}, nil
+	return &pb.GetSegmentationByIdOut{
+		Segmentation: mappers.SegmentationToProto(seg),
+	}, nil
 }
 
 func (h *handler) GetSegmentsByGroupId(ctx context.Context, in *pb.GetSegmentsByGroupIdIn) (*pb.GetSegmentsByGroupIdOut, error) {
@@ -37,7 +38,7 @@ func (h *handler) GetSegmentsByGroupId(ctx context.Context, in *pb.GetSegmentsBy
 		return &pb.GetSegmentsByGroupIdOut{Segmentations: []*pb.Segmentation{}}, nil
 	}
 
-	// TODO: добавить маппинг
-	_ = segs
-	return &pb.GetSegmentsByGroupIdOut{Segmentations: []*pb.Segmentation{}}, nil
+	return &pb.GetSegmentsByGroupIdOut{
+		Segmentations: mappers.SegmentationSliceToProto(segs),
+	}, nil
 }

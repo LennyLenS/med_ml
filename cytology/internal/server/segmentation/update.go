@@ -5,6 +5,7 @@ import (
 
 	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/domain"
+	"cytology/internal/server/mappers"
 	"cytology/internal/services/segmentation"
 
 	"github.com/google/uuid"
@@ -36,7 +37,7 @@ func (h *handler) UpdateSegmentation(ctx context.Context, in *pb.UpdateSegmentat
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
 	}
 
-	// TODO: добавить маппинг
-	_ = seg
-	return &pb.UpdateSegmentationOut{}, nil
+	return &pb.UpdateSegmentationOut{
+		Segmentation: mappers.SegmentationToProto(seg),
+	}, nil
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	pb "cytology/internal/generated/grpc/service"
+	"cytology/internal/server/mappers"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -21,7 +22,7 @@ func (h *handler) GetSegmentationGroupsByCytologyId(ctx context.Context, in *pb.
 		return &pb.GetSegmentationGroupsByCytologyIdOut{SegmentationGroups: []*pb.SegmentationGroup{}}, nil
 	}
 
-	// TODO: добавить маппинг
-	_ = groups
-	return &pb.GetSegmentationGroupsByCytologyIdOut{SegmentationGroups: []*pb.SegmentationGroup{}}, nil
+	return &pb.GetSegmentationGroupsByCytologyIdOut{
+		SegmentationGroups: mappers.SegmentationGroupSliceToProto(groups),
+	}, nil
 }

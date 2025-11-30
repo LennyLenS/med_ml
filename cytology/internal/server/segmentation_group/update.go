@@ -5,6 +5,7 @@ import (
 
 	"cytology/internal/domain"
 	pb "cytology/internal/generated/grpc/service"
+	"cytology/internal/server/mappers"
 	"cytology/internal/services/segmentation_group"
 
 	"github.com/google/uuid"
@@ -40,7 +41,7 @@ func (h *handler) UpdateSegmentationGroup(ctx context.Context, in *pb.UpdateSegm
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
 	}
 
-	// TODO: добавить маппинг
-	_ = group
-	return &pb.UpdateSegmentationGroupOut{}, nil
+	return &pb.UpdateSegmentationGroupOut{
+		SegmentationGroup: mappers.SegmentationGroupToProto(group),
+	}, nil
 }

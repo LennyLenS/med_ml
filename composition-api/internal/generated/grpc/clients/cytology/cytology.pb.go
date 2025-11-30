@@ -276,19 +276,20 @@ type CytologyImage struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	Id                string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
 	ExternalId        string                 `protobuf:"bytes,200,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
-	PatientCardId     string                 `protobuf:"bytes,300,opt,name=patient_card_id,json=patientCardId,proto3" json:"patient_card_id,omitempty"`
-	DiagnosticNumber  int32                  `protobuf:"varint,400,opt,name=diagnostic_number,json=diagnosticNumber,proto3" json:"diagnostic_number,omitempty"`
-	DiagnosticMarking *DiagnosticMarking     `protobuf:"varint,500,opt,name=diagnostic_marking,json=diagnosticMarking,proto3,enum=DiagnosticMarking,oneof" json:"diagnostic_marking,omitempty"`
-	MaterialType      *MaterialType          `protobuf:"varint,600,opt,name=material_type,json=materialType,proto3,enum=MaterialType,oneof" json:"material_type,omitempty"`
-	DiagnosDate       string                 `protobuf:"bytes,700,opt,name=diagnos_date,json=diagnosDate,proto3" json:"diagnos_date,omitempty"`
-	IsLast            bool                   `protobuf:"varint,800,opt,name=is_last,json=isLast,proto3" json:"is_last,omitempty"`
-	Calcitonin        *int32                 `protobuf:"varint,900,opt,name=calcitonin,proto3,oneof" json:"calcitonin,omitempty"`
-	CalcitoninInFlush *int32                 `protobuf:"varint,1000,opt,name=calcitonin_in_flush,json=calcitoninInFlush,proto3,oneof" json:"calcitonin_in_flush,omitempty"`
-	Thyroglobulin     *int32                 `protobuf:"varint,1100,opt,name=thyroglobulin,proto3,oneof" json:"thyroglobulin,omitempty"`
-	Details           *string                `protobuf:"bytes,1200,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
-	PrevId            *string                `protobuf:"bytes,1300,opt,name=prev_id,json=prevId,proto3,oneof" json:"prev_id,omitempty"`
-	ParentPrevId      *string                `protobuf:"bytes,1400,opt,name=parent_prev_id,json=parentPrevId,proto3,oneof" json:"parent_prev_id,omitempty"`
-	CreateAt          string                 `protobuf:"bytes,1500,opt,name=create_at,json=createAt,proto3" json:"create_at,omitempty"`
+	DoctorId          string                 `protobuf:"bytes,300,opt,name=doctor_id,json=doctorId,proto3" json:"doctor_id,omitempty"`
+	PatientId         string                 `protobuf:"bytes,400,opt,name=patient_id,json=patientId,proto3" json:"patient_id,omitempty"`
+	DiagnosticNumber  int32                  `protobuf:"varint,500,opt,name=diagnostic_number,json=diagnosticNumber,proto3" json:"diagnostic_number,omitempty"`
+	DiagnosticMarking *DiagnosticMarking     `protobuf:"varint,600,opt,name=diagnostic_marking,json=diagnosticMarking,proto3,enum=DiagnosticMarking,oneof" json:"diagnostic_marking,omitempty"`
+	MaterialType      *MaterialType          `protobuf:"varint,700,opt,name=material_type,json=materialType,proto3,enum=MaterialType,oneof" json:"material_type,omitempty"`
+	DiagnosDate       string                 `protobuf:"bytes,800,opt,name=diagnos_date,json=diagnosDate,proto3" json:"diagnos_date,omitempty"`
+	IsLast            bool                   `protobuf:"varint,900,opt,name=is_last,json=isLast,proto3" json:"is_last,omitempty"`
+	Calcitonin        *int32                 `protobuf:"varint,1000,opt,name=calcitonin,proto3,oneof" json:"calcitonin,omitempty"`
+	CalcitoninInFlush *int32                 `protobuf:"varint,1100,opt,name=calcitonin_in_flush,json=calcitoninInFlush,proto3,oneof" json:"calcitonin_in_flush,omitempty"`
+	Thyroglobulin     *int32                 `protobuf:"varint,1200,opt,name=thyroglobulin,proto3,oneof" json:"thyroglobulin,omitempty"`
+	Details           *string                `protobuf:"bytes,1300,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
+	PrevId            *string                `protobuf:"bytes,1400,opt,name=prev_id,json=prevId,proto3,oneof" json:"prev_id,omitempty"`
+	ParentPrevId      *string                `protobuf:"bytes,1500,opt,name=parent_prev_id,json=parentPrevId,proto3,oneof" json:"parent_prev_id,omitempty"`
+	CreateAt          string                 `protobuf:"bytes,1600,opt,name=create_at,json=createAt,proto3" json:"create_at,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -337,9 +338,16 @@ func (x *CytologyImage) GetExternalId() string {
 	return ""
 }
 
-func (x *CytologyImage) GetPatientCardId() string {
+func (x *CytologyImage) GetDoctorId() string {
 	if x != nil {
-		return x.PatientCardId
+		return x.DoctorId
+	}
+	return ""
+}
+
+func (x *CytologyImage) GetPatientId() string {
+	if x != nil {
+		return x.PatientId
 	}
 	return ""
 }
@@ -431,16 +439,17 @@ func (x *CytologyImage) GetCreateAt() string {
 type CreateCytologyImageIn struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	ExternalId        string                 `protobuf:"bytes,100,opt,name=external_id,json=externalId,proto3" json:"external_id,omitempty"`
-	PatientCardId     string                 `protobuf:"bytes,200,opt,name=patient_card_id,json=patientCardId,proto3" json:"patient_card_id,omitempty"`
-	DiagnosticNumber  int32                  `protobuf:"varint,300,opt,name=diagnostic_number,json=diagnosticNumber,proto3" json:"diagnostic_number,omitempty"`
-	DiagnosticMarking *DiagnosticMarking     `protobuf:"varint,400,opt,name=diagnostic_marking,json=diagnosticMarking,proto3,enum=DiagnosticMarking,oneof" json:"diagnostic_marking,omitempty"`
-	MaterialType      *MaterialType          `protobuf:"varint,500,opt,name=material_type,json=materialType,proto3,enum=MaterialType,oneof" json:"material_type,omitempty"`
-	Calcitonin        *int32                 `protobuf:"varint,600,opt,name=calcitonin,proto3,oneof" json:"calcitonin,omitempty"`
-	CalcitoninInFlush *int32                 `protobuf:"varint,700,opt,name=calcitonin_in_flush,json=calcitoninInFlush,proto3,oneof" json:"calcitonin_in_flush,omitempty"`
-	Thyroglobulin     *int32                 `protobuf:"varint,800,opt,name=thyroglobulin,proto3,oneof" json:"thyroglobulin,omitempty"`
-	Details           *string                `protobuf:"bytes,900,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
-	PrevId            *string                `protobuf:"bytes,1000,opt,name=prev_id,json=prevId,proto3,oneof" json:"prev_id,omitempty"`
-	ParentPrevId      *string                `protobuf:"bytes,1100,opt,name=parent_prev_id,json=parentPrevId,proto3,oneof" json:"parent_prev_id,omitempty"`
+	DoctorId          string                 `protobuf:"bytes,200,opt,name=doctor_id,json=doctorId,proto3" json:"doctor_id,omitempty"`
+	PatientId         string                 `protobuf:"bytes,300,opt,name=patient_id,json=patientId,proto3" json:"patient_id,omitempty"`
+	DiagnosticNumber  int32                  `protobuf:"varint,400,opt,name=diagnostic_number,json=diagnosticNumber,proto3" json:"diagnostic_number,omitempty"`
+	DiagnosticMarking *DiagnosticMarking     `protobuf:"varint,500,opt,name=diagnostic_marking,json=diagnosticMarking,proto3,enum=DiagnosticMarking,oneof" json:"diagnostic_marking,omitempty"`
+	MaterialType      *MaterialType          `protobuf:"varint,600,opt,name=material_type,json=materialType,proto3,enum=MaterialType,oneof" json:"material_type,omitempty"`
+	Calcitonin        *int32                 `protobuf:"varint,700,opt,name=calcitonin,proto3,oneof" json:"calcitonin,omitempty"`
+	CalcitoninInFlush *int32                 `protobuf:"varint,800,opt,name=calcitonin_in_flush,json=calcitoninInFlush,proto3,oneof" json:"calcitonin_in_flush,omitempty"`
+	Thyroglobulin     *int32                 `protobuf:"varint,900,opt,name=thyroglobulin,proto3,oneof" json:"thyroglobulin,omitempty"`
+	Details           *string                `protobuf:"bytes,1000,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
+	PrevId            *string                `protobuf:"bytes,1100,opt,name=prev_id,json=prevId,proto3,oneof" json:"prev_id,omitempty"`
+	ParentPrevId      *string                `protobuf:"bytes,1200,opt,name=parent_prev_id,json=parentPrevId,proto3,oneof" json:"parent_prev_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -482,9 +491,16 @@ func (x *CreateCytologyImageIn) GetExternalId() string {
 	return ""
 }
 
-func (x *CreateCytologyImageIn) GetPatientCardId() string {
+func (x *CreateCytologyImageIn) GetDoctorId() string {
 	if x != nil {
-		return x.PatientCardId
+		return x.DoctorId
+	}
+	return ""
+}
+
+func (x *CreateCytologyImageIn) GetPatientId() string {
+	if x != nil {
+		return x.PatientId
 	}
 	return ""
 }
@@ -780,27 +796,28 @@ func (x *GetCytologyImagesByExternalIdOut) GetCytologyImages() []*CytologyImage 
 	return nil
 }
 
-type GetCytologyImagesByPatientCardIdIn struct {
+type GetCytologyImagesByDoctorIdAndPatientIdIn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PatientCardId string                 `protobuf:"bytes,100,opt,name=patient_card_id,json=patientCardId,proto3" json:"patient_card_id,omitempty"`
+	DoctorId      string                 `protobuf:"bytes,100,opt,name=doctor_id,json=doctorId,proto3" json:"doctor_id,omitempty"`
+	PatientId     string                 `protobuf:"bytes,200,opt,name=patient_id,json=patientId,proto3" json:"patient_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetCytologyImagesByPatientCardIdIn) Reset() {
-	*x = GetCytologyImagesByPatientCardIdIn{}
+func (x *GetCytologyImagesByDoctorIdAndPatientIdIn) Reset() {
+	*x = GetCytologyImagesByDoctorIdAndPatientIdIn{}
 	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCytologyImagesByPatientCardIdIn) String() string {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdIn) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCytologyImagesByPatientCardIdIn) ProtoMessage() {}
+func (*GetCytologyImagesByDoctorIdAndPatientIdIn) ProtoMessage() {}
 
-func (x *GetCytologyImagesByPatientCardIdIn) ProtoReflect() protoreflect.Message {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdIn) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -812,39 +829,46 @@ func (x *GetCytologyImagesByPatientCardIdIn) ProtoReflect() protoreflect.Message
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCytologyImagesByPatientCardIdIn.ProtoReflect.Descriptor instead.
-func (*GetCytologyImagesByPatientCardIdIn) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCytologyImagesByDoctorIdAndPatientIdIn.ProtoReflect.Descriptor instead.
+func (*GetCytologyImagesByDoctorIdAndPatientIdIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetCytologyImagesByPatientCardIdIn) GetPatientCardId() string {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdIn) GetDoctorId() string {
 	if x != nil {
-		return x.PatientCardId
+		return x.DoctorId
 	}
 	return ""
 }
 
-type GetCytologyImagesByPatientCardIdOut struct {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdIn) GetPatientId() string {
+	if x != nil {
+		return x.PatientId
+	}
+	return ""
+}
+
+type GetCytologyImagesByDoctorIdAndPatientIdOut struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	CytologyImages []*CytologyImage       `protobuf:"bytes,100,rep,name=cytology_images,json=cytologyImages,proto3" json:"cytology_images,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *GetCytologyImagesByPatientCardIdOut) Reset() {
-	*x = GetCytologyImagesByPatientCardIdOut{}
+func (x *GetCytologyImagesByDoctorIdAndPatientIdOut) Reset() {
+	*x = GetCytologyImagesByDoctorIdAndPatientIdOut{}
 	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCytologyImagesByPatientCardIdOut) String() string {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdOut) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCytologyImagesByPatientCardIdOut) ProtoMessage() {}
+func (*GetCytologyImagesByDoctorIdAndPatientIdOut) ProtoMessage() {}
 
-func (x *GetCytologyImagesByPatientCardIdOut) ProtoReflect() protoreflect.Message {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdOut) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -856,12 +880,12 @@ func (x *GetCytologyImagesByPatientCardIdOut) ProtoReflect() protoreflect.Messag
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCytologyImagesByPatientCardIdOut.ProtoReflect.Descriptor instead.
-func (*GetCytologyImagesByPatientCardIdOut) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCytologyImagesByDoctorIdAndPatientIdOut.ProtoReflect.Descriptor instead.
+func (*GetCytologyImagesByDoctorIdAndPatientIdOut) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetCytologyImagesByPatientCardIdOut) GetCytologyImages() []*CytologyImage {
+func (x *GetCytologyImagesByDoctorIdAndPatientIdOut) GetCytologyImages() []*CytologyImage {
 	if x != nil {
 		return x.CytologyImages
 	}
@@ -2608,28 +2632,30 @@ var File_proto_grpc_clients_cytology_proto protoreflect.FileDescriptor
 
 const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\n" +
-	"!proto/grpc/clients/cytology.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xf7\x05\n" +
+	"!proto/grpc/clients/cytology.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x8c\x06\n" +
 	"\rCytologyImage\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\x12 \n" +
 	"\vexternal_id\x18\xc8\x01 \x01(\tR\n" +
-	"externalId\x12'\n" +
-	"\x0fpatient_card_id\x18\xac\x02 \x01(\tR\rpatientCardId\x12,\n" +
-	"\x11diagnostic_number\x18\x90\x03 \x01(\x05R\x10diagnosticNumber\x12G\n" +
-	"\x12diagnostic_marking\x18\xf4\x03 \x01(\x0e2\x12.DiagnosticMarkingH\x00R\x11diagnosticMarking\x88\x01\x01\x128\n" +
-	"\rmaterial_type\x18\xd8\x04 \x01(\x0e2\r.MaterialTypeH\x01R\fmaterialType\x88\x01\x01\x12\"\n" +
-	"\fdiagnos_date\x18\xbc\x05 \x01(\tR\vdiagnosDate\x12\x18\n" +
-	"\ais_last\x18\xa0\x06 \x01(\bR\x06isLast\x12$\n" +
+	"externalId\x12\x1c\n" +
+	"\tdoctor_id\x18\xac\x02 \x01(\tR\bdoctorId\x12\x1e\n" +
 	"\n" +
-	"calcitonin\x18\x84\a \x01(\x05H\x02R\n" +
+	"patient_id\x18\x90\x03 \x01(\tR\tpatientId\x12,\n" +
+	"\x11diagnostic_number\x18\xf4\x03 \x01(\x05R\x10diagnosticNumber\x12G\n" +
+	"\x12diagnostic_marking\x18\xd8\x04 \x01(\x0e2\x12.DiagnosticMarkingH\x00R\x11diagnosticMarking\x88\x01\x01\x128\n" +
+	"\rmaterial_type\x18\xbc\x05 \x01(\x0e2\r.MaterialTypeH\x01R\fmaterialType\x88\x01\x01\x12\"\n" +
+	"\fdiagnos_date\x18\xa0\x06 \x01(\tR\vdiagnosDate\x12\x18\n" +
+	"\ais_last\x18\x84\a \x01(\bR\x06isLast\x12$\n" +
+	"\n" +
+	"calcitonin\x18\xe8\a \x01(\x05H\x02R\n" +
 	"calcitonin\x88\x01\x01\x124\n" +
-	"\x13calcitonin_in_flush\x18\xe8\a \x01(\x05H\x03R\x11calcitoninInFlush\x88\x01\x01\x12*\n" +
-	"\rthyroglobulin\x18\xcc\b \x01(\x05H\x04R\rthyroglobulin\x88\x01\x01\x12\x1e\n" +
-	"\adetails\x18\xb0\t \x01(\tH\x05R\adetails\x88\x01\x01\x12\x1d\n" +
-	"\aprev_id\x18\x94\n" +
+	"\x13calcitonin_in_flush\x18\xcc\b \x01(\x05H\x03R\x11calcitoninInFlush\x88\x01\x01\x12*\n" +
+	"\rthyroglobulin\x18\xb0\t \x01(\x05H\x04R\rthyroglobulin\x88\x01\x01\x12\x1e\n" +
+	"\adetails\x18\x94\n" +
+	" \x01(\tH\x05R\adetails\x88\x01\x01\x12\x1d\n" +
+	"\aprev_id\x18\xf8\n" +
 	" \x01(\tH\x06R\x06prevId\x88\x01\x01\x12*\n" +
-	"\x0eparent_prev_id\x18\xf8\n" +
-	" \x01(\tH\aR\fparentPrevId\x88\x01\x01\x12\x1c\n" +
-	"\tcreate_at\x18\xdc\v \x01(\tR\bcreateAtB\x15\n" +
+	"\x0eparent_prev_id\x18\xdc\v \x01(\tH\aR\fparentPrevId\x88\x01\x01\x12\x1c\n" +
+	"\tcreate_at\x18\xc0\f \x01(\tR\bcreateAtB\x15\n" +
 	"\x13_diagnostic_markingB\x10\n" +
 	"\x0e_material_typeB\r\n" +
 	"\v_calcitoninB\x16\n" +
@@ -2639,22 +2665,24 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\b_detailsB\n" +
 	"\n" +
 	"\b_prev_idB\x11\n" +
-	"\x0f_parent_prev_id\"\x92\x05\n" +
+	"\x0f_parent_prev_id\"\xa7\x05\n" +
 	"\x15CreateCytologyImageIn\x12\x1f\n" +
 	"\vexternal_id\x18d \x01(\tR\n" +
-	"externalId\x12'\n" +
-	"\x0fpatient_card_id\x18\xc8\x01 \x01(\tR\rpatientCardId\x12,\n" +
-	"\x11diagnostic_number\x18\xac\x02 \x01(\x05R\x10diagnosticNumber\x12G\n" +
-	"\x12diagnostic_marking\x18\x90\x03 \x01(\x0e2\x12.DiagnosticMarkingH\x00R\x11diagnosticMarking\x88\x01\x01\x128\n" +
-	"\rmaterial_type\x18\xf4\x03 \x01(\x0e2\r.MaterialTypeH\x01R\fmaterialType\x88\x01\x01\x12$\n" +
+	"externalId\x12\x1c\n" +
+	"\tdoctor_id\x18\xc8\x01 \x01(\tR\bdoctorId\x12\x1e\n" +
 	"\n" +
-	"calcitonin\x18\xd8\x04 \x01(\x05H\x02R\n" +
+	"patient_id\x18\xac\x02 \x01(\tR\tpatientId\x12,\n" +
+	"\x11diagnostic_number\x18\x90\x03 \x01(\x05R\x10diagnosticNumber\x12G\n" +
+	"\x12diagnostic_marking\x18\xf4\x03 \x01(\x0e2\x12.DiagnosticMarkingH\x00R\x11diagnosticMarking\x88\x01\x01\x128\n" +
+	"\rmaterial_type\x18\xd8\x04 \x01(\x0e2\r.MaterialTypeH\x01R\fmaterialType\x88\x01\x01\x12$\n" +
+	"\n" +
+	"calcitonin\x18\xbc\x05 \x01(\x05H\x02R\n" +
 	"calcitonin\x88\x01\x01\x124\n" +
-	"\x13calcitonin_in_flush\x18\xbc\x05 \x01(\x05H\x03R\x11calcitoninInFlush\x88\x01\x01\x12*\n" +
-	"\rthyroglobulin\x18\xa0\x06 \x01(\x05H\x04R\rthyroglobulin\x88\x01\x01\x12\x1e\n" +
-	"\adetails\x18\x84\a \x01(\tH\x05R\adetails\x88\x01\x01\x12\x1d\n" +
-	"\aprev_id\x18\xe8\a \x01(\tH\x06R\x06prevId\x88\x01\x01\x12*\n" +
-	"\x0eparent_prev_id\x18\xcc\b \x01(\tH\aR\fparentPrevId\x88\x01\x01B\x15\n" +
+	"\x13calcitonin_in_flush\x18\xa0\x06 \x01(\x05H\x03R\x11calcitoninInFlush\x88\x01\x01\x12*\n" +
+	"\rthyroglobulin\x18\x84\a \x01(\x05H\x04R\rthyroglobulin\x88\x01\x01\x12\x1e\n" +
+	"\adetails\x18\xe8\a \x01(\tH\x05R\adetails\x88\x01\x01\x12\x1d\n" +
+	"\aprev_id\x18\xcc\b \x01(\tH\x06R\x06prevId\x88\x01\x01\x12*\n" +
+	"\x0eparent_prev_id\x18\xb0\t \x01(\tH\aR\fparentPrevId\x88\x01\x01B\x15\n" +
 	"\x13_diagnostic_markingB\x10\n" +
 	"\x0e_material_typeB\r\n" +
 	"\v_calcitoninB\x16\n" +
@@ -2677,10 +2705,12 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\vexternal_id\x18d \x01(\tR\n" +
 	"externalId\"[\n" +
 	" GetCytologyImagesByExternalIdOut\x127\n" +
-	"\x0fcytology_images\x18d \x03(\v2\x0e.CytologyImageR\x0ecytologyImages\"L\n" +
-	"\"GetCytologyImagesByPatientCardIdIn\x12&\n" +
-	"\x0fpatient_card_id\x18d \x01(\tR\rpatientCardId\"^\n" +
-	"#GetCytologyImagesByPatientCardIdOut\x127\n" +
+	"\x0fcytology_images\x18d \x03(\v2\x0e.CytologyImageR\x0ecytologyImages\"h\n" +
+	")GetCytologyImagesByDoctorIdAndPatientIdIn\x12\x1b\n" +
+	"\tdoctor_id\x18d \x01(\tR\bdoctorId\x12\x1e\n" +
+	"\n" +
+	"patient_id\x18\xc8\x01 \x01(\tR\tpatientId\"e\n" +
+	"*GetCytologyImagesByDoctorIdAndPatientIdOut\x127\n" +
 	"\x0fcytology_images\x18d \x03(\v2\x0e.CytologyImageR\x0ecytologyImages\"\xeb\x03\n" +
 	"\x15UpdateCytologyImageIn\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\x12G\n" +
@@ -2866,12 +2896,12 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x16GROUP_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rGROUP_TYPE_CE\x10\x01\x12\x11\n" +
 	"\rGROUP_TYPE_CL\x10\x02\x12\x11\n" +
-	"\rGROUP_TYPE_ME\x10\x032\x90\f\n" +
+	"\rGROUP_TYPE_ME\x10\x032\xa6\f\n" +
 	"\vCytologySrv\x12F\n" +
 	"\x13createCytologyImage\x12\x16.CreateCytologyImageIn\x1a\x17.CreateCytologyImageOut\x12I\n" +
 	"\x14getCytologyImageById\x12\x17.GetCytologyImageByIdIn\x1a\x18.GetCytologyImageByIdOut\x12d\n" +
-	"\x1dgetCytologyImagesByExternalId\x12 .GetCytologyImagesByExternalIdIn\x1a!.GetCytologyImagesByExternalIdOut\x12m\n" +
-	" getCytologyImagesByPatientCardId\x12#.GetCytologyImagesByPatientCardIdIn\x1a$.GetCytologyImagesByPatientCardIdOut\x12F\n" +
+	"\x1dgetCytologyImagesByExternalId\x12 .GetCytologyImagesByExternalIdIn\x1a!.GetCytologyImagesByExternalIdOut\x12\x82\x01\n" +
+	"'getCytologyImagesByDoctorIdAndPatientId\x12*.GetCytologyImagesByDoctorIdAndPatientIdIn\x1a+.GetCytologyImagesByDoctorIdAndPatientIdOut\x12F\n" +
 	"\x13updateCytologyImage\x12\x16.UpdateCytologyImageIn\x1a\x17.UpdateCytologyImageOut\x12E\n" +
 	"\x13deleteCytologyImage\x12\x16.DeleteCytologyImageIn\x1a\x16.google.protobuf.Empty\x12F\n" +
 	"\x13createOriginalImage\x12\x16.CreateOriginalImageIn\x1a\x17.CreateOriginalImageOut\x12I\n" +
@@ -2903,52 +2933,52 @@ func file_proto_grpc_clients_cytology_proto_rawDescGZIP() []byte {
 var file_proto_grpc_clients_cytology_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_proto_grpc_clients_cytology_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
 var file_proto_grpc_clients_cytology_proto_goTypes = []any{
-	(DiagnosticMarking)(0),                       // 0: DiagnosticMarking
-	(MaterialType)(0),                            // 1: MaterialType
-	(SegType)(0),                                 // 2: SegType
-	(GroupType)(0),                               // 3: GroupType
-	(*CytologyImage)(nil),                        // 4: CytologyImage
-	(*CreateCytologyImageIn)(nil),                // 5: CreateCytologyImageIn
-	(*CreateCytologyImageOut)(nil),               // 6: CreateCytologyImageOut
-	(*GetCytologyImageByIdIn)(nil),               // 7: GetCytologyImageByIdIn
-	(*GetCytologyImageByIdOut)(nil),              // 8: GetCytologyImageByIdOut
-	(*GetCytologyImagesByExternalIdIn)(nil),      // 9: GetCytologyImagesByExternalIdIn
-	(*GetCytologyImagesByExternalIdOut)(nil),     // 10: GetCytologyImagesByExternalIdOut
-	(*GetCytologyImagesByPatientCardIdIn)(nil),   // 11: GetCytologyImagesByPatientCardIdIn
-	(*GetCytologyImagesByPatientCardIdOut)(nil),  // 12: GetCytologyImagesByPatientCardIdOut
-	(*UpdateCytologyImageIn)(nil),                // 13: UpdateCytologyImageIn
-	(*UpdateCytologyImageOut)(nil),               // 14: UpdateCytologyImageOut
-	(*DeleteCytologyImageIn)(nil),                // 15: DeleteCytologyImageIn
-	(*OriginalImage)(nil),                        // 16: OriginalImage
-	(*CreateOriginalImageIn)(nil),                // 17: CreateOriginalImageIn
-	(*CreateOriginalImageOut)(nil),               // 18: CreateOriginalImageOut
-	(*GetOriginalImageByIdIn)(nil),               // 19: GetOriginalImageByIdIn
-	(*GetOriginalImageByIdOut)(nil),              // 20: GetOriginalImageByIdOut
-	(*GetOriginalImagesByCytologyIdIn)(nil),      // 21: GetOriginalImagesByCytologyIdIn
-	(*GetOriginalImagesByCytologyIdOut)(nil),     // 22: GetOriginalImagesByCytologyIdOut
-	(*UpdateOriginalImageIn)(nil),                // 23: UpdateOriginalImageIn
-	(*UpdateOriginalImageOut)(nil),               // 24: UpdateOriginalImageOut
-	(*SegmentationGroup)(nil),                    // 25: SegmentationGroup
-	(*CreateSegmentationGroupIn)(nil),            // 26: CreateSegmentationGroupIn
-	(*CreateSegmentationGroupOut)(nil),           // 27: CreateSegmentationGroupOut
-	(*GetSegmentationGroupsByCytologyIdIn)(nil),  // 28: GetSegmentationGroupsByCytologyIdIn
-	(*GetSegmentationGroupsByCytologyIdOut)(nil), // 29: GetSegmentationGroupsByCytologyIdOut
-	(*UpdateSegmentationGroupIn)(nil),            // 30: UpdateSegmentationGroupIn
-	(*UpdateSegmentationGroupOut)(nil),           // 31: UpdateSegmentationGroupOut
-	(*DeleteSegmentationGroupIn)(nil),            // 32: DeleteSegmentationGroupIn
-	(*SegmentationPoint)(nil),                    // 33: SegmentationPoint
-	(*Segmentation)(nil),                         // 34: Segmentation
-	(*CreateSegmentationIn)(nil),                 // 35: CreateSegmentationIn
-	(*SegmentationPointCreate)(nil),              // 36: SegmentationPointCreate
-	(*CreateSegmentationOut)(nil),                // 37: CreateSegmentationOut
-	(*GetSegmentationByIdIn)(nil),                // 38: GetSegmentationByIdIn
-	(*GetSegmentationByIdOut)(nil),               // 39: GetSegmentationByIdOut
-	(*GetSegmentsByGroupIdIn)(nil),               // 40: GetSegmentsByGroupIdIn
-	(*GetSegmentsByGroupIdOut)(nil),              // 41: GetSegmentsByGroupIdOut
-	(*UpdateSegmentationIn)(nil),                 // 42: UpdateSegmentationIn
-	(*UpdateSegmentationOut)(nil),                // 43: UpdateSegmentationOut
-	(*DeleteSegmentationIn)(nil),                 // 44: DeleteSegmentationIn
-	(*emptypb.Empty)(nil),                        // 45: google.protobuf.Empty
+	(DiagnosticMarking)(0),                             // 0: DiagnosticMarking
+	(MaterialType)(0),                                  // 1: MaterialType
+	(SegType)(0),                                       // 2: SegType
+	(GroupType)(0),                                     // 3: GroupType
+	(*CytologyImage)(nil),                              // 4: CytologyImage
+	(*CreateCytologyImageIn)(nil),                      // 5: CreateCytologyImageIn
+	(*CreateCytologyImageOut)(nil),                     // 6: CreateCytologyImageOut
+	(*GetCytologyImageByIdIn)(nil),                     // 7: GetCytologyImageByIdIn
+	(*GetCytologyImageByIdOut)(nil),                    // 8: GetCytologyImageByIdOut
+	(*GetCytologyImagesByExternalIdIn)(nil),            // 9: GetCytologyImagesByExternalIdIn
+	(*GetCytologyImagesByExternalIdOut)(nil),           // 10: GetCytologyImagesByExternalIdOut
+	(*GetCytologyImagesByDoctorIdAndPatientIdIn)(nil),  // 11: GetCytologyImagesByDoctorIdAndPatientIdIn
+	(*GetCytologyImagesByDoctorIdAndPatientIdOut)(nil), // 12: GetCytologyImagesByDoctorIdAndPatientIdOut
+	(*UpdateCytologyImageIn)(nil),                      // 13: UpdateCytologyImageIn
+	(*UpdateCytologyImageOut)(nil),                     // 14: UpdateCytologyImageOut
+	(*DeleteCytologyImageIn)(nil),                      // 15: DeleteCytologyImageIn
+	(*OriginalImage)(nil),                              // 16: OriginalImage
+	(*CreateOriginalImageIn)(nil),                      // 17: CreateOriginalImageIn
+	(*CreateOriginalImageOut)(nil),                     // 18: CreateOriginalImageOut
+	(*GetOriginalImageByIdIn)(nil),                     // 19: GetOriginalImageByIdIn
+	(*GetOriginalImageByIdOut)(nil),                    // 20: GetOriginalImageByIdOut
+	(*GetOriginalImagesByCytologyIdIn)(nil),            // 21: GetOriginalImagesByCytologyIdIn
+	(*GetOriginalImagesByCytologyIdOut)(nil),           // 22: GetOriginalImagesByCytologyIdOut
+	(*UpdateOriginalImageIn)(nil),                      // 23: UpdateOriginalImageIn
+	(*UpdateOriginalImageOut)(nil),                     // 24: UpdateOriginalImageOut
+	(*SegmentationGroup)(nil),                          // 25: SegmentationGroup
+	(*CreateSegmentationGroupIn)(nil),                  // 26: CreateSegmentationGroupIn
+	(*CreateSegmentationGroupOut)(nil),                 // 27: CreateSegmentationGroupOut
+	(*GetSegmentationGroupsByCytologyIdIn)(nil),        // 28: GetSegmentationGroupsByCytologyIdIn
+	(*GetSegmentationGroupsByCytologyIdOut)(nil),       // 29: GetSegmentationGroupsByCytologyIdOut
+	(*UpdateSegmentationGroupIn)(nil),                  // 30: UpdateSegmentationGroupIn
+	(*UpdateSegmentationGroupOut)(nil),                 // 31: UpdateSegmentationGroupOut
+	(*DeleteSegmentationGroupIn)(nil),                  // 32: DeleteSegmentationGroupIn
+	(*SegmentationPoint)(nil),                          // 33: SegmentationPoint
+	(*Segmentation)(nil),                               // 34: Segmentation
+	(*CreateSegmentationIn)(nil),                       // 35: CreateSegmentationIn
+	(*SegmentationPointCreate)(nil),                    // 36: SegmentationPointCreate
+	(*CreateSegmentationOut)(nil),                      // 37: CreateSegmentationOut
+	(*GetSegmentationByIdIn)(nil),                      // 38: GetSegmentationByIdIn
+	(*GetSegmentationByIdOut)(nil),                     // 39: GetSegmentationByIdOut
+	(*GetSegmentsByGroupIdIn)(nil),                     // 40: GetSegmentsByGroupIdIn
+	(*GetSegmentsByGroupIdOut)(nil),                    // 41: GetSegmentsByGroupIdOut
+	(*UpdateSegmentationIn)(nil),                       // 42: UpdateSegmentationIn
+	(*UpdateSegmentationOut)(nil),                      // 43: UpdateSegmentationOut
+	(*DeleteSegmentationIn)(nil),                       // 44: DeleteSegmentationIn
+	(*emptypb.Empty)(nil),                              // 45: google.protobuf.Empty
 }
 var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	0,  // 0: CytologyImage.diagnostic_marking:type_name -> DiagnosticMarking
@@ -2958,7 +2988,7 @@ var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	4,  // 4: GetCytologyImageByIdOut.cytology_image:type_name -> CytologyImage
 	16, // 5: GetCytologyImageByIdOut.original_image:type_name -> OriginalImage
 	4,  // 6: GetCytologyImagesByExternalIdOut.cytology_images:type_name -> CytologyImage
-	4,  // 7: GetCytologyImagesByPatientCardIdOut.cytology_images:type_name -> CytologyImage
+	4,  // 7: GetCytologyImagesByDoctorIdAndPatientIdOut.cytology_images:type_name -> CytologyImage
 	0,  // 8: UpdateCytologyImageIn.diagnostic_marking:type_name -> DiagnosticMarking
 	1,  // 9: UpdateCytologyImageIn.material_type:type_name -> MaterialType
 	4,  // 10: UpdateCytologyImageOut.cytology_image:type_name -> CytologyImage
@@ -2983,7 +3013,7 @@ var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	5,  // 29: CytologySrv.createCytologyImage:input_type -> CreateCytologyImageIn
 	7,  // 30: CytologySrv.getCytologyImageById:input_type -> GetCytologyImageByIdIn
 	9,  // 31: CytologySrv.getCytologyImagesByExternalId:input_type -> GetCytologyImagesByExternalIdIn
-	11, // 32: CytologySrv.getCytologyImagesByPatientCardId:input_type -> GetCytologyImagesByPatientCardIdIn
+	11, // 32: CytologySrv.getCytologyImagesByDoctorIdAndPatientId:input_type -> GetCytologyImagesByDoctorIdAndPatientIdIn
 	13, // 33: CytologySrv.updateCytologyImage:input_type -> UpdateCytologyImageIn
 	15, // 34: CytologySrv.deleteCytologyImage:input_type -> DeleteCytologyImageIn
 	17, // 35: CytologySrv.createOriginalImage:input_type -> CreateOriginalImageIn
@@ -3002,7 +3032,7 @@ var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	6,  // 48: CytologySrv.createCytologyImage:output_type -> CreateCytologyImageOut
 	8,  // 49: CytologySrv.getCytologyImageById:output_type -> GetCytologyImageByIdOut
 	10, // 50: CytologySrv.getCytologyImagesByExternalId:output_type -> GetCytologyImagesByExternalIdOut
-	12, // 51: CytologySrv.getCytologyImagesByPatientCardId:output_type -> GetCytologyImagesByPatientCardIdOut
+	12, // 51: CytologySrv.getCytologyImagesByDoctorIdAndPatientId:output_type -> GetCytologyImagesByDoctorIdAndPatientIdOut
 	14, // 52: CytologySrv.updateCytologyImage:output_type -> UpdateCytologyImageOut
 	45, // 53: CytologySrv.deleteCytologyImage:output_type -> google.protobuf.Empty
 	18, // 54: CytologySrv.createOriginalImage:output_type -> CreateOriginalImageOut

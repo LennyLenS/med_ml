@@ -38,10 +38,6 @@ func (h *handler) CytologyIDPatch(ctx context.Context, req *api.CytologyIDPatchR
 		}
 	}
 
-	// TODO: Get doctor_id and patient_id from patient_card_id
-	// For now, we'll use zero UUIDs as placeholders
-	var doctorID, patientID = img.Id, img.Id // Placeholder
-
-	result := mappers.CytologyImage{}.Domain(img, doctorID, patientID)
+	result := mappers.CytologyImage{}.Domain(img)
 	return pointer.To(result), nil
 }
