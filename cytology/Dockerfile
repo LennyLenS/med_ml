@@ -14,4 +14,4 @@ RUN go build -o bin/service cmd/service/main.go
 
 EXPOSE 50055
 
-CMD ["sh", "-c", "goose -dir /service/db/migrations postgres \"$GOOSE_DBSTRING\" up && ./bin/service"]
+CMD ["sh", "-c", "goose -dir /service/db/migrations up && ./bin/service"]
