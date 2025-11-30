@@ -7,7 +7,6 @@ import (
 
 	"cytology/internal/domain"
 
-	"github.com/WantBeASleep/med_ml_lib/gtc"
 	"github.com/google/uuid"
 )
 
@@ -40,6 +39,31 @@ func (CytologyImage) FromDomain(d domain.CytologyImage) CytologyImage {
 		materialType = sql.NullString{String: d.MaterialType.String(), Valid: true}
 	}
 
+	var calcitonin sql.NullInt32
+	if d.Calcitonin != nil {
+		calcitonin = sql.NullInt32{Int32: int32(*d.Calcitonin), Valid: true}
+	}
+
+	var calcitoninInFlush sql.NullInt32
+	if d.CalcitoninInFlush != nil {
+		calcitoninInFlush = sql.NullInt32{Int32: int32(*d.CalcitoninInFlush), Valid: true}
+	}
+
+	var thyroglobulin sql.NullInt32
+	if d.Thyroglobulin != nil {
+		thyroglobulin = sql.NullInt32{Int32: int32(*d.Thyroglobulin), Valid: true}
+	}
+
+	var prevID uuid.NullUUID
+	if d.PrevID != nil {
+		prevID = uuid.NullUUID{UUID: *d.PrevID, Valid: true}
+	}
+
+	var parentPrevID uuid.NullUUID
+	if d.ParentPrevID != nil {
+		parentPrevID = uuid.NullUUID{UUID: *d.ParentPrevID, Valid: true}
+	}
+
 	return CytologyImage{
 		Id:                d.Id,
 		ExternalID:        d.ExternalID,
@@ -49,12 +73,12 @@ func (CytologyImage) FromDomain(d domain.CytologyImage) CytologyImage {
 		MaterialType:      materialType,
 		DiagnosDate:       d.DiagnosDate,
 		IsLast:            d.IsLast,
-		Calcitonin:        gtc.Int.PointerToSql(d.Calcitonin),
-		CalcitoninInFlush: gtc.Int.PointerToSql(d.CalcitoninInFlush),
-		Thyroglobulin:     gtc.Int.PointerToSql(d.Thyroglobulin),
+		Calcitonin:        calcitonin,
+		CalcitoninInFlush: calcitoninInFlush,
+		Thyroglobulin:     thyroglobulin,
 		Details:           d.Details,
-		PrevID:            gtc.Uuid.PointerToNullUUID(d.PrevID),
-		ParentPrevID:      gtc.Uuid.PointerToNullUUID(d.ParentPrevID),
+		PrevID:            prevID,
+		ParentPrevID:      parentPrevID,
 		CreateAt:          d.CreateAt,
 	}
 }
@@ -72,6 +96,34 @@ func (d CytologyImage) ToDomain() domain.CytologyImage {
 		materialType = &mt
 	}
 
+	var calcitonin *int
+	if d.Calcitonin.Valid {
+		val := int(d.Calcitonin.Int32)
+		calcitonin = &val
+	}
+
+	var calcitoninInFlush *int
+	if d.CalcitoninInFlush.Valid {
+		val := int(d.CalcitoninInFlush.Int32)
+		calcitoninInFlush = &val
+	}
+
+	var thyroglobulin *int
+	if d.Thyroglobulin.Valid {
+		val := int(d.Thyroglobulin.Int32)
+		thyroglobulin = &val
+	}
+
+	var prevID *uuid.UUID
+	if d.PrevID.Valid {
+		prevID = &d.PrevID.UUID
+	}
+
+	var parentPrevID *uuid.UUID
+	if d.ParentPrevID.Valid {
+		parentPrevID = &d.ParentPrevID.UUID
+	}
+
 	return domain.CytologyImage{
 		Id:                d.Id,
 		ExternalID:        d.ExternalID,
@@ -81,12 +133,12 @@ func (d CytologyImage) ToDomain() domain.CytologyImage {
 		MaterialType:      materialType,
 		DiagnosDate:       d.DiagnosDate,
 		IsLast:            d.IsLast,
-		Calcitonin:        gtc.Int.SqlToPointer(d.Calcitonin),
-		CalcitoninInFlush: gtc.Int.SqlToPointer(d.CalcitoninInFlush),
-		Thyroglobulin:     gtc.Int.SqlToPointer(d.Thyroglobulin),
+		Calcitonin:        calcitonin,
+		CalcitoninInFlush: calcitoninInFlush,
+		Thyroglobulin:     thyroglobulin,
 		Details:           d.Details,
-		PrevID:            gtc.Uuid.NullUUIDToPointer(d.PrevID),
-		ParentPrevID:      gtc.Uuid.NullUUIDToPointer(d.ParentPrevID),
+		PrevID:            prevID,
+		ParentPrevID:      parentPrevID,
 		CreateAt:          d.CreateAt,
 	}
 }
