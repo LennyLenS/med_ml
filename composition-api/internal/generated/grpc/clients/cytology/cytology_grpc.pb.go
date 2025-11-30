@@ -20,25 +20,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CytologySrv_CreateCytologyImage_FullMethodName                     = "/CytologySrv/createCytologyImage"
-	CytologySrv_GetCytologyImageById_FullMethodName                    = "/CytologySrv/getCytologyImageById"
-	CytologySrv_GetCytologyImagesByExternalId_FullMethodName           = "/CytologySrv/getCytologyImagesByExternalId"
-	CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName = "/CytologySrv/getCytologyImagesByDoctorIdAndPatientId"
-	CytologySrv_UpdateCytologyImage_FullMethodName                     = "/CytologySrv/updateCytologyImage"
-	CytologySrv_DeleteCytologyImage_FullMethodName                     = "/CytologySrv/deleteCytologyImage"
-	CytologySrv_CreateOriginalImage_FullMethodName                     = "/CytologySrv/createOriginalImage"
-	CytologySrv_GetOriginalImageById_FullMethodName                    = "/CytologySrv/getOriginalImageById"
-	CytologySrv_GetOriginalImagesByCytologyId_FullMethodName           = "/CytologySrv/getOriginalImagesByCytologyId"
-	CytologySrv_UpdateOriginalImage_FullMethodName                     = "/CytologySrv/updateOriginalImage"
-	CytologySrv_CreateSegmentationGroup_FullMethodName                 = "/CytologySrv/createSegmentationGroup"
-	CytologySrv_GetSegmentationGroupsByCytologyId_FullMethodName       = "/CytologySrv/getSegmentationGroupsByCytologyId"
-	CytologySrv_UpdateSegmentationGroup_FullMethodName                 = "/CytologySrv/updateSegmentationGroup"
-	CytologySrv_DeleteSegmentationGroup_FullMethodName                 = "/CytologySrv/deleteSegmentationGroup"
-	CytologySrv_CreateSegmentation_FullMethodName                      = "/CytologySrv/createSegmentation"
-	CytologySrv_GetSegmentationById_FullMethodName                     = "/CytologySrv/getSegmentationById"
-	CytologySrv_GetSegmentsByGroupId_FullMethodName                    = "/CytologySrv/getSegmentsByGroupId"
-	CytologySrv_UpdateSegmentation_FullMethodName                      = "/CytologySrv/updateSegmentation"
-	CytologySrv_DeleteSegmentation_FullMethodName                      = "/CytologySrv/deleteSegmentation"
+	CytologySrv_CreateCytologyImage_FullMethodName                     = "/CytologySrv/CreateCytologyImage"
+	CytologySrv_GetCytologyImageById_FullMethodName                    = "/CytologySrv/GetCytologyImageById"
+	CytologySrv_GetCytologyImagesByExternalId_FullMethodName           = "/CytologySrv/GetCytologyImagesByExternalId"
+	CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName = "/CytologySrv/GetCytologyImagesByDoctorIdAndPatientId"
+	CytologySrv_UpdateCytologyImage_FullMethodName                     = "/CytologySrv/UpdateCytologyImage"
+	CytologySrv_DeleteCytologyImage_FullMethodName                     = "/CytologySrv/DeleteCytologyImage"
+	CytologySrv_CreateOriginalImage_FullMethodName                     = "/CytologySrv/CreateOriginalImage"
+	CytologySrv_GetOriginalImageById_FullMethodName                    = "/CytologySrv/GetOriginalImageById"
+	CytologySrv_GetOriginalImagesByCytologyId_FullMethodName           = "/CytologySrv/GetOriginalImagesByCytologyId"
+	CytologySrv_UpdateOriginalImage_FullMethodName                     = "/CytologySrv/UpdateOriginalImage"
+	CytologySrv_CreateSegmentationGroup_FullMethodName                 = "/CytologySrv/CreateSegmentationGroup"
+	CytologySrv_GetSegmentationGroupsByCytologyId_FullMethodName       = "/CytologySrv/GetSegmentationGroupsByCytologyId"
+	CytologySrv_UpdateSegmentationGroup_FullMethodName                 = "/CytologySrv/UpdateSegmentationGroup"
+	CytologySrv_DeleteSegmentationGroup_FullMethodName                 = "/CytologySrv/DeleteSegmentationGroup"
+	CytologySrv_CreateSegmentation_FullMethodName                      = "/CytologySrv/CreateSegmentation"
+	CytologySrv_GetSegmentationById_FullMethodName                     = "/CytologySrv/GetSegmentationById"
+	CytologySrv_GetSegmentsByGroupId_FullMethodName                    = "/CytologySrv/GetSegmentsByGroupId"
+	CytologySrv_UpdateSegmentation_FullMethodName                      = "/CytologySrv/UpdateSegmentation"
+	CytologySrv_DeleteSegmentation_FullMethodName                      = "/CytologySrv/DeleteSegmentation"
 )
 
 // CytologySrvClient is the client API for CytologySrv service.
@@ -733,79 +733,79 @@ var CytologySrv_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*CytologySrvServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "createCytologyImage",
+			MethodName: "CreateCytologyImage",
 			Handler:    _CytologySrv_CreateCytologyImage_Handler,
 		},
 		{
-			MethodName: "getCytologyImageById",
+			MethodName: "GetCytologyImageById",
 			Handler:    _CytologySrv_GetCytologyImageById_Handler,
 		},
 		{
-			MethodName: "getCytologyImagesByExternalId",
+			MethodName: "GetCytologyImagesByExternalId",
 			Handler:    _CytologySrv_GetCytologyImagesByExternalId_Handler,
 		},
 		{
-			MethodName: "getCytologyImagesByDoctorIdAndPatientId",
+			MethodName: "GetCytologyImagesByDoctorIdAndPatientId",
 			Handler:    _CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_Handler,
 		},
 		{
-			MethodName: "updateCytologyImage",
+			MethodName: "UpdateCytologyImage",
 			Handler:    _CytologySrv_UpdateCytologyImage_Handler,
 		},
 		{
-			MethodName: "deleteCytologyImage",
+			MethodName: "DeleteCytologyImage",
 			Handler:    _CytologySrv_DeleteCytologyImage_Handler,
 		},
 		{
-			MethodName: "createOriginalImage",
+			MethodName: "CreateOriginalImage",
 			Handler:    _CytologySrv_CreateOriginalImage_Handler,
 		},
 		{
-			MethodName: "getOriginalImageById",
+			MethodName: "GetOriginalImageById",
 			Handler:    _CytologySrv_GetOriginalImageById_Handler,
 		},
 		{
-			MethodName: "getOriginalImagesByCytologyId",
+			MethodName: "GetOriginalImagesByCytologyId",
 			Handler:    _CytologySrv_GetOriginalImagesByCytologyId_Handler,
 		},
 		{
-			MethodName: "updateOriginalImage",
+			MethodName: "UpdateOriginalImage",
 			Handler:    _CytologySrv_UpdateOriginalImage_Handler,
 		},
 		{
-			MethodName: "createSegmentationGroup",
+			MethodName: "CreateSegmentationGroup",
 			Handler:    _CytologySrv_CreateSegmentationGroup_Handler,
 		},
 		{
-			MethodName: "getSegmentationGroupsByCytologyId",
+			MethodName: "GetSegmentationGroupsByCytologyId",
 			Handler:    _CytologySrv_GetSegmentationGroupsByCytologyId_Handler,
 		},
 		{
-			MethodName: "updateSegmentationGroup",
+			MethodName: "UpdateSegmentationGroup",
 			Handler:    _CytologySrv_UpdateSegmentationGroup_Handler,
 		},
 		{
-			MethodName: "deleteSegmentationGroup",
+			MethodName: "DeleteSegmentationGroup",
 			Handler:    _CytologySrv_DeleteSegmentationGroup_Handler,
 		},
 		{
-			MethodName: "createSegmentation",
+			MethodName: "CreateSegmentation",
 			Handler:    _CytologySrv_CreateSegmentation_Handler,
 		},
 		{
-			MethodName: "getSegmentationById",
+			MethodName: "GetSegmentationById",
 			Handler:    _CytologySrv_GetSegmentationById_Handler,
 		},
 		{
-			MethodName: "getSegmentsByGroupId",
+			MethodName: "GetSegmentsByGroupId",
 			Handler:    _CytologySrv_GetSegmentsByGroupId_Handler,
 		},
 		{
-			MethodName: "updateSegmentation",
+			MethodName: "UpdateSegmentation",
 			Handler:    _CytologySrv_UpdateSegmentation_Handler,
 		},
 		{
-			MethodName: "deleteSegmentation",
+			MethodName: "DeleteSegmentation",
 			Handler:    _CytologySrv_DeleteSegmentation_Handler,
 		},
 	},

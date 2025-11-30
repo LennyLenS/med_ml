@@ -2906,25 +2906,25 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\rGROUP_TYPE_CL\x10\x02\x12\x11\n" +
 	"\rGROUP_TYPE_ME\x10\x032\xa6\f\n" +
 	"\vCytologySrv\x12F\n" +
-	"\x13createCytologyImage\x12\x16.CreateCytologyImageIn\x1a\x17.CreateCytologyImageOut\x12I\n" +
-	"\x14getCytologyImageById\x12\x17.GetCytologyImageByIdIn\x1a\x18.GetCytologyImageByIdOut\x12d\n" +
-	"\x1dgetCytologyImagesByExternalId\x12 .GetCytologyImagesByExternalIdIn\x1a!.GetCytologyImagesByExternalIdOut\x12\x82\x01\n" +
-	"'getCytologyImagesByDoctorIdAndPatientId\x12*.GetCytologyImagesByDoctorIdAndPatientIdIn\x1a+.GetCytologyImagesByDoctorIdAndPatientIdOut\x12F\n" +
-	"\x13updateCytologyImage\x12\x16.UpdateCytologyImageIn\x1a\x17.UpdateCytologyImageOut\x12E\n" +
-	"\x13deleteCytologyImage\x12\x16.DeleteCytologyImageIn\x1a\x16.google.protobuf.Empty\x12F\n" +
-	"\x13createOriginalImage\x12\x16.CreateOriginalImageIn\x1a\x17.CreateOriginalImageOut\x12I\n" +
-	"\x14getOriginalImageById\x12\x17.GetOriginalImageByIdIn\x1a\x18.GetOriginalImageByIdOut\x12d\n" +
-	"\x1dgetOriginalImagesByCytologyId\x12 .GetOriginalImagesByCytologyIdIn\x1a!.GetOriginalImagesByCytologyIdOut\x12F\n" +
-	"\x13updateOriginalImage\x12\x16.UpdateOriginalImageIn\x1a\x17.UpdateOriginalImageOut\x12R\n" +
-	"\x17createSegmentationGroup\x12\x1a.CreateSegmentationGroupIn\x1a\x1b.CreateSegmentationGroupOut\x12p\n" +
-	"!getSegmentationGroupsByCytologyId\x12$.GetSegmentationGroupsByCytologyIdIn\x1a%.GetSegmentationGroupsByCytologyIdOut\x12R\n" +
-	"\x17updateSegmentationGroup\x12\x1a.UpdateSegmentationGroupIn\x1a\x1b.UpdateSegmentationGroupOut\x12M\n" +
-	"\x17deleteSegmentationGroup\x12\x1a.DeleteSegmentationGroupIn\x1a\x16.google.protobuf.Empty\x12C\n" +
-	"\x12createSegmentation\x12\x15.CreateSegmentationIn\x1a\x16.CreateSegmentationOut\x12F\n" +
-	"\x13getSegmentationById\x12\x16.GetSegmentationByIdIn\x1a\x17.GetSegmentationByIdOut\x12I\n" +
-	"\x14getSegmentsByGroupId\x12\x17.GetSegmentsByGroupIdIn\x1a\x18.GetSegmentsByGroupIdOut\x12C\n" +
-	"\x12updateSegmentation\x12\x15.UpdateSegmentationIn\x1a\x16.UpdateSegmentationOut\x12C\n" +
-	"\x12deleteSegmentation\x12\x15.DeleteSegmentationIn\x1a\x16.google.protobuf.EmptyB*Z(internal/generated/grpc/clients/cytologyb\x06proto3"
+	"\x13CreateCytologyImage\x12\x16.CreateCytologyImageIn\x1a\x17.CreateCytologyImageOut\x12I\n" +
+	"\x14GetCytologyImageById\x12\x17.GetCytologyImageByIdIn\x1a\x18.GetCytologyImageByIdOut\x12d\n" +
+	"\x1dGetCytologyImagesByExternalId\x12 .GetCytologyImagesByExternalIdIn\x1a!.GetCytologyImagesByExternalIdOut\x12\x82\x01\n" +
+	"'GetCytologyImagesByDoctorIdAndPatientId\x12*.GetCytologyImagesByDoctorIdAndPatientIdIn\x1a+.GetCytologyImagesByDoctorIdAndPatientIdOut\x12F\n" +
+	"\x13UpdateCytologyImage\x12\x16.UpdateCytologyImageIn\x1a\x17.UpdateCytologyImageOut\x12E\n" +
+	"\x13DeleteCytologyImage\x12\x16.DeleteCytologyImageIn\x1a\x16.google.protobuf.Empty\x12F\n" +
+	"\x13CreateOriginalImage\x12\x16.CreateOriginalImageIn\x1a\x17.CreateOriginalImageOut\x12I\n" +
+	"\x14GetOriginalImageById\x12\x17.GetOriginalImageByIdIn\x1a\x18.GetOriginalImageByIdOut\x12d\n" +
+	"\x1dGetOriginalImagesByCytologyId\x12 .GetOriginalImagesByCytologyIdIn\x1a!.GetOriginalImagesByCytologyIdOut\x12F\n" +
+	"\x13UpdateOriginalImage\x12\x16.UpdateOriginalImageIn\x1a\x17.UpdateOriginalImageOut\x12R\n" +
+	"\x17CreateSegmentationGroup\x12\x1a.CreateSegmentationGroupIn\x1a\x1b.CreateSegmentationGroupOut\x12p\n" +
+	"!GetSegmentationGroupsByCytologyId\x12$.GetSegmentationGroupsByCytologyIdIn\x1a%.GetSegmentationGroupsByCytologyIdOut\x12R\n" +
+	"\x17UpdateSegmentationGroup\x12\x1a.UpdateSegmentationGroupIn\x1a\x1b.UpdateSegmentationGroupOut\x12M\n" +
+	"\x17DeleteSegmentationGroup\x12\x1a.DeleteSegmentationGroupIn\x1a\x16.google.protobuf.Empty\x12C\n" +
+	"\x12CreateSegmentation\x12\x15.CreateSegmentationIn\x1a\x16.CreateSegmentationOut\x12F\n" +
+	"\x13GetSegmentationById\x12\x16.GetSegmentationByIdIn\x1a\x17.GetSegmentationByIdOut\x12I\n" +
+	"\x14GetSegmentsByGroupId\x12\x17.GetSegmentsByGroupIdIn\x1a\x18.GetSegmentsByGroupIdOut\x12C\n" +
+	"\x12UpdateSegmentation\x12\x15.UpdateSegmentationIn\x1a\x16.UpdateSegmentationOut\x12C\n" +
+	"\x12DeleteSegmentation\x12\x15.DeleteSegmentationIn\x1a\x16.google.protobuf.EmptyB*Z(internal/generated/grpc/clients/cytologyb\x06proto3"
 
 var (
 	file_proto_grpc_clients_cytology_proto_rawDescOnce sync.Once
@@ -3018,44 +3018,44 @@ var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	34, // 26: GetSegmentsByGroupIdOut.segmentations:type_name -> Segmentation
 	36, // 27: UpdateSegmentationIn.points:type_name -> SegmentationPointCreate
 	34, // 28: UpdateSegmentationOut.segmentation:type_name -> Segmentation
-	5,  // 29: CytologySrv.createCytologyImage:input_type -> CreateCytologyImageIn
-	7,  // 30: CytologySrv.getCytologyImageById:input_type -> GetCytologyImageByIdIn
-	9,  // 31: CytologySrv.getCytologyImagesByExternalId:input_type -> GetCytologyImagesByExternalIdIn
-	11, // 32: CytologySrv.getCytologyImagesByDoctorIdAndPatientId:input_type -> GetCytologyImagesByDoctorIdAndPatientIdIn
-	13, // 33: CytologySrv.updateCytologyImage:input_type -> UpdateCytologyImageIn
-	15, // 34: CytologySrv.deleteCytologyImage:input_type -> DeleteCytologyImageIn
-	17, // 35: CytologySrv.createOriginalImage:input_type -> CreateOriginalImageIn
-	19, // 36: CytologySrv.getOriginalImageById:input_type -> GetOriginalImageByIdIn
-	21, // 37: CytologySrv.getOriginalImagesByCytologyId:input_type -> GetOriginalImagesByCytologyIdIn
-	23, // 38: CytologySrv.updateOriginalImage:input_type -> UpdateOriginalImageIn
-	26, // 39: CytologySrv.createSegmentationGroup:input_type -> CreateSegmentationGroupIn
-	28, // 40: CytologySrv.getSegmentationGroupsByCytologyId:input_type -> GetSegmentationGroupsByCytologyIdIn
-	30, // 41: CytologySrv.updateSegmentationGroup:input_type -> UpdateSegmentationGroupIn
-	32, // 42: CytologySrv.deleteSegmentationGroup:input_type -> DeleteSegmentationGroupIn
-	35, // 43: CytologySrv.createSegmentation:input_type -> CreateSegmentationIn
-	38, // 44: CytologySrv.getSegmentationById:input_type -> GetSegmentationByIdIn
-	40, // 45: CytologySrv.getSegmentsByGroupId:input_type -> GetSegmentsByGroupIdIn
-	42, // 46: CytologySrv.updateSegmentation:input_type -> UpdateSegmentationIn
-	44, // 47: CytologySrv.deleteSegmentation:input_type -> DeleteSegmentationIn
-	6,  // 48: CytologySrv.createCytologyImage:output_type -> CreateCytologyImageOut
-	8,  // 49: CytologySrv.getCytologyImageById:output_type -> GetCytologyImageByIdOut
-	10, // 50: CytologySrv.getCytologyImagesByExternalId:output_type -> GetCytologyImagesByExternalIdOut
-	12, // 51: CytologySrv.getCytologyImagesByDoctorIdAndPatientId:output_type -> GetCytologyImagesByDoctorIdAndPatientIdOut
-	14, // 52: CytologySrv.updateCytologyImage:output_type -> UpdateCytologyImageOut
-	45, // 53: CytologySrv.deleteCytologyImage:output_type -> google.protobuf.Empty
-	18, // 54: CytologySrv.createOriginalImage:output_type -> CreateOriginalImageOut
-	20, // 55: CytologySrv.getOriginalImageById:output_type -> GetOriginalImageByIdOut
-	22, // 56: CytologySrv.getOriginalImagesByCytologyId:output_type -> GetOriginalImagesByCytologyIdOut
-	24, // 57: CytologySrv.updateOriginalImage:output_type -> UpdateOriginalImageOut
-	27, // 58: CytologySrv.createSegmentationGroup:output_type -> CreateSegmentationGroupOut
-	29, // 59: CytologySrv.getSegmentationGroupsByCytologyId:output_type -> GetSegmentationGroupsByCytologyIdOut
-	31, // 60: CytologySrv.updateSegmentationGroup:output_type -> UpdateSegmentationGroupOut
-	45, // 61: CytologySrv.deleteSegmentationGroup:output_type -> google.protobuf.Empty
-	37, // 62: CytologySrv.createSegmentation:output_type -> CreateSegmentationOut
-	39, // 63: CytologySrv.getSegmentationById:output_type -> GetSegmentationByIdOut
-	41, // 64: CytologySrv.getSegmentsByGroupId:output_type -> GetSegmentsByGroupIdOut
-	43, // 65: CytologySrv.updateSegmentation:output_type -> UpdateSegmentationOut
-	45, // 66: CytologySrv.deleteSegmentation:output_type -> google.protobuf.Empty
+	5,  // 29: CytologySrv.CreateCytologyImage:input_type -> CreateCytologyImageIn
+	7,  // 30: CytologySrv.GetCytologyImageById:input_type -> GetCytologyImageByIdIn
+	9,  // 31: CytologySrv.GetCytologyImagesByExternalId:input_type -> GetCytologyImagesByExternalIdIn
+	11, // 32: CytologySrv.GetCytologyImagesByDoctorIdAndPatientId:input_type -> GetCytologyImagesByDoctorIdAndPatientIdIn
+	13, // 33: CytologySrv.UpdateCytologyImage:input_type -> UpdateCytologyImageIn
+	15, // 34: CytologySrv.DeleteCytologyImage:input_type -> DeleteCytologyImageIn
+	17, // 35: CytologySrv.CreateOriginalImage:input_type -> CreateOriginalImageIn
+	19, // 36: CytologySrv.GetOriginalImageById:input_type -> GetOriginalImageByIdIn
+	21, // 37: CytologySrv.GetOriginalImagesByCytologyId:input_type -> GetOriginalImagesByCytologyIdIn
+	23, // 38: CytologySrv.UpdateOriginalImage:input_type -> UpdateOriginalImageIn
+	26, // 39: CytologySrv.CreateSegmentationGroup:input_type -> CreateSegmentationGroupIn
+	28, // 40: CytologySrv.GetSegmentationGroupsByCytologyId:input_type -> GetSegmentationGroupsByCytologyIdIn
+	30, // 41: CytologySrv.UpdateSegmentationGroup:input_type -> UpdateSegmentationGroupIn
+	32, // 42: CytologySrv.DeleteSegmentationGroup:input_type -> DeleteSegmentationGroupIn
+	35, // 43: CytologySrv.CreateSegmentation:input_type -> CreateSegmentationIn
+	38, // 44: CytologySrv.GetSegmentationById:input_type -> GetSegmentationByIdIn
+	40, // 45: CytologySrv.GetSegmentsByGroupId:input_type -> GetSegmentsByGroupIdIn
+	42, // 46: CytologySrv.UpdateSegmentation:input_type -> UpdateSegmentationIn
+	44, // 47: CytologySrv.DeleteSegmentation:input_type -> DeleteSegmentationIn
+	6,  // 48: CytologySrv.CreateCytologyImage:output_type -> CreateCytologyImageOut
+	8,  // 49: CytologySrv.GetCytologyImageById:output_type -> GetCytologyImageByIdOut
+	10, // 50: CytologySrv.GetCytologyImagesByExternalId:output_type -> GetCytologyImagesByExternalIdOut
+	12, // 51: CytologySrv.GetCytologyImagesByDoctorIdAndPatientId:output_type -> GetCytologyImagesByDoctorIdAndPatientIdOut
+	14, // 52: CytologySrv.UpdateCytologyImage:output_type -> UpdateCytologyImageOut
+	45, // 53: CytologySrv.DeleteCytologyImage:output_type -> google.protobuf.Empty
+	18, // 54: CytologySrv.CreateOriginalImage:output_type -> CreateOriginalImageOut
+	20, // 55: CytologySrv.GetOriginalImageById:output_type -> GetOriginalImageByIdOut
+	22, // 56: CytologySrv.GetOriginalImagesByCytologyId:output_type -> GetOriginalImagesByCytologyIdOut
+	24, // 57: CytologySrv.UpdateOriginalImage:output_type -> UpdateOriginalImageOut
+	27, // 58: CytologySrv.CreateSegmentationGroup:output_type -> CreateSegmentationGroupOut
+	29, // 59: CytologySrv.GetSegmentationGroupsByCytologyId:output_type -> GetSegmentationGroupsByCytologyIdOut
+	31, // 60: CytologySrv.UpdateSegmentationGroup:output_type -> UpdateSegmentationGroupOut
+	45, // 61: CytologySrv.DeleteSegmentationGroup:output_type -> google.protobuf.Empty
+	37, // 62: CytologySrv.CreateSegmentation:output_type -> CreateSegmentationOut
+	39, // 63: CytologySrv.GetSegmentationById:output_type -> GetSegmentationByIdOut
+	41, // 64: CytologySrv.GetSegmentsByGroupId:output_type -> GetSegmentsByGroupIdOut
+	43, // 65: CytologySrv.UpdateSegmentation:output_type -> UpdateSegmentationOut
+	45, // 66: CytologySrv.DeleteSegmentation:output_type -> google.protobuf.Empty
 	48, // [48:67] is the sub-list for method output_type
 	29, // [29:48] is the sub-list for method input_type
 	29, // [29:29] is the sub-list for extension type_name

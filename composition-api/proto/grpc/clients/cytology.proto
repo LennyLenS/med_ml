@@ -6,31 +6,31 @@ import "google/protobuf/empty.proto";
 
 service CytologySrv {
   // CYTOLOGY IMAGE
-  rpc createCytologyImage(CreateCytologyImageIn) returns (CreateCytologyImageOut);
-  rpc getCytologyImageById(GetCytologyImageByIdIn) returns (GetCytologyImageByIdOut);
-  rpc getCytologyImagesByExternalId(GetCytologyImagesByExternalIdIn) returns (GetCytologyImagesByExternalIdOut);
-  rpc getCytologyImagesByDoctorIdAndPatientId(GetCytologyImagesByDoctorIdAndPatientIdIn) returns (GetCytologyImagesByDoctorIdAndPatientIdOut);
-  rpc updateCytologyImage(UpdateCytologyImageIn) returns (UpdateCytologyImageOut);
-  rpc deleteCytologyImage(DeleteCytologyImageIn) returns (google.protobuf.Empty);
+  rpc CreateCytologyImage(CreateCytologyImageIn) returns (CreateCytologyImageOut);
+  rpc GetCytologyImageById(GetCytologyImageByIdIn) returns (GetCytologyImageByIdOut);
+  rpc GetCytologyImagesByExternalId(GetCytologyImagesByExternalIdIn) returns (GetCytologyImagesByExternalIdOut);
+  rpc GetCytologyImagesByDoctorIdAndPatientId(GetCytologyImagesByDoctorIdAndPatientIdIn) returns (GetCytologyImagesByDoctorIdAndPatientIdOut);
+  rpc UpdateCytologyImage(UpdateCytologyImageIn) returns (UpdateCytologyImageOut);
+  rpc DeleteCytologyImage(DeleteCytologyImageIn) returns (google.protobuf.Empty);
 
   // ORIGINAL IMAGE
-  rpc createOriginalImage(CreateOriginalImageIn) returns (CreateOriginalImageOut);
-  rpc getOriginalImageById(GetOriginalImageByIdIn) returns (GetOriginalImageByIdOut);
-  rpc getOriginalImagesByCytologyId(GetOriginalImagesByCytologyIdIn) returns (GetOriginalImagesByCytologyIdOut);
-  rpc updateOriginalImage(UpdateOriginalImageIn) returns (UpdateOriginalImageOut);
+  rpc CreateOriginalImage(CreateOriginalImageIn) returns (CreateOriginalImageOut);
+  rpc GetOriginalImageById(GetOriginalImageByIdIn) returns (GetOriginalImageByIdOut);
+  rpc GetOriginalImagesByCytologyId(GetOriginalImagesByCytologyIdIn) returns (GetOriginalImagesByCytologyIdOut);
+  rpc UpdateOriginalImage(UpdateOriginalImageIn) returns (UpdateOriginalImageOut);
 
   // SEGMENTATION GROUP
-  rpc createSegmentationGroup(CreateSegmentationGroupIn) returns (CreateSegmentationGroupOut);
-  rpc getSegmentationGroupsByCytologyId(GetSegmentationGroupsByCytologyIdIn) returns (GetSegmentationGroupsByCytologyIdOut);
-  rpc updateSegmentationGroup(UpdateSegmentationGroupIn) returns (UpdateSegmentationGroupOut);
-  rpc deleteSegmentationGroup(DeleteSegmentationGroupIn) returns (google.protobuf.Empty);
+  rpc CreateSegmentationGroup(CreateSegmentationGroupIn) returns (CreateSegmentationGroupOut);
+  rpc GetSegmentationGroupsByCytologyId(GetSegmentationGroupsByCytologyIdIn) returns (GetSegmentationGroupsByCytologyIdOut);
+  rpc UpdateSegmentationGroup(UpdateSegmentationGroupIn) returns (UpdateSegmentationGroupOut);
+  rpc DeleteSegmentationGroup(DeleteSegmentationGroupIn) returns (google.protobuf.Empty);
 
   // SEGMENTATION
-  rpc createSegmentation(CreateSegmentationIn) returns (CreateSegmentationOut);
-  rpc getSegmentationById(GetSegmentationByIdIn) returns (GetSegmentationByIdOut);
-  rpc getSegmentsByGroupId(GetSegmentsByGroupIdIn) returns (GetSegmentsByGroupIdOut);
-  rpc updateSegmentation(UpdateSegmentationIn) returns (UpdateSegmentationOut);
-  rpc deleteSegmentation(DeleteSegmentationIn) returns (google.protobuf.Empty);
+  rpc CreateSegmentation(CreateSegmentationIn) returns (CreateSegmentationOut);
+  rpc GetSegmentationById(GetSegmentationByIdIn) returns (GetSegmentationByIdOut);
+  rpc GetSegmentsByGroupId(GetSegmentsByGroupIdIn) returns (GetSegmentsByGroupIdOut);
+  rpc UpdateSegmentation(UpdateSegmentationIn) returns (UpdateSegmentationOut);
+  rpc DeleteSegmentation(DeleteSegmentationIn) returns (google.protobuf.Empty);
 }
 
 // CYTOLOGY IMAGE
