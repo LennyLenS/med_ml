@@ -8,6 +8,112 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// CytologiesExternalIDGet implements GET /cytologies/external/{id} operation.
+	//
+	// Получить цитологические исследования по внешнему id.
+	//
+	// GET /cytologies/external/{id}
+	CytologiesExternalIDGet(ctx context.Context, params CytologiesExternalIDGetParams) (CytologiesExternalIDGetRes, error)
+	// CytologiesPatientCardDoctorIDPatientIDGet implements GET /cytologies/patient-card/{doctor_id}/{patient_id} operation.
+	//
+	// Получить цитологические исследования по id врача и
+	// пациента.
+	//
+	// GET /cytologies/patient-card/{doctor_id}/{patient_id}
+	CytologiesPatientCardDoctorIDPatientIDGet(ctx context.Context, params CytologiesPatientCardDoctorIDPatientIDGetParams) (CytologiesPatientCardDoctorIDPatientIDGetRes, error)
+	// CytologyIDDelete implements DELETE /cytology/{id} operation.
+	//
+	// Удалить цитологическое исследование.
+	//
+	// DELETE /cytology/{id}
+	CytologyIDDelete(ctx context.Context, params CytologyIDDeleteParams) (CytologyIDDeleteRes, error)
+	// CytologyIDGet implements GET /cytology/{id} operation.
+	//
+	// Получить цитологическое исследование.
+	//
+	// GET /cytology/{id}
+	CytologyIDGet(ctx context.Context, params CytologyIDGetParams) (CytologyIDGetRes, error)
+	// CytologyIDOriginalImageGet implements GET /cytology/{id}/original-image operation.
+	//
+	// Получить оригинальные изображения цитологического
+	// исследования.
+	//
+	// GET /cytology/{id}/original-image
+	CytologyIDOriginalImageGet(ctx context.Context, params CytologyIDOriginalImageGetParams) (CytologyIDOriginalImageGetRes, error)
+	// CytologyIDOriginalImagePost implements POST /cytology/{id}/original-image operation.
+	//
+	// Создать оригинальное изображение для
+	// цитологического исследования.
+	//
+	// POST /cytology/{id}/original-image
+	CytologyIDOriginalImagePost(ctx context.Context, req *CytologyIDOriginalImagePostReq, params CytologyIDOriginalImagePostParams) (CytologyIDOriginalImagePostRes, error)
+	// CytologyIDPatch implements PATCH /cytology/{id} operation.
+	//
+	// Обновить цитологическое исследование.
+	//
+	// PATCH /cytology/{id}
+	CytologyIDPatch(ctx context.Context, req *CytologyIDPatchReq, params CytologyIDPatchParams) (CytologyIDPatchRes, error)
+	// CytologyIDSegmentationGroupsGet implements GET /cytology/{id}/segmentation-groups operation.
+	//
+	// Получить группы сегментаций цитологического
+	// исследования.
+	//
+	// GET /cytology/{id}/segmentation-groups
+	CytologyIDSegmentationGroupsGet(ctx context.Context, params CytologyIDSegmentationGroupsGetParams) (CytologyIDSegmentationGroupsGetRes, error)
+	// CytologyIDSegmentationGroupsPost implements POST /cytology/{id}/segmentation-groups operation.
+	//
+	// Создать группу сегментаций.
+	//
+	// POST /cytology/{id}/segmentation-groups
+	CytologyIDSegmentationGroupsPost(ctx context.Context, req *CytologyIDSegmentationGroupsPostReq, params CytologyIDSegmentationGroupsPostParams) (CytologyIDSegmentationGroupsPostRes, error)
+	// CytologyOriginalImageIDPatch implements PATCH /cytology/original-image/{id} operation.
+	//
+	// Обновить оригинальное изображение.
+	//
+	// PATCH /cytology/original-image/{id}
+	CytologyOriginalImageIDPatch(ctx context.Context, req *CytologyOriginalImageIDPatchReq, params CytologyOriginalImageIDPatchParams) (CytologyOriginalImageIDPatchRes, error)
+	// CytologyPost implements POST /cytology operation.
+	//
+	// Создать цитологическое исследование.
+	//
+	// POST /cytology
+	CytologyPost(ctx context.Context, req *CytologyPostReq) (CytologyPostRes, error)
+	// CytologySegmentationGroupIDDelete implements DELETE /cytology/segmentation-group/{id} operation.
+	//
+	// Все сегментации группы будут также удалены.
+	//
+	// DELETE /cytology/segmentation-group/{id}
+	CytologySegmentationGroupIDDelete(ctx context.Context, params CytologySegmentationGroupIDDeleteParams) (CytologySegmentationGroupIDDeleteRes, error)
+	// CytologySegmentationGroupIDPatch implements PATCH /cytology/segmentation-group/{id} operation.
+	//
+	// Обновить группу сегментаций.
+	//
+	// PATCH /cytology/segmentation-group/{id}
+	CytologySegmentationGroupIDPatch(ctx context.Context, req *CytologySegmentationGroupIDPatchReq, params CytologySegmentationGroupIDPatchParams) (CytologySegmentationGroupIDPatchRes, error)
+	// CytologySegmentationGroupIDSegmentsGet implements GET /cytology/segmentation-group/{id}/segments operation.
+	//
+	// Получить сегментации группы.
+	//
+	// GET /cytology/segmentation-group/{id}/segments
+	CytologySegmentationGroupIDSegmentsGet(ctx context.Context, params CytologySegmentationGroupIDSegmentsGetParams) (CytologySegmentationGroupIDSegmentsGetRes, error)
+	// CytologySegmentationGroupIDSegmentsPost implements POST /cytology/segmentation-group/{id}/segments operation.
+	//
+	// Создать сегментацию в группе.
+	//
+	// POST /cytology/segmentation-group/{id}/segments
+	CytologySegmentationGroupIDSegmentsPost(ctx context.Context, req *CytologySegmentationGroupIDSegmentsPostReq, params CytologySegmentationGroupIDSegmentsPostParams) (CytologySegmentationGroupIDSegmentsPostRes, error)
+	// CytologySegmentationIDDelete implements DELETE /cytology/segmentation/{id} operation.
+	//
+	// Удалить сегментацию.
+	//
+	// DELETE /cytology/segmentation/{id}
+	CytologySegmentationIDDelete(ctx context.Context, params CytologySegmentationIDDeleteParams) (CytologySegmentationIDDeleteRes, error)
+	// CytologySegmentationIDPatch implements PATCH /cytology/segmentation/{id} operation.
+	//
+	// Обновить сегментацию.
+	//
+	// PATCH /cytology/segmentation/{id}
+	CytologySegmentationIDPatch(ctx context.Context, req *CytologySegmentationIDPatchReq, params CytologySegmentationIDPatchParams) (CytologySegmentationIDPatchRes, error)
 	// DownloadUziIDImageIDGet implements GET /download/{uzi_id}/{image_id} operation.
 	//
 	// Получить кадр узи.

@@ -717,6 +717,257 @@ components:
         name: "Yookassa"
         is_active: true
 
+    cytologyImage:
+      type: object
+      description: цитологическое исследование
+      required:
+        - id
+        - external_id
+        - doctor_id
+        - patient_id
+        - diagnostic_number
+        - is_last
+        - diagnos_date
+        - create_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id цитологического исследования
+        external_id:
+          type: string
+          format: uuid
+          description: внешний id пациента/организации etc.
+        doctor_id:
+          type: string
+          format: uuid
+          description: id врача
+        patient_id:
+          type: string
+          format: uuid
+          description: id пациента
+        diagnostic_number:
+          type: integer
+          description: номер диагностики
+        diagnostic_marking:
+          type: string
+          enum:
+            - П11
+            - Л23
+          description: маркировка диагностики
+        material_type:
+          type: string
+          enum:
+            - GS
+            - BP
+            - TP
+            - PTP
+            - LNP
+          description: тип материала
+        diagnos_date:
+          type: string
+          format: date-time
+          description: дата диагностики
+        is_last:
+          type: boolean
+          description: является ли данная версия последней
+        calcitonin:
+          type: integer
+          description: кальцитонин
+        calcitonin_in_flush:
+          type: integer
+          description: кальцитонин в смыве
+        thyroglobulin:
+          type: integer
+          description: тиреоглобулин
+        details:
+          type: object
+          description: детали диагностики (JSON)
+        prev_id:
+          type: string
+          format: uuid
+          description: id предыдущей версии
+        parent_prev_id:
+          type: string
+          format: uuid
+          description: id родительской предыдущей версии
+        create_at:
+          type: string
+          format: date-time
+          description: дата создания
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        external_id: "123e4567-e89b-12d3-a456-426614174000"
+        doctor_id: "123e4567-e89b-12d3-a456-426614174000"
+        patient_id: "123e4567-e89b-12d3-a456-426614174000"
+        diagnostic_number: 1
+        diagnostic_marking: "П11"
+        material_type: "GS"
+        diagnos_date: "2024-01-01T00:00:00Z"
+        is_last: true
+        calcitonin: 10
+        calcitonin_in_flush: 5
+        thyroglobulin: 20
+        create_at: "2024-01-01T00:00:00Z"
+
+    originalImage:
+      type: object
+      description: оригинальное изображение
+      required:
+        - id
+        - cytology_id
+        - image_path
+        - create_date
+        - viewed_flag
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id изображения
+        cytology_id:
+          type: string
+          format: uuid
+          description: id цитологического исследования
+        image_path:
+          type: string
+          description: путь к изображению в S3
+        create_date:
+          type: string
+          format: date-time
+          description: дата создания
+        delay_time:
+          type: number
+          description: время обработки
+        viewed_flag:
+          type: boolean
+          description: флаг просмотра
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        cytology_id: "123e4567-e89b-12d3-a456-426614174000"
+        image_path: "cytology/images/123e4567-e89b-12d3-a456-426614174000.png"
+        create_date: "2024-01-01T00:00:00Z"
+        delay_time: 1.5
+        viewed_flag: false
+
+    segmentationGroup:
+      type: object
+      description: группа сегментаций
+      required:
+        - id
+        - cytology_id
+        - seg_type
+        - group_type
+        - is_ai
+        - create_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id группы сегментаций
+        cytology_id:
+          type: string
+          format: uuid
+          description: id цитологического исследования
+        seg_type:
+          type: string
+          enum:
+            - NIL
+            - NIR
+            - NIM
+            - CNO
+            - CGE
+            - C2N
+            - CPS
+            - CFC
+            - CLY
+            - SOS
+            - SDS
+            - SMS
+            - STS
+            - SPS
+            - SNM
+            - STM
+          description: тип сегментации
+        group_type:
+          type: string
+          enum:
+            - CE
+            - CL
+            - ME
+          description: тип группы
+        is_ai:
+          type: boolean
+          description: создана ли группа AI
+        details:
+          type: object
+          description: детали (JSON)
+        create_at:
+          type: string
+          format: date-time
+          description: дата создания
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        cytology_id: "123e4567-e89b-12d3-a456-426614174000"
+        seg_type: "NIL"
+        group_type: "CE"
+        is_ai: false
+        create_at: "2024-01-01T00:00:00Z"
+
+    segmentationPoint:
+      type: object
+      description: точка сегментации
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: integer
+          minimum: 0
+          description: координата X
+        y:
+          type: integer
+          minimum: 0
+          description: координата Y
+      example:
+        x: 100
+        y: 200
+
+    segmentation:
+      type: object
+      description: сегментация
+      required:
+        - id
+        - segmentation_group_id
+        - points
+        - create_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id сегментации
+        segmentation_group_id:
+          type: string
+          format: uuid
+          description: id группы сегментаций
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/segmentationPoint'
+          description: точки сегментации
+        create_at:
+          type: string
+          format: date-time
+          description: дата создания
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        segmentation_group_id: "123e4567-e89b-12d3-a456-426614174000"
+        points:
+          - x: 100
+            y: 200
+          - x: 200
+            y: 300
+        create_at: "2024-01-01T00:00:00Z"
+
     error:
       description: Ошибка
       type: object
@@ -2352,6 +2603,823 @@ paths:
         '200':
           description: Успешная обработка уведомления
         '500':
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology:
+    post:
+      summary: создать цитологическое исследование
+      tags:
+        - cytology
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - external_id
+                - doctor_id
+                - patient_id
+                - diagnostic_number
+              properties:
+                external_id:
+                  type: string
+                  format: uuid
+                  description: внешний id пациента/организации etc.
+                doctor_id:
+                  type: string
+                  format: uuid
+                  description: id врача
+                patient_id:
+                  type: string
+                  format: uuid
+                  description: id пациента
+                diagnostic_number:
+                  type: integer
+                  description: номер диагностики
+                diagnostic_marking:
+                  type: string
+                  enum:
+                    - П11
+                    - Л23
+                  description: маркировка диагностики
+                material_type:
+                  type: string
+                  enum:
+                    - GS
+                    - BP
+                    - TP
+                    - PTP
+                    - LNP
+                  description: тип материала
+                calcitonin:
+                  type: integer
+                  description: кальцитонин
+                calcitonin_in_flush:
+                  type: integer
+                  description: кальцитонин в смыве
+                thyroglobulin:
+                  type: integer
+                  description: тиреоглобулин
+                details:
+                  type: object
+                  description: детали диагностики (JSON)
+                prev_id:
+                  type: string
+                  format: uuid
+                  description: id предыдущей версии
+                parent_prev_id:
+                  type: string
+                  format: uuid
+                  description: id родительской предыдущей версии
+              example:
+                external_id: "123e4567-e89b-12d3-a456-426614174000"
+                doctor_id: "123e4567-e89b-12d3-a456-426614174000"
+                patient_id: "123e4567-e89b-12d3-a456-426614174000"
+                diagnostic_number: 1
+                diagnostic_marking: "П11"
+                material_type: "GS"
+      responses:
+        '200':
+          description: id цитологического исследования
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/{id}:
+    get:
+      summary: получить цитологическое исследование
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: цитологическое исследование
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cytology_image:
+                    $ref: '#/components/schemas/cytologyImage'
+                  original_image:
+                    $ref: '#/components/schemas/originalImage'
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    patch:
+      summary: обновить цитологическое исследование
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                diagnostic_marking:
+                  type: string
+                  enum:
+                    - П11
+                    - Л23
+                material_type:
+                  type: string
+                  enum:
+                    - GS
+                    - BP
+                    - TP
+                    - PTP
+                    - LNP
+                calcitonin:
+                  type: integer
+                calcitonin_in_flush:
+                  type: integer
+                thyroglobulin:
+                  type: integer
+                details:
+                  type: object
+                is_last:
+                  type: boolean
+              example:
+                diagnostic_marking: "Л23"
+                is_last: true
+      responses:
+        '200':
+          description: обновленное цитологическое исследование
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cytologyImage'
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    delete:
+      summary: удалить цитологическое исследование
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: цитологическое исследование удалено
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytologies/external/{id}:
+    get:
+      summary: получить цитологические исследования по внешнему id
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: внешний id пациента/организации etc.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: цитологические исследования
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/cytologyImage'
+        '404':
+          description: Цитологические исследования не найдены
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytologies/patient-card/{doctor_id}/{patient_id}:
+    get:
+      summary: получить цитологические исследования по id врача и пациента
+      tags:
+        - cytology
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          description: id врача
+          schema:
+            type: string
+            format: uuid
+        - name: patient_id
+          in: path
+          required: true
+          description: id пациента
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: цитологические исследования
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/cytologyImage'
+        '404':
+          description: Цитологические исследования не найдены
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/{id}/original-image:
+    post:
+      summary: создать оригинальное изображение для цитологического исследования
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - image_path
+              properties:
+                image_path:
+                  type: string
+                  description: путь к изображению в S3
+                delay_time:
+                  type: number
+                  description: время обработки
+              example:
+                image_path: "cytology/images/123e4567-e89b-12d3-a456-426614174000.png"
+                delay_time: 1.5
+      responses:
+        '200':
+          description: id оригинального изображения
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    get:
+      summary: получить оригинальные изображения цитологического исследования
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: оригинальные изображения
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/originalImage'
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/original-image/{id}:
+    patch:
+      summary: обновить оригинальное изображение
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id оригинального изображения
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                delay_time:
+                  type: number
+                  description: время обработки
+                viewed_flag:
+                  type: boolean
+                  description: флаг просмотра
+              example:
+                delay_time: 2.0
+                viewed_flag: true
+      responses:
+        '200':
+          description: обновленное оригинальное изображение
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/originalImage'
+        '404':
+          description: Оригинальное изображение не найдено
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/{id}/segmentation-groups:
+    post:
+      summary: создать группу сегментаций
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - seg_type
+                - group_type
+              properties:
+                seg_type:
+                  type: string
+                  enum:
+                    - NIL
+                    - NIR
+                    - NIM
+                    - CNO
+                    - CGE
+                    - C2N
+                    - CPS
+                    - CFC
+                    - CLY
+                    - SOS
+                    - SDS
+                    - SMS
+                    - STS
+                    - SPS
+                    - SNM
+                    - STM
+                  description: тип сегментации
+                group_type:
+                  type: string
+                  enum:
+                    - CE
+                    - CL
+                    - ME
+                  description: тип группы
+                is_ai:
+                  type: boolean
+                  description: создана ли группа AI
+                  default: false
+                details:
+                  type: object
+                  description: детали (JSON)
+              example:
+                seg_type: "NIL"
+                group_type: "CE"
+                is_ai: false
+      responses:
+        '200':
+          description: id группы сегментаций
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    get:
+      summary: получить группы сегментаций цитологического исследования
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id цитологического исследования
+          schema:
+            type: string
+            format: uuid
+        - name: seg_type
+          in: query
+          required: false
+          description: фильтр по типу сегментации
+          schema:
+            type: string
+            enum:
+              - NIL
+              - NIR
+              - NIM
+              - CNO
+              - CGE
+              - C2N
+              - CPS
+              - CFC
+              - CLY
+              - SOS
+              - SDS
+              - SMS
+              - STS
+              - SPS
+              - SNM
+              - STM
+        - name: group_type
+          in: query
+          required: false
+          description: фильтр по типу группы
+          schema:
+            type: string
+            enum:
+              - CE
+              - CL
+              - ME
+        - name: is_ai
+          in: query
+          required: false
+          description: фильтр по признаку AI
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: группы сегментаций
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/segmentationGroup'
+        '404':
+          description: Цитологическое исследование не найдено
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/segmentation-group/{id}:
+    patch:
+      summary: обновить группу сегментаций
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id группы сегментаций
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seg_type:
+                  type: string
+                  enum:
+                    - NIL
+                    - NIR
+                    - NIM
+                    - CNO
+                    - CGE
+                    - C2N
+                    - CPS
+                    - CFC
+                    - CLY
+                    - SOS
+                    - SDS
+                    - SMS
+                    - STS
+                    - SPS
+                    - SNM
+                    - STM
+                details:
+                  type: object
+              example:
+                seg_type: "NIR"
+      responses:
+        '200':
+          description: обновленная группа сегментаций
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/segmentationGroup'
+        '404':
+          description: Группа сегментаций не найдена
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    delete:
+      summary: удалить группу сегментаций
+      description: все сегментации группы будут также удалены
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id группы сегментаций
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: группа сегментаций удалена
+        '404':
+          description: Группа сегментаций не найдена
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/segmentation-group/{id}/segments:
+    post:
+      summary: создать сегментацию в группе
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id группы сегментаций
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - points
+              properties:
+                points:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/segmentationPoint'
+                  description: точки сегментации
+              example:
+                points:
+                  - x: 100
+                    y: 200
+                  - x: 200
+                    y: 300
+      responses:
+        '200':
+          description: id сегментации
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/simpleUuid"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '404':
+          description: Группа сегментаций не найдена
+          $ref: "#/components/responses/error"
+        '422':
+          description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    get:
+      summary: получить сегментации группы
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id группы сегментаций
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: сегментации
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/segmentation'
+        '404':
+          description: Группа сегментаций не найдена
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/segmentation/{id}:
+    patch:
+      summary: обновить сегментацию
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id сегментации
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - points
+              properties:
+                points:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/segmentationPoint'
+              example:
+                points:
+                  - x: 150
+                    y: 250
+                  - x: 250
+                    y: 350
+      responses:
+        '200':
+          description: обновленная сегментация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/segmentation'
+        '404':
+          description: Сегментация не найдена
+          $ref: "#/components/responses/error"
+        '400':
+          description: Неверный формат запроса
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+    delete:
+      summary: удалить сегментацию
+      tags:
+        - cytology
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id сегментации
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: сегментация удалена
+        '404':
+          description: Сегментация не найдена
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"

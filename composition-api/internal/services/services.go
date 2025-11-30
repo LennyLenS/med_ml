@@ -5,6 +5,7 @@ import (
 	"composition-api/internal/dbus/producers"
 	"composition-api/internal/repository"
 	"composition-api/internal/services/card"
+	"composition-api/internal/services/cytology"
 	"composition-api/internal/services/device"
 	"composition-api/internal/services/doctor"
 	"composition-api/internal/services/download"
@@ -39,6 +40,7 @@ type Services struct {
 	SubscriptionService    subscription.Service
 	PaymentProviderService payment_provider.Service
 	YookassaWebhookService yookassa_webhook.Service
+	CytologyService        cytology.Service
 }
 
 func New(
@@ -62,6 +64,7 @@ func New(
 	subscriptionService := subscription.New(adapters)
 	paymentProviderService := payment_provider.New(adapters)
 	yookassaWebhookService := yookassa_webhook.New(adapters)
+	cytologyService := cytology.New(adapters)
 
 	return &Services{
 		DeviceService:          deviceService,
@@ -80,5 +83,6 @@ func New(
 		SubscriptionService:    subscriptionService,
 		PaymentProviderService: paymentProviderService,
 		YookassaWebhookService: yookassaWebhookService,
+		CytologyService:        cytologyService,
 	}
 }

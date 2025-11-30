@@ -7,18 +7,21 @@ import (
 
 	"composition-api/internal/adapters/auth"
 	"composition-api/internal/adapters/billing"
+	"composition-api/internal/adapters/cytology"
 	"composition-api/internal/adapters/med"
 	"composition-api/internal/adapters/uzi"
 	authPB "composition-api/internal/generated/grpc/clients/auth"
+	cytologyPB "composition-api/internal/generated/grpc/clients/cytology"
 	medPB "composition-api/internal/generated/grpc/clients/med"
 	uziPB "composition-api/internal/generated/grpc/clients/uzi"
 )
 
 type Adapters struct {
-	Uzi     uzi.Adapter
-	Auth    auth.Adapter
-	Med     med.Adapter
-	Billing billing.Adapter
+	Uzi      uzi.Adapter
+	Auth     auth.Adapter
+	Med      med.Adapter
+	Billing  billing.Adapter
+	Cytology cytology.Adapter
 }
 
 func NewAdapters(
@@ -26,6 +29,7 @@ func NewAdapters(
 	authConn *grpc.ClientConn,
 	medConn *grpc.ClientConn,
 	billingConn *grpc.ClientConn,
+	cytologyConn *grpc.ClientConn,
 ) *Adapters {
 	uziClient := uziPB.NewUziSrvClient(uziConn)
 	uziAdapter := uzi.NewAdapter(uziClient)
@@ -39,10 +43,14 @@ func NewAdapters(
 	billingClient := billingPB.NewBillingServiceClient(billingConn)
 	billingAdapter := billing.NewAdapter(billingClient)
 
+	cytologyClient := cytologyPB.NewCytologySrvClient(cytologyConn)
+	cytologyAdapter := cytology.NewAdapter(cytologyClient)
+
 	return &Adapters{
-		Uzi:     uziAdapter,
-		Auth:    authAdapter,
-		Med:     medAdapter,
-		Billing: billingAdapter,
+		Uzi:      uziAdapter,
+		Auth:     authAdapter,
+		Med:      medAdapter,
+		Billing:  billingAdapter,
+		Cytology: cytologyAdapter,
 	}
 }

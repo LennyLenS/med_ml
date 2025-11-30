@@ -79,8 +79,21 @@ func run() (exitCode int) {
 		cfg.Adapters.BillingUrl,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
+	if err != nil {
+		slog.Error("init billingConn", slog.Any("err", err))
+		return failExitCode
+	}
 
-	adapters := adapters.NewAdapters(uziConn, authConn, medConn, billingConn)
+	cytologyConn, err := grpc.NewClient(
+		cfg.Adapters.CytologyUrl,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		slog.Error("init cytologyConn", slog.Any("err", err))
+		return failExitCode
+	}
+
+	adapters := adapters.NewAdapters(uziConn, authConn, medConn, billingConn, cytologyConn)
 
 	// infra
 	s3Client, err := minio.New(cfg.S3.Endpoint, &minio.Options{

@@ -81,6 +81,615 @@ func TestContorItem_EncodeDecode(t *testing.T) {
 	var typ2 ContorItem
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
+func TestCytologiesExternalIDGetOKApplicationJSON_EncodeDecode(t *testing.T) {
+	var typ CytologiesExternalIDGetOKApplicationJSON
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologiesExternalIDGetOKApplicationJSON
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON_EncodeDecode(t *testing.T) {
+	var typ CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDGetOK_EncodeDecode(t *testing.T) {
+	var typ CytologyIDGetOK
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDGetOK
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDOriginalImageGetOKApplicationJSON_EncodeDecode(t *testing.T) {
+	var typ CytologyIDOriginalImageGetOKApplicationJSON
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDOriginalImageGetOKApplicationJSON
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDOriginalImagePostReq_EncodeDecode(t *testing.T) {
+	var typ CytologyIDOriginalImagePostReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDOriginalImagePostReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyIDOriginalImagePostReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"delay_time\":1.5,\"image_path\":\"cytology/images/123e4567-e89b-12d3-a456-426614174000.png\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyIDOriginalImagePostReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyIDOriginalImagePostReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyIDPatchReq_EncodeDecode(t *testing.T) {
+	var typ CytologyIDPatchReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDPatchReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyIDPatchReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"diagnostic_marking\":\"Л23\",\"is_last\":true}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyIDPatchReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyIDPatchReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyIDPatchReqDetails_EncodeDecode(t *testing.T) {
+	var typ CytologyIDPatchReqDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDPatchReqDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDPatchReqDiagnosticMarking_EncodeDecode(t *testing.T) {
+	var typ CytologyIDPatchReqDiagnosticMarking
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDPatchReqDiagnosticMarking
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDPatchReqMaterialType_EncodeDecode(t *testing.T) {
+	var typ CytologyIDPatchReqMaterialType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDPatchReqMaterialType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDSegmentationGroupsGetOKApplicationJSON_EncodeDecode(t *testing.T) {
+	var typ CytologyIDSegmentationGroupsGetOKApplicationJSON
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDSegmentationGroupsGetOKApplicationJSON
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDSegmentationGroupsPostReq_EncodeDecode(t *testing.T) {
+	var typ CytologyIDSegmentationGroupsPostReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDSegmentationGroupsPostReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyIDSegmentationGroupsPostReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"group_type\":\"CE\",\"is_ai\":false,\"seg_type\":\"NIL\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyIDSegmentationGroupsPostReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyIDSegmentationGroupsPostReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyIDSegmentationGroupsPostReqDetails_EncodeDecode(t *testing.T) {
+	var typ CytologyIDSegmentationGroupsPostReqDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDSegmentationGroupsPostReqDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDSegmentationGroupsPostReqGroupType_EncodeDecode(t *testing.T) {
+	var typ CytologyIDSegmentationGroupsPostReqGroupType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDSegmentationGroupsPostReqGroupType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyIDSegmentationGroupsPostReqSegType_EncodeDecode(t *testing.T) {
+	var typ CytologyIDSegmentationGroupsPostReqSegType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyIDSegmentationGroupsPostReqSegType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyImage_EncodeDecode(t *testing.T) {
+	var typ CytologyImage
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyImage
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyImage_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"calcitonin\":10,\"calcitonin_in_flush\":5,\"create_at\":\"2024-01-01T00:00:00Z\",\"diagnos_date\":\"2024-01-01T00:00:00Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":1,\"doctor_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"external_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"id\":\"123e4567-e89b-12d3-a456-426614174000\",\"is_last\":true,\"material_type\":\"GS\",\"patient_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"thyroglobulin\":20}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyImage
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyImage
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyImageDetails_EncodeDecode(t *testing.T) {
+	var typ CytologyImageDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyImageDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyImageDiagnosticMarking_EncodeDecode(t *testing.T) {
+	var typ CytologyImageDiagnosticMarking
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyImageDiagnosticMarking
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyImageMaterialType_EncodeDecode(t *testing.T) {
+	var typ CytologyImageMaterialType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyImageMaterialType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyOriginalImageIDPatchReq_EncodeDecode(t *testing.T) {
+	var typ CytologyOriginalImageIDPatchReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyOriginalImageIDPatchReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyOriginalImageIDPatchReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"delay_time\":2,\"viewed_flag\":true}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyOriginalImageIDPatchReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyOriginalImageIDPatchReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyPostReq_EncodeDecode(t *testing.T) {
+	var typ CytologyPostReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPostReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyPostReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"diagnostic_marking\":\"П11\",\"diagnostic_number\":1,\"doctor_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"external_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"material_type\":\"GS\",\"patient_id\":\"123e4567-e89b-12d3-a456-426614174000\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyPostReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyPostReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyPostReqDetails_EncodeDecode(t *testing.T) {
+	var typ CytologyPostReqDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPostReqDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyPostReqDiagnosticMarking_EncodeDecode(t *testing.T) {
+	var typ CytologyPostReqDiagnosticMarking
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPostReqDiagnosticMarking
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyPostReqMaterialType_EncodeDecode(t *testing.T) {
+	var typ CytologyPostReqMaterialType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPostReqMaterialType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologySegmentationGroupIDPatchReq_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentationGroupIDPatchReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentationGroupIDPatchReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologySegmentationGroupIDPatchReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"seg_type\":\"NIR\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologySegmentationGroupIDPatchReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologySegmentationGroupIDPatchReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologySegmentationGroupIDPatchReqDetails_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentationGroupIDPatchReqDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentationGroupIDPatchReqDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologySegmentationGroupIDPatchReqSegType_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentationGroupIDPatchReqSegType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentationGroupIDPatchReqSegType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologySegmentationGroupIDSegmentsGetOKApplicationJSON_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentationGroupIDSegmentsGetOKApplicationJSON
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentationGroupIDSegmentsGetOKApplicationJSON
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologySegmentationGroupIDSegmentsPostReq_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentationGroupIDSegmentsPostReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentationGroupIDSegmentsPostReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologySegmentationGroupIDSegmentsPostReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"points\":[{\"true\":200,\"x\":100},{\"true\":300,\"x\":200}]}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologySegmentationGroupIDSegmentsPostReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologySegmentationGroupIDSegmentsPostReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologySegmentationIDPatchReq_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentationIDPatchReq
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentationIDPatchReq
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologySegmentationIDPatchReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"points\":[{\"true\":250,\"x\":150},{\"true\":350,\"x\":250}]}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologySegmentationIDPatchReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologySegmentationIDPatchReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
 func TestDevice_EncodeDecode(t *testing.T) {
 	var typ Device
 	typ.SetFake()
@@ -410,6 +1019,47 @@ func TestNodeValidation_EncodeDecode(t *testing.T) {
 
 	var typ2 NodeValidation
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestOriginalImage_EncodeDecode(t *testing.T) {
+	var typ OriginalImage
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 OriginalImage
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestOriginalImage_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"create_date\":\"2024-01-01T00:00:00Z\",\"cytology_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"delay_time\":1.5,\"id\":\"123e4567-e89b-12d3-a456-426614174000\",\"image_path\":\"cytology/images/123e4567-e89b-12d3-a456-426614174000.png\",\"viewed_flag\":false}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ OriginalImage
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 OriginalImage
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
 }
 func TestPatient_EncodeDecode(t *testing.T) {
 	var typ Patient
@@ -759,6 +1409,165 @@ func TestSegment_Examples(t *testing.T) {
 			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
 
 			var typ2 Segment
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestSegmentation_EncodeDecode(t *testing.T) {
+	var typ Segmentation
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 Segmentation
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestSegmentation_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"create_at\":\"2024-01-01T00:00:00Z\",\"id\":\"123e4567-e89b-12d3-a456-426614174000\",\"points\":[{\"true\":200,\"x\":100},{\"true\":300,\"x\":200}],\"segmentation_group_id\":\"123e4567-e89b-12d3-a456-426614174000\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ Segmentation
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 Segmentation
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestSegmentationGroup_EncodeDecode(t *testing.T) {
+	var typ SegmentationGroup
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 SegmentationGroup
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestSegmentationGroup_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"create_at\":\"2024-01-01T00:00:00Z\",\"cytology_id\":\"123e4567-e89b-12d3-a456-426614174000\",\"group_type\":\"CE\",\"id\":\"123e4567-e89b-12d3-a456-426614174000\",\"is_ai\":false,\"seg_type\":\"NIL\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ SegmentationGroup
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 SegmentationGroup
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestSegmentationGroupDetails_EncodeDecode(t *testing.T) {
+	var typ SegmentationGroupDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 SegmentationGroupDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestSegmentationGroupGroupType_EncodeDecode(t *testing.T) {
+	var typ SegmentationGroupGroupType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 SegmentationGroupGroupType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestSegmentationGroupSegType_EncodeDecode(t *testing.T) {
+	var typ SegmentationGroupSegType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 SegmentationGroupSegType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestSegmentationPoint_EncodeDecode(t *testing.T) {
+	var typ SegmentationPoint
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 SegmentationPoint
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestSegmentationPoint_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"true\":200,\"x\":100}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ SegmentationPoint
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 SegmentationPoint
 			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
 		})
 	}

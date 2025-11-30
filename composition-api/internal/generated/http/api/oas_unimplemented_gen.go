@@ -13,6 +13,163 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// CytologiesExternalIDGet implements GET /cytologies/external/{id} operation.
+//
+// Получить цитологические исследования по внешнему id.
+//
+// GET /cytologies/external/{id}
+func (UnimplementedHandler) CytologiesExternalIDGet(ctx context.Context, params CytologiesExternalIDGetParams) (r CytologiesExternalIDGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologiesPatientCardDoctorIDPatientIDGet implements GET /cytologies/patient-card/{doctor_id}/{patient_id} operation.
+//
+// Получить цитологические исследования по id врача и
+// пациента.
+//
+// GET /cytologies/patient-card/{doctor_id}/{patient_id}
+func (UnimplementedHandler) CytologiesPatientCardDoctorIDPatientIDGet(ctx context.Context, params CytologiesPatientCardDoctorIDPatientIDGetParams) (r CytologiesPatientCardDoctorIDPatientIDGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDDelete implements DELETE /cytology/{id} operation.
+//
+// Удалить цитологическое исследование.
+//
+// DELETE /cytology/{id}
+func (UnimplementedHandler) CytologyIDDelete(ctx context.Context, params CytologyIDDeleteParams) (r CytologyIDDeleteRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDGet implements GET /cytology/{id} operation.
+//
+// Получить цитологическое исследование.
+//
+// GET /cytology/{id}
+func (UnimplementedHandler) CytologyIDGet(ctx context.Context, params CytologyIDGetParams) (r CytologyIDGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDOriginalImageGet implements GET /cytology/{id}/original-image operation.
+//
+// Получить оригинальные изображения цитологического
+// исследования.
+//
+// GET /cytology/{id}/original-image
+func (UnimplementedHandler) CytologyIDOriginalImageGet(ctx context.Context, params CytologyIDOriginalImageGetParams) (r CytologyIDOriginalImageGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDOriginalImagePost implements POST /cytology/{id}/original-image operation.
+//
+// Создать оригинальное изображение для
+// цитологического исследования.
+//
+// POST /cytology/{id}/original-image
+func (UnimplementedHandler) CytologyIDOriginalImagePost(ctx context.Context, req *CytologyIDOriginalImagePostReq, params CytologyIDOriginalImagePostParams) (r CytologyIDOriginalImagePostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDPatch implements PATCH /cytology/{id} operation.
+//
+// Обновить цитологическое исследование.
+//
+// PATCH /cytology/{id}
+func (UnimplementedHandler) CytologyIDPatch(ctx context.Context, req *CytologyIDPatchReq, params CytologyIDPatchParams) (r CytologyIDPatchRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDSegmentationGroupsGet implements GET /cytology/{id}/segmentation-groups operation.
+//
+// Получить группы сегментаций цитологического
+// исследования.
+//
+// GET /cytology/{id}/segmentation-groups
+func (UnimplementedHandler) CytologyIDSegmentationGroupsGet(ctx context.Context, params CytologyIDSegmentationGroupsGetParams) (r CytologyIDSegmentationGroupsGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyIDSegmentationGroupsPost implements POST /cytology/{id}/segmentation-groups operation.
+//
+// Создать группу сегментаций.
+//
+// POST /cytology/{id}/segmentation-groups
+func (UnimplementedHandler) CytologyIDSegmentationGroupsPost(ctx context.Context, req *CytologyIDSegmentationGroupsPostReq, params CytologyIDSegmentationGroupsPostParams) (r CytologyIDSegmentationGroupsPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyOriginalImageIDPatch implements PATCH /cytology/original-image/{id} operation.
+//
+// Обновить оригинальное изображение.
+//
+// PATCH /cytology/original-image/{id}
+func (UnimplementedHandler) CytologyOriginalImageIDPatch(ctx context.Context, req *CytologyOriginalImageIDPatchReq, params CytologyOriginalImageIDPatchParams) (r CytologyOriginalImageIDPatchRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologyPost implements POST /cytology operation.
+//
+// Создать цитологическое исследование.
+//
+// POST /cytology
+func (UnimplementedHandler) CytologyPost(ctx context.Context, req *CytologyPostReq) (r CytologyPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologySegmentationGroupIDDelete implements DELETE /cytology/segmentation-group/{id} operation.
+//
+// Все сегментации группы будут также удалены.
+//
+// DELETE /cytology/segmentation-group/{id}
+func (UnimplementedHandler) CytologySegmentationGroupIDDelete(ctx context.Context, params CytologySegmentationGroupIDDeleteParams) (r CytologySegmentationGroupIDDeleteRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologySegmentationGroupIDPatch implements PATCH /cytology/segmentation-group/{id} operation.
+//
+// Обновить группу сегментаций.
+//
+// PATCH /cytology/segmentation-group/{id}
+func (UnimplementedHandler) CytologySegmentationGroupIDPatch(ctx context.Context, req *CytologySegmentationGroupIDPatchReq, params CytologySegmentationGroupIDPatchParams) (r CytologySegmentationGroupIDPatchRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologySegmentationGroupIDSegmentsGet implements GET /cytology/segmentation-group/{id}/segments operation.
+//
+// Получить сегментации группы.
+//
+// GET /cytology/segmentation-group/{id}/segments
+func (UnimplementedHandler) CytologySegmentationGroupIDSegmentsGet(ctx context.Context, params CytologySegmentationGroupIDSegmentsGetParams) (r CytologySegmentationGroupIDSegmentsGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologySegmentationGroupIDSegmentsPost implements POST /cytology/segmentation-group/{id}/segments operation.
+//
+// Создать сегментацию в группе.
+//
+// POST /cytology/segmentation-group/{id}/segments
+func (UnimplementedHandler) CytologySegmentationGroupIDSegmentsPost(ctx context.Context, req *CytologySegmentationGroupIDSegmentsPostReq, params CytologySegmentationGroupIDSegmentsPostParams) (r CytologySegmentationGroupIDSegmentsPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologySegmentationIDDelete implements DELETE /cytology/segmentation/{id} operation.
+//
+// Удалить сегментацию.
+//
+// DELETE /cytology/segmentation/{id}
+func (UnimplementedHandler) CytologySegmentationIDDelete(ctx context.Context, params CytologySegmentationIDDeleteParams) (r CytologySegmentationIDDeleteRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CytologySegmentationIDPatch implements PATCH /cytology/segmentation/{id} operation.
+//
+// Обновить сегментацию.
+//
+// PATCH /cytology/segmentation/{id}
+func (UnimplementedHandler) CytologySegmentationIDPatch(ctx context.Context, req *CytologySegmentationIDPatchReq, params CytologySegmentationIDPatchParams) (r CytologySegmentationIDPatchRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // DownloadUziIDImageIDGet implements GET /download/{uzi_id}/{image_id} operation.
 //
 // Получить кадр узи.

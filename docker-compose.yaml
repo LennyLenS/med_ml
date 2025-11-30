@@ -1,7 +1,7 @@
 name: yir
-  
+
 volumes:
-  redpanda-0: 
+  redpanda-0:
   minio-s3:
   postgres:
 
@@ -21,7 +21,7 @@ services:
       - deps
       - app
     environment:
-      POSTGRES_MULTIPLE_DATABASES: authdb,meddb,uzidb,billingdb
+      POSTGRES_MULTIPLE_DATABASES: authdb,meddb,uzidb,billingdb,cytologydb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
 
@@ -35,8 +35,8 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
       MINIO_SERVER_URL: http://localhost:9000
-      MINIO_ACCESS_KEY: NZjt6KmuHQRU7IitYUiW   
-      MINIO_SECRET_KEY: ql9DoBMKyqMxQm8j5LQuKwnn68KFsGqn5jGbL7uL    
+      MINIO_ACCESS_KEY: NZjt6KmuHQRU7IitYUiW
+      MINIO_SECRET_KEY: ql9DoBMKyqMxQm8j5LQuKwnn68KFsGqn5jGbL7uL
     volumes:
       - minio-s3:/data
     command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
@@ -81,7 +81,7 @@ services:
       - 19092:19092
       - 19644:9644
     profiles:
-      - deps 
+      - deps
       - app
   ####################
   # Redpanda Console #
@@ -115,7 +115,7 @@ services:
 
   ml_service:
     container_name: ml_service
-    build: 
+    build:
       context: ./ml_service/
       dockerfile: Dockerfile
     depends_on:
@@ -160,7 +160,19 @@ services:
       - 50060:50055
     profiles:
       - app
-    
+
+  cytology_service:
+    container_name: cytology_service
+    build:
+      context: ./cytology/
+      dockerfile: Dockerfile
+    env_file:
+      - ./cytology/.env-docker
+    ports:
+      - 50070:50055
+    profiles:
+      - app
+
   composition_api:
     container_name: composition_api
     build:
@@ -175,6 +187,7 @@ services:
       - uzi_service
       - med_service
       - auth_service
+      - cytology_service
     profiles:
       - app
 

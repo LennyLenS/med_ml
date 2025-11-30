@@ -9,6 +9,7 @@ import (
 
 	api "composition-api/internal/generated/http/api"
 	"composition-api/internal/server/auth"
+	"composition-api/internal/server/cytology"
 	"composition-api/internal/server/download"
 	"composition-api/internal/server/med"
 	"composition-api/internal/server/register"
@@ -23,6 +24,7 @@ type server struct {
 	register.RegisterRoute
 	download.DownloadRoute
 	billing.BillingRoute
+	cytology.CytologyRoute
 }
 
 func New(services *services.Services) api.Handler {
@@ -32,14 +34,16 @@ func New(services *services.Services) api.Handler {
 	registerRoute := register.NewRegisterRoute(services)
 	downloadRoute := download.NewDownloadRoute(services)
 	billingRoute := billing.NewBillingRoute(services)
+	cytologyRoute := cytology.NewCytologyRoute(services)
 
 	return &server{
-		UziRoute:      uziRoute,
-		AuthRoute:     authRoute,
-		MedRoute:      medRoute,
-		RegisterRoute: registerRoute,
-		DownloadRoute: downloadRoute,
-		BillingRoute:  billingRoute,
+		UziRoute:       uziRoute,
+		AuthRoute:      authRoute,
+		MedRoute:       medRoute,
+		RegisterRoute:   registerRoute,
+		DownloadRoute:   downloadRoute,
+		BillingRoute:    billingRoute,
+		CytologyRoute:   cytologyRoute,
 	}
 }
 
