@@ -2,7 +2,6 @@ package segmentation_group
 
 import (
 	sq "github.com/Masterminds/squirrel"
-	"github.com/google/uuid"
 
 	repoEntity "cytology/internal/repository/entity"
 	"cytology/internal/repository/segmentation_group/entity"

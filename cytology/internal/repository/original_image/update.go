@@ -2,7 +2,6 @@ package original_image
 
 import (
 	sq "github.com/Masterminds/squirrel"
-	"github.com/google/uuid"
 
 	repoEntity "cytology/internal/repository/entity"
 	"cytology/internal/repository/original_image/entity"
