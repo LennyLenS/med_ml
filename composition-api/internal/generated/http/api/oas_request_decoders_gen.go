@@ -44,45 +44,94 @@ func (s *Server) decodeCytologyIDOriginalImagePostRequest(r *http.Request) (
 		return req, close, errors.Wrap(err, "parse media type")
 	}
 	switch {
-	case ct == "application/json":
+	case ct == "multipart/form-data":
 		if r.ContentLength == 0 {
 			return req, close, validate.ErrBodyRequired
 		}
-		buf, err := io.ReadAll(r.Body)
-		if err != nil {
-			return req, close, err
+		if err := r.ParseMultipartForm(s.cfg.MaxMultipartMemory); err != nil {
+			return req, close, errors.Wrap(err, "parse multipart form")
 		}
-
-		if len(buf) == 0 {
-			return req, close, validate.ErrBodyRequired
-		}
-
-		d := jx.DecodeBytes(buf)
+		// Remove all temporary files created by ParseMultipartForm when the request is done.
+		//
+		// Notice that the closers are called in reverse order, to match defer behavior, so
+		// any opened file will be closed before RemoveAll call.
+		closers = append(closers, r.MultipartForm.RemoveAll)
+		// Form values may be unused.
+		form := url.Values(r.MultipartForm.Value)
+		_ = form
 
 		var request CytologyIDOriginalImagePostReq
-		if err := func() error {
-			if err := request.Decode(d); err != nil {
-				return err
+		q := uri.NewQueryDecoder(form)
+		{
+			cfg := uri.QueryParameterDecodingConfig{
+				Name:    "delay_time",
+				Style:   uri.QueryStyleForm,
+				Explode: true,
 			}
-			if err := d.Skip(); err != io.EOF {
-				return errors.New("unexpected trailing data")
+			if err := q.HasParam(cfg); err == nil {
+				if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+					var requestDotDelayTimeVal float64
+					if err := func() error {
+						val, err := d.DecodeValue()
+						if err != nil {
+							return err
+						}
+
+						c, err := conv.ToFloat64(val)
+						if err != nil {
+							return err
+						}
+
+						requestDotDelayTimeVal = c
+						return nil
+					}(); err != nil {
+						return err
+					}
+					request.DelayTime.SetTo(requestDotDelayTimeVal)
+					return nil
+				}); err != nil {
+					return req, close, errors.Wrap(err, "decode \"delay_time\"")
+				}
+				if err := func() error {
+					if value, ok := request.DelayTime.Get(); ok {
+						if err := func() error {
+							if err := (validate.Float{}).Validate(float64(value)); err != nil {
+								return errors.Wrap(err, "float")
+							}
+							return nil
+						}(); err != nil {
+							return err
+						}
+					}
+					return nil
+				}(); err != nil {
+					return req, close, errors.Wrap(err, "validate")
+				}
 			}
-			return nil
-		}(); err != nil {
-			err = &ogenerrors.DecodeBodyError{
-				ContentType: ct,
-				Body:        buf,
-				Err:         err,
-			}
-			return req, close, err
 		}
-		if err := func() error {
-			if err := request.Validate(); err != nil {
-				return err
+		{
+			if err := func() error {
+				files, ok := r.MultipartForm.File["file"]
+				if !ok || len(files) < 1 {
+					return validate.ErrFieldRequired
+				}
+				fh := files[0]
+
+				f, err := fh.Open()
+				if err != nil {
+					return errors.Wrap(err, "open")
+				}
+				closers = append(closers, f.Close)
+				request.File = ht.MultipartFile{
+					Name:   fh.Filename,
+					File:   f,
+					Size:   fh.Size,
+					Header: fh.Header,
+				}
+				return nil
+			}(); err != nil {
+				return req, close, errors.Wrap(err, "decode \"file\"")
 			}
-			return nil
-		}(); err != nil {
-			return req, close, errors.Wrap(err, "validate")
 		}
 		return &request, close, nil
 	default:

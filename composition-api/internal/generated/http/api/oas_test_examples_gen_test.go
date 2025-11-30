@@ -129,47 +129,6 @@ func TestCytologyIDOriginalImageGetOKApplicationJSON_EncodeDecode(t *testing.T) 
 	var typ2 CytologyIDOriginalImageGetOKApplicationJSON
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
-func TestCytologyIDOriginalImagePostReq_EncodeDecode(t *testing.T) {
-	var typ CytologyIDOriginalImagePostReq
-	typ.SetFake()
-
-	e := jx.Encoder{}
-	typ.Encode(&e)
-	data := e.Bytes()
-	require.True(t, std.Valid(data), "Encoded: %s", data)
-
-	var typ2 CytologyIDOriginalImagePostReq
-	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
-}
-
-func TestCytologyIDOriginalImagePostReq_Examples(t *testing.T) {
-
-	for i, tc := range []struct {
-		Input string
-	}{
-		{Input: "{\"delay_time\":1.5,\"image_path\":\"cytology/images/123e4567-e89b-12d3-a456-426614174000.png\"}"},
-	} {
-		tc := tc
-		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
-			var typ CytologyIDOriginalImagePostReq
-
-			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
-				if validateErr, ok := errors.Into[*validate.Error](err); ok {
-					t.Skipf("Validation error: %v", validateErr)
-					return
-				}
-				require.NoErrorf(t, err, "Input: %s", tc.Input)
-			}
-
-			e := jx.Encoder{}
-			typ.Encode(&e)
-			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
-
-			var typ2 CytologyIDOriginalImagePostReq
-			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
-		})
-	}
-}
 func TestCytologyIDPatchReq_EncodeDecode(t *testing.T) {
 	var typ CytologyIDPatchReq
 	typ.SetFake()

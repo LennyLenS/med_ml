@@ -20,13 +20,36 @@ func encodeCytologyIDOriginalImagePostRequest(
 	req *CytologyIDOriginalImagePostReq,
 	r *http.Request,
 ) error {
-	const contentType = "application/json"
-	e := new(jx.Encoder)
+	const contentType = "multipart/form-data"
+	request := req
+
+	q := uri.NewFormEncoder(map[string]string{})
 	{
-		req.Encode(e)
+		// Encode "delay_time" form field.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "delay_time",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := request.DelayTime.Get(); ok {
+				return e.EncodeValue(conv.Float64ToString(val))
+			}
+			return nil
+		}); err != nil {
+			return errors.Wrap(err, "encode query")
+		}
 	}
-	encoded := e.Bytes()
-	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	body, boundary := ht.CreateMultipartBody(func(w *multipart.Writer) error {
+		if err := request.File.WriteMultipart("file", w); err != nil {
+			return errors.Wrap(err, "write \"file\"")
+		}
+		if err := q.WriteMultipart(w); err != nil {
+			return errors.Wrap(err, "write multipart")
+		}
+		return nil
+	})
+	ht.SetCloserBody(r, body, mime.FormatMediaType(contentType, map[string]string{"boundary": boundary}))
 	return nil
 }
 

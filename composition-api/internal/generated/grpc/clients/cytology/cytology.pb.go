@@ -1167,8 +1167,9 @@ func (x *OriginalImage) GetViewedFlag() bool {
 type CreateOriginalImageIn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CytologyId    string                 `protobuf:"bytes,100,opt,name=cytology_id,json=cytologyId,proto3" json:"cytology_id,omitempty"`
-	ImagePath     string                 `protobuf:"bytes,200,opt,name=image_path,json=imagePath,proto3" json:"image_path,omitempty"`
-	DelayTime     *float64               `protobuf:"fixed64,300,opt,name=delay_time,json=delayTime,proto3,oneof" json:"delay_time,omitempty"`
+	File          []byte                 `protobuf:"bytes,200,opt,name=file,proto3" json:"file,omitempty"`
+	ContentType   string                 `protobuf:"bytes,300,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	DelayTime     *float64               `protobuf:"fixed64,400,opt,name=delay_time,json=delayTime,proto3,oneof" json:"delay_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1210,9 +1211,16 @@ func (x *CreateOriginalImageIn) GetCytologyId() string {
 	return ""
 }
 
-func (x *CreateOriginalImageIn) GetImagePath() string {
+func (x *CreateOriginalImageIn) GetFile() []byte {
 	if x != nil {
-		return x.ImagePath
+		return x.File
+	}
+	return nil
+}
+
+func (x *CreateOriginalImageIn) GetContentType() string {
+	if x != nil {
+		return x.ContentType
 	}
 	return ""
 }
@@ -2748,14 +2756,14 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"delay_time\x18\xf4\x03 \x01(\x01H\x00R\tdelayTime\x88\x01\x01\x12 \n" +
 	"\vviewed_flag\x18\xd8\x04 \x01(\bR\n" +
 	"viewedFlagB\r\n" +
-	"\v_delay_time\"\x8c\x01\n" +
+	"\v_delay_time\"\xa5\x01\n" +
 	"\x15CreateOriginalImageIn\x12\x1f\n" +
 	"\vcytology_id\x18d \x01(\tR\n" +
-	"cytologyId\x12\x1e\n" +
+	"cytologyId\x12\x13\n" +
+	"\x04file\x18\xc8\x01 \x01(\fR\x04file\x12\"\n" +
+	"\fcontent_type\x18\xac\x02 \x01(\tR\vcontentType\x12#\n" +
 	"\n" +
-	"image_path\x18\xc8\x01 \x01(\tR\timagePath\x12#\n" +
-	"\n" +
-	"delay_time\x18\xac\x02 \x01(\x01H\x00R\tdelayTime\x88\x01\x01B\r\n" +
+	"delay_time\x18\x90\x03 \x01(\x01H\x00R\tdelayTime\x88\x01\x01B\r\n" +
 	"\v_delay_time\"(\n" +
 	"\x16CreateOriginalImageOut\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\"(\n" +

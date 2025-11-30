@@ -14,13 +14,15 @@ import (
 )
 
 func (h *handler) CytologyIDOriginalImagePost(ctx context.Context, req *api.CytologyIDOriginalImagePostReq, params api.CytologyIDOriginalImagePostParams) (api.CytologyIDOriginalImagePostRes, error) {
-	// TODO: Implement image upload and path extraction
-	// For now, using a placeholder
-	imagePath := "placeholder/path"
+	contentType := req.File.Header.Get("Content-Type")
+	if contentType == "" {
+		contentType = "application/octet-stream"
+	}
 
 	arg := cytologySrv.CreateOriginalImageArg{
-		CytologyID: params.ID,
-		ImagePath:   imagePath,
+		CytologyID:  params.ID,
+		File:        req.File,
+		ContentType: contentType,
 	}
 
 	if req.DelayTime.Set {

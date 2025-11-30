@@ -2,6 +2,7 @@ package cytology
 
 import (
 	"github.com/google/uuid"
+	ht "github.com/ogen-go/ogen/http"
 
 	domain "composition-api/internal/domain/cytology"
 )
@@ -33,9 +34,10 @@ type UpdateCytologyImageArg struct {
 }
 
 type CreateOriginalImageArg struct {
-	CytologyID uuid.UUID
-	ImagePath  string
-	DelayTime  *float64
+	CytologyID  uuid.UUID
+	File        ht.MultipartFile
+	ContentType string
+	DelayTime   *float64
 }
 
 type UpdateOriginalImageArg struct {

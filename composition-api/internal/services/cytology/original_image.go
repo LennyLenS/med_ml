@@ -11,9 +11,10 @@ import (
 
 func (s *service) CreateOriginalImage(ctx context.Context, arg CreateOriginalImageArg) (uuid.UUID, error) {
 	return s.adapters.Cytology.CreateOriginalImage(ctx, cytology.CreateOriginalImageIn{
-		CytologyID: arg.CytologyID,
-		ImagePath:  arg.ImagePath,
-		DelayTime:  arg.DelayTime,
+		CytologyID:  arg.CytologyID,
+		File:        arg.File,
+		ContentType: arg.ContentType,
+		DelayTime:   arg.DelayTime,
 	})
 }
 

@@ -204,15 +204,15 @@ type CytologyIDOriginalImagePostNotFound ErrorStatusCode
 func (*CytologyIDOriginalImagePostNotFound) cytologyIDOriginalImagePostRes() {}
 
 type CytologyIDOriginalImagePostReq struct {
-	// Путь к изображению в S3.
-	ImagePath string `json:"image_path"`
+	// Файл изображения.
+	File ht.MultipartFile `json:"file"`
 	// Время обработки.
 	DelayTime OptFloat64 `json:"delay_time"`
 }
 
-// GetImagePath returns the value of ImagePath.
-func (s *CytologyIDOriginalImagePostReq) GetImagePath() string {
-	return s.ImagePath
+// GetFile returns the value of File.
+func (s *CytologyIDOriginalImagePostReq) GetFile() ht.MultipartFile {
+	return s.File
 }
 
 // GetDelayTime returns the value of DelayTime.
@@ -220,9 +220,9 @@ func (s *CytologyIDOriginalImagePostReq) GetDelayTime() OptFloat64 {
 	return s.DelayTime
 }
 
-// SetImagePath sets the value of ImagePath.
-func (s *CytologyIDOriginalImagePostReq) SetImagePath(val string) {
-	s.ImagePath = val
+// SetFile sets the value of File.
+func (s *CytologyIDOriginalImagePostReq) SetFile(val ht.MultipartFile) {
+	s.File = val
 }
 
 // SetDelayTime sets the value of DelayTime.

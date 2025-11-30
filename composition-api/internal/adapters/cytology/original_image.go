@@ -2,6 +2,7 @@ package cytology
 
 import (
 	"context"
+	"io"
 
 	"composition-api/internal/adapters/cytology/mappers"
 	adapter_errors "composition-api/internal/adapters/errors"
@@ -12,10 +13,16 @@ import (
 )
 
 func (a *adapter) CreateOriginalImage(ctx context.Context, in CreateOriginalImageIn) (uuid.UUID, error) {
+	fileData, err := io.ReadAll(in.File.File)
+	if err != nil {
+		return uuid.Nil, adapter_errors.HandleGRPCError(err)
+	}
+
 	req := &pb.CreateOriginalImageIn{
-		CytologyId: in.CytologyID.String(),
-		ImagePath:  in.ImagePath,
-		DelayTime:  in.DelayTime,
+		CytologyId:  in.CytologyID.String(),
+		File:        fileData,
+		ContentType: in.ContentType,
+		DelayTime:   in.DelayTime,
 	}
 
 	res, err := a.client.CreateOriginalImage(ctx, req)

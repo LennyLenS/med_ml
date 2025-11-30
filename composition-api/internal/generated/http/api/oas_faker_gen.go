@@ -120,20 +120,6 @@ func (s *CytologyIDOriginalImageGetOKApplicationJSON) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyIDOriginalImagePostReq) SetFake() {
-	{
-		{
-			s.ImagePath = "string"
-		}
-	}
-	{
-		{
-			s.DelayTime.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *CytologyIDPatchReq) SetFake() {
 	{
 		{

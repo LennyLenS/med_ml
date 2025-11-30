@@ -2910,21 +2910,19 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
-                - image_path
+                - file
               properties:
-                image_path:
+                file:
                   type: string
-                  description: путь к изображению в S3
+                  format: binary
+                  description: файл изображения
                 delay_time:
                   type: number
                   description: время обработки
-              example:
-                image_path: "cytology/images/123e4567-e89b-12d3-a456-426614174000.png"
-                delay_time: 1.5
       responses:
         '200':
           description: id оригинального изображения
