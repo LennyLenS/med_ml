@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"net"
 	"os"
@@ -64,12 +65,27 @@ func run() (exitCode int) {
 		return failExitCode
 	}
 
+	bucketName := "cytology"
+	exists, err := client.BucketExists(context.Background(), bucketName)
+	if err != nil {
+		slog.Error("check bucket exists", "err", err)
+		return failExitCode
+	}
+	if !exists {
+		err = client.MakeBucket(context.Background(), bucketName, minio.MakeBucketOptions{})
+		if err != nil {
+			slog.Error("create bucket", "err", err)
+			return failExitCode
+		}
+		slog.Info("created bucket", "bucket", bucketName)
+	}
+
 	if err := db.Ping(); err != nil {
 		slog.Error("ping db", "err", err)
 		return failExitCode
 	}
 
-	dao := repository.NewRepository(db, client, "cytology")
+	dao := repository.NewRepository(db, client, bucketName)
 
 	services := services.New(
 		dao,
