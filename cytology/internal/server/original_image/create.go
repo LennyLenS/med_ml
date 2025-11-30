@@ -17,10 +17,19 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 		return nil, status.Errorf(codes.InvalidArgument, "cytology_id is not a valid uuid: %s", err.Error())
 	}
 
+	if len(in.File) == 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "file is required")
+	}
+
+	if in.ContentType == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "content_type is required")
+	}
+
 	arg := original_image.CreateOriginalImageArg{
-		CytologyID: cytologyID,
-		ImagePath:  in.ImagePath,
-		DelayTime:  in.DelayTime,
+		CytologyID:  cytologyID,
+		File:        in.File,
+		ContentType: in.ContentType,
+		DelayTime:   in.DelayTime,
 	}
 
 	id, err := h.services.OriginalImage.CreateOriginalImage(ctx, arg)

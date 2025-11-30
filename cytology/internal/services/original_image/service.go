@@ -1,7 +1,10 @@
 package original_image
 
 import (
+	"bytes"
 	"context"
+	"fmt"
+	"path/filepath"
 	"time"
 
 	"cytology/internal/domain"
@@ -29,9 +32,10 @@ func New(dao repository.DAO) Service {
 }
 
 type CreateOriginalImageArg struct {
-	CytologyID uuid.UUID
-	ImagePath  string
-	DelayTime  *float64
+	CytologyID  uuid.UUID
+	File        []byte
+	ContentType string
+	DelayTime   *float64
 }
 
 type UpdateOriginalImageArg struct {
@@ -41,10 +45,29 @@ type UpdateOriginalImageArg struct {
 }
 
 func (s *service) CreateOriginalImage(ctx context.Context, arg CreateOriginalImageArg) (uuid.UUID, error) {
+	// Генерируем ID для изображения
+	imageID := uuid.New()
+
+	// Формируем путь в S3: {cytology_id}/{image_id}/{image_id}
+	imagePath := filepath.Join(arg.CytologyID.String(), imageID.String(), imageID.String())
+
+	// Загружаем файл в S3
+	fileRepo := s.dao.NewFileRepo()
+	file := domain.File{
+		Format: arg.ContentType,
+		Size:   int64(len(arg.File)),
+		Buf:    bytes.NewReader(arg.File),
+	}
+
+	if err := fileRepo.LoadFile(ctx, imagePath, file); err != nil {
+		return uuid.Nil, fmt.Errorf("load file to S3: %w", err)
+	}
+
+	// Создаем запись в БД
 	img := domain.OriginalImage{
-		Id:         uuid.New(),
+		Id:         imageID,
 		CytologyID: arg.CytologyID,
-		ImagePath:  arg.ImagePath,
+		ImagePath:  imagePath,
 		CreateDate: time.Now(),
 		DelayTime:  arg.DelayTime,
 		ViewedFlag: false,

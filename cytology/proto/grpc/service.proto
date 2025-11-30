@@ -143,8 +143,9 @@ message OriginalImage {
 
 message CreateOriginalImageIn {
   string cytology_id = 100;
-  string image_path = 200;
-  optional double delay_time = 300;
+  bytes file = 200;
+  string content_type = 300;
+  optional double delay_time = 400;
 }
 
 message CreateOriginalImageOut {

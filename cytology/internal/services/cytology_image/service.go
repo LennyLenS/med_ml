@@ -2,7 +2,6 @@ package cytology_image
 
 import (
 	"context"
-	"time"
 
 	"cytology/internal/domain"
 	"cytology/internal/repository"

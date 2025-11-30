@@ -8,8 +8,6 @@ import (
 	"cytology/internal/domain"
 	cytologyImageEntity "cytology/internal/repository/cytology_image/entity"
 	"cytology/internal/repository/entity"
-
-	"github.com/google/uuid"
 )
 
 func (s *service) UpdateCytologyImage(ctx context.Context, arg UpdateCytologyImageArg) (domain.CytologyImage, error) {
