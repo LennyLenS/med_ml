@@ -3,8 +3,8 @@ package mappers
 import (
 	"github.com/google/uuid"
 
-	api "composition-api/internal/generated/http/api"
 	domain "composition-api/internal/domain/cytology"
+	api "composition-api/internal/generated/http/api"
 	cytologySrv "composition-api/internal/services/cytology"
 )
 

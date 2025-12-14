@@ -37,13 +37,13 @@ func New(services *services.Services) api.Handler {
 	cytologyRoute := cytology.NewCytologyRoute(services)
 
 	return &server{
-		UziRoute:       uziRoute,
-		AuthRoute:      authRoute,
-		MedRoute:       medRoute,
-		RegisterRoute:   registerRoute,
-		DownloadRoute:   downloadRoute,
-		BillingRoute:    billingRoute,
-		CytologyRoute:   cytologyRoute,
+		UziRoute:      uziRoute,
+		AuthRoute:     authRoute,
+		MedRoute:      medRoute,
+		RegisterRoute: registerRoute,
+		DownloadRoute: downloadRoute,
+		BillingRoute:  billingRoute,
+		CytologyRoute: cytologyRoute,
 	}
 }
 

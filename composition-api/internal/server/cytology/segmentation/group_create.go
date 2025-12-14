@@ -11,7 +11,6 @@ import (
 
 	api "composition-api/internal/generated/http/api"
 	mappers "composition-api/internal/server/cytology/mappers"
-	domainCytology "composition-api/internal/domain/cytology"
 )
 
 func (h *handler) CytologySegmentGroupCreateCreate(ctx context.Context, req *api.CytologySegmentGroupCreateCreateReq, params api.CytologySegmentGroupCreateCreateParams) (api.CytologySegmentGroupCreateCreateRes, error) {

@@ -10,9 +10,9 @@ import (
 	"github.com/AlekSi/pointer"
 	"github.com/google/uuid"
 
+	domainCytology "composition-api/internal/domain/cytology"
 	api "composition-api/internal/generated/http/api"
 	mappers "composition-api/internal/server/cytology/mappers"
-	domainCytology "composition-api/internal/domain/cytology"
 )
 
 func (h *handler) CytologySegmentsList(ctx context.Context, params api.CytologySegmentsListParams) (api.CytologySegmentsListRes, error) {

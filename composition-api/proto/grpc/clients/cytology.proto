@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "internal/generated/grpc/service";
+option go_package = "internal/generated/grpc/clients/cytology";
 
 import "google/protobuf/empty.proto";
 

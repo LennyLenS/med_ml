@@ -4,15 +4,16 @@
 // 	protoc        v6.33.1
 // source: proto/grpc/clients/cytology.proto
 
-package service
+package cytology
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 const (
@@ -3110,7 +3111,7 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x13GetSegmentationById\x12\x16.GetSegmentationByIdIn\x1a\x17.GetSegmentationByIdOut\x12I\n" +
 	"\x14GetSegmentsByGroupId\x12\x17.GetSegmentsByGroupIdIn\x1a\x18.GetSegmentsByGroupIdOut\x12C\n" +
 	"\x12UpdateSegmentation\x12\x15.UpdateSegmentationIn\x1a\x16.UpdateSegmentationOut\x12C\n" +
-	"\x12DeleteSegmentation\x12\x15.DeleteSegmentationIn\x1a\x16.google.protobuf.EmptyB!Z\x1finternal/generated/grpc/serviceb\x06proto3"
+	"\x12DeleteSegmentation\x12\x15.DeleteSegmentationIn\x1a\x16.google.protobuf.EmptyB*Z(internal/generated/grpc/clients/cytologyb\x06proto3"
 
 var (
 	file_proto_grpc_clients_cytology_proto_rawDescOnce sync.Once

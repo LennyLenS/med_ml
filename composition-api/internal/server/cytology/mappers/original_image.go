@@ -1,8 +1,8 @@
 package mappers
 
 import (
-	api "composition-api/internal/generated/http/api"
 	domain "composition-api/internal/domain/cytology"
+	api "composition-api/internal/generated/http/api"
 )
 
 type OriginalImage struct{}
