@@ -20,6 +20,8 @@ type CreateCytologyImageIn struct {
 	Details           *string
 	PrevID            *uuid.UUID
 	ParentPrevID      *uuid.UUID
+	File              *ht.MultipartFile
+	ContentType       string
 }
 
 type UpdateCytologyImageIn struct {

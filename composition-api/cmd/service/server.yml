@@ -2681,42 +2681,27 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
                 - diagnostic_number
               properties:
-                id:
-                  type: integer
-                  readOnly: true
                 image:
                   type: string
-                  format: uri
-                  readOnly: true
-                is_last:
-                  type: boolean
-                  readOnly: true
-                  description: Является ли данная версия измениний последней?
-                diagnos_date:
-                  type: string
-                  format: date-time
-                  readOnly: true
-                details:
-                  type: object
-                  x-nullable: true
-                  description: Детали диагностики
+                  format: binary
+                  description: файл изображения цитологии
+                diagnostic_number:
+                  type: integer
+                  minimum: 0
+                  maximum: 2147483647
+                  description: Номер диагностики
                 diagnostic_marking:
                   type: string
                   enum:
                     - П11
                     - Л23
                   description: Маркировка диагностики
-                diagnostic_number:
-                  type: integer
-                  minimum: 0
-                  maximum: 2147483647
-                  description: Номер диагностики
                 material_type:
                   type: string
                   enum:
@@ -2748,6 +2733,18 @@ paths:
                 patient_card:
                   type: integer
                   x-nullable: true
+                details:
+                  type: string
+                  description: Детали диагностики в формате JSON
+                  x-nullable: true
+                is_last:
+                  type: boolean
+                  readOnly: true
+                  description: Является ли данная версия измениний последней?
+                diagnos_date:
+                  type: string
+                  format: date-time
+                  readOnly: true
       responses:
         '201':
           description: созданное цитологическое исследование

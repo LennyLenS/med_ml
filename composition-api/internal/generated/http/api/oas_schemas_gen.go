@@ -446,59 +446,39 @@ type CytologyCreateCreateInternalServerError ErrorStatusCode
 func (*CytologyCreateCreateInternalServerError) cytologyCreateCreateRes() {}
 
 type CytologyCreateCreateReq struct {
-	ID    OptInt `json:"id"`
-	Image OptURI `json:"image"`
+	// Файл изображения цитологии.
+	Image OptMultipartFile `json:"image"`
+	// Номер диагностики.
+	DiagnosticNumber int `json:"diagnostic_number"`
+	// Маркировка диагностики.
+	DiagnosticMarking OptCytologyCreateCreateReqDiagnosticMarking `json:"diagnostic_marking"`
+	MaterialType      OptCytologyCreateCreateReqMaterialType      `json:"material_type"`
+	Calcitonin        OptInt                                      `json:"calcitonin"`
+	CalcitoninInFlush OptInt                                      `json:"calcitonin_in_flush"`
+	Thyroglobulin     OptInt                                      `json:"thyroglobulin"`
+	Prev              OptInt                                      `json:"prev"`
+	ParentPrev        OptInt                                      `json:"parent_prev"`
+	PatientCard       OptInt                                      `json:"patient_card"`
+	// Детали диагностики в формате JSON.
+	Details OptString `json:"details"`
 	// Является ли данная версия измениний последней?.
 	IsLast      OptBool     `json:"is_last"`
 	DiagnosDate OptDateTime `json:"diagnos_date"`
-	// Детали диагностики.
-	Details *CytologyCreateCreateReqDetails `json:"details"`
-	// Маркировка диагностики.
-	DiagnosticMarking OptCytologyCreateCreateReqDiagnosticMarking `json:"diagnostic_marking"`
-	// Номер диагностики.
-	DiagnosticNumber  int                                    `json:"diagnostic_number"`
-	MaterialType      OptCytologyCreateCreateReqMaterialType `json:"material_type"`
-	Calcitonin        OptInt                                 `json:"calcitonin"`
-	CalcitoninInFlush OptInt                                 `json:"calcitonin_in_flush"`
-	Thyroglobulin     OptInt                                 `json:"thyroglobulin"`
-	Prev              OptInt                                 `json:"prev"`
-	ParentPrev        OptInt                                 `json:"parent_prev"`
-	PatientCard       OptInt                                 `json:"patient_card"`
-}
-
-// GetID returns the value of ID.
-func (s *CytologyCreateCreateReq) GetID() OptInt {
-	return s.ID
 }
 
 // GetImage returns the value of Image.
-func (s *CytologyCreateCreateReq) GetImage() OptURI {
+func (s *CytologyCreateCreateReq) GetImage() OptMultipartFile {
 	return s.Image
-}
-
-// GetIsLast returns the value of IsLast.
-func (s *CytologyCreateCreateReq) GetIsLast() OptBool {
-	return s.IsLast
-}
-
-// GetDiagnosDate returns the value of DiagnosDate.
-func (s *CytologyCreateCreateReq) GetDiagnosDate() OptDateTime {
-	return s.DiagnosDate
-}
-
-// GetDetails returns the value of Details.
-func (s *CytologyCreateCreateReq) GetDetails() *CytologyCreateCreateReqDetails {
-	return s.Details
-}
-
-// GetDiagnosticMarking returns the value of DiagnosticMarking.
-func (s *CytologyCreateCreateReq) GetDiagnosticMarking() OptCytologyCreateCreateReqDiagnosticMarking {
-	return s.DiagnosticMarking
 }
 
 // GetDiagnosticNumber returns the value of DiagnosticNumber.
 func (s *CytologyCreateCreateReq) GetDiagnosticNumber() int {
 	return s.DiagnosticNumber
+}
+
+// GetDiagnosticMarking returns the value of DiagnosticMarking.
+func (s *CytologyCreateCreateReq) GetDiagnosticMarking() OptCytologyCreateCreateReqDiagnosticMarking {
+	return s.DiagnosticMarking
 }
 
 // GetMaterialType returns the value of MaterialType.
@@ -536,39 +516,34 @@ func (s *CytologyCreateCreateReq) GetPatientCard() OptInt {
 	return s.PatientCard
 }
 
-// SetID sets the value of ID.
-func (s *CytologyCreateCreateReq) SetID(val OptInt) {
-	s.ID = val
+// GetDetails returns the value of Details.
+func (s *CytologyCreateCreateReq) GetDetails() OptString {
+	return s.Details
+}
+
+// GetIsLast returns the value of IsLast.
+func (s *CytologyCreateCreateReq) GetIsLast() OptBool {
+	return s.IsLast
+}
+
+// GetDiagnosDate returns the value of DiagnosDate.
+func (s *CytologyCreateCreateReq) GetDiagnosDate() OptDateTime {
+	return s.DiagnosDate
 }
 
 // SetImage sets the value of Image.
-func (s *CytologyCreateCreateReq) SetImage(val OptURI) {
+func (s *CytologyCreateCreateReq) SetImage(val OptMultipartFile) {
 	s.Image = val
-}
-
-// SetIsLast sets the value of IsLast.
-func (s *CytologyCreateCreateReq) SetIsLast(val OptBool) {
-	s.IsLast = val
-}
-
-// SetDiagnosDate sets the value of DiagnosDate.
-func (s *CytologyCreateCreateReq) SetDiagnosDate(val OptDateTime) {
-	s.DiagnosDate = val
-}
-
-// SetDetails sets the value of Details.
-func (s *CytologyCreateCreateReq) SetDetails(val *CytologyCreateCreateReqDetails) {
-	s.Details = val
-}
-
-// SetDiagnosticMarking sets the value of DiagnosticMarking.
-func (s *CytologyCreateCreateReq) SetDiagnosticMarking(val OptCytologyCreateCreateReqDiagnosticMarking) {
-	s.DiagnosticMarking = val
 }
 
 // SetDiagnosticNumber sets the value of DiagnosticNumber.
 func (s *CytologyCreateCreateReq) SetDiagnosticNumber(val int) {
 	s.DiagnosticNumber = val
+}
+
+// SetDiagnosticMarking sets the value of DiagnosticMarking.
+func (s *CytologyCreateCreateReq) SetDiagnosticMarking(val OptCytologyCreateCreateReqDiagnosticMarking) {
+	s.DiagnosticMarking = val
 }
 
 // SetMaterialType sets the value of MaterialType.
@@ -606,8 +581,20 @@ func (s *CytologyCreateCreateReq) SetPatientCard(val OptInt) {
 	s.PatientCard = val
 }
 
-// Детали диагностики.
-type CytologyCreateCreateReqDetails struct{}
+// SetDetails sets the value of Details.
+func (s *CytologyCreateCreateReq) SetDetails(val OptString) {
+	s.Details = val
+}
+
+// SetIsLast sets the value of IsLast.
+func (s *CytologyCreateCreateReq) SetIsLast(val OptBool) {
+	s.IsLast = val
+}
+
+// SetDiagnosDate sets the value of DiagnosDate.
+func (s *CytologyCreateCreateReq) SetDiagnosDate(val OptDateTime) {
+	s.DiagnosDate = val
+}
 
 // Маркировка диагностики.
 type CytologyCreateCreateReqDiagnosticMarking string
@@ -5874,6 +5861,52 @@ func (o OptInt) Get() (v int, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptInt) Or(d int) int {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptMultipartFile returns new OptMultipartFile with value set to v.
+func NewOptMultipartFile(v ht.MultipartFile) OptMultipartFile {
+	return OptMultipartFile{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptMultipartFile is optional ht.MultipartFile.
+type OptMultipartFile struct {
+	Value ht.MultipartFile
+	Set   bool
+}
+
+// IsSet returns true if OptMultipartFile was set.
+func (o OptMultipartFile) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptMultipartFile) Reset() {
+	var v ht.MultipartFile
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptMultipartFile) SetTo(v ht.MultipartFile) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptMultipartFile) Get() (v ht.MultipartFile, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptMultipartFile) Or(d ht.MultipartFile) ht.MultipartFile {
 	if v, ok := o.Get(); ok {
 		return v
 	}

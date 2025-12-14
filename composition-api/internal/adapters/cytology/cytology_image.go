@@ -2,6 +2,7 @@ package cytology
 
 import (
 	"context"
+	"io"
 
 	"composition-api/internal/adapters/cytology/mappers"
 	adapter_errors "composition-api/internal/adapters/errors"
@@ -30,6 +31,20 @@ func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImag
 		DoctorId:         in.DoctorID.String(),
 		PatientId:        in.PatientID.String(),
 		DiagnosticNumber: int32(in.DiagnosticNumber),
+	}
+
+	// Обработка файла изображения (опционально)
+	if in.File != nil && (*in.File).File != nil {
+		fileData, err := io.ReadAll((*in.File).File)
+		if err != nil {
+			return uuid.Nil, adapter_errors.HandleGRPCError(err)
+		}
+		if len(fileData) > 0 {
+			req.File = fileData
+			if in.ContentType != "" {
+				req.ContentType = &in.ContentType
+			}
+		}
 	}
 
 	if in.DiagnosticMarking != nil {

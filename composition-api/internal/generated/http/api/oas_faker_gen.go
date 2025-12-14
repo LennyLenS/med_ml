@@ -175,94 +175,6 @@ func (s *CytologyCreateCreateCreatedMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyCreateCreateReq) SetFake() {
-	{
-		{
-			s.ID.SetFake()
-		}
-	}
-	{
-		{
-			s.Image.SetFake()
-		}
-	}
-	{
-		{
-			s.IsLast.SetFake()
-		}
-	}
-	{
-		{
-			s.DiagnosDate.SetFake()
-		}
-	}
-	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
-		}
-	}
-	{
-		{
-			s.DiagnosticMarking.SetFake()
-		}
-	}
-	{
-		{
-			s.DiagnosticNumber = int(0)
-		}
-	}
-	{
-		{
-			s.MaterialType.SetFake()
-		}
-	}
-	{
-		{
-			s.Calcitonin.SetFake()
-		}
-	}
-	{
-		{
-			s.CalcitoninInFlush.SetFake()
-		}
-	}
-	{
-		{
-			s.Thyroglobulin.SetFake()
-		}
-	}
-	{
-		{
-			s.Prev.SetFake()
-		}
-	}
-	{
-		{
-			s.ParentPrev.SetFake()
-		}
-	}
-	{
-		{
-			s.PatientCard.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *CytologyCreateCreateReqDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyCreateCreateReqDiagnosticMarking) SetFake() {
-	*s = CytologyCreateCreateReqDiagnosticMarking11
-}
-
-// SetFake set fake values.
-func (s *CytologyCreateCreateReqMaterialType) SetFake() {
-	*s = CytologyCreateCreateReqMaterialTypeGS
-}
-
-// SetFake set fake values.
 func (s *CytologyHistoryReadOK) SetFake() {
 	{
 		{
@@ -1729,24 +1641,6 @@ func (s *OptCytologyCreateCreateCreatedDiagnosticMarking) SetFake() {
 // SetFake set fake values.
 func (s *OptCytologyCreateCreateCreatedMaterialType) SetFake() {
 	var elem CytologyCreateCreateCreatedMaterialType
-	{
-		elem.SetFake()
-	}
-	s.SetTo(elem)
-}
-
-// SetFake set fake values.
-func (s *OptCytologyCreateCreateReqDiagnosticMarking) SetFake() {
-	var elem CytologyCreateCreateReqDiagnosticMarking
-	{
-		elem.SetFake()
-	}
-	s.SetTo(elem)
-}
-
-// SetFake set fake values.
-func (s *OptCytologyCreateCreateReqMaterialType) SetFake() {
-	var elem CytologyCreateCreateReqMaterialType
 	{
 		elem.SetFake()
 	}

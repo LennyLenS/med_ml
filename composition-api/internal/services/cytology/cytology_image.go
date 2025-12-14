@@ -23,6 +23,8 @@ func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyIma
 		Details:           arg.Details,
 		PrevID:            arg.PrevID,
 		ParentPrevID:      arg.ParentPrevID,
+		File:              arg.File,
+		ContentType:       arg.ContentType,
 	})
 }
 

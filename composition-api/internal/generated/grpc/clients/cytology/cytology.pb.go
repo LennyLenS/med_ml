@@ -451,6 +451,8 @@ type CreateCytologyImageIn struct {
 	Details           *string                `protobuf:"bytes,1000,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
 	PrevId            *string                `protobuf:"bytes,1100,opt,name=prev_id,json=prevId,proto3,oneof" json:"prev_id,omitempty"`
 	ParentPrevId      *string                `protobuf:"bytes,1200,opt,name=parent_prev_id,json=parentPrevId,proto3,oneof" json:"parent_prev_id,omitempty"`
+	File              []byte                 `protobuf:"bytes,1300,opt,name=file,proto3,oneof" json:"file,omitempty"`                                  // файл изображения
+	ContentType       *string                `protobuf:"bytes,1400,opt,name=content_type,json=contentType,proto3,oneof" json:"content_type,omitempty"` // Content-Type файла
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -565,6 +567,20 @@ func (x *CreateCytologyImageIn) GetPrevId() string {
 func (x *CreateCytologyImageIn) GetParentPrevId() string {
 	if x != nil && x.ParentPrevId != nil {
 		return *x.ParentPrevId
+	}
+	return ""
+}
+
+func (x *CreateCytologyImageIn) GetFile() []byte {
+	if x != nil {
+		return x.File
+	}
+	return nil
+}
+
+func (x *CreateCytologyImageIn) GetContentType() string {
+	if x != nil && x.ContentType != nil {
+		return *x.ContentType
 	}
 	return ""
 }
@@ -2850,7 +2866,7 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\b_detailsB\n" +
 	"\n" +
 	"\b_prev_idB\x11\n" +
-	"\x0f_parent_prev_id\"\xa7\x05\n" +
+	"\x0f_parent_prev_id\"\x84\x06\n" +
 	"\x15CreateCytologyImageIn\x12\x1f\n" +
 	"\vexternal_id\x18d \x01(\tR\n" +
 	"externalId\x12\x1c\n" +
@@ -2867,7 +2883,11 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\rthyroglobulin\x18\x84\a \x01(\x05H\x04R\rthyroglobulin\x88\x01\x01\x12\x1e\n" +
 	"\adetails\x18\xe8\a \x01(\tH\x05R\adetails\x88\x01\x01\x12\x1d\n" +
 	"\aprev_id\x18\xcc\b \x01(\tH\x06R\x06prevId\x88\x01\x01\x12*\n" +
-	"\x0eparent_prev_id\x18\xb0\t \x01(\tH\aR\fparentPrevId\x88\x01\x01B\x15\n" +
+	"\x0eparent_prev_id\x18\xb0\t \x01(\tH\aR\fparentPrevId\x88\x01\x01\x12\x18\n" +
+	"\x04file\x18\x94\n" +
+	" \x01(\fH\bR\x04file\x88\x01\x01\x12'\n" +
+	"\fcontent_type\x18\xf8\n" +
+	" \x01(\tH\tR\vcontentType\x88\x01\x01B\x15\n" +
 	"\x13_diagnostic_markingB\x10\n" +
 	"\x0e_material_typeB\r\n" +
 	"\v_calcitoninB\x16\n" +
@@ -2877,7 +2897,9 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\b_detailsB\n" +
 	"\n" +
 	"\b_prev_idB\x11\n" +
-	"\x0f_parent_prev_id\"(\n" +
+	"\x0f_parent_prev_idB\a\n" +
+	"\x05_fileB\x0f\n" +
+	"\r_content_type\"(\n" +
 	"\x16CreateCytologyImageOut\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\"(\n" +
 	"\x16GetCytologyImageByIdIn\x12\x0e\n" +

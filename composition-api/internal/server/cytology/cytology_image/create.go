@@ -43,19 +43,10 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 		DiagnosticNumber: req.DiagnosticNumber,
 	}
 
-	if req.ID.Set {
-		result.ID = req.ID
-	}
-	if req.Image.Set {
-		result.Image = req.Image
-	}
-	if req.IsLast.Set {
-		result.IsLast = req.IsLast
-	}
-	if req.DiagnosDate.Set {
-		result.DiagnosDate = req.DiagnosDate
-	}
-	if req.Details != nil {
+	// ID, image, is_last, diagnos_date - readOnly поля, возвращаются сервером
+	// Пока оставляем их пустыми, так как они должны быть заполнены из ответа сервиса
+
+	if req.Details.Set {
 		result.Details = &api.CytologyCreateCreateCreatedDetails{}
 	}
 	if req.DiagnosticMarking.Set {

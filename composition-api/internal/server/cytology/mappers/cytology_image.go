@@ -22,6 +22,17 @@ func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreat
 		PatientID:  uuid.Nil,
 	}
 
+	// Обработка файла изображения
+	if req.Image.Set {
+		arg.File = &req.Image.Value
+		// Получаем Content-Type из заголовка файла
+		contentType := req.Image.Value.Header.Get("Content-Type")
+		if contentType == "" {
+			contentType = "application/octet-stream"
+		}
+		arg.ContentType = contentType
+	}
+
 	if req.DiagnosticMarking.Set {
 		marking := domain.DiagnosticMarking(req.DiagnosticMarking.Value)
 		arg.DiagnosticMarking = &marking
@@ -47,8 +58,10 @@ func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreat
 		arg.Thyroglobulin = &thyroglobulin
 	}
 
-	if req.Details != nil {
-		// Details handling - может быть JSON объект
+	if req.Details.Set {
+		// Details handling - строка JSON
+		detailsStr := req.Details.Value
+		arg.Details = &detailsStr
 	}
 
 	// Prev и ParentPrev в swagger.json - это integer, но в нашей системе это UUID
