@@ -16,573 +16,46 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-// CytologiesExternalIDGetParams is parameters of GET /cytologies/external/{id} operation.
-type CytologiesExternalIDGetParams struct {
-	// Внешний id пациента/организации etc.
-	ID uuid.UUID
-}
-
-func unpackCytologiesExternalIDGetParams(packed middleware.Parameters) (params CytologiesExternalIDGetParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologiesExternalIDGetParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologiesExternalIDGetParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologiesPatientCardDoctorIDPatientIDGetParams is parameters of GET /cytologies/patient-card/{doctor_id}/{patient_id} operation.
-type CytologiesPatientCardDoctorIDPatientIDGetParams struct {
-	// Id врача.
-	DoctorID uuid.UUID
-	// Id пациента.
-	PatientID uuid.UUID
-}
-
-func unpackCytologiesPatientCardDoctorIDPatientIDGetParams(packed middleware.Parameters) (params CytologiesPatientCardDoctorIDPatientIDGetParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "doctor_id",
-			In:   "path",
-		}
-		params.DoctorID = packed[key].(uuid.UUID)
-	}
-	{
-		key := middleware.ParameterKey{
-			Name: "patient_id",
-			In:   "path",
-		}
-		params.PatientID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologiesPatientCardDoctorIDPatientIDGetParams(args [2]string, argsEscaped bool, r *http.Request) (params CytologiesPatientCardDoctorIDPatientIDGetParams, _ error) {
-	// Decode path: doctor_id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "doctor_id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.DoctorID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "doctor_id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	// Decode path: patient_id.
-	if err := func() error {
-		param := args[1]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[1])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "patient_id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.PatientID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "patient_id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologyIDDeleteParams is parameters of DELETE /cytology/{id} operation.
-type CytologyIDDeleteParams struct {
+// CytologyHistoryReadParams is parameters of CytologyHistoryRead operation.
+type CytologyHistoryReadParams struct {
 	// Id цитологического исследования.
-	ID uuid.UUID
+	ID string
+	// Number of results to return per page.
+	Limit OptInt
+	// The initial index from which to return the results.
+	Offset OptInt
 }
 
-func unpackCytologyIDDeleteParams(packed middleware.Parameters) (params CytologyIDDeleteParams) {
+func unpackCytologyHistoryReadParams(packed middleware.Parameters) (params CytologyHistoryReadParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologyIDDeleteParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDDeleteParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologyIDGetParams is parameters of GET /cytology/{id} operation.
-type CytologyIDGetParams struct {
-	// Id цитологического исследования.
-	ID uuid.UUID
-}
-
-func unpackCytologyIDGetParams(packed middleware.Parameters) (params CytologyIDGetParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologyIDGetParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDGetParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologyIDOriginalImageGetParams is parameters of GET /cytology/{id}/original-image operation.
-type CytologyIDOriginalImageGetParams struct {
-	// Id цитологического исследования.
-	ID uuid.UUID
-}
-
-func unpackCytologyIDOriginalImageGetParams(packed middleware.Parameters) (params CytologyIDOriginalImageGetParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologyIDOriginalImageGetParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDOriginalImageGetParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologyIDOriginalImagePostParams is parameters of POST /cytology/{id}/original-image operation.
-type CytologyIDOriginalImagePostParams struct {
-	// Id цитологического исследования.
-	ID uuid.UUID
-}
-
-func unpackCytologyIDOriginalImagePostParams(packed middleware.Parameters) (params CytologyIDOriginalImagePostParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologyIDOriginalImagePostParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDOriginalImagePostParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologyIDPatchParams is parameters of PATCH /cytology/{id} operation.
-type CytologyIDPatchParams struct {
-	// Id цитологического исследования.
-	ID uuid.UUID
-}
-
-func unpackCytologyIDPatchParams(packed middleware.Parameters) (params CytologyIDPatchParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologyIDPatchParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDPatchParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologyIDSegmentationGroupsGetParams is parameters of GET /cytology/{id}/segmentation-groups operation.
-type CytologyIDSegmentationGroupsGetParams struct {
-	// Id цитологического исследования.
-	ID uuid.UUID
-	// Фильтр по типу сегментации.
-	SegType OptCytologyIDSegmentationGroupsGetSegType
-	// Фильтр по типу группы.
-	GroupType OptCytologyIDSegmentationGroupsGetGroupType
-	// Фильтр по признаку AI.
-	IsAi OptBool
-}
-
-func unpackCytologyIDSegmentationGroupsGetParams(packed middleware.Parameters) (params CytologyIDSegmentationGroupsGetParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
+		params.ID = packed[key].(string)
 	}
 	{
 		key := middleware.ParameterKey{
-			Name: "seg_type",
+			Name: "limit",
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.SegType = v.(OptCytologyIDSegmentationGroupsGetSegType)
+			params.Limit = v.(OptInt)
 		}
 	}
 	{
 		key := middleware.ParameterKey{
-			Name: "group_type",
+			Name: "offset",
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.GroupType = v.(OptCytologyIDSegmentationGroupsGetGroupType)
-		}
-	}
-	{
-		key := middleware.ParameterKey{
-			Name: "is_ai",
-			In:   "query",
-		}
-		if v, ok := packed[key]; ok {
-			params.IsAi = v.(OptBool)
+			params.Offset = v.(OptInt)
 		}
 	}
 	return params
 }
 
-func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDSegmentationGroupsGetParams, _ error) {
+func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyHistoryReadParams, _ error) {
 	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode path: id.
 	if err := func() error {
@@ -608,6 +81,286 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 					return err
 				}
 
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: limit.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotLimitVal int
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToInt(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotLimitVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Limit.SetTo(paramsDotLimitVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "limit",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: offset.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotOffsetVal int
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToInt(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotOffsetVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Offset.SetTo(paramsDotOffsetVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "offset",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CytologyReadParams is parameters of CytologyRead operation.
+type CytologyReadParams struct {
+	// Id цитологического исследования.
+	ID string
+}
+
+func unpackCytologyReadParams(packed middleware.Parameters) (params CytologyReadParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(string)
+	}
+	return params
+}
+
+func decodeCytologyReadParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyReadParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CytologySegmentGroupCreateCreateParams is parameters of CytologySegmentGroupCreateCreate operation.
+type CytologySegmentGroupCreateCreateParams struct {
+	// Id цитологического исследования.
+	CytologyImgID uuid.UUID
+}
+
+func unpackCytologySegmentGroupCreateCreateParams(packed middleware.Parameters) (params CytologySegmentGroupCreateCreateParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "cytology_img_id",
+			In:   "path",
+		}
+		params.CytologyImgID = packed[key].(uuid.UUID)
+	}
+	return params
+}
+
+func decodeCytologySegmentGroupCreateCreateParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentGroupCreateCreateParams, _ error) {
+	// Decode path: cytology_img_id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "cytology_img_id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUUID(val)
+				if err != nil {
+					return err
+				}
+
+				params.CytologyImgID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "cytology_img_id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CytologySegmentUpdateDeleteParams is parameters of CytologySegmentUpdateDelete operation.
+type CytologySegmentUpdateDeleteParams struct {
+	// Id сегментации.
+	ID uuid.UUID
+}
+
+func unpackCytologySegmentUpdateDeleteParams(packed middleware.Parameters) (params CytologySegmentUpdateDeleteParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(uuid.UUID)
+	}
+	return params
+}
+
+func decodeCytologySegmentUpdateDeleteParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentUpdateDeleteParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
 				c, err := conv.ToUUID(val)
 				if err != nil {
 					return err
@@ -629,17 +382,337 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 			Err:  err,
 		}
 	}
-	// Decode query: seg_type.
+	return params, nil
+}
+
+// CytologySegmentUpdatePartialUpdateParams is parameters of CytologySegmentUpdatePartialUpdate operation.
+type CytologySegmentUpdatePartialUpdateParams struct {
+	// Id сегментации.
+	ID uuid.UUID
+}
+
+func unpackCytologySegmentUpdatePartialUpdateParams(packed middleware.Parameters) (params CytologySegmentUpdatePartialUpdateParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(uuid.UUID)
+	}
+	return params
+}
+
+func decodeCytologySegmentUpdatePartialUpdateParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentUpdatePartialUpdateParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUUID(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CytologySegmentUpdateReadParams is parameters of CytologySegmentUpdateRead operation.
+type CytologySegmentUpdateReadParams struct {
+	// Id сегментации.
+	ID uuid.UUID
+}
+
+func unpackCytologySegmentUpdateReadParams(packed middleware.Parameters) (params CytologySegmentUpdateReadParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(uuid.UUID)
+	}
+	return params
+}
+
+func decodeCytologySegmentUpdateReadParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentUpdateReadParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUUID(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CytologySegmentUpdateUpdateParams is parameters of CytologySegmentUpdateUpdate operation.
+type CytologySegmentUpdateUpdateParams struct {
+	// Id сегментации.
+	ID uuid.UUID
+}
+
+func unpackCytologySegmentUpdateUpdateParams(packed middleware.Parameters) (params CytologySegmentUpdateUpdateParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(uuid.UUID)
+	}
+	return params
+}
+
+func decodeCytologySegmentUpdateUpdateParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentUpdateUpdateParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUUID(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// CytologySegmentsListParams is parameters of CytologySegmentsList operation.
+type CytologySegmentsListParams struct {
+	// Id цитологического исследования.
+	ID string
+	// Is_ai.
+	IsAi OptString
+	// Group_type.
+	GroupType OptCytologySegmentsListGroupType
+	// Seg_type.
+	SegType OptCytologySegmentsListSegType
+	// Number of results to return per page.
+	Limit OptInt
+	// The initial index from which to return the results.
+	Offset OptInt
+}
+
+func unpackCytologySegmentsListParams(packed middleware.Parameters) (params CytologySegmentsListParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "is_ai",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.IsAi = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "group_type",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.GroupType = v.(OptCytologySegmentsListGroupType)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "seg_type",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.SegType = v.(OptCytologySegmentsListSegType)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "limit",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Limit = v.(OptInt)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "offset",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Offset = v.(OptInt)
+		}
+	}
+	return params
+}
+
+func decodeCytologySegmentsListParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentsListParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: is_ai.
 	if err := func() error {
 		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "seg_type",
+			Name:    "is_ai",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotSegTypeVal CytologyIDSegmentationGroupsGetSegType
+				var paramsDotIsAiVal string
 				if err := func() error {
 					val, err := d.DecodeValue()
 					if err != nil {
@@ -651,36 +724,21 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 						return err
 					}
 
-					paramsDotSegTypeVal = CytologyIDSegmentationGroupsGetSegType(c)
+					paramsDotIsAiVal = c
 					return nil
 				}(); err != nil {
 					return err
 				}
-				params.SegType.SetTo(paramsDotSegTypeVal)
+				params.IsAi.SetTo(paramsDotIsAiVal)
 				return nil
 			}); err != nil {
-				return err
-			}
-			if err := func() error {
-				if value, ok := params.SegType.Get(); ok {
-					if err := func() error {
-						if err := value.Validate(); err != nil {
-							return err
-						}
-						return nil
-					}(); err != nil {
-						return err
-					}
-				}
-				return nil
-			}(); err != nil {
 				return err
 			}
 		}
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "seg_type",
+			Name: "is_ai",
 			In:   "query",
 			Err:  err,
 		}
@@ -695,7 +753,7 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotGroupTypeVal CytologyIDSegmentationGroupsGetGroupType
+				var paramsDotGroupTypeVal CytologySegmentsListGroupType
 				if err := func() error {
 					val, err := d.DecodeValue()
 					if err != nil {
@@ -707,7 +765,7 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 						return err
 					}
 
-					paramsDotGroupTypeVal = CytologyIDSegmentationGroupsGetGroupType(c)
+					paramsDotGroupTypeVal = CytologySegmentsListGroupType(c)
 					return nil
 				}(); err != nil {
 					return err
@@ -741,34 +799,90 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 			Err:  err,
 		}
 	}
-	// Decode query: is_ai.
+	// Decode query: seg_type.
 	if err := func() error {
 		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "is_ai",
+			Name:    "seg_type",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotIsAiVal bool
+				var paramsDotSegTypeVal CytologySegmentsListSegType
 				if err := func() error {
 					val, err := d.DecodeValue()
 					if err != nil {
 						return err
 					}
 
-					c, err := conv.ToBool(val)
+					c, err := conv.ToString(val)
 					if err != nil {
 						return err
 					}
 
-					paramsDotIsAiVal = c
+					paramsDotSegTypeVal = CytologySegmentsListSegType(c)
 					return nil
 				}(); err != nil {
 					return err
 				}
-				params.IsAi.SetTo(paramsDotIsAiVal)
+				params.SegType.SetTo(paramsDotSegTypeVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if value, ok := params.SegType.Get(); ok {
+					if err := func() error {
+						if err := value.Validate(); err != nil {
+							return err
+						}
+						return nil
+					}(); err != nil {
+						return err
+					}
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "seg_type",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: limit.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotLimitVal int
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToInt(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotLimitVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Limit.SetTo(paramsDotLimitVal)
 				return nil
 			}); err != nil {
 				return err
@@ -777,7 +891,48 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "is_ai",
+			Name: "limit",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: offset.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotOffsetVal int
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToInt(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotOffsetVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Offset.SetTo(paramsDotOffsetVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "offset",
 			In:   "query",
 			Err:  err,
 		}
@@ -785,24 +940,24 @@ func decodeCytologyIDSegmentationGroupsGetParams(args [1]string, argsEscaped boo
 	return params, nil
 }
 
-// CytologyIDSegmentationGroupsPostParams is parameters of POST /cytology/{id}/segmentation-groups operation.
-type CytologyIDSegmentationGroupsPostParams struct {
+// CytologyUpdatePartialUpdateParams is parameters of CytologyUpdatePartialUpdate operation.
+type CytologyUpdatePartialUpdateParams struct {
 	// Id цитологического исследования.
-	ID uuid.UUID
+	ID string
 }
 
-func unpackCytologyIDSegmentationGroupsPostParams(packed middleware.Parameters) (params CytologyIDSegmentationGroupsPostParams) {
+func unpackCytologyUpdatePartialUpdateParams(packed middleware.Parameters) (params CytologyUpdatePartialUpdateParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
+		params.ID = packed[key].(string)
 	}
 	return params
 }
 
-func decodeCytologyIDSegmentationGroupsPostParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyIDSegmentationGroupsPostParams, _ error) {
+func decodeCytologyUpdatePartialUpdateParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyUpdatePartialUpdateParams, _ error) {
 	// Decode path: id.
 	if err := func() error {
 		param := args[0]
@@ -827,7 +982,7 @@ func decodeCytologyIDSegmentationGroupsPostParams(args [1]string, argsEscaped bo
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToString(val)
 				if err != nil {
 					return err
 				}
@@ -851,25 +1006,100 @@ func decodeCytologyIDSegmentationGroupsPostParams(args [1]string, argsEscaped bo
 	return params, nil
 }
 
-// CytologyOriginalImageIDPatchParams is parameters of PATCH /cytology/original-image/{id} operation.
-type CytologyOriginalImageIDPatchParams struct {
+// CytologyUpdateUpdateParams is parameters of CytologyUpdateUpdate operation.
+type CytologyUpdateUpdateParams struct {
+	// Id цитологического исследования.
+	ID string
+}
+
+func unpackCytologyUpdateUpdateParams(packed middleware.Parameters) (params CytologyUpdateUpdateParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(string)
+	}
+	return params
+}
+
+func decodeCytologyUpdateUpdateParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyUpdateUpdateParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// DownloadCytologyCytologyIDOriginalImageIDGetParams is parameters of GET /download/cytology/{cytology_id}/{original_image_id} operation.
+type DownloadCytologyCytologyIDOriginalImageIDGetParams struct {
+	// Id цитологического исследования.
+	CytologyID uuid.UUID
 	// Id оригинального изображения.
-	ID uuid.UUID
+	OriginalImageID uuid.UUID
 }
 
-func unpackCytologyOriginalImageIDPatchParams(packed middleware.Parameters) (params CytologyOriginalImageIDPatchParams) {
+func unpackDownloadCytologyCytologyIDOriginalImageIDGetParams(packed middleware.Parameters) (params DownloadCytologyCytologyIDOriginalImageIDGetParams) {
 	{
 		key := middleware.ParameterKey{
-			Name: "id",
+			Name: "cytology_id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
+		params.CytologyID = packed[key].(uuid.UUID)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "original_image_id",
+			In:   "path",
+		}
+		params.OriginalImageID = packed[key].(uuid.UUID)
 	}
 	return params
 }
 
-func decodeCytologyOriginalImageIDPatchParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyOriginalImageIDPatchParams, _ error) {
-	// Decode path: id.
+func decodeDownloadCytologyCytologyIDOriginalImageIDGetParams(args [2]string, argsEscaped bool, r *http.Request) (params DownloadCytologyCytologyIDOriginalImageIDGetParams, _ error) {
+	// Decode path: cytology_id.
 	if err := func() error {
 		param := args[0]
 		if argsEscaped {
@@ -881,7 +1111,7 @@ func decodeCytologyOriginalImageIDPatchParams(args [1]string, argsEscaped bool, 
 		}
 		if len(param) > 0 {
 			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
+				Param:   "cytology_id",
 				Value:   param,
 				Style:   uri.PathStyleSimple,
 				Explode: false,
@@ -898,7 +1128,7 @@ func decodeCytologyOriginalImageIDPatchParams(args [1]string, argsEscaped bool, 
 					return err
 				}
 
-				params.ID = c
+				params.CytologyID = c
 				return nil
 			}(); err != nil {
 				return err
@@ -909,37 +1139,16 @@ func decodeCytologyOriginalImageIDPatchParams(args [1]string, argsEscaped bool, 
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
+			Name: "cytology_id",
 			In:   "path",
 			Err:  err,
 		}
 	}
-	return params, nil
-}
-
-// CytologySegmentationGroupIDDeleteParams is parameters of DELETE /cytology/segmentation-group/{id} operation.
-type CytologySegmentationGroupIDDeleteParams struct {
-	// Id группы сегментаций.
-	ID uuid.UUID
-}
-
-func unpackCytologySegmentationGroupIDDeleteParams(packed middleware.Parameters) (params CytologySegmentationGroupIDDeleteParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologySegmentationGroupIDDeleteParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentationGroupIDDeleteParams, _ error) {
-	// Decode path: id.
+	// Decode path: original_image_id.
 	if err := func() error {
-		param := args[0]
+		param := args[1]
 		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
+			unescaped, err := url.PathUnescape(args[1])
 			if err != nil {
 				return errors.Wrap(err, "unescape path")
 			}
@@ -947,7 +1156,7 @@ func decodeCytologySegmentationGroupIDDeleteParams(args [1]string, argsEscaped b
 		}
 		if len(param) > 0 {
 			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
+				Param:   "original_image_id",
 				Value:   param,
 				Style:   uri.PathStyleSimple,
 				Explode: false,
@@ -964,7 +1173,7 @@ func decodeCytologySegmentationGroupIDDeleteParams(args [1]string, argsEscaped b
 					return err
 				}
 
-				params.ID = c
+				params.OriginalImageID = c
 				return nil
 			}(); err != nil {
 				return err
@@ -975,337 +1184,7 @@ func decodeCytologySegmentationGroupIDDeleteParams(args [1]string, argsEscaped b
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologySegmentationGroupIDPatchParams is parameters of PATCH /cytology/segmentation-group/{id} operation.
-type CytologySegmentationGroupIDPatchParams struct {
-	// Id группы сегментаций.
-	ID uuid.UUID
-}
-
-func unpackCytologySegmentationGroupIDPatchParams(packed middleware.Parameters) (params CytologySegmentationGroupIDPatchParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologySegmentationGroupIDPatchParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentationGroupIDPatchParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologySegmentationGroupIDSegmentsGetParams is parameters of GET /cytology/segmentation-group/{id}/segments operation.
-type CytologySegmentationGroupIDSegmentsGetParams struct {
-	// Id группы сегментаций.
-	ID uuid.UUID
-}
-
-func unpackCytologySegmentationGroupIDSegmentsGetParams(packed middleware.Parameters) (params CytologySegmentationGroupIDSegmentsGetParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologySegmentationGroupIDSegmentsGetParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentationGroupIDSegmentsGetParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologySegmentationGroupIDSegmentsPostParams is parameters of POST /cytology/segmentation-group/{id}/segments operation.
-type CytologySegmentationGroupIDSegmentsPostParams struct {
-	// Id группы сегментаций.
-	ID uuid.UUID
-}
-
-func unpackCytologySegmentationGroupIDSegmentsPostParams(packed middleware.Parameters) (params CytologySegmentationGroupIDSegmentsPostParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologySegmentationGroupIDSegmentsPostParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentationGroupIDSegmentsPostParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologySegmentationIDDeleteParams is parameters of DELETE /cytology/segmentation/{id} operation.
-type CytologySegmentationIDDeleteParams struct {
-	// Id сегментации.
-	ID uuid.UUID
-}
-
-func unpackCytologySegmentationIDDeleteParams(packed middleware.Parameters) (params CytologySegmentationIDDeleteParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologySegmentationIDDeleteParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentationIDDeleteParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
-// CytologySegmentationIDPatchParams is parameters of PATCH /cytology/segmentation/{id} operation.
-type CytologySegmentationIDPatchParams struct {
-	// Id сегментации.
-	ID uuid.UUID
-}
-
-func unpackCytologySegmentationIDPatchParams(packed middleware.Parameters) (params CytologySegmentationIDPatchParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "id",
-			In:   "path",
-		}
-		params.ID = packed[key].(uuid.UUID)
-	}
-	return params
-}
-
-func decodeCytologySegmentationIDPatchParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologySegmentationIDPatchParams, _ error) {
-	// Decode path: id.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "id",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToUUID(val)
-				if err != nil {
-					return err
-				}
-
-				params.ID = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "id",
+			Name: "original_image_id",
 			In:   "path",
 			Err:  err,
 		}

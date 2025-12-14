@@ -61,9 +61,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 			switch elem[0] {
-			case 'c': // Prefix: "cytolog"
+			case 'c': // Prefix: "cytology/"
 
-				if l := len("cytolog"); len(elem) >= l && elem[0:l] == "cytolog" {
+				if l := len("cytology/"); len(elem) >= l && elem[0:l] == "cytology/" {
 					elem = elem[l:]
 				} else {
 					break
@@ -73,9 +73,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
-				case 'i': // Prefix: "ies/"
-
-					if l := len("ies/"); len(elem) >= l && elem[0:l] == "ies/" {
+				case 'c': // Prefix: "c"
+					origElem := elem
+					if l := len("c"); len(elem) >= l && elem[0:l] == "c" {
 						elem = elem[l:]
 					} else {
 						break
@@ -85,9 +85,127 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						break
 					}
 					switch elem[0] {
-					case 'e': // Prefix: "external/"
+					case 'o': // Prefix: "opy"
 
-						if l := len("external/"); len(elem) >= l && elem[0:l] == "external/" {
+						if l := len("opy"); len(elem) >= l && elem[0:l] == "opy" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCytologyCopyCreateRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+
+					case 'r': // Prefix: "reate"
+
+						if l := len("reate"); len(elem) >= l && elem[0:l] == "reate" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCytologyCreateCreateRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+
+					}
+
+					elem = origElem
+				case 'h': // Prefix: "history/"
+					origElem := elem
+					if l := len("history/"); len(elem) >= l && elem[0:l] == "history/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter, slashes are prohibited
+					idx := strings.IndexByte(elem, '/')
+					if idx >= 0 {
+						break
+					}
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "GET":
+							s.handleCytologyHistoryReadRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "GET")
+						}
+
+						return
+					}
+
+					elem = origElem
+				case 's': // Prefix: "segment/"
+					origElem := elem
+					if l := len("segment/"); len(elem) >= l && elem[0:l] == "segment/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 'g': // Prefix: "group/create/"
+
+						if l := len("group/create/"); len(elem) >= l && elem[0:l] == "group/create/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "cytology_img_id"
+						// Leaf parameter, slashes are prohibited
+						idx := strings.IndexByte(elem, '/')
+						if idx >= 0 {
+							break
+						}
+						args[0] = elem
+						elem = ""
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleCytologySegmentGroupCreateCreateRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+
+					case 'u': // Prefix: "update/"
+
+						if l := len("update/"); len(elem) >= l && elem[0:l] == "update/" {
 							elem = elem[l:]
 						} else {
 							break
@@ -105,8 +223,80 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						if len(elem) == 0 {
 							// Leaf node.
 							switch r.Method {
+							case "DELETE":
+								s.handleCytologySegmentUpdateDeleteRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
 							case "GET":
-								s.handleCytologiesExternalIDGetRequest([1]string{
+								s.handleCytologySegmentUpdateReadRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							case "PATCH":
+								s.handleCytologySegmentUpdatePartialUpdateRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							case "PUT":
+								s.handleCytologySegmentUpdateUpdateRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "DELETE,GET,PATCH,PUT")
+							}
+
+							return
+						}
+
+					}
+
+					elem = origElem
+				}
+				// Param: "id"
+				// Match until "/"
+				idx := strings.IndexByte(elem, '/')
+				if idx < 0 {
+					idx = len(elem)
+				}
+				args[0] = elem[:idx]
+				elem = elem[idx:]
+
+				if len(elem) == 0 {
+					switch r.Method {
+					case "GET":
+						s.handleCytologyReadRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET")
+					}
+
+					return
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 's': // Prefix: "segments"
+
+						if l := len("segments"); len(elem) >= l && elem[0:l] == "segments" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleCytologySegmentsListRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							default:
@@ -116,335 +306,30 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							return
 						}
 
-					case 'p': // Prefix: "patient-card/"
+					case 'u': // Prefix: "update"
 
-						if l := len("patient-card/"); len(elem) >= l && elem[0:l] == "patient-card/" {
-							elem = elem[l:]
-						} else {
-							break
-						}
-
-						// Param: "doctor_id"
-						// Match until "/"
-						idx := strings.IndexByte(elem, '/')
-						if idx < 0 {
-							idx = len(elem)
-						}
-						args[0] = elem[:idx]
-						elem = elem[idx:]
-
-						if len(elem) == 0 {
-							break
-						}
-						switch elem[0] {
-						case '/': // Prefix: "/"
-
-							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							// Param: "patient_id"
-							// Leaf parameter, slashes are prohibited
-							idx := strings.IndexByte(elem, '/')
-							if idx >= 0 {
-								break
-							}
-							args[1] = elem
-							elem = ""
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch r.Method {
-								case "GET":
-									s.handleCytologiesPatientCardDoctorIDPatientIDGetRequest([2]string{
-										args[0],
-										args[1],
-									}, elemIsEscaped, w, r)
-								default:
-									s.notAllowed(w, r, "GET")
-								}
-
-								return
-							}
-
-						}
-
-					}
-
-				case 'y': // Prefix: "y"
-
-					if l := len("y"); len(elem) >= l && elem[0:l] == "y" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					if len(elem) == 0 {
-						switch r.Method {
-						case "POST":
-							s.handleCytologyPostRequest([0]string{}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
-						}
-
-						return
-					}
-					switch elem[0] {
-					case '/': // Prefix: "/"
-
-						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						if l := len("update"); len(elem) >= l && elem[0:l] == "update" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							break
-						}
-						switch elem[0] {
-						case 'o': // Prefix: "original-image/"
-							origElem := elem
-							if l := len("original-image/"); len(elem) >= l && elem[0:l] == "original-image/" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							// Param: "id"
-							// Leaf parameter, slashes are prohibited
-							idx := strings.IndexByte(elem, '/')
-							if idx >= 0 {
-								break
-							}
-							args[0] = elem
-							elem = ""
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch r.Method {
-								case "PATCH":
-									s.handleCytologyOriginalImageIDPatchRequest([1]string{
-										args[0],
-									}, elemIsEscaped, w, r)
-								default:
-									s.notAllowed(w, r, "PATCH")
-								}
-
-								return
-							}
-
-							elem = origElem
-						case 's': // Prefix: "segmentation"
-							origElem := elem
-							if l := len("segmentation"); len(elem) >= l && elem[0:l] == "segmentation" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							if len(elem) == 0 {
-								break
-							}
-							switch elem[0] {
-							case '-': // Prefix: "-group/"
-
-								if l := len("-group/"); len(elem) >= l && elem[0:l] == "-group/" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								// Param: "id"
-								// Match until "/"
-								idx := strings.IndexByte(elem, '/')
-								if idx < 0 {
-									idx = len(elem)
-								}
-								args[0] = elem[:idx]
-								elem = elem[idx:]
-
-								if len(elem) == 0 {
-									switch r.Method {
-									case "DELETE":
-										s.handleCytologySegmentationGroupIDDeleteRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									case "PATCH":
-										s.handleCytologySegmentationGroupIDPatchRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									default:
-										s.notAllowed(w, r, "DELETE,PATCH")
-									}
-
-									return
-								}
-								switch elem[0] {
-								case '/': // Prefix: "/segments"
-
-									if l := len("/segments"); len(elem) >= l && elem[0:l] == "/segments" {
-										elem = elem[l:]
-									} else {
-										break
-									}
-
-									if len(elem) == 0 {
-										// Leaf node.
-										switch r.Method {
-										case "GET":
-											s.handleCytologySegmentationGroupIDSegmentsGetRequest([1]string{
-												args[0],
-											}, elemIsEscaped, w, r)
-										case "POST":
-											s.handleCytologySegmentationGroupIDSegmentsPostRequest([1]string{
-												args[0],
-											}, elemIsEscaped, w, r)
-										default:
-											s.notAllowed(w, r, "GET,POST")
-										}
-
-										return
-									}
-
-								}
-
-							case '/': // Prefix: "/"
-
-								if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								// Param: "id"
-								// Leaf parameter, slashes are prohibited
-								idx := strings.IndexByte(elem, '/')
-								if idx >= 0 {
-									break
-								}
-								args[0] = elem
-								elem = ""
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "DELETE":
-										s.handleCytologySegmentationIDDeleteRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									case "PATCH":
-										s.handleCytologySegmentationIDPatchRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									default:
-										s.notAllowed(w, r, "DELETE,PATCH")
-									}
-
-									return
-								}
-
-							}
-
-							elem = origElem
-						}
-						// Param: "id"
-						// Match until "/"
-						idx := strings.IndexByte(elem, '/')
-						if idx < 0 {
-							idx = len(elem)
-						}
-						args[0] = elem[:idx]
-						elem = elem[idx:]
-
-						if len(elem) == 0 {
+							// Leaf node.
 							switch r.Method {
-							case "DELETE":
-								s.handleCytologyIDDeleteRequest([1]string{
-									args[0],
-								}, elemIsEscaped, w, r)
-							case "GET":
-								s.handleCytologyIDGetRequest([1]string{
-									args[0],
-								}, elemIsEscaped, w, r)
 							case "PATCH":
-								s.handleCytologyIDPatchRequest([1]string{
+								s.handleCytologyUpdatePartialUpdateRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							case "PUT":
+								s.handleCytologyUpdateUpdateRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							default:
-								s.notAllowed(w, r, "DELETE,GET,PATCH")
+								s.notAllowed(w, r, "PATCH,PUT")
 							}
 
 							return
-						}
-						switch elem[0] {
-						case '/': // Prefix: "/"
-
-							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							if len(elem) == 0 {
-								break
-							}
-							switch elem[0] {
-							case 'o': // Prefix: "original-image"
-
-								if l := len("original-image"); len(elem) >= l && elem[0:l] == "original-image" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "GET":
-										s.handleCytologyIDOriginalImageGetRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									case "POST":
-										s.handleCytologyIDOriginalImagePostRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									default:
-										s.notAllowed(w, r, "GET,POST")
-									}
-
-									return
-								}
-
-							case 's': // Prefix: "segmentation-groups"
-
-								if l := len("segmentation-groups"); len(elem) >= l && elem[0:l] == "segmentation-groups" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch r.Method {
-									case "GET":
-										s.handleCytologyIDSegmentationGroupsGetRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									case "POST":
-										s.handleCytologyIDSegmentationGroupsPostRequest([1]string{
-											args[0],
-										}, elemIsEscaped, w, r)
-									default:
-										s.notAllowed(w, r, "GET,POST")
-									}
-
-									return
-								}
-
-							}
-
 						}
 
 					}
@@ -459,6 +344,67 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case 'c': // Prefix: "cytology/"
+					origElem := elem
+					if l := len("cytology/"); len(elem) >= l && elem[0:l] == "cytology/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "cytology_id"
+					// Match until "/"
+					idx := strings.IndexByte(elem, '/')
+					if idx < 0 {
+						idx = len(elem)
+					}
+					args[0] = elem[:idx]
+					elem = elem[idx:]
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case '/': // Prefix: "/"
+
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "original_image_id"
+						// Leaf parameter, slashes are prohibited
+						idx := strings.IndexByte(elem, '/')
+						if idx >= 0 {
+							break
+						}
+						args[1] = elem
+						elem = ""
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleDownloadCytologyCytologyIDOriginalImageIDGetRequest([2]string{
+									args[0],
+									args[1],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
+							}
+
+							return
+						}
+
+					}
+
+					elem = origElem
+				}
 				// Param: "uzi_id"
 				// Match until "/"
 				idx := strings.IndexByte(elem, '/')
@@ -1532,9 +1478,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				break
 			}
 			switch elem[0] {
-			case 'c': // Prefix: "cytolog"
+			case 'c': // Prefix: "cytology/"
 
-				if l := len("cytolog"); len(elem) >= l && elem[0:l] == "cytolog" {
+				if l := len("cytology/"); len(elem) >= l && elem[0:l] == "cytology/" {
 					elem = elem[l:]
 				} else {
 					break
@@ -1544,9 +1490,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
-				case 'i': // Prefix: "ies/"
-
-					if l := len("ies/"); len(elem) >= l && elem[0:l] == "ies/" {
+				case 'c': // Prefix: "c"
+					origElem := elem
+					if l := len("c"); len(elem) >= l && elem[0:l] == "c" {
 						elem = elem[l:]
 					} else {
 						break
@@ -1556,9 +1502,139 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						break
 					}
 					switch elem[0] {
-					case 'e': // Prefix: "external/"
+					case 'o': // Prefix: "opy"
 
-						if l := len("external/"); len(elem) >= l && elem[0:l] == "external/" {
+						if l := len("opy"); len(elem) >= l && elem[0:l] == "opy" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "POST":
+								r.name = CytologyCopyCreateOperation
+								r.summary = "Создание нового исследования, на основе предыдущего"
+								r.operationID = "CytologyCopyCreate"
+								r.pathPattern = "/cytology/copy"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+					case 'r': // Prefix: "reate"
+
+						if l := len("reate"); len(elem) >= l && elem[0:l] == "reate" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "POST":
+								r.name = CytologyCreateCreateOperation
+								r.summary = "Форма для сохранния цитологического изображения"
+								r.operationID = "CytologyCreateCreate"
+								r.pathPattern = "/cytology/create"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+					}
+
+					elem = origElem
+				case 'h': // Prefix: "history/"
+					origElem := elem
+					if l := len("history/"); len(elem) >= l && elem[0:l] == "history/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter, slashes are prohibited
+					idx := strings.IndexByte(elem, '/')
+					if idx >= 0 {
+						break
+					}
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "GET":
+							r.name = CytologyHistoryReadOperation
+							r.summary = "получить историю цитологического исследования"
+							r.operationID = "CytologyHistoryRead"
+							r.pathPattern = "/cytology/history/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
+				case 's': // Prefix: "segment/"
+					origElem := elem
+					if l := len("segment/"); len(elem) >= l && elem[0:l] == "segment/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 'g': // Prefix: "group/create/"
+
+						if l := len("group/create/"); len(elem) >= l && elem[0:l] == "group/create/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "cytology_img_id"
+						// Leaf parameter, slashes are prohibited
+						idx := strings.IndexByte(elem, '/')
+						if idx >= 0 {
+							break
+						}
+						args[0] = elem
+						elem = ""
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "POST":
+								r.name = CytologySegmentGroupCreateCreateOperation
+								r.summary = "создать группу сегментаций"
+								r.operationID = "CytologySegmentGroupCreateCreate"
+								r.pathPattern = "/cytology/segment/group/create/{cytology_img_id}"
+								r.args = args
+								r.count = 1
+								return r, true
+							default:
+								return
+							}
+						}
+
+					case 'u': // Prefix: "update/"
+
+						if l := len("update/"); len(elem) >= l && elem[0:l] == "update/" {
 							elem = elem[l:]
 						} else {
 							break
@@ -1576,11 +1652,35 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						if len(elem) == 0 {
 							// Leaf node.
 							switch method {
+							case "DELETE":
+								r.name = CytologySegmentUpdateDeleteOperation
+								r.summary = "удалить сегментацию"
+								r.operationID = "CytologySegmentUpdateDelete"
+								r.pathPattern = "/cytology/segment/update/{id}"
+								r.args = args
+								r.count = 1
+								return r, true
 							case "GET":
-								r.name = CytologiesExternalIDGetOperation
-								r.summary = "получить цитологические исследования по внешнему id"
-								r.operationID = ""
-								r.pathPattern = "/cytologies/external/{id}"
+								r.name = CytologySegmentUpdateReadOperation
+								r.summary = "получить сегментацию"
+								r.operationID = "CytologySegmentUpdateRead"
+								r.pathPattern = "/cytology/segment/update/{id}"
+								r.args = args
+								r.count = 1
+								return r, true
+							case "PATCH":
+								r.name = CytologySegmentUpdatePartialUpdateOperation
+								r.summary = "обновить сегментацию"
+								r.operationID = "CytologySegmentUpdatePartialUpdate"
+								r.pathPattern = "/cytology/segment/update/{id}"
+								r.args = args
+								r.count = 1
+								return r, true
+							case "PUT":
+								r.name = CytologySegmentUpdateUpdateOperation
+								r.summary = "обновить сегментацию"
+								r.operationID = "CytologySegmentUpdateUpdate"
+								r.pathPattern = "/cytology/segment/update/{id}"
 								r.args = args
 								r.count = 1
 								return r, true
@@ -1589,296 +1689,62 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 						}
 
-					case 'p': // Prefix: "patient-card/"
-
-						if l := len("patient-card/"); len(elem) >= l && elem[0:l] == "patient-card/" {
-							elem = elem[l:]
-						} else {
-							break
-						}
-
-						// Param: "doctor_id"
-						// Match until "/"
-						idx := strings.IndexByte(elem, '/')
-						if idx < 0 {
-							idx = len(elem)
-						}
-						args[0] = elem[:idx]
-						elem = elem[idx:]
-
-						if len(elem) == 0 {
-							break
-						}
-						switch elem[0] {
-						case '/': // Prefix: "/"
-
-							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							// Param: "patient_id"
-							// Leaf parameter, slashes are prohibited
-							idx := strings.IndexByte(elem, '/')
-							if idx >= 0 {
-								break
-							}
-							args[1] = elem
-							elem = ""
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch method {
-								case "GET":
-									r.name = CytologiesPatientCardDoctorIDPatientIDGetOperation
-									r.summary = "получить цитологические исследования по id врача и пациента"
-									r.operationID = ""
-									r.pathPattern = "/cytologies/patient-card/{doctor_id}/{patient_id}"
-									r.args = args
-									r.count = 2
-									return r, true
-								default:
-									return
-								}
-							}
-
-						}
-
 					}
 
-				case 'y': // Prefix: "y"
+					elem = origElem
+				}
+				// Param: "id"
+				// Match until "/"
+				idx := strings.IndexByte(elem, '/')
+				if idx < 0 {
+					idx = len(elem)
+				}
+				args[0] = elem[:idx]
+				elem = elem[idx:]
 
-					if l := len("y"); len(elem) >= l && elem[0:l] == "y" {
+				if len(elem) == 0 {
+					switch method {
+					case "GET":
+						r.name = CytologyReadOperation
+						r.summary = "Информация об одной группе снимков"
+						r.operationID = "CytologyRead"
+						r.pathPattern = "/cytology/{id}"
+						r.args = args
+						r.count = 1
+						return r, true
+					default:
+						return
+					}
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch method {
-						case "POST":
-							r.name = CytologyPostOperation
-							r.summary = "создать цитологическое исследование"
-							r.operationID = ""
-							r.pathPattern = "/cytology"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
-						}
+						break
 					}
 					switch elem[0] {
-					case '/': // Prefix: "/"
+					case 's': // Prefix: "segments"
 
-						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						if l := len("segments"); len(elem) >= l && elem[0:l] == "segments" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							break
-						}
-						switch elem[0] {
-						case 'o': // Prefix: "original-image/"
-							origElem := elem
-							if l := len("original-image/"); len(elem) >= l && elem[0:l] == "original-image/" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							// Param: "id"
-							// Leaf parameter, slashes are prohibited
-							idx := strings.IndexByte(elem, '/')
-							if idx >= 0 {
-								break
-							}
-							args[0] = elem
-							elem = ""
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch method {
-								case "PATCH":
-									r.name = CytologyOriginalImageIDPatchOperation
-									r.summary = "обновить оригинальное изображение"
-									r.operationID = ""
-									r.pathPattern = "/cytology/original-image/{id}"
-									r.args = args
-									r.count = 1
-									return r, true
-								default:
-									return
-								}
-							}
-
-							elem = origElem
-						case 's': // Prefix: "segmentation"
-							origElem := elem
-							if l := len("segmentation"); len(elem) >= l && elem[0:l] == "segmentation" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							if len(elem) == 0 {
-								break
-							}
-							switch elem[0] {
-							case '-': // Prefix: "-group/"
-
-								if l := len("-group/"); len(elem) >= l && elem[0:l] == "-group/" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								// Param: "id"
-								// Match until "/"
-								idx := strings.IndexByte(elem, '/')
-								if idx < 0 {
-									idx = len(elem)
-								}
-								args[0] = elem[:idx]
-								elem = elem[idx:]
-
-								if len(elem) == 0 {
-									switch method {
-									case "DELETE":
-										r.name = CytologySegmentationGroupIDDeleteOperation
-										r.summary = "удалить группу сегментаций"
-										r.operationID = ""
-										r.pathPattern = "/cytology/segmentation-group/{id}"
-										r.args = args
-										r.count = 1
-										return r, true
-									case "PATCH":
-										r.name = CytologySegmentationGroupIDPatchOperation
-										r.summary = "обновить группу сегментаций"
-										r.operationID = ""
-										r.pathPattern = "/cytology/segmentation-group/{id}"
-										r.args = args
-										r.count = 1
-										return r, true
-									default:
-										return
-									}
-								}
-								switch elem[0] {
-								case '/': // Prefix: "/segments"
-
-									if l := len("/segments"); len(elem) >= l && elem[0:l] == "/segments" {
-										elem = elem[l:]
-									} else {
-										break
-									}
-
-									if len(elem) == 0 {
-										// Leaf node.
-										switch method {
-										case "GET":
-											r.name = CytologySegmentationGroupIDSegmentsGetOperation
-											r.summary = "получить сегментации группы"
-											r.operationID = ""
-											r.pathPattern = "/cytology/segmentation-group/{id}/segments"
-											r.args = args
-											r.count = 1
-											return r, true
-										case "POST":
-											r.name = CytologySegmentationGroupIDSegmentsPostOperation
-											r.summary = "создать сегментацию в группе"
-											r.operationID = ""
-											r.pathPattern = "/cytology/segmentation-group/{id}/segments"
-											r.args = args
-											r.count = 1
-											return r, true
-										default:
-											return
-										}
-									}
-
-								}
-
-							case '/': // Prefix: "/"
-
-								if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								// Param: "id"
-								// Leaf parameter, slashes are prohibited
-								idx := strings.IndexByte(elem, '/')
-								if idx >= 0 {
-									break
-								}
-								args[0] = elem
-								elem = ""
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch method {
-									case "DELETE":
-										r.name = CytologySegmentationIDDeleteOperation
-										r.summary = "удалить сегментацию"
-										r.operationID = ""
-										r.pathPattern = "/cytology/segmentation/{id}"
-										r.args = args
-										r.count = 1
-										return r, true
-									case "PATCH":
-										r.name = CytologySegmentationIDPatchOperation
-										r.summary = "обновить сегментацию"
-										r.operationID = ""
-										r.pathPattern = "/cytology/segmentation/{id}"
-										r.args = args
-										r.count = 1
-										return r, true
-									default:
-										return
-									}
-								}
-
-							}
-
-							elem = origElem
-						}
-						// Param: "id"
-						// Match until "/"
-						idx := strings.IndexByte(elem, '/')
-						if idx < 0 {
-							idx = len(elem)
-						}
-						args[0] = elem[:idx]
-						elem = elem[idx:]
-
-						if len(elem) == 0 {
+							// Leaf node.
 							switch method {
-							case "DELETE":
-								r.name = CytologyIDDeleteOperation
-								r.summary = "удалить цитологическое исследование"
-								r.operationID = ""
-								r.pathPattern = "/cytology/{id}"
-								r.args = args
-								r.count = 1
-								return r, true
 							case "GET":
-								r.name = CytologyIDGetOperation
-								r.summary = "получить цитологическое исследование"
-								r.operationID = ""
-								r.pathPattern = "/cytology/{id}"
-								r.args = args
-								r.count = 1
-								return r, true
-							case "PATCH":
-								r.name = CytologyIDPatchOperation
-								r.summary = "обновить цитологическое исследование"
-								r.operationID = ""
-								r.pathPattern = "/cytology/{id}"
+								r.name = CytologySegmentsListOperation
+								r.summary = "Информация об одной группе снимков"
+								r.operationID = "CytologySegmentsList"
+								r.pathPattern = "/cytology/{id}/segments"
 								r.args = args
 								r.count = 1
 								return r, true
@@ -1886,85 +1752,37 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								return
 							}
 						}
-						switch elem[0] {
-						case '/': // Prefix: "/"
 
-							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
-								elem = elem[l:]
-							} else {
-								break
+					case 'u': // Prefix: "update"
+
+						if l := len("update"); len(elem) >= l && elem[0:l] == "update" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "PATCH":
+								r.name = CytologyUpdatePartialUpdateOperation
+								r.summary = "Обновление всей страницы с информацией о приеме"
+								r.operationID = "CytologyUpdatePartialUpdate"
+								r.pathPattern = "/cytology/{id}/update"
+								r.args = args
+								r.count = 1
+								return r, true
+							case "PUT":
+								r.name = CytologyUpdateUpdateOperation
+								r.summary = "Обновление всей страницы с информацией о приеме"
+								r.operationID = "CytologyUpdateUpdate"
+								r.pathPattern = "/cytology/{id}/update"
+								r.args = args
+								r.count = 1
+								return r, true
+							default:
+								return
 							}
-
-							if len(elem) == 0 {
-								break
-							}
-							switch elem[0] {
-							case 'o': // Prefix: "original-image"
-
-								if l := len("original-image"); len(elem) >= l && elem[0:l] == "original-image" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch method {
-									case "GET":
-										r.name = CytologyIDOriginalImageGetOperation
-										r.summary = "получить оригинальные изображения цитологического исследования"
-										r.operationID = ""
-										r.pathPattern = "/cytology/{id}/original-image"
-										r.args = args
-										r.count = 1
-										return r, true
-									case "POST":
-										r.name = CytologyIDOriginalImagePostOperation
-										r.summary = "создать оригинальное изображение для цитологического исследования"
-										r.operationID = ""
-										r.pathPattern = "/cytology/{id}/original-image"
-										r.args = args
-										r.count = 1
-										return r, true
-									default:
-										return
-									}
-								}
-
-							case 's': // Prefix: "segmentation-groups"
-
-								if l := len("segmentation-groups"); len(elem) >= l && elem[0:l] == "segmentation-groups" {
-									elem = elem[l:]
-								} else {
-									break
-								}
-
-								if len(elem) == 0 {
-									// Leaf node.
-									switch method {
-									case "GET":
-										r.name = CytologyIDSegmentationGroupsGetOperation
-										r.summary = "получить группы сегментаций цитологического исследования"
-										r.operationID = ""
-										r.pathPattern = "/cytology/{id}/segmentation-groups"
-										r.args = args
-										r.count = 1
-										return r, true
-									case "POST":
-										r.name = CytologyIDSegmentationGroupsPostOperation
-										r.summary = "создать группу сегментаций"
-										r.operationID = ""
-										r.pathPattern = "/cytology/{id}/segmentation-groups"
-										r.args = args
-										r.count = 1
-										return r, true
-									default:
-										return
-									}
-								}
-
-							}
-
 						}
 
 					}
@@ -1979,6 +1797,68 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case 'c': // Prefix: "cytology/"
+					origElem := elem
+					if l := len("cytology/"); len(elem) >= l && elem[0:l] == "cytology/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "cytology_id"
+					// Match until "/"
+					idx := strings.IndexByte(elem, '/')
+					if idx < 0 {
+						idx = len(elem)
+					}
+					args[0] = elem[:idx]
+					elem = elem[idx:]
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case '/': // Prefix: "/"
+
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "original_image_id"
+						// Leaf parameter, slashes are prohibited
+						idx := strings.IndexByte(elem, '/')
+						if idx >= 0 {
+							break
+						}
+						args[1] = elem
+						elem = ""
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = DownloadCytologyCytologyIDOriginalImageIDGetOperation
+								r.summary = "получить оригинальное изображение цитологического исследования"
+								r.operationID = ""
+								r.pathPattern = "/download/cytology/{cytology_id}/{original_image_id}"
+								r.args = args
+								r.count = 2
+								return r, true
+							default:
+								return
+							}
+						}
+
+					}
+
+					elem = origElem
+				}
 				// Param: "uzi_id"
 				// Match until "/"
 				idx := strings.IndexByte(elem, '/')

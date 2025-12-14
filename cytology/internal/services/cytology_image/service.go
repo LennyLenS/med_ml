@@ -16,6 +16,8 @@ type Service interface {
 	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]domain.CytologyImage, error)
 	UpdateCytologyImage(ctx context.Context, arg UpdateCytologyImageArg) (domain.CytologyImage, error)
 	DeleteCytologyImage(ctx context.Context, id uuid.UUID) error
+	CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.CytologyImage, error)
+	GetCytologyImageHistory(ctx context.Context, id uuid.UUID) ([]domain.CytologyImage, error)
 }
 
 type service struct {

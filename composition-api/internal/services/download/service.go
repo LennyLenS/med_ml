@@ -11,6 +11,7 @@ import (
 
 type Service interface {
 	GetImage(ctx context.Context, uziID uuid.UUID, imageID uuid.UUID) (io.ReadCloser, error)
+	GetCytologyImage(ctx context.Context, cytologyID uuid.UUID, originalImageID uuid.UUID) (io.ReadCloser, error)
 }
 
 type service struct {

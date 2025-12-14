@@ -26,6 +26,8 @@ const (
 	CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName = "/CytologySrv/GetCytologyImagesByDoctorIdAndPatientId"
 	CytologySrv_UpdateCytologyImage_FullMethodName                     = "/CytologySrv/UpdateCytologyImage"
 	CytologySrv_DeleteCytologyImage_FullMethodName                     = "/CytologySrv/DeleteCytologyImage"
+	CytologySrv_CopyCytologyImage_FullMethodName                       = "/CytologySrv/CopyCytologyImage"
+	CytologySrv_GetCytologyImageHistory_FullMethodName                 = "/CytologySrv/GetCytologyImageHistory"
 	CytologySrv_CreateOriginalImage_FullMethodName                     = "/CytologySrv/CreateOriginalImage"
 	CytologySrv_GetOriginalImageById_FullMethodName                    = "/CytologySrv/GetOriginalImageById"
 	CytologySrv_GetOriginalImagesByCytologyId_FullMethodName           = "/CytologySrv/GetOriginalImagesByCytologyId"
@@ -52,6 +54,8 @@ type CytologySrvClient interface {
 	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, in *GetCytologyImagesByDoctorIdAndPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(ctx context.Context, in *UpdateCytologyImageIn, opts ...grpc.CallOption) (*UpdateCytologyImageOut, error)
 	DeleteCytologyImage(ctx context.Context, in *DeleteCytologyImageIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CopyCytologyImage(ctx context.Context, in *CopyCytologyImageIn, opts ...grpc.CallOption) (*CopyCytologyImageOut, error)
+	GetCytologyImageHistory(ctx context.Context, in *GetCytologyImageHistoryIn, opts ...grpc.CallOption) (*GetCytologyImageHistoryOut, error)
 	// ORIGINAL IMAGE
 	CreateOriginalImage(ctx context.Context, in *CreateOriginalImageIn, opts ...grpc.CallOption) (*CreateOriginalImageOut, error)
 	GetOriginalImageById(ctx context.Context, in *GetOriginalImageByIdIn, opts ...grpc.CallOption) (*GetOriginalImageByIdOut, error)
@@ -132,6 +136,26 @@ func (c *cytologySrvClient) DeleteCytologyImage(ctx context.Context, in *DeleteC
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, CytologySrv_DeleteCytologyImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cytologySrvClient) CopyCytologyImage(ctx context.Context, in *CopyCytologyImageIn, opts ...grpc.CallOption) (*CopyCytologyImageOut, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CopyCytologyImageOut)
+	err := c.cc.Invoke(ctx, CytologySrv_CopyCytologyImage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cytologySrvClient) GetCytologyImageHistory(ctx context.Context, in *GetCytologyImageHistoryIn, opts ...grpc.CallOption) (*GetCytologyImageHistoryOut, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCytologyImageHistoryOut)
+	err := c.cc.Invoke(ctx, CytologySrv_GetCytologyImageHistory_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -279,6 +303,8 @@ type CytologySrvServer interface {
 	GetCytologyImagesByDoctorIdAndPatientId(context.Context, *GetCytologyImagesByDoctorIdAndPatientIdIn) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(context.Context, *UpdateCytologyImageIn) (*UpdateCytologyImageOut, error)
 	DeleteCytologyImage(context.Context, *DeleteCytologyImageIn) (*emptypb.Empty, error)
+	CopyCytologyImage(context.Context, *CopyCytologyImageIn) (*CopyCytologyImageOut, error)
+	GetCytologyImageHistory(context.Context, *GetCytologyImageHistoryIn) (*GetCytologyImageHistoryOut, error)
 	// ORIGINAL IMAGE
 	CreateOriginalImage(context.Context, *CreateOriginalImageIn) (*CreateOriginalImageOut, error)
 	GetOriginalImageById(context.Context, *GetOriginalImageByIdIn) (*GetOriginalImageByIdOut, error)
@@ -322,6 +348,12 @@ func (UnimplementedCytologySrvServer) UpdateCytologyImage(context.Context, *Upda
 }
 func (UnimplementedCytologySrvServer) DeleteCytologyImage(context.Context, *DeleteCytologyImageIn) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteCytologyImage not implemented")
+}
+func (UnimplementedCytologySrvServer) CopyCytologyImage(context.Context, *CopyCytologyImageIn) (*CopyCytologyImageOut, error) {
+	return nil, status.Error(codes.Unimplemented, "method CopyCytologyImage not implemented")
+}
+func (UnimplementedCytologySrvServer) GetCytologyImageHistory(context.Context, *GetCytologyImageHistoryIn) (*GetCytologyImageHistoryOut, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCytologyImageHistory not implemented")
 }
 func (UnimplementedCytologySrvServer) CreateOriginalImage(context.Context, *CreateOriginalImageIn) (*CreateOriginalImageOut, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateOriginalImage not implemented")
@@ -487,6 +519,42 @@ func _CytologySrv_DeleteCytologyImage_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CytologySrvServer).DeleteCytologyImage(ctx, req.(*DeleteCytologyImageIn))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CytologySrv_CopyCytologyImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CopyCytologyImageIn)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CytologySrvServer).CopyCytologyImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CytologySrv_CopyCytologyImage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CytologySrvServer).CopyCytologyImage(ctx, req.(*CopyCytologyImageIn))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CytologySrv_GetCytologyImageHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCytologyImageHistoryIn)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CytologySrvServer).GetCytologyImageHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CytologySrv_GetCytologyImageHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CytologySrvServer).GetCytologyImageHistory(ctx, req.(*GetCytologyImageHistoryIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -755,6 +823,14 @@ var CytologySrv_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCytologyImage",
 			Handler:    _CytologySrv_DeleteCytologyImage_Handler,
+		},
+		{
+			MethodName: "CopyCytologyImage",
+			Handler:    _CytologySrv_CopyCytologyImage_Handler,
+		},
+		{
+			MethodName: "GetCytologyImageHistory",
+			Handler:    _CytologySrv_GetCytologyImageHistory_Handler,
 		},
 		{
 			MethodName: "CreateOriginalImage",

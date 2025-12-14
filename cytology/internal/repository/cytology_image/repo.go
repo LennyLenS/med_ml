@@ -34,6 +34,7 @@ type Repository interface {
 	GetCytologyImageByID(id uuid.UUID) (entity.CytologyImage, error)
 	GetCytologyImagesByExternalID(externalID uuid.UUID) ([]entity.CytologyImage, error)
 	GetCytologyImagesByDoctorIdAndPatientId(doctorID, patientID uuid.UUID) ([]entity.CytologyImage, error)
+	GetCytologyImagesByParentPrevID(parentPrevID uuid.UUID) ([]entity.CytologyImage, error)
 	UpdateCytologyImage(img entity.CytologyImage) error
 	DeleteCytologyImage(id uuid.UUID) error
 }

@@ -10,6 +10,7 @@ import (
 type OriginalImageHandler interface {
 	CytologyIDOriginalImagePost(ctx context.Context, req *api.CytologyIDOriginalImagePostReq, params api.CytologyIDOriginalImagePostParams) (api.CytologyIDOriginalImagePostRes, error)
 	CytologyIDOriginalImageGet(ctx context.Context, params api.CytologyIDOriginalImageGetParams) (api.CytologyIDOriginalImageGetRes, error)
+	CytologyOriginalImageIDGet(ctx context.Context, params api.CytologyOriginalImageIDGetParams) (api.CytologyOriginalImageIDGetRes, error)
 	CytologyOriginalImageIDPatch(ctx context.Context, req *api.CytologyOriginalImageIDPatchReq, params api.CytologyOriginalImageIDPatchParams) (api.CytologyOriginalImageIDPatchRes, error)
 }
 

@@ -19,128 +19,8 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s *Server) decodeCytologyIDOriginalImagePostRequest(r *http.Request) (
-	req *CytologyIDOriginalImagePostReq,
-	close func() error,
-	rerr error,
-) {
-	var closers []func() error
-	close = func() error {
-		var merr error
-		// Close in reverse order, to match defer behavior.
-		for i := len(closers) - 1; i >= 0; i-- {
-			c := closers[i]
-			merr = multierr.Append(merr, c())
-		}
-		return merr
-	}
-	defer func() {
-		if rerr != nil {
-			rerr = multierr.Append(rerr, close())
-		}
-	}()
-	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
-	if err != nil {
-		return req, close, errors.Wrap(err, "parse media type")
-	}
-	switch {
-	case ct == "multipart/form-data":
-		if r.ContentLength == 0 {
-			return req, close, validate.ErrBodyRequired
-		}
-		if err := r.ParseMultipartForm(s.cfg.MaxMultipartMemory); err != nil {
-			return req, close, errors.Wrap(err, "parse multipart form")
-		}
-		// Remove all temporary files created by ParseMultipartForm when the request is done.
-		//
-		// Notice that the closers are called in reverse order, to match defer behavior, so
-		// any opened file will be closed before RemoveAll call.
-		closers = append(closers, r.MultipartForm.RemoveAll)
-		// Form values may be unused.
-		form := url.Values(r.MultipartForm.Value)
-		_ = form
-
-		var request CytologyIDOriginalImagePostReq
-		q := uri.NewQueryDecoder(form)
-		{
-			cfg := uri.QueryParameterDecodingConfig{
-				Name:    "delay_time",
-				Style:   uri.QueryStyleForm,
-				Explode: true,
-			}
-			if err := q.HasParam(cfg); err == nil {
-				if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-					var requestDotDelayTimeVal float64
-					if err := func() error {
-						val, err := d.DecodeValue()
-						if err != nil {
-							return err
-						}
-
-						c, err := conv.ToFloat64(val)
-						if err != nil {
-							return err
-						}
-
-						requestDotDelayTimeVal = c
-						return nil
-					}(); err != nil {
-						return err
-					}
-					request.DelayTime.SetTo(requestDotDelayTimeVal)
-					return nil
-				}); err != nil {
-					return req, close, errors.Wrap(err, "decode \"delay_time\"")
-				}
-				if err := func() error {
-					if value, ok := request.DelayTime.Get(); ok {
-						if err := func() error {
-							if err := (validate.Float{}).Validate(float64(value)); err != nil {
-								return errors.Wrap(err, "float")
-							}
-							return nil
-						}(); err != nil {
-							return err
-						}
-					}
-					return nil
-				}(); err != nil {
-					return req, close, errors.Wrap(err, "validate")
-				}
-			}
-		}
-		{
-			if err := func() error {
-				files, ok := r.MultipartForm.File["file"]
-				if !ok || len(files) < 1 {
-					return validate.ErrFieldRequired
-				}
-				fh := files[0]
-
-				f, err := fh.Open()
-				if err != nil {
-					return errors.Wrap(err, "open")
-				}
-				closers = append(closers, f.Close)
-				request.File = ht.MultipartFile{
-					Name:   fh.Filename,
-					File:   f,
-					Size:   fh.Size,
-					Header: fh.Header,
-				}
-				return nil
-			}(); err != nil {
-				return req, close, errors.Wrap(err, "decode \"file\"")
-			}
-		}
-		return &request, close, nil
-	default:
-		return req, close, validate.InvalidContentType(ct)
-	}
-}
-
-func (s *Server) decodeCytologyIDPatchRequest(r *http.Request) (
-	req *CytologyIDPatchReq,
+func (s *Server) decodeCytologyCopyCreateRequest(r *http.Request) (
+	req *CytologyCopyCreateReq,
 	close func() error,
 	rerr error,
 ) {
@@ -179,7 +59,70 @@ func (s *Server) decodeCytologyIDPatchRequest(r *http.Request) (
 
 		d := jx.DecodeBytes(buf)
 
-		var request CytologyIDPatchReq
+		var request CytologyCopyCreateReq
+		if err := func() error {
+			if err := request.Decode(d); err != nil {
+				return err
+			}
+			if err := d.Skip(); err != io.EOF {
+				return errors.New("unexpected trailing data")
+			}
+			return nil
+		}(); err != nil {
+			err = &ogenerrors.DecodeBodyError{
+				ContentType: ct,
+				Body:        buf,
+				Err:         err,
+			}
+			return req, close, err
+		}
+		return &request, close, nil
+	default:
+		return req, close, validate.InvalidContentType(ct)
+	}
+}
+
+func (s *Server) decodeCytologyCreateCreateRequest(r *http.Request) (
+	req *CytologyCreateCreateReq,
+	close func() error,
+	rerr error,
+) {
+	var closers []func() error
+	close = func() error {
+		var merr error
+		// Close in reverse order, to match defer behavior.
+		for i := len(closers) - 1; i >= 0; i-- {
+			c := closers[i]
+			merr = multierr.Append(merr, c())
+		}
+		return merr
+	}
+	defer func() {
+		if rerr != nil {
+			rerr = multierr.Append(rerr, close())
+		}
+	}()
+	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
+	if err != nil {
+		return req, close, errors.Wrap(err, "parse media type")
+	}
+	switch {
+	case ct == "application/json":
+		if r.ContentLength == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+		buf, err := io.ReadAll(r.Body)
+		if err != nil {
+			return req, close, err
+		}
+
+		if len(buf) == 0 {
+			return req, close, validate.ErrBodyRequired
+		}
+
+		d := jx.DecodeBytes(buf)
+
+		var request CytologyCreateCreateReq
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err
@@ -210,8 +153,8 @@ func (s *Server) decodeCytologyIDPatchRequest(r *http.Request) (
 	}
 }
 
-func (s *Server) decodeCytologyIDSegmentationGroupsPostRequest(r *http.Request) (
-	req *CytologyIDSegmentationGroupsPostReq,
+func (s *Server) decodeCytologySegmentGroupCreateCreateRequest(r *http.Request) (
+	req *CytologySegmentGroupCreateCreateReq,
 	close func() error,
 	rerr error,
 ) {
@@ -250,7 +193,7 @@ func (s *Server) decodeCytologyIDSegmentationGroupsPostRequest(r *http.Request) 
 
 		d := jx.DecodeBytes(buf)
 
-		var request CytologyIDSegmentationGroupsPostReq
+		var request CytologySegmentGroupCreateCreateReq
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err
@@ -281,8 +224,8 @@ func (s *Server) decodeCytologyIDSegmentationGroupsPostRequest(r *http.Request) 
 	}
 }
 
-func (s *Server) decodeCytologyOriginalImageIDPatchRequest(r *http.Request) (
-	req *CytologyOriginalImageIDPatchReq,
+func (s *Server) decodeCytologySegmentUpdatePartialUpdateRequest(r *http.Request) (
+	req *CytologySegmentUpdatePartialUpdateReq,
 	close func() error,
 	rerr error,
 ) {
@@ -321,7 +264,7 @@ func (s *Server) decodeCytologyOriginalImageIDPatchRequest(r *http.Request) (
 
 		d := jx.DecodeBytes(buf)
 
-		var request CytologyOriginalImageIDPatchReq
+		var request CytologySegmentUpdatePartialUpdateReq
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err
@@ -352,8 +295,8 @@ func (s *Server) decodeCytologyOriginalImageIDPatchRequest(r *http.Request) (
 	}
 }
 
-func (s *Server) decodeCytologyPostRequest(r *http.Request) (
-	req *CytologyPostReq,
+func (s *Server) decodeCytologySegmentUpdateUpdateRequest(r *http.Request) (
+	req *CytologySegmentUpdateUpdateReq,
 	close func() error,
 	rerr error,
 ) {
@@ -392,7 +335,7 @@ func (s *Server) decodeCytologyPostRequest(r *http.Request) (
 
 		d := jx.DecodeBytes(buf)
 
-		var request CytologyPostReq
+		var request CytologySegmentUpdateUpdateReq
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err
@@ -423,8 +366,8 @@ func (s *Server) decodeCytologyPostRequest(r *http.Request) (
 	}
 }
 
-func (s *Server) decodeCytologySegmentationGroupIDPatchRequest(r *http.Request) (
-	req *CytologySegmentationGroupIDPatchReq,
+func (s *Server) decodeCytologyUpdatePartialUpdateRequest(r *http.Request) (
+	req *CytologyUpdatePartialUpdateReq,
 	close func() error,
 	rerr error,
 ) {
@@ -463,7 +406,7 @@ func (s *Server) decodeCytologySegmentationGroupIDPatchRequest(r *http.Request) 
 
 		d := jx.DecodeBytes(buf)
 
-		var request CytologySegmentationGroupIDPatchReq
+		var request CytologyUpdatePartialUpdateReq
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err
@@ -494,8 +437,8 @@ func (s *Server) decodeCytologySegmentationGroupIDPatchRequest(r *http.Request) 
 	}
 }
 
-func (s *Server) decodeCytologySegmentationGroupIDSegmentsPostRequest(r *http.Request) (
-	req *CytologySegmentationGroupIDSegmentsPostReq,
+func (s *Server) decodeCytologyUpdateUpdateRequest(r *http.Request) (
+	req *CytologyUpdateUpdateReq,
 	close func() error,
 	rerr error,
 ) {
@@ -534,78 +477,7 @@ func (s *Server) decodeCytologySegmentationGroupIDSegmentsPostRequest(r *http.Re
 
 		d := jx.DecodeBytes(buf)
 
-		var request CytologySegmentationGroupIDSegmentsPostReq
-		if err := func() error {
-			if err := request.Decode(d); err != nil {
-				return err
-			}
-			if err := d.Skip(); err != io.EOF {
-				return errors.New("unexpected trailing data")
-			}
-			return nil
-		}(); err != nil {
-			err = &ogenerrors.DecodeBodyError{
-				ContentType: ct,
-				Body:        buf,
-				Err:         err,
-			}
-			return req, close, err
-		}
-		if err := func() error {
-			if err := request.Validate(); err != nil {
-				return err
-			}
-			return nil
-		}(); err != nil {
-			return req, close, errors.Wrap(err, "validate")
-		}
-		return &request, close, nil
-	default:
-		return req, close, validate.InvalidContentType(ct)
-	}
-}
-
-func (s *Server) decodeCytologySegmentationIDPatchRequest(r *http.Request) (
-	req *CytologySegmentationIDPatchReq,
-	close func() error,
-	rerr error,
-) {
-	var closers []func() error
-	close = func() error {
-		var merr error
-		// Close in reverse order, to match defer behavior.
-		for i := len(closers) - 1; i >= 0; i-- {
-			c := closers[i]
-			merr = multierr.Append(merr, c())
-		}
-		return merr
-	}
-	defer func() {
-		if rerr != nil {
-			rerr = multierr.Append(rerr, close())
-		}
-	}()
-	ct, _, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
-	if err != nil {
-		return req, close, errors.Wrap(err, "parse media type")
-	}
-	switch {
-	case ct == "application/json":
-		if r.ContentLength == 0 {
-			return req, close, validate.ErrBodyRequired
-		}
-		buf, err := io.ReadAll(r.Body)
-		if err != nil {
-			return req, close, err
-		}
-
-		if len(buf) == 0 {
-			return req, close, validate.ErrBodyRequired
-		}
-
-		d := jx.DecodeBytes(buf)
-
-		var request CytologySegmentationIDPatchReq
+		var request CytologyUpdateUpdateReq
 		if err := func() error {
 			if err := request.Decode(d); err != nil {
 				return err

@@ -18,6 +18,7 @@ import (
 	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/ogenerrors"
+	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
 )
 
@@ -28,112 +29,85 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
-	// CytologiesExternalIDGet invokes GET /cytologies/external/{id} operation.
+	// CytologyCopyCreate invokes CytologyCopyCreate operation.
 	//
-	// Получить цитологические исследования по внешнему id.
+	// Создание нового исследования, на основе предыдущего.
 	//
-	// GET /cytologies/external/{id}
-	CytologiesExternalIDGet(ctx context.Context, params CytologiesExternalIDGetParams) (CytologiesExternalIDGetRes, error)
-	// CytologiesPatientCardDoctorIDPatientIDGet invokes GET /cytologies/patient-card/{doctor_id}/{patient_id} operation.
+	// POST /cytology/copy
+	CytologyCopyCreate(ctx context.Context, request *CytologyCopyCreateReq) (CytologyCopyCreateRes, error)
+	// CytologyCreateCreate invokes CytologyCreateCreate operation.
 	//
-	// Получить цитологические исследования по id врача и
-	// пациента.
+	// Форма для сохранния цитологического изображения.
 	//
-	// GET /cytologies/patient-card/{doctor_id}/{patient_id}
-	CytologiesPatientCardDoctorIDPatientIDGet(ctx context.Context, params CytologiesPatientCardDoctorIDPatientIDGetParams) (CytologiesPatientCardDoctorIDPatientIDGetRes, error)
-	// CytologyIDDelete invokes DELETE /cytology/{id} operation.
+	// POST /cytology/create
+	CytologyCreateCreate(ctx context.Context, request *CytologyCreateCreateReq) (CytologyCreateCreateRes, error)
+	// CytologyHistoryRead invokes CytologyHistoryRead operation.
 	//
-	// Удалить цитологическое исследование.
+	// Получить историю цитологического исследования.
 	//
-	// DELETE /cytology/{id}
-	CytologyIDDelete(ctx context.Context, params CytologyIDDeleteParams) (CytologyIDDeleteRes, error)
-	// CytologyIDGet invokes GET /cytology/{id} operation.
+	// GET /cytology/history/{id}
+	CytologyHistoryRead(ctx context.Context, params CytologyHistoryReadParams) (CytologyHistoryReadRes, error)
+	// CytologyRead invokes CytologyRead operation.
 	//
-	// Получить цитологическое исследование.
+	// Информация об одной группе снимков.
 	//
 	// GET /cytology/{id}
-	CytologyIDGet(ctx context.Context, params CytologyIDGetParams) (CytologyIDGetRes, error)
-	// CytologyIDOriginalImageGet invokes GET /cytology/{id}/original-image operation.
-	//
-	// Получить оригинальные изображения цитологического
-	// исследования.
-	//
-	// GET /cytology/{id}/original-image
-	CytologyIDOriginalImageGet(ctx context.Context, params CytologyIDOriginalImageGetParams) (CytologyIDOriginalImageGetRes, error)
-	// CytologyIDOriginalImagePost invokes POST /cytology/{id}/original-image operation.
-	//
-	// Создать оригинальное изображение для
-	// цитологического исследования.
-	//
-	// POST /cytology/{id}/original-image
-	CytologyIDOriginalImagePost(ctx context.Context, request *CytologyIDOriginalImagePostReq, params CytologyIDOriginalImagePostParams) (CytologyIDOriginalImagePostRes, error)
-	// CytologyIDPatch invokes PATCH /cytology/{id} operation.
-	//
-	// Обновить цитологическое исследование.
-	//
-	// PATCH /cytology/{id}
-	CytologyIDPatch(ctx context.Context, request *CytologyIDPatchReq, params CytologyIDPatchParams) (CytologyIDPatchRes, error)
-	// CytologyIDSegmentationGroupsGet invokes GET /cytology/{id}/segmentation-groups operation.
-	//
-	// Получить группы сегментаций цитологического
-	// исследования.
-	//
-	// GET /cytology/{id}/segmentation-groups
-	CytologyIDSegmentationGroupsGet(ctx context.Context, params CytologyIDSegmentationGroupsGetParams) (CytologyIDSegmentationGroupsGetRes, error)
-	// CytologyIDSegmentationGroupsPost invokes POST /cytology/{id}/segmentation-groups operation.
+	CytologyRead(ctx context.Context, params CytologyReadParams) (CytologyReadRes, error)
+	// CytologySegmentGroupCreateCreate invokes CytologySegmentGroupCreateCreate operation.
 	//
 	// Создать группу сегментаций.
 	//
-	// POST /cytology/{id}/segmentation-groups
-	CytologyIDSegmentationGroupsPost(ctx context.Context, request *CytologyIDSegmentationGroupsPostReq, params CytologyIDSegmentationGroupsPostParams) (CytologyIDSegmentationGroupsPostRes, error)
-	// CytologyOriginalImageIDPatch invokes PATCH /cytology/original-image/{id} operation.
-	//
-	// Обновить оригинальное изображение.
-	//
-	// PATCH /cytology/original-image/{id}
-	CytologyOriginalImageIDPatch(ctx context.Context, request *CytologyOriginalImageIDPatchReq, params CytologyOriginalImageIDPatchParams) (CytologyOriginalImageIDPatchRes, error)
-	// CytologyPost invokes POST /cytology operation.
-	//
-	// Создать цитологическое исследование.
-	//
-	// POST /cytology
-	CytologyPost(ctx context.Context, request *CytologyPostReq) (CytologyPostRes, error)
-	// CytologySegmentationGroupIDDelete invokes DELETE /cytology/segmentation-group/{id} operation.
-	//
-	// Все сегментации группы будут также удалены.
-	//
-	// DELETE /cytology/segmentation-group/{id}
-	CytologySegmentationGroupIDDelete(ctx context.Context, params CytologySegmentationGroupIDDeleteParams) (CytologySegmentationGroupIDDeleteRes, error)
-	// CytologySegmentationGroupIDPatch invokes PATCH /cytology/segmentation-group/{id} operation.
-	//
-	// Обновить группу сегментаций.
-	//
-	// PATCH /cytology/segmentation-group/{id}
-	CytologySegmentationGroupIDPatch(ctx context.Context, request *CytologySegmentationGroupIDPatchReq, params CytologySegmentationGroupIDPatchParams) (CytologySegmentationGroupIDPatchRes, error)
-	// CytologySegmentationGroupIDSegmentsGet invokes GET /cytology/segmentation-group/{id}/segments operation.
-	//
-	// Получить сегментации группы.
-	//
-	// GET /cytology/segmentation-group/{id}/segments
-	CytologySegmentationGroupIDSegmentsGet(ctx context.Context, params CytologySegmentationGroupIDSegmentsGetParams) (CytologySegmentationGroupIDSegmentsGetRes, error)
-	// CytologySegmentationGroupIDSegmentsPost invokes POST /cytology/segmentation-group/{id}/segments operation.
-	//
-	// Создать сегментацию в группе.
-	//
-	// POST /cytology/segmentation-group/{id}/segments
-	CytologySegmentationGroupIDSegmentsPost(ctx context.Context, request *CytologySegmentationGroupIDSegmentsPostReq, params CytologySegmentationGroupIDSegmentsPostParams) (CytologySegmentationGroupIDSegmentsPostRes, error)
-	// CytologySegmentationIDDelete invokes DELETE /cytology/segmentation/{id} operation.
+	// POST /cytology/segment/group/create/{cytology_img_id}
+	CytologySegmentGroupCreateCreate(ctx context.Context, request *CytologySegmentGroupCreateCreateReq, params CytologySegmentGroupCreateCreateParams) (CytologySegmentGroupCreateCreateRes, error)
+	// CytologySegmentUpdateDelete invokes CytologySegmentUpdateDelete operation.
 	//
 	// Удалить сегментацию.
 	//
-	// DELETE /cytology/segmentation/{id}
-	CytologySegmentationIDDelete(ctx context.Context, params CytologySegmentationIDDeleteParams) (CytologySegmentationIDDeleteRes, error)
-	// CytologySegmentationIDPatch invokes PATCH /cytology/segmentation/{id} operation.
+	// DELETE /cytology/segment/update/{id}
+	CytologySegmentUpdateDelete(ctx context.Context, params CytologySegmentUpdateDeleteParams) (CytologySegmentUpdateDeleteRes, error)
+	// CytologySegmentUpdatePartialUpdate invokes CytologySegmentUpdatePartialUpdate operation.
 	//
 	// Обновить сегментацию.
 	//
-	// PATCH /cytology/segmentation/{id}
-	CytologySegmentationIDPatch(ctx context.Context, request *CytologySegmentationIDPatchReq, params CytologySegmentationIDPatchParams) (CytologySegmentationIDPatchRes, error)
+	// PATCH /cytology/segment/update/{id}
+	CytologySegmentUpdatePartialUpdate(ctx context.Context, request *CytologySegmentUpdatePartialUpdateReq, params CytologySegmentUpdatePartialUpdateParams) (CytologySegmentUpdatePartialUpdateRes, error)
+	// CytologySegmentUpdateRead invokes CytologySegmentUpdateRead operation.
+	//
+	// Получить сегментацию.
+	//
+	// GET /cytology/segment/update/{id}
+	CytologySegmentUpdateRead(ctx context.Context, params CytologySegmentUpdateReadParams) (CytologySegmentUpdateReadRes, error)
+	// CytologySegmentUpdateUpdate invokes CytologySegmentUpdateUpdate operation.
+	//
+	// Обновить сегментацию.
+	//
+	// PUT /cytology/segment/update/{id}
+	CytologySegmentUpdateUpdate(ctx context.Context, request *CytologySegmentUpdateUpdateReq, params CytologySegmentUpdateUpdateParams) (CytologySegmentUpdateUpdateRes, error)
+	// CytologySegmentsList invokes CytologySegmentsList operation.
+	//
+	// Информация об одной группе снимков.
+	//
+	// GET /cytology/{id}/segments
+	CytologySegmentsList(ctx context.Context, params CytologySegmentsListParams) (CytologySegmentsListRes, error)
+	// CytologyUpdatePartialUpdate invokes CytologyUpdatePartialUpdate operation.
+	//
+	// Обновление всей страницы с информацией о приеме.
+	//
+	// PATCH /cytology/{id}/update
+	CytologyUpdatePartialUpdate(ctx context.Context, request *CytologyUpdatePartialUpdateReq, params CytologyUpdatePartialUpdateParams) (CytologyUpdatePartialUpdateRes, error)
+	// CytologyUpdateUpdate invokes CytologyUpdateUpdate operation.
+	//
+	// Обновление всей страницы с информацией о приеме.
+	//
+	// PUT /cytology/{id}/update
+	CytologyUpdateUpdate(ctx context.Context, request *CytologyUpdateUpdateReq, params CytologyUpdateUpdateParams) (CytologyUpdateUpdateRes, error)
+	// DownloadCytologyCytologyIDOriginalImageIDGet invokes GET /download/cytology/{cytology_id}/{original_image_id} operation.
+	//
+	// Получить оригинальное изображение цитологического
+	// исследования.
+	//
+	// GET /download/cytology/{cytology_id}/{original_image_id}
+	DownloadCytologyCytologyIDOriginalImageIDGet(ctx context.Context, params DownloadCytologyCytologyIDOriginalImageIDGetParams) (DownloadCytologyCytologyIDOriginalImageIDGetRes, error)
 	// DownloadUziIDImageIDGet invokes GET /download/{uzi_id}/{image_id} operation.
 	//
 	// Получить кадр узи.
@@ -429,20 +403,21 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 	return u
 }
 
-// CytologiesExternalIDGet invokes GET /cytologies/external/{id} operation.
+// CytologyCopyCreate invokes CytologyCopyCreate operation.
 //
-// Получить цитологические исследования по внешнему id.
+// Создание нового исследования, на основе предыдущего.
 //
-// GET /cytologies/external/{id}
-func (c *Client) CytologiesExternalIDGet(ctx context.Context, params CytologiesExternalIDGetParams) (CytologiesExternalIDGetRes, error) {
-	res, err := c.sendCytologiesExternalIDGet(ctx, params)
+// POST /cytology/copy
+func (c *Client) CytologyCopyCreate(ctx context.Context, request *CytologyCopyCreateReq) (CytologyCopyCreateRes, error) {
+	res, err := c.sendCytologyCopyCreate(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params CytologiesExternalIDGetParams) (res CytologiesExternalIDGetRes, err error) {
+func (c *Client) sendCytologyCopyCreate(ctx context.Context, request *CytologyCopyCreateReq) (res CytologyCopyCreateRes, err error) {
 	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/cytologies/external/{id}"),
+		otelogen.OperationID("CytologyCopyCreate"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/cytology/copy"),
 	}
 
 	// Run stopwatch.
@@ -457,7 +432,232 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologiesExternalIDGetOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologyCopyCreateOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/cytology/copy"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCytologyCopyCreateRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologyCopyCreateOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologyCopyCreateResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CytologyCreateCreate invokes CytologyCreateCreate operation.
+//
+// Форма для сохранния цитологического изображения.
+//
+// POST /cytology/create
+func (c *Client) CytologyCreateCreate(ctx context.Context, request *CytologyCreateCreateReq) (CytologyCreateCreateRes, error) {
+	res, err := c.sendCytologyCreateCreate(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendCytologyCreateCreate(ctx context.Context, request *CytologyCreateCreateReq) (res CytologyCreateCreateRes, err error) {
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologyCreateCreate"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/cytology/create"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologyCreateCreateOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/cytology/create"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCytologyCreateCreateRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologyCreateCreateOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologyCreateCreateResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CytologyHistoryRead invokes CytologyHistoryRead operation.
+//
+// Получить историю цитологического исследования.
+//
+// GET /cytology/history/{id}
+func (c *Client) CytologyHistoryRead(ctx context.Context, params CytologyHistoryReadParams) (CytologyHistoryReadRes, error) {
+	res, err := c.sendCytologyHistoryRead(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendCytologyHistoryRead(ctx context.Context, params CytologyHistoryReadParams) (res CytologyHistoryReadRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologyHistoryRead"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/cytology/history/{id}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologyHistoryReadOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -475,7 +675,7 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [2]string
-	pathParts[0] = "/cytologies/external/"
+	pathParts[0] = "/cytology/history/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -484,7 +684,7 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 			Explode: false,
 		})
 		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
+			return e.EncodeValue(conv.StringToString(params.ID))
 		}(); err != nil {
 			return res, errors.Wrap(err, "encode path")
 		}
@@ -495,6 +695,44 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 		pathParts[1] = encoded
 	}
 	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "limit" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.Limit.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "offset" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.Offset.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "GET", u)
@@ -507,7 +745,7 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologiesExternalIDGetOperation, r); {
+			switch err := c.securityBearerAuth(ctx, CytologyHistoryReadOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -543,7 +781,7 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCytologiesExternalIDGetResponse(resp)
+	result, err := decodeCytologyHistoryReadResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -551,161 +789,20 @@ func (c *Client) sendCytologiesExternalIDGet(ctx context.Context, params Cytolog
 	return result, nil
 }
 
-// CytologiesPatientCardDoctorIDPatientIDGet invokes GET /cytologies/patient-card/{doctor_id}/{patient_id} operation.
+// CytologyRead invokes CytologyRead operation.
 //
-// Получить цитологические исследования по id врача и
-// пациента.
+// Информация об одной группе снимков.
 //
-// GET /cytologies/patient-card/{doctor_id}/{patient_id}
-func (c *Client) CytologiesPatientCardDoctorIDPatientIDGet(ctx context.Context, params CytologiesPatientCardDoctorIDPatientIDGetParams) (CytologiesPatientCardDoctorIDPatientIDGetRes, error) {
-	res, err := c.sendCytologiesPatientCardDoctorIDPatientIDGet(ctx, params)
+// GET /cytology/{id}
+func (c *Client) CytologyRead(ctx context.Context, params CytologyReadParams) (CytologyReadRes, error) {
+	res, err := c.sendCytologyRead(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendCytologiesPatientCardDoctorIDPatientIDGet(ctx context.Context, params CytologiesPatientCardDoctorIDPatientIDGetParams) (res CytologiesPatientCardDoctorIDPatientIDGetRes, err error) {
+func (c *Client) sendCytologyRead(ctx context.Context, params CytologyReadParams) (res CytologyReadRes, err error) {
 	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologyRead"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/cytologies/patient-card/{doctor_id}/{patient_id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologiesPatientCardDoctorIDPatientIDGetOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [4]string
-	pathParts[0] = "/cytologies/patient-card/"
-	{
-		// Encode "doctor_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "doctor_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.DoctorID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/"
-	{
-		// Encode "patient_id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "patient_id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.PatientID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[3] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "GET", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologiesPatientCardDoctorIDPatientIDGetOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologiesPatientCardDoctorIDPatientIDGetResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologyIDDelete invokes DELETE /cytology/{id} operation.
-//
-// Удалить цитологическое исследование.
-//
-// DELETE /cytology/{id}
-func (c *Client) CytologyIDDelete(ctx context.Context, params CytologyIDDeleteParams) (CytologyIDDeleteRes, error) {
-	res, err := c.sendCytologyIDDelete(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendCytologyIDDelete(ctx context.Context, params CytologyIDDeleteParams) (res CytologyIDDeleteRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("DELETE"),
 		semconv.HTTPRouteKey.String("/cytology/{id}"),
 	}
 
@@ -721,7 +818,7 @@ func (c *Client) sendCytologyIDDelete(ctx context.Context, params CytologyIDDele
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDDeleteOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologyReadOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -740,6 +837,264 @@ func (c *Client) sendCytologyIDDelete(ctx context.Context, params CytologyIDDele
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [2]string
 	pathParts[0] = "/cytology/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologyReadOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologyReadResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CytologySegmentGroupCreateCreate invokes CytologySegmentGroupCreateCreate operation.
+//
+// Создать группу сегментаций.
+//
+// POST /cytology/segment/group/create/{cytology_img_id}
+func (c *Client) CytologySegmentGroupCreateCreate(ctx context.Context, request *CytologySegmentGroupCreateCreateReq, params CytologySegmentGroupCreateCreateParams) (CytologySegmentGroupCreateCreateRes, error) {
+	res, err := c.sendCytologySegmentGroupCreateCreate(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendCytologySegmentGroupCreateCreate(ctx context.Context, request *CytologySegmentGroupCreateCreateReq, params CytologySegmentGroupCreateCreateParams) (res CytologySegmentGroupCreateCreateRes, err error) {
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologySegmentGroupCreateCreate"),
+		semconv.HTTPRequestMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/cytology/segment/group/create/{cytology_img_id}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentGroupCreateCreateOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/cytology/segment/group/create/"
+	{
+		// Encode "cytology_img_id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "cytology_img_id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.UUIDToString(params.CytologyImgID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCytologySegmentGroupCreateCreateRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologySegmentGroupCreateCreateOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologySegmentGroupCreateCreateResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CytologySegmentUpdateDelete invokes CytologySegmentUpdateDelete operation.
+//
+// Удалить сегментацию.
+//
+// DELETE /cytology/segment/update/{id}
+func (c *Client) CytologySegmentUpdateDelete(ctx context.Context, params CytologySegmentUpdateDeleteParams) (CytologySegmentUpdateDeleteRes, error) {
+	res, err := c.sendCytologySegmentUpdateDelete(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendCytologySegmentUpdateDelete(ctx context.Context, params CytologySegmentUpdateDeleteParams) (res CytologySegmentUpdateDeleteRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologySegmentUpdateDelete"),
+		semconv.HTTPRequestMethodKey.String("DELETE"),
+		semconv.HTTPRouteKey.String("/cytology/segment/update/{id}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentUpdateDeleteOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/cytology/segment/update/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -771,7 +1126,7 @@ func (c *Client) sendCytologyIDDelete(ctx context.Context, params CytologyIDDele
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDDeleteOperation, r); {
+			switch err := c.securityBearerAuth(ctx, CytologySegmentUpdateDeleteOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -807,7 +1162,7 @@ func (c *Client) sendCytologyIDDelete(ctx context.Context, params CytologyIDDele
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCytologyIDDeleteResponse(resp)
+	result, err := decodeCytologySegmentUpdateDeleteResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -815,264 +1170,17 @@ func (c *Client) sendCytologyIDDelete(ctx context.Context, params CytologyIDDele
 	return result, nil
 }
 
-// CytologyIDGet invokes GET /cytology/{id} operation.
+// CytologySegmentUpdatePartialUpdate invokes CytologySegmentUpdatePartialUpdate operation.
 //
-// Получить цитологическое исследование.
+// Обновить сегментацию.
 //
-// GET /cytology/{id}
-func (c *Client) CytologyIDGet(ctx context.Context, params CytologyIDGetParams) (CytologyIDGetRes, error) {
-	res, err := c.sendCytologyIDGet(ctx, params)
+// PATCH /cytology/segment/update/{id}
+func (c *Client) CytologySegmentUpdatePartialUpdate(ctx context.Context, request *CytologySegmentUpdatePartialUpdateReq, params CytologySegmentUpdatePartialUpdateParams) (CytologySegmentUpdatePartialUpdateRes, error) {
+	res, err := c.sendCytologySegmentUpdatePartialUpdate(ctx, request, params)
 	return res, err
 }
 
-func (c *Client) sendCytologyIDGet(ctx context.Context, params CytologyIDGetParams) (res CytologyIDGetRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/cytology/{id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDGetOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/cytology/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "GET", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDGetOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologyIDGetResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologyIDOriginalImageGet invokes GET /cytology/{id}/original-image operation.
-//
-// Получить оригинальные изображения цитологического
-// исследования.
-//
-// GET /cytology/{id}/original-image
-func (c *Client) CytologyIDOriginalImageGet(ctx context.Context, params CytologyIDOriginalImageGetParams) (CytologyIDOriginalImageGetRes, error) {
-	res, err := c.sendCytologyIDOriginalImageGet(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendCytologyIDOriginalImageGet(ctx context.Context, params CytologyIDOriginalImageGetParams) (res CytologyIDOriginalImageGetRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/cytology/{id}/original-image"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDOriginalImageGetOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [3]string
-	pathParts[0] = "/cytology/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/original-image"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "GET", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDOriginalImageGetOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologyIDOriginalImageGetResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologyIDOriginalImagePost invokes POST /cytology/{id}/original-image operation.
-//
-// Создать оригинальное изображение для
-// цитологического исследования.
-//
-// POST /cytology/{id}/original-image
-func (c *Client) CytologyIDOriginalImagePost(ctx context.Context, request *CytologyIDOriginalImagePostReq, params CytologyIDOriginalImagePostParams) (CytologyIDOriginalImagePostRes, error) {
-	res, err := c.sendCytologyIDOriginalImagePost(ctx, request, params)
-	return res, err
-}
-
-func (c *Client) sendCytologyIDOriginalImagePost(ctx context.Context, request *CytologyIDOriginalImagePostReq, params CytologyIDOriginalImagePostParams) (res CytologyIDOriginalImagePostRes, err error) {
+func (c *Client) sendCytologySegmentUpdatePartialUpdate(ctx context.Context, request *CytologySegmentUpdatePartialUpdateReq, params CytologySegmentUpdatePartialUpdateParams) (res CytologySegmentUpdatePartialUpdateRes, err error) {
 	// Validate request before sending.
 	if err := func() error {
 		if err := request.Validate(); err != nil {
@@ -1083,143 +1191,9 @@ func (c *Client) sendCytologyIDOriginalImagePost(ctx context.Context, request *C
 		return res, errors.Wrap(err, "validate")
 	}
 	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/cytology/{id}/original-image"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDOriginalImagePostOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [3]string
-	pathParts[0] = "/cytology/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/original-image"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "POST", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeCytologyIDOriginalImagePostRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDOriginalImagePostOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologyIDOriginalImagePostResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologyIDPatch invokes PATCH /cytology/{id} operation.
-//
-// Обновить цитологическое исследование.
-//
-// PATCH /cytology/{id}
-func (c *Client) CytologyIDPatch(ctx context.Context, request *CytologyIDPatchReq, params CytologyIDPatchParams) (CytologyIDPatchRes, error) {
-	res, err := c.sendCytologyIDPatch(ctx, request, params)
-	return res, err
-}
-
-func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPatchReq, params CytologyIDPatchParams) (res CytologyIDPatchRes, err error) {
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
-	}
-	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologySegmentUpdatePartialUpdate"),
 		semconv.HTTPRequestMethodKey.String("PATCH"),
-		semconv.HTTPRouteKey.String("/cytology/{id}"),
+		semconv.HTTPRouteKey.String("/cytology/segment/update/{id}"),
 	}
 
 	// Run stopwatch.
@@ -1234,7 +1208,7 @@ func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPat
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDPatchOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentUpdatePartialUpdateOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1252,7 +1226,7 @@ func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPat
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [2]string
-	pathParts[0] = "/cytology/"
+	pathParts[0] = "/cytology/segment/update/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -1278,7 +1252,7 @@ func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPat
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
 	}
-	if err := encodeCytologyIDPatchRequest(request, r); err != nil {
+	if err := encodeCytologySegmentUpdatePartialUpdateRequest(request, r); err != nil {
 		return res, errors.Wrap(err, "encode request")
 	}
 
@@ -1287,7 +1261,7 @@ func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPat
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDPatchOperation, r); {
+			switch err := c.securityBearerAuth(ctx, CytologySegmentUpdatePartialUpdateOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -1323,7 +1297,7 @@ func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPat
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCytologyIDPatchResponse(resp)
+	result, err := decodeCytologySegmentUpdatePartialUpdateResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1331,21 +1305,21 @@ func (c *Client) sendCytologyIDPatch(ctx context.Context, request *CytologyIDPat
 	return result, nil
 }
 
-// CytologyIDSegmentationGroupsGet invokes GET /cytology/{id}/segmentation-groups operation.
+// CytologySegmentUpdateRead invokes CytologySegmentUpdateRead operation.
 //
-// Получить группы сегментаций цитологического
-// исследования.
+// Получить сегментацию.
 //
-// GET /cytology/{id}/segmentation-groups
-func (c *Client) CytologyIDSegmentationGroupsGet(ctx context.Context, params CytologyIDSegmentationGroupsGetParams) (CytologyIDSegmentationGroupsGetRes, error) {
-	res, err := c.sendCytologyIDSegmentationGroupsGet(ctx, params)
+// GET /cytology/segment/update/{id}
+func (c *Client) CytologySegmentUpdateRead(ctx context.Context, params CytologySegmentUpdateReadParams) (CytologySegmentUpdateReadRes, error) {
+	res, err := c.sendCytologySegmentUpdateRead(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params CytologyIDSegmentationGroupsGetParams) (res CytologyIDSegmentationGroupsGetRes, err error) {
+func (c *Client) sendCytologySegmentUpdateRead(ctx context.Context, params CytologySegmentUpdateReadParams) (res CytologySegmentUpdateReadRes, err error) {
 	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologySegmentUpdateRead"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/cytology/{id}/segmentation-groups"),
+		semconv.HTTPRouteKey.String("/cytology/segment/update/{id}"),
 	}
 
 	// Run stopwatch.
@@ -1360,7 +1334,265 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDSegmentationGroupsGetOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentUpdateReadOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/cytology/segment/update/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.UUIDToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologySegmentUpdateReadOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologySegmentUpdateReadResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CytologySegmentUpdateUpdate invokes CytologySegmentUpdateUpdate operation.
+//
+// Обновить сегментацию.
+//
+// PUT /cytology/segment/update/{id}
+func (c *Client) CytologySegmentUpdateUpdate(ctx context.Context, request *CytologySegmentUpdateUpdateReq, params CytologySegmentUpdateUpdateParams) (CytologySegmentUpdateUpdateRes, error) {
+	res, err := c.sendCytologySegmentUpdateUpdate(ctx, request, params)
+	return res, err
+}
+
+func (c *Client) sendCytologySegmentUpdateUpdate(ctx context.Context, request *CytologySegmentUpdateUpdateReq, params CytologySegmentUpdateUpdateParams) (res CytologySegmentUpdateUpdateRes, err error) {
+	// Validate request before sending.
+	if err := func() error {
+		if err := request.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return res, errors.Wrap(err, "validate")
+	}
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologySegmentUpdateUpdate"),
+		semconv.HTTPRequestMethodKey.String("PUT"),
+		semconv.HTTPRouteKey.String("/cytology/segment/update/{id}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentUpdateUpdateOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/cytology/segment/update/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.UUIDToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "PUT", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCytologySegmentUpdateUpdateRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologySegmentUpdateUpdateOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologySegmentUpdateUpdateResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// CytologySegmentsList invokes CytologySegmentsList operation.
+//
+// Информация об одной группе снимков.
+//
+// GET /cytology/{id}/segments
+func (c *Client) CytologySegmentsList(ctx context.Context, params CytologySegmentsListParams) (CytologySegmentsListRes, error) {
+	res, err := c.sendCytologySegmentsList(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendCytologySegmentsList(ctx context.Context, params CytologySegmentsListParams) (res CytologySegmentsListRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("CytologySegmentsList"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/cytology/{id}/segments"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentsListOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1387,7 +1619,7 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 			Explode: false,
 		})
 		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
+			return e.EncodeValue(conv.StringToString(params.ID))
 		}(); err != nil {
 			return res, errors.Wrap(err, "encode path")
 		}
@@ -1397,22 +1629,22 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 		}
 		pathParts[1] = encoded
 	}
-	pathParts[2] = "/segmentation-groups"
+	pathParts[2] = "/segments"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeQueryParams"
 	q := uri.NewQueryEncoder()
 	{
-		// Encode "seg_type" parameter.
+		// Encode "is_ai" parameter.
 		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "seg_type",
+			Name:    "is_ai",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.SegType.Get(); ok {
-				return e.EncodeValue(conv.StringToString(string(val)))
+			if val, ok := params.IsAi.Get(); ok {
+				return e.EncodeValue(conv.StringToString(val))
 			}
 			return nil
 		}); err != nil {
@@ -1437,16 +1669,50 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 		}
 	}
 	{
-		// Encode "is_ai" parameter.
+		// Encode "seg_type" parameter.
 		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "is_ai",
+			Name:    "seg_type",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.IsAi.Get(); ok {
-				return e.EncodeValue(conv.BoolToString(val))
+			if val, ok := params.SegType.Get(); ok {
+				return e.EncodeValue(conv.StringToString(string(val)))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "limit" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.Limit.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "offset" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.Offset.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
 			}
 			return nil
 		}); err != nil {
@@ -1466,7 +1732,7 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDSegmentationGroupsGetOperation, r); {
+			switch err := c.securityBearerAuth(ctx, CytologySegmentsListOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -1502,7 +1768,7 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCytologyIDSegmentationGroupsGetResponse(resp)
+	result, err := decodeCytologySegmentsListResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1510,17 +1776,17 @@ func (c *Client) sendCytologyIDSegmentationGroupsGet(ctx context.Context, params
 	return result, nil
 }
 
-// CytologyIDSegmentationGroupsPost invokes POST /cytology/{id}/segmentation-groups operation.
+// CytologyUpdatePartialUpdate invokes CytologyUpdatePartialUpdate operation.
 //
-// Создать группу сегментаций.
+// Обновление всей страницы с информацией о приеме.
 //
-// POST /cytology/{id}/segmentation-groups
-func (c *Client) CytologyIDSegmentationGroupsPost(ctx context.Context, request *CytologyIDSegmentationGroupsPostReq, params CytologyIDSegmentationGroupsPostParams) (CytologyIDSegmentationGroupsPostRes, error) {
-	res, err := c.sendCytologyIDSegmentationGroupsPost(ctx, request, params)
+// PATCH /cytology/{id}/update
+func (c *Client) CytologyUpdatePartialUpdate(ctx context.Context, request *CytologyUpdatePartialUpdateReq, params CytologyUpdatePartialUpdateParams) (CytologyUpdatePartialUpdateRes, error) {
+	res, err := c.sendCytologyUpdatePartialUpdate(ctx, request, params)
 	return res, err
 }
 
-func (c *Client) sendCytologyIDSegmentationGroupsPost(ctx context.Context, request *CytologyIDSegmentationGroupsPostReq, params CytologyIDSegmentationGroupsPostParams) (res CytologyIDSegmentationGroupsPostRes, err error) {
+func (c *Client) sendCytologyUpdatePartialUpdate(ctx context.Context, request *CytologyUpdatePartialUpdateReq, params CytologyUpdatePartialUpdateParams) (res CytologyUpdatePartialUpdateRes, err error) {
 	// Validate request before sending.
 	if err := func() error {
 		if err := request.Validate(); err != nil {
@@ -1531,8 +1797,9 @@ func (c *Client) sendCytologyIDSegmentationGroupsPost(ctx context.Context, reque
 		return res, errors.Wrap(err, "validate")
 	}
 	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/cytology/{id}/segmentation-groups"),
+		otelogen.OperationID("CytologyUpdatePartialUpdate"),
+		semconv.HTTPRequestMethodKey.String("PATCH"),
+		semconv.HTTPRouteKey.String("/cytology/{id}/update"),
 	}
 
 	// Run stopwatch.
@@ -1547,7 +1814,7 @@ func (c *Client) sendCytologyIDSegmentationGroupsPost(ctx context.Context, reque
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyIDSegmentationGroupsPostOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologyUpdatePartialUpdateOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1574,7 +1841,7 @@ func (c *Client) sendCytologyIDSegmentationGroupsPost(ctx context.Context, reque
 			Explode: false,
 		})
 		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
+			return e.EncodeValue(conv.StringToString(params.ID))
 		}(); err != nil {
 			return res, errors.Wrap(err, "encode path")
 		}
@@ -1584,141 +1851,7 @@ func (c *Client) sendCytologyIDSegmentationGroupsPost(ctx context.Context, reque
 		}
 		pathParts[1] = encoded
 	}
-	pathParts[2] = "/segmentation-groups"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "POST", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeCytologyIDSegmentationGroupsPostRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyIDSegmentationGroupsPostOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologyIDSegmentationGroupsPostResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologyOriginalImageIDPatch invokes PATCH /cytology/original-image/{id} operation.
-//
-// Обновить оригинальное изображение.
-//
-// PATCH /cytology/original-image/{id}
-func (c *Client) CytologyOriginalImageIDPatch(ctx context.Context, request *CytologyOriginalImageIDPatchReq, params CytologyOriginalImageIDPatchParams) (CytologyOriginalImageIDPatchRes, error) {
-	res, err := c.sendCytologyOriginalImageIDPatch(ctx, request, params)
-	return res, err
-}
-
-func (c *Client) sendCytologyOriginalImageIDPatch(ctx context.Context, request *CytologyOriginalImageIDPatchReq, params CytologyOriginalImageIDPatchParams) (res CytologyOriginalImageIDPatchRes, err error) {
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
-	}
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("PATCH"),
-		semconv.HTTPRouteKey.String("/cytology/original-image/{id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyOriginalImageIDPatchOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/cytology/original-image/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
+	pathParts[2] = "/update"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
@@ -1726,7 +1859,7 @@ func (c *Client) sendCytologyOriginalImageIDPatch(ctx context.Context, request *
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
 	}
-	if err := encodeCytologyOriginalImageIDPatchRequest(request, r); err != nil {
+	if err := encodeCytologyUpdatePartialUpdateRequest(request, r); err != nil {
 		return res, errors.Wrap(err, "encode request")
 	}
 
@@ -1735,7 +1868,7 @@ func (c *Client) sendCytologyOriginalImageIDPatch(ctx context.Context, request *
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyOriginalImageIDPatchOperation, r); {
+			switch err := c.securityBearerAuth(ctx, CytologyUpdatePartialUpdateOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -1771,7 +1904,7 @@ func (c *Client) sendCytologyOriginalImageIDPatch(ctx context.Context, request *
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCytologyOriginalImageIDPatchResponse(resp)
+	result, err := decodeCytologyUpdatePartialUpdateResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}
@@ -1779,17 +1912,17 @@ func (c *Client) sendCytologyOriginalImageIDPatch(ctx context.Context, request *
 	return result, nil
 }
 
-// CytologyPost invokes POST /cytology operation.
+// CytologyUpdateUpdate invokes CytologyUpdateUpdate operation.
 //
-// Создать цитологическое исследование.
+// Обновление всей страницы с информацией о приеме.
 //
-// POST /cytology
-func (c *Client) CytologyPost(ctx context.Context, request *CytologyPostReq) (CytologyPostRes, error) {
-	res, err := c.sendCytologyPost(ctx, request)
+// PUT /cytology/{id}/update
+func (c *Client) CytologyUpdateUpdate(ctx context.Context, request *CytologyUpdateUpdateReq, params CytologyUpdateUpdateParams) (CytologyUpdateUpdateRes, error) {
+	res, err := c.sendCytologyUpdateUpdate(ctx, request, params)
 	return res, err
 }
 
-func (c *Client) sendCytologyPost(ctx context.Context, request *CytologyPostReq) (res CytologyPostRes, err error) {
+func (c *Client) sendCytologyUpdateUpdate(ctx context.Context, request *CytologyUpdateUpdateReq, params CytologyUpdateUpdateParams) (res CytologyUpdateUpdateRes, err error) {
 	// Validate request before sending.
 	if err := func() error {
 		if err := request.Validate(); err != nil {
@@ -1800,8 +1933,9 @@ func (c *Client) sendCytologyPost(ctx context.Context, request *CytologyPostReq)
 		return res, errors.Wrap(err, "validate")
 	}
 	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/cytology"),
+		otelogen.OperationID("CytologyUpdateUpdate"),
+		semconv.HTTPRequestMethodKey.String("PUT"),
+		semconv.HTTPRouteKey.String("/cytology/{id}/update"),
 	}
 
 	// Run stopwatch.
@@ -1816,370 +1950,7 @@ func (c *Client) sendCytologyPost(ctx context.Context, request *CytologyPostReq)
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologyPostOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/cytology"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "POST", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeCytologyPostRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologyPostOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologyPostResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologySegmentationGroupIDDelete invokes DELETE /cytology/segmentation-group/{id} operation.
-//
-// Все сегментации группы будут также удалены.
-//
-// DELETE /cytology/segmentation-group/{id}
-func (c *Client) CytologySegmentationGroupIDDelete(ctx context.Context, params CytologySegmentationGroupIDDeleteParams) (CytologySegmentationGroupIDDeleteRes, error) {
-	res, err := c.sendCytologySegmentationGroupIDDelete(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendCytologySegmentationGroupIDDelete(ctx context.Context, params CytologySegmentationGroupIDDeleteParams) (res CytologySegmentationGroupIDDeleteRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("DELETE"),
-		semconv.HTTPRouteKey.String("/cytology/segmentation-group/{id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentationGroupIDDeleteOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/cytology/segmentation-group/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "DELETE", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologySegmentationGroupIDDeleteOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologySegmentationGroupIDDeleteResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologySegmentationGroupIDPatch invokes PATCH /cytology/segmentation-group/{id} operation.
-//
-// Обновить группу сегментаций.
-//
-// PATCH /cytology/segmentation-group/{id}
-func (c *Client) CytologySegmentationGroupIDPatch(ctx context.Context, request *CytologySegmentationGroupIDPatchReq, params CytologySegmentationGroupIDPatchParams) (CytologySegmentationGroupIDPatchRes, error) {
-	res, err := c.sendCytologySegmentationGroupIDPatch(ctx, request, params)
-	return res, err
-}
-
-func (c *Client) sendCytologySegmentationGroupIDPatch(ctx context.Context, request *CytologySegmentationGroupIDPatchReq, params CytologySegmentationGroupIDPatchParams) (res CytologySegmentationGroupIDPatchRes, err error) {
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
-	}
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("PATCH"),
-		semconv.HTTPRouteKey.String("/cytology/segmentation-group/{id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentationGroupIDPatchOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/cytology/segmentation-group/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "PATCH", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeCytologySegmentationGroupIDPatchRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologySegmentationGroupIDPatchOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologySegmentationGroupIDPatchResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologySegmentationGroupIDSegmentsGet invokes GET /cytology/segmentation-group/{id}/segments operation.
-//
-// Получить сегментации группы.
-//
-// GET /cytology/segmentation-group/{id}/segments
-func (c *Client) CytologySegmentationGroupIDSegmentsGet(ctx context.Context, params CytologySegmentationGroupIDSegmentsGetParams) (CytologySegmentationGroupIDSegmentsGetRes, error) {
-	res, err := c.sendCytologySegmentationGroupIDSegmentsGet(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendCytologySegmentationGroupIDSegmentsGet(ctx context.Context, params CytologySegmentationGroupIDSegmentsGetParams) (res CytologySegmentationGroupIDSegmentsGetRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/cytology/segmentation-group/{id}/segments"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentationGroupIDSegmentsGetOperation,
+	ctx, span := c.cfg.Tracer.Start(ctx, CytologyUpdateUpdateOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -2197,7 +1968,7 @@ func (c *Client) sendCytologySegmentationGroupIDSegmentsGet(ctx context.Context,
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [3]string
-	pathParts[0] = "/cytology/segmentation-group/"
+	pathParts[0] = "/cytology/"
 	{
 		// Encode "id" parameter.
 		e := uri.NewPathEncoder(uri.PathEncoderConfig{
@@ -2206,7 +1977,7 @@ func (c *Client) sendCytologySegmentationGroupIDSegmentsGet(ctx context.Context,
 			Explode: false,
 		})
 		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
+			return e.EncodeValue(conv.StringToString(params.ID))
 		}(); err != nil {
 			return res, errors.Wrap(err, "encode path")
 		}
@@ -2216,7 +1987,152 @@ func (c *Client) sendCytologySegmentationGroupIDSegmentsGet(ctx context.Context,
 		}
 		pathParts[1] = encoded
 	}
-	pathParts[2] = "/segments"
+	pathParts[2] = "/update"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "PUT", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeCytologyUpdateUpdateRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, CytologyUpdateUpdateOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeCytologyUpdateUpdateResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// DownloadCytologyCytologyIDOriginalImageIDGet invokes GET /download/cytology/{cytology_id}/{original_image_id} operation.
+//
+// Получить оригинальное изображение цитологического
+// исследования.
+//
+// GET /download/cytology/{cytology_id}/{original_image_id}
+func (c *Client) DownloadCytologyCytologyIDOriginalImageIDGet(ctx context.Context, params DownloadCytologyCytologyIDOriginalImageIDGetParams) (DownloadCytologyCytologyIDOriginalImageIDGetRes, error) {
+	res, err := c.sendDownloadCytologyCytologyIDOriginalImageIDGet(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendDownloadCytologyCytologyIDOriginalImageIDGet(ctx context.Context, params DownloadCytologyCytologyIDOriginalImageIDGetParams) (res DownloadCytologyCytologyIDOriginalImageIDGetRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/download/cytology/{cytology_id}/{original_image_id}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, DownloadCytologyCytologyIDOriginalImageIDGetOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [4]string
+	pathParts[0] = "/download/cytology/"
+	{
+		// Encode "cytology_id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "cytology_id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.UUIDToString(params.CytologyID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/"
+	{
+		// Encode "original_image_id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "original_image_id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.UUIDToString(params.OriginalImageID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
@@ -2230,7 +2146,7 @@ func (c *Client) sendCytologySegmentationGroupIDSegmentsGet(ctx context.Context,
 		var satisfied bitset
 		{
 			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologySegmentationGroupIDSegmentsGetOperation, r); {
+			switch err := c.securityBearerAuth(ctx, DownloadCytologyCytologyIDOriginalImageIDGetOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
@@ -2266,398 +2182,7 @@ func (c *Client) sendCytologySegmentationGroupIDSegmentsGet(ctx context.Context,
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCytologySegmentationGroupIDSegmentsGetResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologySegmentationGroupIDSegmentsPost invokes POST /cytology/segmentation-group/{id}/segments operation.
-//
-// Создать сегментацию в группе.
-//
-// POST /cytology/segmentation-group/{id}/segments
-func (c *Client) CytologySegmentationGroupIDSegmentsPost(ctx context.Context, request *CytologySegmentationGroupIDSegmentsPostReq, params CytologySegmentationGroupIDSegmentsPostParams) (CytologySegmentationGroupIDSegmentsPostRes, error) {
-	res, err := c.sendCytologySegmentationGroupIDSegmentsPost(ctx, request, params)
-	return res, err
-}
-
-func (c *Client) sendCytologySegmentationGroupIDSegmentsPost(ctx context.Context, request *CytologySegmentationGroupIDSegmentsPostReq, params CytologySegmentationGroupIDSegmentsPostParams) (res CytologySegmentationGroupIDSegmentsPostRes, err error) {
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
-	}
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("POST"),
-		semconv.HTTPRouteKey.String("/cytology/segmentation-group/{id}/segments"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentationGroupIDSegmentsPostOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [3]string
-	pathParts[0] = "/cytology/segmentation-group/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	pathParts[2] = "/segments"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "POST", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeCytologySegmentationGroupIDSegmentsPostRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologySegmentationGroupIDSegmentsPostOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologySegmentationGroupIDSegmentsPostResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologySegmentationIDDelete invokes DELETE /cytology/segmentation/{id} operation.
-//
-// Удалить сегментацию.
-//
-// DELETE /cytology/segmentation/{id}
-func (c *Client) CytologySegmentationIDDelete(ctx context.Context, params CytologySegmentationIDDeleteParams) (CytologySegmentationIDDeleteRes, error) {
-	res, err := c.sendCytologySegmentationIDDelete(ctx, params)
-	return res, err
-}
-
-func (c *Client) sendCytologySegmentationIDDelete(ctx context.Context, params CytologySegmentationIDDeleteParams) (res CytologySegmentationIDDeleteRes, err error) {
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("DELETE"),
-		semconv.HTTPRouteKey.String("/cytology/segmentation/{id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentationIDDeleteOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/cytology/segmentation/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "DELETE", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologySegmentationIDDeleteOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologySegmentationIDDeleteResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
-// CytologySegmentationIDPatch invokes PATCH /cytology/segmentation/{id} operation.
-//
-// Обновить сегментацию.
-//
-// PATCH /cytology/segmentation/{id}
-func (c *Client) CytologySegmentationIDPatch(ctx context.Context, request *CytologySegmentationIDPatchReq, params CytologySegmentationIDPatchParams) (CytologySegmentationIDPatchRes, error) {
-	res, err := c.sendCytologySegmentationIDPatch(ctx, request, params)
-	return res, err
-}
-
-func (c *Client) sendCytologySegmentationIDPatch(ctx context.Context, request *CytologySegmentationIDPatchReq, params CytologySegmentationIDPatchParams) (res CytologySegmentationIDPatchRes, err error) {
-	// Validate request before sending.
-	if err := func() error {
-		if err := request.Validate(); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return res, errors.Wrap(err, "validate")
-	}
-	otelAttrs := []attribute.KeyValue{
-		semconv.HTTPRequestMethodKey.String("PATCH"),
-		semconv.HTTPRouteKey.String("/cytology/segmentation/{id}"),
-	}
-
-	// Run stopwatch.
-	startTime := time.Now()
-	defer func() {
-		// Use floating point division here for higher precision (instead of Millisecond method).
-		elapsedDuration := time.Since(startTime)
-		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
-	}()
-
-	// Increment request counter.
-	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-
-	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, CytologySegmentationIDPatchOperation,
-		trace.WithAttributes(otelAttrs...),
-		clientSpanKind,
-	)
-	// Track stage for error reporting.
-	var stage string
-	defer func() {
-		if err != nil {
-			span.RecordError(err)
-			span.SetStatus(codes.Error, stage)
-			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
-		}
-		span.End()
-	}()
-
-	stage = "BuildURL"
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [2]string
-	pathParts[0] = "/cytology/segmentation/"
-	{
-		// Encode "id" parameter.
-		e := uri.NewPathEncoder(uri.PathEncoderConfig{
-			Param:   "id",
-			Style:   uri.PathStyleSimple,
-			Explode: false,
-		})
-		if err := func() error {
-			return e.EncodeValue(conv.UUIDToString(params.ID))
-		}(); err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		encoded, err := e.Result()
-		if err != nil {
-			return res, errors.Wrap(err, "encode path")
-		}
-		pathParts[1] = encoded
-	}
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeRequest"
-	r, err := ht.NewRequest(ctx, "PATCH", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-	if err := encodeCytologySegmentationIDPatchRequest(request, r); err != nil {
-		return res, errors.Wrap(err, "encode request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, CytologySegmentationIDPatchOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	stage = "SendRequest"
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	defer resp.Body.Close()
-
-	stage = "DecodeResponse"
-	result, err := decodeCytologySegmentationIDPatchResponse(resp)
+	result, err := decodeDownloadCytologyCytologyIDOriginalImageIDGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

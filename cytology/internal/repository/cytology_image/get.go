@@ -139,3 +139,37 @@ func (q *repo) CheckExist(id uuid.UUID) (bool, error) {
 
 	return exists, nil
 }
+
+func (q *repo) GetCytologyImagesByParentPrevID(parentPrevID uuid.UUID) ([]entity.CytologyImage, error) {
+	query := q.QueryBuilder().
+		Select(
+			columnID,
+			columnExternalID,
+			columnDoctorID,
+			columnPatientID,
+			columnDiagnosticNumber,
+			columnDiagnosticMarking,
+			columnMaterialType,
+			columnDiagnosDate,
+			columnIsLast,
+			columnCalcitonin,
+			columnCalcitoninInFlush,
+			columnThyroglobulin,
+			columnDetails,
+			columnPrevID,
+			columnParentPrevID,
+			columnCreateAt,
+		).
+		From(table).
+		Where(sq.Eq{
+			columnParentPrevID: parentPrevID,
+		}).
+		OrderBy(columnCreateAt + " ASC")
+
+	var images []entity.CytologyImage
+	if err := q.Runner().Selectx(q.Context(), &images, query); err != nil {
+		return nil, err
+	}
+
+	return images, nil
+}

@@ -167,3 +167,21 @@ func (a *adapter) DeleteCytologyImage(ctx context.Context, id uuid.UUID) error {
 	_, err := a.client.DeleteCytologyImage(ctx, &pb.DeleteCytologyImageIn{Id: id.String()})
 	return adapter_errors.HandleGRPCError(err)
 }
+
+func (a *adapter) CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.CytologyImage, error) {
+	res, err := a.client.CopyCytologyImage(ctx, &pb.CopyCytologyImageIn{Id: id.String()})
+	if err != nil {
+		return domain.CytologyImage{}, adapter_errors.HandleGRPCError(err)
+	}
+
+	return mappers.CytologyImage{}.Domain(res.CytologyImage), nil
+}
+
+func (a *adapter) GetCytologyImageHistory(ctx context.Context, id uuid.UUID) ([]domain.CytologyImage, error) {
+	res, err := a.client.GetCytologyImageHistory(ctx, &pb.GetCytologyImageHistoryIn{Id: id.String()})
+	if err != nil {
+		return nil, adapter_errors.HandleGRPCError(err)
+	}
+
+	return mappers.CytologyImage{}.SliceDomain(res.CytologyImages), nil
+}

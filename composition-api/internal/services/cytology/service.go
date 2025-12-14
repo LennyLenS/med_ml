@@ -32,6 +32,9 @@ type Service interface {
 	GetSegmentsByGroupId(ctx context.Context, id uuid.UUID) ([]domain.Segmentation, error)
 	UpdateSegmentation(ctx context.Context, arg UpdateSegmentationArg) (domain.Segmentation, error)
 	DeleteSegmentation(ctx context.Context, id uuid.UUID) error
+
+	CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.CytologyImage, error)
+	GetCytologyImageHistory(ctx context.Context, id uuid.UUID) ([]domain.CytologyImage, error)
 }
 
 type service struct {

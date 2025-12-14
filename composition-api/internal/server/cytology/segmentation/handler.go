@@ -8,14 +8,11 @@ import (
 )
 
 type SegmentationHandler interface {
-	CytologyIDSegmentationGroupsPost(ctx context.Context, req *api.CytologyIDSegmentationGroupsPostReq, params api.CytologyIDSegmentationGroupsPostParams) (api.CytologyIDSegmentationGroupsPostRes, error)
-	CytologyIDSegmentationGroupsGet(ctx context.Context, params api.CytologyIDSegmentationGroupsGetParams) (api.CytologyIDSegmentationGroupsGetRes, error)
-	CytologySegmentationGroupIDPatch(ctx context.Context, req *api.CytologySegmentationGroupIDPatchReq, params api.CytologySegmentationGroupIDPatchParams) (api.CytologySegmentationGroupIDPatchRes, error)
-	CytologySegmentationGroupIDDelete(ctx context.Context, params api.CytologySegmentationGroupIDDeleteParams) (api.CytologySegmentationGroupIDDeleteRes, error)
-	CytologySegmentationGroupIDSegmentsPost(ctx context.Context, req *api.CytologySegmentationGroupIDSegmentsPostReq, params api.CytologySegmentationGroupIDSegmentsPostParams) (api.CytologySegmentationGroupIDSegmentsPostRes, error)
-	CytologySegmentationGroupIDSegmentsGet(ctx context.Context, params api.CytologySegmentationGroupIDSegmentsGetParams) (api.CytologySegmentationGroupIDSegmentsGetRes, error)
-	CytologySegmentationIDPatch(ctx context.Context, req *api.CytologySegmentationIDPatchReq, params api.CytologySegmentationIDPatchParams) (api.CytologySegmentationIDPatchRes, error)
-	CytologySegmentationIDDelete(ctx context.Context, params api.CytologySegmentationIDDeleteParams) (api.CytologySegmentationIDDeleteRes, error)
+	CytologySegmentGroupCreateCreate(ctx context.Context, req *api.CytologySegmentGroupCreateCreateReq, params api.CytologySegmentGroupCreateCreateParams) (api.CytologySegmentGroupCreateCreateRes, error)
+	CytologySegmentUpdateRead(ctx context.Context, params api.CytologySegmentUpdateReadParams) (api.CytologySegmentUpdateReadRes, error)
+	CytologySegmentUpdateUpdate(ctx context.Context, req *api.CytologySegmentUpdateUpdateReq, params api.CytologySegmentUpdateUpdateParams) (api.CytologySegmentUpdateUpdateRes, error)
+	CytologySegmentUpdatePartialUpdate(ctx context.Context, req *api.CytologySegmentUpdatePartialUpdateReq, params api.CytologySegmentUpdatePartialUpdateParams) (api.CytologySegmentUpdatePartialUpdateRes, error)
+	CytologySegmentUpdateDelete(ctx context.Context, params api.CytologySegmentUpdateDeleteParams) (api.CytologySegmentUpdateDeleteRes, error)
 }
 
 type handler struct {

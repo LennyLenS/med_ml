@@ -12,6 +12,8 @@ service CytologySrv {
   rpc GetCytologyImagesByDoctorIdAndPatientId(GetCytologyImagesByDoctorIdAndPatientIdIn) returns (GetCytologyImagesByDoctorIdAndPatientIdOut);
   rpc UpdateCytologyImage(UpdateCytologyImageIn) returns (UpdateCytologyImageOut);
   rpc DeleteCytologyImage(DeleteCytologyImageIn) returns (google.protobuf.Empty);
+  rpc CopyCytologyImage(CopyCytologyImageIn) returns (CopyCytologyImageOut);
+  rpc GetCytologyImageHistory(GetCytologyImageHistoryIn) returns (GetCytologyImageHistoryOut);
 
   // ORIGINAL IMAGE
   rpc CreateOriginalImage(CreateOriginalImageIn) returns (CreateOriginalImageOut);
@@ -131,6 +133,22 @@ message UpdateCytologyImageOut {
 
 message DeleteCytologyImageIn {
   string id = 100;
+}
+
+message CopyCytologyImageIn {
+  string id = 100;
+}
+
+message CopyCytologyImageOut {
+  CytologyImage cytology_image = 100;
+}
+
+message GetCytologyImageHistoryIn {
+  string id = 100;
+}
+
+message GetCytologyImageHistoryOut {
+  repeated CytologyImage cytology_images = 100;
 }
 
 // ORIGINAL IMAGE

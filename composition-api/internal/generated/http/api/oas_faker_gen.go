@@ -3,6 +3,7 @@
 package api
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -58,72 +59,68 @@ func (s *ContorItem) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologiesExternalIDGetOKApplicationJSON) SetFake() {
-	var unwrapped []CytologyImage
-	{
-		unwrapped = nil
-		for i := 0; i < 0; i++ {
-			var elem CytologyImage
-			{
-				elem.SetFake()
-			}
-			unwrapped = append(unwrapped, elem)
-		}
-	}
-	*s = CytologiesExternalIDGetOKApplicationJSON(unwrapped)
-}
-
-// SetFake set fake values.
-func (s *CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON) SetFake() {
-	var unwrapped []CytologyImage
-	{
-		unwrapped = nil
-		for i := 0; i < 0; i++ {
-			var elem CytologyImage
-			{
-				elem.SetFake()
-			}
-			unwrapped = append(unwrapped, elem)
-		}
-	}
-	*s = CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON(unwrapped)
-}
-
-// SetFake set fake values.
-func (s *CytologyIDGetOK) SetFake() {
+func (s *CytologyCopyCreateCreated) SetFake() {
 	{
 		{
-			s.CytologyImage.SetFake()
+			s.Pk.SetFake()
 		}
 	}
 	{
 		{
-			s.OriginalImage.SetFake()
+			s.ID.SetFake()
 		}
 	}
 }
 
 // SetFake set fake values.
-func (s *CytologyIDOriginalImageGetOKApplicationJSON) SetFake() {
-	var unwrapped []OriginalImage
+func (s *CytologyCopyCreateReq) SetFake() {
 	{
-		unwrapped = nil
-		for i := 0; i < 0; i++ {
-			var elem OriginalImage
-			{
-				elem.SetFake()
-			}
-			unwrapped = append(unwrapped, elem)
+		{
+			s.Pk.SetFake()
 		}
 	}
-	*s = CytologyIDOriginalImageGetOKApplicationJSON(unwrapped)
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
 }
 
 // SetFake set fake values.
-func (s *CytologyIDPatchReq) SetFake() {
+func (s *CytologyCreateCreateCreated) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.Image.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{ // Keep pointer nil to prevent infinite recursion.
+			s.Details = nil
+		}
+	}
 	{
 		{
 			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
 		}
 	}
 	{
@@ -144,6 +141,810 @@ func (s *CytologyIDPatchReq) SetFake() {
 	{
 		{
 			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateCreatedDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateCreatedDiagnosticMarking) SetFake() {
+	*s = CytologyCreateCreateCreatedDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateCreatedMaterialType) SetFake() {
+	*s = CytologyCreateCreateCreatedMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateReq) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.Image.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{ // Keep pointer nil to prevent infinite recursion.
+			s.Details = nil
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateReqDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateReqDiagnosticMarking) SetFake() {
+	*s = CytologyCreateCreateReqDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyCreateCreateReqMaterialType) SetFake() {
+	*s = CytologyCreateCreateReqMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyHistoryReadOK) SetFake() {
+	{
+		{
+			s.Count = int(0)
+		}
+	}
+	{
+		{
+			s.Next.SetFake()
+		}
+	}
+	{
+		{
+			s.Previous.SetFake()
+		}
+	}
+	{
+		{
+			s.Results = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologyHistoryReadOKResultsItem
+				{
+					elem.SetFake()
+				}
+				s.Results = append(s.Results, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyHistoryReadOKResultsItem) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{ // Keep pointer nil to prevent infinite recursion.
+			s.Details = nil
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyHistoryReadOKResultsItemDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyHistoryReadOKResultsItemDiagnosticMarking) SetFake() {
+	*s = CytologyHistoryReadOKResultsItemDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyHistoryReadOKResultsItemMaterialType) SetFake() {
+	*s = CytologyHistoryReadOKResultsItemMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOK) SetFake() {
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+	{
+		{
+			s.Info.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOKInfo) SetFake() {
+	{
+		{
+			s.Patient.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+	{
+		{
+			s.ImageGroup.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOKInfoImageGroup) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{ // Keep pointer nil to prevent infinite recursion.
+			s.Details = nil
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOKInfoImageGroupDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOKInfoImageGroupDiagnosticMarking) SetFake() {
+	*s = CytologyReadOKInfoImageGroupDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOKInfoImageGroupMaterialType) SetFake() {
+	*s = CytologyReadOKInfoImageGroupMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyReadOKOriginalImage) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.CreateDate.SetFake()
+		}
+	}
+	{
+		{
+			s.DelayTime.SetFake()
+		}
+	}
+	{
+		{
+			s.ViewedFlag.SetFake()
+		}
+	}
+	{
+		{
+			s.Image.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateCreated) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.Data.SetFake()
+		}
+	}
+	{
+		{
+			s.SegType.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateCreatedData) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentGroupCreateCreateCreatedDataPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateCreatedDataPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateReq) SetFake() {
+	{
+		{
+			s.Data.SetFake()
+		}
+	}
+	{
+		{
+			s.SegType.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateReqData) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentGroupCreateCreateReqDataPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateReqDataPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentGroupCreateCreateReqSegType) SetFake() {
+	*s = CytologySegmentGroupCreateCreateReqSegTypeNIL
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdatePartialUpdateOK) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentUpdatePartialUpdateOKPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+	{
+		{
+			s.SegmentGroup.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdatePartialUpdateOKPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdatePartialUpdateReq) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentUpdatePartialUpdateReqPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+	{
+		{
+			s.SegmentGroup.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdatePartialUpdateReqPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdateReadOK) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentUpdateReadOKPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+	{
+		{
+			s.SegmentGroup.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdateReadOKPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdateUpdateOK) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentUpdateUpdateOKPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+	{
+		{
+			s.SegmentGroup.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdateUpdateOKPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdateUpdateReq) SetFake() {
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentUpdateUpdateReqPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+	{
+		{
+			s.SegmentGroup.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentUpdateUpdateReqPointsItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOK) SetFake() {
+	{
+		{
+			s.Count = int(0)
+		}
+	}
+	{
+		{
+			s.Next.SetFake()
+		}
+	}
+	{
+		{
+			s.Previous.SetFake()
+		}
+	}
+	{
+		{
+			s.Results = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentsListOKResultsItem
+				{
+					elem.SetFake()
+				}
+				s.Results = append(s.Results, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItem) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.Data = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentsListOKResultsItemDataItem
+				{
+					elem.SetFake()
+				}
+				s.Data = append(s.Data, elem)
+			}
+		}
+	}
+	{
+		{
+			s.GroupType.SetFake()
+		}
+	}
+	{
+		{
+			s.SegType.SetFake()
+		}
+	}
+	{
+		{ // Keep pointer nil to prevent infinite recursion.
+			s.Details = nil
+		}
+	}
+	{
+		{
+			s.IsAi.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemDataItem) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.Points = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologySegmentsListOKResultsItemDataItemPointsItem
+				{
+					elem.SetFake()
+				}
+				s.Points = append(s.Points, elem)
+			}
+		}
+	}
+	{
+		{
+			s.Details.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.UID = int(0)
+		}
+	}
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemGroupType) SetFake() {
+	*s = CytologySegmentsListOKResultsItemGroupTypeCE
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemSegType) SetFake() {
+	*s = CytologySegmentsListOKResultsItemSegTypeNIL
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdatePartialUpdateOK) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
 		}
 	}
 	{
@@ -156,101 +957,9 @@ func (s *CytologyIDPatchReq) SetFake() {
 			s.IsLast.SetFake()
 		}
 	}
-}
-
-// SetFake set fake values.
-func (s *CytologyIDPatchReqDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyIDPatchReqDiagnosticMarking) SetFake() {
-	*s = CytologyIDPatchReqDiagnosticMarking11
-}
-
-// SetFake set fake values.
-func (s *CytologyIDPatchReqMaterialType) SetFake() {
-	*s = CytologyIDPatchReqMaterialTypeGS
-}
-
-// SetFake set fake values.
-func (s *CytologyIDSegmentationGroupsGetOKApplicationJSON) SetFake() {
-	var unwrapped []SegmentationGroup
-	{
-		unwrapped = nil
-		for i := 0; i < 0; i++ {
-			var elem SegmentationGroup
-			{
-				elem.SetFake()
-			}
-			unwrapped = append(unwrapped, elem)
-		}
-	}
-	*s = CytologyIDSegmentationGroupsGetOKApplicationJSON(unwrapped)
-}
-
-// SetFake set fake values.
-func (s *CytologyIDSegmentationGroupsPostReq) SetFake() {
 	{
 		{
-			s.SegType.SetFake()
-		}
-	}
-	{
-		{
-			s.GroupType.SetFake()
-		}
-	}
-	{
-		{
-			s.IsAi.SetFake()
-		}
-	}
-	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *CytologyIDSegmentationGroupsPostReqDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyIDSegmentationGroupsPostReqGroupType) SetFake() {
-	*s = CytologyIDSegmentationGroupsPostReqGroupTypeCE
-}
-
-// SetFake set fake values.
-func (s *CytologyIDSegmentationGroupsPostReqSegType) SetFake() {
-	*s = CytologyIDSegmentationGroupsPostReqSegTypeNIL
-}
-
-// SetFake set fake values.
-func (s *CytologyImage) SetFake() {
-	{
-		{
-			s.ID = uuid.New()
-		}
-	}
-	{
-		{
-			s.ExternalID = uuid.New()
-		}
-	}
-	{
-		{
-			s.DoctorID = uuid.New()
-		}
-	}
-	{
-		{
-			s.PatientID = uuid.New()
-		}
-	}
-	{
-		{
-			s.DiagnosticNumber = int(0)
+			s.DiagnosDate.SetFake()
 		}
 	}
 	{
@@ -260,109 +969,7 @@ func (s *CytologyImage) SetFake() {
 	}
 	{
 		{
-			s.MaterialType.SetFake()
-		}
-	}
-	{
-		{
-			s.DiagnosDate = time.Now()
-		}
-	}
-	{
-		{
-			s.IsLast = true
-		}
-	}
-	{
-		{
-			s.Calcitonin.SetFake()
-		}
-	}
-	{
-		{
-			s.CalcitoninInFlush.SetFake()
-		}
-	}
-	{
-		{
-			s.Thyroglobulin.SetFake()
-		}
-	}
-	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
-		}
-	}
-	{
-		{
-			s.PrevID.SetFake()
-		}
-	}
-	{
-		{
-			s.ParentPrevID.SetFake()
-		}
-	}
-	{
-		{
-			s.CreateAt = time.Now()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *CytologyImageDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyImageDiagnosticMarking) SetFake() {
-	*s = CytologyImageDiagnosticMarking11
-}
-
-// SetFake set fake values.
-func (s *CytologyImageMaterialType) SetFake() {
-	*s = CytologyImageMaterialTypeGS
-}
-
-// SetFake set fake values.
-func (s *CytologyOriginalImageIDPatchReq) SetFake() {
-	{
-		{
-			s.DelayTime.SetFake()
-		}
-	}
-	{
-		{
-			s.ViewedFlag.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *CytologyPostReq) SetFake() {
-	{
-		{
-			s.ExternalID = uuid.New()
-		}
-	}
-	{
-		{
-			s.DoctorID = uuid.New()
-		}
-	}
-	{
-		{
-			s.PatientID = uuid.New()
-		}
-	}
-	{
-		{
 			s.DiagnosticNumber = int(0)
-		}
-	}
-	{
-		{
-			s.DiagnosticMarking.SetFake()
 		}
 	}
 	{
@@ -386,41 +993,147 @@ func (s *CytologyPostReq) SetFake() {
 		}
 	}
 	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdatePartialUpdateOKDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdatePartialUpdateOKPatientCard) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdatePartialUpdateReq) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+	{
 		{ // Keep pointer nil to prevent infinite recursion.
 			s.Details = nil
 		}
 	}
 	{
 		{
-			s.PrevID.SetFake()
+			s.IsLast.SetFake()
 		}
 	}
 	{
 		{
-			s.ParentPrevID.SetFake()
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
 		}
 	}
 }
 
 // SetFake set fake values.
-func (s *CytologyPostReqDetails) SetFake() {
+func (s *CytologyUpdatePartialUpdateReqDetails) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyPostReqDiagnosticMarking) SetFake() {
-	*s = CytologyPostReqDiagnosticMarking11
+func (s *CytologyUpdatePartialUpdateReqDiagnosticMarking) SetFake() {
+	*s = CytologyUpdatePartialUpdateReqDiagnosticMarking11
 }
 
 // SetFake set fake values.
-func (s *CytologyPostReqMaterialType) SetFake() {
-	*s = CytologyPostReqMaterialTypeGS
+func (s *CytologyUpdatePartialUpdateReqMaterialType) SetFake() {
+	*s = CytologyUpdatePartialUpdateReqMaterialTypeGS
 }
 
 // SetFake set fake values.
-func (s *CytologySegmentationGroupIDPatchReq) SetFake() {
+func (s *CytologyUpdatePartialUpdateReqPatientCard) SetFake() {
 	{
 		{
-			s.SegType.SetFake()
+			s.Patient.SetFake()
+		}
+	}
+	{
+		{
+			s.AcceptanceDatetime.SetFake()
+		}
+	}
+	{
+		{
+			s.Diagnosis.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateOK) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
 		}
 	}
 	{
@@ -428,61 +1141,249 @@ func (s *CytologySegmentationGroupIDPatchReq) SetFake() {
 			s.Details = nil
 		}
 	}
-}
-
-// SetFake set fake values.
-func (s *CytologySegmentationGroupIDPatchReqDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologySegmentationGroupIDPatchReqSegType) SetFake() {
-	*s = CytologySegmentationGroupIDPatchReqSegTypeNIL
-}
-
-// SetFake set fake values.
-func (s *CytologySegmentationGroupIDSegmentsGetOKApplicationJSON) SetFake() {
-	var unwrapped []Segmentation
-	{
-		unwrapped = nil
-		for i := 0; i < 0; i++ {
-			var elem Segmentation
-			{
-				elem.SetFake()
-			}
-			unwrapped = append(unwrapped, elem)
-		}
-	}
-	*s = CytologySegmentationGroupIDSegmentsGetOKApplicationJSON(unwrapped)
-}
-
-// SetFake set fake values.
-func (s *CytologySegmentationGroupIDSegmentsPostReq) SetFake() {
 	{
 		{
-			s.Points = nil
-			for i := 0; i < 0; i++ {
-				var elem SegmentationPoint
-				{
-					elem.SetFake()
-				}
-				s.Points = append(s.Points, elem)
-			}
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
 		}
 	}
 }
 
 // SetFake set fake values.
-func (s *CytologySegmentationIDPatchReq) SetFake() {
+func (s *CytologyUpdateUpdateOKDetails) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateOKPatientCard) SetFake() {
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReq) SetFake() {
 	{
 		{
-			s.Points = nil
-			for i := 0; i < 0; i++ {
-				var elem SegmentationPoint
-				{
-					elem.SetFake()
-				}
-				s.Points = append(s.Points, elem)
-			}
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+	{
+		{
+			s.Details.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReqDetails) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosDate.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReqDetailsDiagnosticMarking) SetFake() {
+	*s = CytologyUpdateUpdateReqDetailsDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReqDetailsMaterialType) SetFake() {
+	*s = CytologyUpdateUpdateReqDetailsMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReqDiagnosticMarking) SetFake() {
+	*s = CytologyUpdateUpdateReqDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReqMaterialType) SetFake() {
+	*s = CytologyUpdateUpdateReqMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyUpdateUpdateReqPatientCard) SetFake() {
+	{
+		{
+			s.Patient.SetFake()
+		}
+	}
+	{
+		{
+			s.AcceptanceDatetime.SetFake()
+		}
+	}
+	{
+		{
+			s.Diagnosis.SetFake()
 		}
 	}
 }
@@ -817,8 +1718,8 @@ func (s *OptBool) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyIDPatchReqDiagnosticMarking) SetFake() {
-	var elem CytologyIDPatchReqDiagnosticMarking
+func (s *OptCytologyCreateCreateCreatedDiagnosticMarking) SetFake() {
+	var elem CytologyCreateCreateCreatedDiagnosticMarking
 	{
 		elem.SetFake()
 	}
@@ -826,8 +1727,8 @@ func (s *OptCytologyIDPatchReqDiagnosticMarking) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyIDPatchReqMaterialType) SetFake() {
-	var elem CytologyIDPatchReqMaterialType
+func (s *OptCytologyCreateCreateCreatedMaterialType) SetFake() {
+	var elem CytologyCreateCreateCreatedMaterialType
 	{
 		elem.SetFake()
 	}
@@ -835,8 +1736,8 @@ func (s *OptCytologyIDPatchReqMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyImage) SetFake() {
-	var elem CytologyImage
+func (s *OptCytologyCreateCreateReqDiagnosticMarking) SetFake() {
+	var elem CytologyCreateCreateReqDiagnosticMarking
 	{
 		elem.SetFake()
 	}
@@ -844,8 +1745,8 @@ func (s *OptCytologyImage) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyImageDiagnosticMarking) SetFake() {
-	var elem CytologyImageDiagnosticMarking
+func (s *OptCytologyCreateCreateReqMaterialType) SetFake() {
+	var elem CytologyCreateCreateReqMaterialType
 	{
 		elem.SetFake()
 	}
@@ -853,8 +1754,8 @@ func (s *OptCytologyImageDiagnosticMarking) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyImageMaterialType) SetFake() {
-	var elem CytologyImageMaterialType
+func (s *OptCytologyHistoryReadOKResultsItemDiagnosticMarking) SetFake() {
+	var elem CytologyHistoryReadOKResultsItemDiagnosticMarking
 	{
 		elem.SetFake()
 	}
@@ -862,8 +1763,8 @@ func (s *OptCytologyImageMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyPostReqDiagnosticMarking) SetFake() {
-	var elem CytologyPostReqDiagnosticMarking
+func (s *OptCytologyHistoryReadOKResultsItemMaterialType) SetFake() {
+	var elem CytologyHistoryReadOKResultsItemMaterialType
 	{
 		elem.SetFake()
 	}
@@ -871,8 +1772,8 @@ func (s *OptCytologyPostReqDiagnosticMarking) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologyPostReqMaterialType) SetFake() {
-	var elem CytologyPostReqMaterialType
+func (s *OptCytologyReadOKInfoImageGroupDiagnosticMarking) SetFake() {
+	var elem CytologyReadOKInfoImageGroupDiagnosticMarking
 	{
 		elem.SetFake()
 	}
@@ -880,8 +1781,98 @@ func (s *OptCytologyPostReqMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologySegmentationGroupIDPatchReqSegType) SetFake() {
-	var elem CytologySegmentationGroupIDPatchReqSegType
+func (s *OptCytologyReadOKInfoImageGroupMaterialType) SetFake() {
+	var elem CytologyReadOKInfoImageGroupMaterialType
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologySegmentGroupCreateCreateCreatedData) SetFake() {
+	var elem CytologySegmentGroupCreateCreateCreatedData
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologySegmentsListOKResultsItemGroupType) SetFake() {
+	var elem CytologySegmentsListOKResultsItemGroupType
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologySegmentsListOKResultsItemSegType) SetFake() {
+	var elem CytologySegmentsListOKResultsItemSegType
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdatePartialUpdateReqDiagnosticMarking) SetFake() {
+	var elem CytologyUpdatePartialUpdateReqDiagnosticMarking
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdatePartialUpdateReqMaterialType) SetFake() {
+	var elem CytologyUpdatePartialUpdateReqMaterialType
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdateUpdateReqDetails) SetFake() {
+	var elem CytologyUpdateUpdateReqDetails
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdateUpdateReqDetailsDiagnosticMarking) SetFake() {
+	var elem CytologyUpdateUpdateReqDetailsDiagnosticMarking
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdateUpdateReqDetailsMaterialType) SetFake() {
+	var elem CytologyUpdateUpdateReqDetailsMaterialType
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdateUpdateReqDiagnosticMarking) SetFake() {
+	var elem CytologyUpdateUpdateReqDiagnosticMarking
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyUpdateUpdateReqMaterialType) SetFake() {
+	var elem CytologyUpdateUpdateReqMaterialType
 	{
 		elem.SetFake()
 	}
@@ -937,19 +1928,19 @@ func (s *OptNilUziNodesIDPatchReqValidation) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptOriginalImage) SetFake() {
-	var elem OriginalImage
+func (s *OptString) SetFake() {
+	var elem string
 	{
-		elem.SetFake()
+		elem = "string"
 	}
 	s.SetTo(elem)
 }
 
 // SetFake set fake values.
-func (s *OptString) SetFake() {
-	var elem string
+func (s *OptURI) SetFake() {
+	var elem url.URL
 	{
-		elem = "string"
+		elem = url.URL{Scheme: "https", Host: "github.com", Path: "/ogen-go/ogen"}
 	}
 	s.SetTo(elem)
 }
@@ -1009,40 +2000,6 @@ func (s *OptYookassaWebhookRequestObjectPaymentMethodCard) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OriginalImage) SetFake() {
-	{
-		{
-			s.ID = uuid.New()
-		}
-	}
-	{
-		{
-			s.CytologyID = uuid.New()
-		}
-	}
-	{
-		{
-			s.ImagePath = "string"
-		}
-	}
-	{
-		{
-			s.CreateDate = time.Now()
-		}
-	}
-	{
-		{
-			s.DelayTime.SetFake()
-		}
-	}
-	{
-		{
-			s.ViewedFlag = true
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *Patient) SetFake() {
 	{
 		{
@@ -1082,6 +2039,35 @@ func (s *Patient) SetFake() {
 	{
 		{
 			s.LastUziDate.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *PatientCard) SetFake() {
+	{
+		{
+			s.ID.SetFake()
+		}
+	}
+	{
+		{
+			s.AcceptanceDatetime.SetFake()
+		}
+	}
+	{
+		{
+			s.Diagnosis.SetFake()
+		}
+	}
+	{
+		{
+			s.Patient.SetFake()
+		}
+	}
+	{
+		{
+			s.MedWorker.SetFake()
 		}
 	}
 }
@@ -1275,104 +2261,6 @@ func (s *Segment) SetFake() {
 	{
 		{
 			s.Tirads5 = float64(0)
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *Segmentation) SetFake() {
-	{
-		{
-			s.ID = uuid.New()
-		}
-	}
-	{
-		{
-			s.SegmentationGroupID = uuid.New()
-		}
-	}
-	{
-		{
-			s.Points = nil
-			for i := 0; i < 0; i++ {
-				var elem SegmentationPoint
-				{
-					elem.SetFake()
-				}
-				s.Points = append(s.Points, elem)
-			}
-		}
-	}
-	{
-		{
-			s.CreateAt = time.Now()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *SegmentationGroup) SetFake() {
-	{
-		{
-			s.ID = uuid.New()
-		}
-	}
-	{
-		{
-			s.CytologyID = uuid.New()
-		}
-	}
-	{
-		{
-			s.SegType.SetFake()
-		}
-	}
-	{
-		{
-			s.GroupType.SetFake()
-		}
-	}
-	{
-		{
-			s.IsAi = true
-		}
-	}
-	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
-		}
-	}
-	{
-		{
-			s.CreateAt = time.Now()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *SegmentationGroupDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *SegmentationGroupGroupType) SetFake() {
-	*s = SegmentationGroupGroupTypeCE
-}
-
-// SetFake set fake values.
-func (s *SegmentationGroupSegType) SetFake() {
-	*s = SegmentationGroupSegTypeNIL
-}
-
-// SetFake set fake values.
-func (s *SegmentationPoint) SetFake() {
-	{
-		{
-			s.X = int(0)
-		}
-	}
-	{
-		{
-			s.Y = int(0)
 		}
 	}
 }

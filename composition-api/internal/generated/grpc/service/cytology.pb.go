@@ -4,7 +4,7 @@
 // 	protoc        v6.33.1
 // source: proto/grpc/clients/cytology.proto
 
-package cytology
+package service
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -1080,6 +1080,182 @@ func (x *DeleteCytologyImageIn) GetId() string {
 	return ""
 }
 
+type CopyCytologyImageIn struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CopyCytologyImageIn) Reset() {
+	*x = CopyCytologyImageIn{}
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CopyCytologyImageIn) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CopyCytologyImageIn) ProtoMessage() {}
+
+func (x *CopyCytologyImageIn) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CopyCytologyImageIn.ProtoReflect.Descriptor instead.
+func (*CopyCytologyImageIn) Descriptor() ([]byte, []int) {
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *CopyCytologyImageIn) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type CopyCytologyImageOut struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CytologyImage *CytologyImage         `protobuf:"bytes,100,opt,name=cytology_image,json=cytologyImage,proto3" json:"cytology_image,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CopyCytologyImageOut) Reset() {
+	*x = CopyCytologyImageOut{}
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CopyCytologyImageOut) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CopyCytologyImageOut) ProtoMessage() {}
+
+func (x *CopyCytologyImageOut) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CopyCytologyImageOut.ProtoReflect.Descriptor instead.
+func (*CopyCytologyImageOut) Descriptor() ([]byte, []int) {
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *CopyCytologyImageOut) GetCytologyImage() *CytologyImage {
+	if x != nil {
+		return x.CytologyImage
+	}
+	return nil
+}
+
+type GetCytologyImageHistoryIn struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCytologyImageHistoryIn) Reset() {
+	*x = GetCytologyImageHistoryIn{}
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCytologyImageHistoryIn) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCytologyImageHistoryIn) ProtoMessage() {}
+
+func (x *GetCytologyImageHistoryIn) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCytologyImageHistoryIn.ProtoReflect.Descriptor instead.
+func (*GetCytologyImageHistoryIn) Descriptor() ([]byte, []int) {
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetCytologyImageHistoryIn) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetCytologyImageHistoryOut struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CytologyImages []*CytologyImage       `protobuf:"bytes,100,rep,name=cytology_images,json=cytologyImages,proto3" json:"cytology_images,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *GetCytologyImageHistoryOut) Reset() {
+	*x = GetCytologyImageHistoryOut{}
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCytologyImageHistoryOut) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCytologyImageHistoryOut) ProtoMessage() {}
+
+func (x *GetCytologyImageHistoryOut) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCytologyImageHistoryOut.ProtoReflect.Descriptor instead.
+func (*GetCytologyImageHistoryOut) Descriptor() ([]byte, []int) {
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetCytologyImageHistoryOut) GetCytologyImages() []*CytologyImage {
+	if x != nil {
+		return x.CytologyImages
+	}
+	return nil
+}
+
 type OriginalImage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
@@ -1094,7 +1270,7 @@ type OriginalImage struct {
 
 func (x *OriginalImage) Reset() {
 	*x = OriginalImage{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[12]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1106,7 +1282,7 @@ func (x *OriginalImage) String() string {
 func (*OriginalImage) ProtoMessage() {}
 
 func (x *OriginalImage) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[12]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1119,7 +1295,7 @@ func (x *OriginalImage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OriginalImage.ProtoReflect.Descriptor instead.
 func (*OriginalImage) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{12}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *OriginalImage) GetId() string {
@@ -1176,7 +1352,7 @@ type CreateOriginalImageIn struct {
 
 func (x *CreateOriginalImageIn) Reset() {
 	*x = CreateOriginalImageIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[13]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1188,7 +1364,7 @@ func (x *CreateOriginalImageIn) String() string {
 func (*CreateOriginalImageIn) ProtoMessage() {}
 
 func (x *CreateOriginalImageIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[13]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1201,7 +1377,7 @@ func (x *CreateOriginalImageIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOriginalImageIn.ProtoReflect.Descriptor instead.
 func (*CreateOriginalImageIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{13}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CreateOriginalImageIn) GetCytologyId() string {
@@ -1241,7 +1417,7 @@ type CreateOriginalImageOut struct {
 
 func (x *CreateOriginalImageOut) Reset() {
 	*x = CreateOriginalImageOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[14]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1253,7 +1429,7 @@ func (x *CreateOriginalImageOut) String() string {
 func (*CreateOriginalImageOut) ProtoMessage() {}
 
 func (x *CreateOriginalImageOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[14]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1266,7 +1442,7 @@ func (x *CreateOriginalImageOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOriginalImageOut.ProtoReflect.Descriptor instead.
 func (*CreateOriginalImageOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{14}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *CreateOriginalImageOut) GetId() string {
@@ -1285,7 +1461,7 @@ type GetOriginalImageByIdIn struct {
 
 func (x *GetOriginalImageByIdIn) Reset() {
 	*x = GetOriginalImageByIdIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[15]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1297,7 +1473,7 @@ func (x *GetOriginalImageByIdIn) String() string {
 func (*GetOriginalImageByIdIn) ProtoMessage() {}
 
 func (x *GetOriginalImageByIdIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[15]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1310,7 +1486,7 @@ func (x *GetOriginalImageByIdIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOriginalImageByIdIn.ProtoReflect.Descriptor instead.
 func (*GetOriginalImageByIdIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{15}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetOriginalImageByIdIn) GetId() string {
@@ -1329,7 +1505,7 @@ type GetOriginalImageByIdOut struct {
 
 func (x *GetOriginalImageByIdOut) Reset() {
 	*x = GetOriginalImageByIdOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[16]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1341,7 +1517,7 @@ func (x *GetOriginalImageByIdOut) String() string {
 func (*GetOriginalImageByIdOut) ProtoMessage() {}
 
 func (x *GetOriginalImageByIdOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[16]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1354,7 +1530,7 @@ func (x *GetOriginalImageByIdOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOriginalImageByIdOut.ProtoReflect.Descriptor instead.
 func (*GetOriginalImageByIdOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{16}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetOriginalImageByIdOut) GetOriginalImage() *OriginalImage {
@@ -1373,7 +1549,7 @@ type GetOriginalImagesByCytologyIdIn struct {
 
 func (x *GetOriginalImagesByCytologyIdIn) Reset() {
 	*x = GetOriginalImagesByCytologyIdIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[17]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1385,7 +1561,7 @@ func (x *GetOriginalImagesByCytologyIdIn) String() string {
 func (*GetOriginalImagesByCytologyIdIn) ProtoMessage() {}
 
 func (x *GetOriginalImagesByCytologyIdIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[17]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1398,7 +1574,7 @@ func (x *GetOriginalImagesByCytologyIdIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOriginalImagesByCytologyIdIn.ProtoReflect.Descriptor instead.
 func (*GetOriginalImagesByCytologyIdIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{17}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetOriginalImagesByCytologyIdIn) GetCytologyId() string {
@@ -1417,7 +1593,7 @@ type GetOriginalImagesByCytologyIdOut struct {
 
 func (x *GetOriginalImagesByCytologyIdOut) Reset() {
 	*x = GetOriginalImagesByCytologyIdOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[18]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1429,7 +1605,7 @@ func (x *GetOriginalImagesByCytologyIdOut) String() string {
 func (*GetOriginalImagesByCytologyIdOut) ProtoMessage() {}
 
 func (x *GetOriginalImagesByCytologyIdOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[18]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1442,7 +1618,7 @@ func (x *GetOriginalImagesByCytologyIdOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetOriginalImagesByCytologyIdOut.ProtoReflect.Descriptor instead.
 func (*GetOriginalImagesByCytologyIdOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{18}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetOriginalImagesByCytologyIdOut) GetOriginalImages() []*OriginalImage {
@@ -1463,7 +1639,7 @@ type UpdateOriginalImageIn struct {
 
 func (x *UpdateOriginalImageIn) Reset() {
 	*x = UpdateOriginalImageIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[19]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1475,7 +1651,7 @@ func (x *UpdateOriginalImageIn) String() string {
 func (*UpdateOriginalImageIn) ProtoMessage() {}
 
 func (x *UpdateOriginalImageIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[19]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1488,7 +1664,7 @@ func (x *UpdateOriginalImageIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOriginalImageIn.ProtoReflect.Descriptor instead.
 func (*UpdateOriginalImageIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{19}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *UpdateOriginalImageIn) GetId() string {
@@ -1521,7 +1697,7 @@ type UpdateOriginalImageOut struct {
 
 func (x *UpdateOriginalImageOut) Reset() {
 	*x = UpdateOriginalImageOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[20]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1533,7 +1709,7 @@ func (x *UpdateOriginalImageOut) String() string {
 func (*UpdateOriginalImageOut) ProtoMessage() {}
 
 func (x *UpdateOriginalImageOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[20]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1546,7 +1722,7 @@ func (x *UpdateOriginalImageOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateOriginalImageOut.ProtoReflect.Descriptor instead.
 func (*UpdateOriginalImageOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{20}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *UpdateOriginalImageOut) GetOriginalImage() *OriginalImage {
@@ -1571,7 +1747,7 @@ type SegmentationGroup struct {
 
 func (x *SegmentationGroup) Reset() {
 	*x = SegmentationGroup{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[21]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1583,7 +1759,7 @@ func (x *SegmentationGroup) String() string {
 func (*SegmentationGroup) ProtoMessage() {}
 
 func (x *SegmentationGroup) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[21]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1596,7 +1772,7 @@ func (x *SegmentationGroup) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SegmentationGroup.ProtoReflect.Descriptor instead.
 func (*SegmentationGroup) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{21}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *SegmentationGroup) GetId() string {
@@ -1661,7 +1837,7 @@ type CreateSegmentationGroupIn struct {
 
 func (x *CreateSegmentationGroupIn) Reset() {
 	*x = CreateSegmentationGroupIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[22]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1673,7 +1849,7 @@ func (x *CreateSegmentationGroupIn) String() string {
 func (*CreateSegmentationGroupIn) ProtoMessage() {}
 
 func (x *CreateSegmentationGroupIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[22]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1686,7 +1862,7 @@ func (x *CreateSegmentationGroupIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSegmentationGroupIn.ProtoReflect.Descriptor instead.
 func (*CreateSegmentationGroupIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{22}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *CreateSegmentationGroupIn) GetCytologyId() string {
@@ -1733,7 +1909,7 @@ type CreateSegmentationGroupOut struct {
 
 func (x *CreateSegmentationGroupOut) Reset() {
 	*x = CreateSegmentationGroupOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[23]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1745,7 +1921,7 @@ func (x *CreateSegmentationGroupOut) String() string {
 func (*CreateSegmentationGroupOut) ProtoMessage() {}
 
 func (x *CreateSegmentationGroupOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[23]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1758,7 +1934,7 @@ func (x *CreateSegmentationGroupOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSegmentationGroupOut.ProtoReflect.Descriptor instead.
 func (*CreateSegmentationGroupOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{23}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CreateSegmentationGroupOut) GetId() string {
@@ -1780,7 +1956,7 @@ type GetSegmentationGroupsByCytologyIdIn struct {
 
 func (x *GetSegmentationGroupsByCytologyIdIn) Reset() {
 	*x = GetSegmentationGroupsByCytologyIdIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[24]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1792,7 +1968,7 @@ func (x *GetSegmentationGroupsByCytologyIdIn) String() string {
 func (*GetSegmentationGroupsByCytologyIdIn) ProtoMessage() {}
 
 func (x *GetSegmentationGroupsByCytologyIdIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[24]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1805,7 +1981,7 @@ func (x *GetSegmentationGroupsByCytologyIdIn) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use GetSegmentationGroupsByCytologyIdIn.ProtoReflect.Descriptor instead.
 func (*GetSegmentationGroupsByCytologyIdIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{24}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *GetSegmentationGroupsByCytologyIdIn) GetCytologyId() string {
@@ -1845,7 +2021,7 @@ type GetSegmentationGroupsByCytologyIdOut struct {
 
 func (x *GetSegmentationGroupsByCytologyIdOut) Reset() {
 	*x = GetSegmentationGroupsByCytologyIdOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[25]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1857,7 +2033,7 @@ func (x *GetSegmentationGroupsByCytologyIdOut) String() string {
 func (*GetSegmentationGroupsByCytologyIdOut) ProtoMessage() {}
 
 func (x *GetSegmentationGroupsByCytologyIdOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[25]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1870,7 +2046,7 @@ func (x *GetSegmentationGroupsByCytologyIdOut) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use GetSegmentationGroupsByCytologyIdOut.ProtoReflect.Descriptor instead.
 func (*GetSegmentationGroupsByCytologyIdOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{25}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetSegmentationGroupsByCytologyIdOut) GetSegmentationGroups() []*SegmentationGroup {
@@ -1891,7 +2067,7 @@ type UpdateSegmentationGroupIn struct {
 
 func (x *UpdateSegmentationGroupIn) Reset() {
 	*x = UpdateSegmentationGroupIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[26]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1903,7 +2079,7 @@ func (x *UpdateSegmentationGroupIn) String() string {
 func (*UpdateSegmentationGroupIn) ProtoMessage() {}
 
 func (x *UpdateSegmentationGroupIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[26]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1916,7 +2092,7 @@ func (x *UpdateSegmentationGroupIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSegmentationGroupIn.ProtoReflect.Descriptor instead.
 func (*UpdateSegmentationGroupIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{26}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *UpdateSegmentationGroupIn) GetId() string {
@@ -1949,7 +2125,7 @@ type UpdateSegmentationGroupOut struct {
 
 func (x *UpdateSegmentationGroupOut) Reset() {
 	*x = UpdateSegmentationGroupOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[27]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1961,7 +2137,7 @@ func (x *UpdateSegmentationGroupOut) String() string {
 func (*UpdateSegmentationGroupOut) ProtoMessage() {}
 
 func (x *UpdateSegmentationGroupOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[27]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1974,7 +2150,7 @@ func (x *UpdateSegmentationGroupOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSegmentationGroupOut.ProtoReflect.Descriptor instead.
 func (*UpdateSegmentationGroupOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{27}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *UpdateSegmentationGroupOut) GetSegmentationGroup() *SegmentationGroup {
@@ -1993,7 +2169,7 @@ type DeleteSegmentationGroupIn struct {
 
 func (x *DeleteSegmentationGroupIn) Reset() {
 	*x = DeleteSegmentationGroupIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[28]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2005,7 +2181,7 @@ func (x *DeleteSegmentationGroupIn) String() string {
 func (*DeleteSegmentationGroupIn) ProtoMessage() {}
 
 func (x *DeleteSegmentationGroupIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[28]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2018,7 +2194,7 @@ func (x *DeleteSegmentationGroupIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSegmentationGroupIn.ProtoReflect.Descriptor instead.
 func (*DeleteSegmentationGroupIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{28}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *DeleteSegmentationGroupIn) GetId() string {
@@ -2041,7 +2217,7 @@ type SegmentationPoint struct {
 
 func (x *SegmentationPoint) Reset() {
 	*x = SegmentationPoint{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[29]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2053,7 +2229,7 @@ func (x *SegmentationPoint) String() string {
 func (*SegmentationPoint) ProtoMessage() {}
 
 func (x *SegmentationPoint) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[29]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2066,7 +2242,7 @@ func (x *SegmentationPoint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SegmentationPoint.ProtoReflect.Descriptor instead.
 func (*SegmentationPoint) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{29}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *SegmentationPoint) GetId() string {
@@ -2116,7 +2292,7 @@ type Segmentation struct {
 
 func (x *Segmentation) Reset() {
 	*x = Segmentation{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[30]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2128,7 +2304,7 @@ func (x *Segmentation) String() string {
 func (*Segmentation) ProtoMessage() {}
 
 func (x *Segmentation) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[30]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2141,7 +2317,7 @@ func (x *Segmentation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Segmentation.ProtoReflect.Descriptor instead.
 func (*Segmentation) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{30}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *Segmentation) GetId() string {
@@ -2182,7 +2358,7 @@ type CreateSegmentationIn struct {
 
 func (x *CreateSegmentationIn) Reset() {
 	*x = CreateSegmentationIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[31]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2194,7 +2370,7 @@ func (x *CreateSegmentationIn) String() string {
 func (*CreateSegmentationIn) ProtoMessage() {}
 
 func (x *CreateSegmentationIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[31]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2207,7 +2383,7 @@ func (x *CreateSegmentationIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSegmentationIn.ProtoReflect.Descriptor instead.
 func (*CreateSegmentationIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{31}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *CreateSegmentationIn) GetSegmentationGroupId() string {
@@ -2234,7 +2410,7 @@ type SegmentationPointCreate struct {
 
 func (x *SegmentationPointCreate) Reset() {
 	*x = SegmentationPointCreate{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[32]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2246,7 +2422,7 @@ func (x *SegmentationPointCreate) String() string {
 func (*SegmentationPointCreate) ProtoMessage() {}
 
 func (x *SegmentationPointCreate) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[32]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2259,7 +2435,7 @@ func (x *SegmentationPointCreate) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SegmentationPointCreate.ProtoReflect.Descriptor instead.
 func (*SegmentationPointCreate) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{32}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *SegmentationPointCreate) GetX() int32 {
@@ -2285,7 +2461,7 @@ type CreateSegmentationOut struct {
 
 func (x *CreateSegmentationOut) Reset() {
 	*x = CreateSegmentationOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[33]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2297,7 +2473,7 @@ func (x *CreateSegmentationOut) String() string {
 func (*CreateSegmentationOut) ProtoMessage() {}
 
 func (x *CreateSegmentationOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[33]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2310,7 +2486,7 @@ func (x *CreateSegmentationOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSegmentationOut.ProtoReflect.Descriptor instead.
 func (*CreateSegmentationOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{33}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *CreateSegmentationOut) GetId() string {
@@ -2329,7 +2505,7 @@ type GetSegmentationByIdIn struct {
 
 func (x *GetSegmentationByIdIn) Reset() {
 	*x = GetSegmentationByIdIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[34]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2341,7 +2517,7 @@ func (x *GetSegmentationByIdIn) String() string {
 func (*GetSegmentationByIdIn) ProtoMessage() {}
 
 func (x *GetSegmentationByIdIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[34]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2354,7 +2530,7 @@ func (x *GetSegmentationByIdIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSegmentationByIdIn.ProtoReflect.Descriptor instead.
 func (*GetSegmentationByIdIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{34}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *GetSegmentationByIdIn) GetId() string {
@@ -2373,7 +2549,7 @@ type GetSegmentationByIdOut struct {
 
 func (x *GetSegmentationByIdOut) Reset() {
 	*x = GetSegmentationByIdOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[35]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2385,7 +2561,7 @@ func (x *GetSegmentationByIdOut) String() string {
 func (*GetSegmentationByIdOut) ProtoMessage() {}
 
 func (x *GetSegmentationByIdOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[35]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2398,7 +2574,7 @@ func (x *GetSegmentationByIdOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSegmentationByIdOut.ProtoReflect.Descriptor instead.
 func (*GetSegmentationByIdOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{35}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *GetSegmentationByIdOut) GetSegmentation() *Segmentation {
@@ -2417,7 +2593,7 @@ type GetSegmentsByGroupIdIn struct {
 
 func (x *GetSegmentsByGroupIdIn) Reset() {
 	*x = GetSegmentsByGroupIdIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[36]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2429,7 +2605,7 @@ func (x *GetSegmentsByGroupIdIn) String() string {
 func (*GetSegmentsByGroupIdIn) ProtoMessage() {}
 
 func (x *GetSegmentsByGroupIdIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[36]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2442,7 +2618,7 @@ func (x *GetSegmentsByGroupIdIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSegmentsByGroupIdIn.ProtoReflect.Descriptor instead.
 func (*GetSegmentsByGroupIdIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{36}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *GetSegmentsByGroupIdIn) GetSegmentationGroupId() string {
@@ -2461,7 +2637,7 @@ type GetSegmentsByGroupIdOut struct {
 
 func (x *GetSegmentsByGroupIdOut) Reset() {
 	*x = GetSegmentsByGroupIdOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[37]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2473,7 +2649,7 @@ func (x *GetSegmentsByGroupIdOut) String() string {
 func (*GetSegmentsByGroupIdOut) ProtoMessage() {}
 
 func (x *GetSegmentsByGroupIdOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[37]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2486,7 +2662,7 @@ func (x *GetSegmentsByGroupIdOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSegmentsByGroupIdOut.ProtoReflect.Descriptor instead.
 func (*GetSegmentsByGroupIdOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{37}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetSegmentsByGroupIdOut) GetSegmentations() []*Segmentation {
@@ -2506,7 +2682,7 @@ type UpdateSegmentationIn struct {
 
 func (x *UpdateSegmentationIn) Reset() {
 	*x = UpdateSegmentationIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[38]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2518,7 +2694,7 @@ func (x *UpdateSegmentationIn) String() string {
 func (*UpdateSegmentationIn) ProtoMessage() {}
 
 func (x *UpdateSegmentationIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[38]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2531,7 +2707,7 @@ func (x *UpdateSegmentationIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSegmentationIn.ProtoReflect.Descriptor instead.
 func (*UpdateSegmentationIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{38}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *UpdateSegmentationIn) GetId() string {
@@ -2557,7 +2733,7 @@ type UpdateSegmentationOut struct {
 
 func (x *UpdateSegmentationOut) Reset() {
 	*x = UpdateSegmentationOut{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[39]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2569,7 +2745,7 @@ func (x *UpdateSegmentationOut) String() string {
 func (*UpdateSegmentationOut) ProtoMessage() {}
 
 func (x *UpdateSegmentationOut) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[39]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2582,7 +2758,7 @@ func (x *UpdateSegmentationOut) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateSegmentationOut.ProtoReflect.Descriptor instead.
 func (*UpdateSegmentationOut) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{39}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *UpdateSegmentationOut) GetSegmentation() *Segmentation {
@@ -2601,7 +2777,7 @@ type DeleteSegmentationIn struct {
 
 func (x *DeleteSegmentationIn) Reset() {
 	*x = DeleteSegmentationIn{}
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[40]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2613,7 +2789,7 @@ func (x *DeleteSegmentationIn) String() string {
 func (*DeleteSegmentationIn) ProtoMessage() {}
 
 func (x *DeleteSegmentationIn) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[40]
+	mi := &file_proto_grpc_clients_cytology_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2626,7 +2802,7 @@ func (x *DeleteSegmentationIn) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteSegmentationIn.ProtoReflect.Descriptor instead.
 func (*DeleteSegmentationIn) Descriptor() ([]byte, []int) {
-	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{40}
+	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *DeleteSegmentationIn) GetId() string {
@@ -2743,7 +2919,15 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x16UpdateCytologyImageOut\x125\n" +
 	"\x0ecytology_image\x18d \x01(\v2\x0e.CytologyImageR\rcytologyImage\"'\n" +
 	"\x15DeleteCytologyImageIn\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\"\xd9\x01\n" +
+	"\x02id\x18d \x01(\tR\x02id\"%\n" +
+	"\x13CopyCytologyImageIn\x12\x0e\n" +
+	"\x02id\x18d \x01(\tR\x02id\"M\n" +
+	"\x14CopyCytologyImageOut\x125\n" +
+	"\x0ecytology_image\x18d \x01(\v2\x0e.CytologyImageR\rcytologyImage\"+\n" +
+	"\x19GetCytologyImageHistoryIn\x12\x0e\n" +
+	"\x02id\x18d \x01(\tR\x02id\"U\n" +
+	"\x1aGetCytologyImageHistoryOut\x127\n" +
+	"\x0fcytology_images\x18d \x03(\v2\x0e.CytologyImageR\x0ecytologyImages\"\xd9\x01\n" +
 	"\rOriginalImage\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\x12 \n" +
 	"\vcytology_id\x18\xc8\x01 \x01(\tR\n" +
@@ -2904,14 +3088,16 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x16GROUP_TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
 	"\rGROUP_TYPE_CE\x10\x01\x12\x11\n" +
 	"\rGROUP_TYPE_CL\x10\x02\x12\x11\n" +
-	"\rGROUP_TYPE_ME\x10\x032\xa6\f\n" +
+	"\rGROUP_TYPE_ME\x10\x032\xbc\r\n" +
 	"\vCytologySrv\x12F\n" +
 	"\x13CreateCytologyImage\x12\x16.CreateCytologyImageIn\x1a\x17.CreateCytologyImageOut\x12I\n" +
 	"\x14GetCytologyImageById\x12\x17.GetCytologyImageByIdIn\x1a\x18.GetCytologyImageByIdOut\x12d\n" +
 	"\x1dGetCytologyImagesByExternalId\x12 .GetCytologyImagesByExternalIdIn\x1a!.GetCytologyImagesByExternalIdOut\x12\x82\x01\n" +
 	"'GetCytologyImagesByDoctorIdAndPatientId\x12*.GetCytologyImagesByDoctorIdAndPatientIdIn\x1a+.GetCytologyImagesByDoctorIdAndPatientIdOut\x12F\n" +
 	"\x13UpdateCytologyImage\x12\x16.UpdateCytologyImageIn\x1a\x17.UpdateCytologyImageOut\x12E\n" +
-	"\x13DeleteCytologyImage\x12\x16.DeleteCytologyImageIn\x1a\x16.google.protobuf.Empty\x12F\n" +
+	"\x13DeleteCytologyImage\x12\x16.DeleteCytologyImageIn\x1a\x16.google.protobuf.Empty\x12@\n" +
+	"\x11CopyCytologyImage\x12\x14.CopyCytologyImageIn\x1a\x15.CopyCytologyImageOut\x12R\n" +
+	"\x17GetCytologyImageHistory\x12\x1a.GetCytologyImageHistoryIn\x1a\x1b.GetCytologyImageHistoryOut\x12F\n" +
 	"\x13CreateOriginalImage\x12\x16.CreateOriginalImageIn\x1a\x17.CreateOriginalImageOut\x12I\n" +
 	"\x14GetOriginalImageById\x12\x17.GetOriginalImageByIdIn\x1a\x18.GetOriginalImageByIdOut\x12d\n" +
 	"\x1dGetOriginalImagesByCytologyId\x12 .GetOriginalImagesByCytologyIdIn\x1a!.GetOriginalImagesByCytologyIdOut\x12F\n" +
@@ -2924,7 +3110,7 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x13GetSegmentationById\x12\x16.GetSegmentationByIdIn\x1a\x17.GetSegmentationByIdOut\x12I\n" +
 	"\x14GetSegmentsByGroupId\x12\x17.GetSegmentsByGroupIdIn\x1a\x18.GetSegmentsByGroupIdOut\x12C\n" +
 	"\x12UpdateSegmentation\x12\x15.UpdateSegmentationIn\x1a\x16.UpdateSegmentationOut\x12C\n" +
-	"\x12DeleteSegmentation\x12\x15.DeleteSegmentationIn\x1a\x16.google.protobuf.EmptyB*Z(internal/generated/grpc/clients/cytologyb\x06proto3"
+	"\x12DeleteSegmentation\x12\x15.DeleteSegmentationIn\x1a\x16.google.protobuf.EmptyB!Z\x1finternal/generated/grpc/serviceb\x06proto3"
 
 var (
 	file_proto_grpc_clients_cytology_proto_rawDescOnce sync.Once
@@ -2939,7 +3125,7 @@ func file_proto_grpc_clients_cytology_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_grpc_clients_cytology_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_proto_grpc_clients_cytology_proto_msgTypes = make([]protoimpl.MessageInfo, 41)
+var file_proto_grpc_clients_cytology_proto_msgTypes = make([]protoimpl.MessageInfo, 45)
 var file_proto_grpc_clients_cytology_proto_goTypes = []any{
 	(DiagnosticMarking)(0),                             // 0: DiagnosticMarking
 	(MaterialType)(0),                                  // 1: MaterialType
@@ -2957,36 +3143,40 @@ var file_proto_grpc_clients_cytology_proto_goTypes = []any{
 	(*UpdateCytologyImageIn)(nil),                      // 13: UpdateCytologyImageIn
 	(*UpdateCytologyImageOut)(nil),                     // 14: UpdateCytologyImageOut
 	(*DeleteCytologyImageIn)(nil),                      // 15: DeleteCytologyImageIn
-	(*OriginalImage)(nil),                              // 16: OriginalImage
-	(*CreateOriginalImageIn)(nil),                      // 17: CreateOriginalImageIn
-	(*CreateOriginalImageOut)(nil),                     // 18: CreateOriginalImageOut
-	(*GetOriginalImageByIdIn)(nil),                     // 19: GetOriginalImageByIdIn
-	(*GetOriginalImageByIdOut)(nil),                    // 20: GetOriginalImageByIdOut
-	(*GetOriginalImagesByCytologyIdIn)(nil),            // 21: GetOriginalImagesByCytologyIdIn
-	(*GetOriginalImagesByCytologyIdOut)(nil),           // 22: GetOriginalImagesByCytologyIdOut
-	(*UpdateOriginalImageIn)(nil),                      // 23: UpdateOriginalImageIn
-	(*UpdateOriginalImageOut)(nil),                     // 24: UpdateOriginalImageOut
-	(*SegmentationGroup)(nil),                          // 25: SegmentationGroup
-	(*CreateSegmentationGroupIn)(nil),                  // 26: CreateSegmentationGroupIn
-	(*CreateSegmentationGroupOut)(nil),                 // 27: CreateSegmentationGroupOut
-	(*GetSegmentationGroupsByCytologyIdIn)(nil),        // 28: GetSegmentationGroupsByCytologyIdIn
-	(*GetSegmentationGroupsByCytologyIdOut)(nil),       // 29: GetSegmentationGroupsByCytologyIdOut
-	(*UpdateSegmentationGroupIn)(nil),                  // 30: UpdateSegmentationGroupIn
-	(*UpdateSegmentationGroupOut)(nil),                 // 31: UpdateSegmentationGroupOut
-	(*DeleteSegmentationGroupIn)(nil),                  // 32: DeleteSegmentationGroupIn
-	(*SegmentationPoint)(nil),                          // 33: SegmentationPoint
-	(*Segmentation)(nil),                               // 34: Segmentation
-	(*CreateSegmentationIn)(nil),                       // 35: CreateSegmentationIn
-	(*SegmentationPointCreate)(nil),                    // 36: SegmentationPointCreate
-	(*CreateSegmentationOut)(nil),                      // 37: CreateSegmentationOut
-	(*GetSegmentationByIdIn)(nil),                      // 38: GetSegmentationByIdIn
-	(*GetSegmentationByIdOut)(nil),                     // 39: GetSegmentationByIdOut
-	(*GetSegmentsByGroupIdIn)(nil),                     // 40: GetSegmentsByGroupIdIn
-	(*GetSegmentsByGroupIdOut)(nil),                    // 41: GetSegmentsByGroupIdOut
-	(*UpdateSegmentationIn)(nil),                       // 42: UpdateSegmentationIn
-	(*UpdateSegmentationOut)(nil),                      // 43: UpdateSegmentationOut
-	(*DeleteSegmentationIn)(nil),                       // 44: DeleteSegmentationIn
-	(*emptypb.Empty)(nil),                              // 45: google.protobuf.Empty
+	(*CopyCytologyImageIn)(nil),                        // 16: CopyCytologyImageIn
+	(*CopyCytologyImageOut)(nil),                       // 17: CopyCytologyImageOut
+	(*GetCytologyImageHistoryIn)(nil),                  // 18: GetCytologyImageHistoryIn
+	(*GetCytologyImageHistoryOut)(nil),                 // 19: GetCytologyImageHistoryOut
+	(*OriginalImage)(nil),                              // 20: OriginalImage
+	(*CreateOriginalImageIn)(nil),                      // 21: CreateOriginalImageIn
+	(*CreateOriginalImageOut)(nil),                     // 22: CreateOriginalImageOut
+	(*GetOriginalImageByIdIn)(nil),                     // 23: GetOriginalImageByIdIn
+	(*GetOriginalImageByIdOut)(nil),                    // 24: GetOriginalImageByIdOut
+	(*GetOriginalImagesByCytologyIdIn)(nil),            // 25: GetOriginalImagesByCytologyIdIn
+	(*GetOriginalImagesByCytologyIdOut)(nil),           // 26: GetOriginalImagesByCytologyIdOut
+	(*UpdateOriginalImageIn)(nil),                      // 27: UpdateOriginalImageIn
+	(*UpdateOriginalImageOut)(nil),                     // 28: UpdateOriginalImageOut
+	(*SegmentationGroup)(nil),                          // 29: SegmentationGroup
+	(*CreateSegmentationGroupIn)(nil),                  // 30: CreateSegmentationGroupIn
+	(*CreateSegmentationGroupOut)(nil),                 // 31: CreateSegmentationGroupOut
+	(*GetSegmentationGroupsByCytologyIdIn)(nil),        // 32: GetSegmentationGroupsByCytologyIdIn
+	(*GetSegmentationGroupsByCytologyIdOut)(nil),       // 33: GetSegmentationGroupsByCytologyIdOut
+	(*UpdateSegmentationGroupIn)(nil),                  // 34: UpdateSegmentationGroupIn
+	(*UpdateSegmentationGroupOut)(nil),                 // 35: UpdateSegmentationGroupOut
+	(*DeleteSegmentationGroupIn)(nil),                  // 36: DeleteSegmentationGroupIn
+	(*SegmentationPoint)(nil),                          // 37: SegmentationPoint
+	(*Segmentation)(nil),                               // 38: Segmentation
+	(*CreateSegmentationIn)(nil),                       // 39: CreateSegmentationIn
+	(*SegmentationPointCreate)(nil),                    // 40: SegmentationPointCreate
+	(*CreateSegmentationOut)(nil),                      // 41: CreateSegmentationOut
+	(*GetSegmentationByIdIn)(nil),                      // 42: GetSegmentationByIdIn
+	(*GetSegmentationByIdOut)(nil),                     // 43: GetSegmentationByIdOut
+	(*GetSegmentsByGroupIdIn)(nil),                     // 44: GetSegmentsByGroupIdIn
+	(*GetSegmentsByGroupIdOut)(nil),                    // 45: GetSegmentsByGroupIdOut
+	(*UpdateSegmentationIn)(nil),                       // 46: UpdateSegmentationIn
+	(*UpdateSegmentationOut)(nil),                      // 47: UpdateSegmentationOut
+	(*DeleteSegmentationIn)(nil),                       // 48: DeleteSegmentationIn
+	(*emptypb.Empty)(nil),                              // 49: google.protobuf.Empty
 }
 var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	0,  // 0: CytologyImage.diagnostic_marking:type_name -> DiagnosticMarking
@@ -2994,73 +3184,79 @@ var file_proto_grpc_clients_cytology_proto_depIdxs = []int32{
 	0,  // 2: CreateCytologyImageIn.diagnostic_marking:type_name -> DiagnosticMarking
 	1,  // 3: CreateCytologyImageIn.material_type:type_name -> MaterialType
 	4,  // 4: GetCytologyImageByIdOut.cytology_image:type_name -> CytologyImage
-	16, // 5: GetCytologyImageByIdOut.original_image:type_name -> OriginalImage
+	20, // 5: GetCytologyImageByIdOut.original_image:type_name -> OriginalImage
 	4,  // 6: GetCytologyImagesByExternalIdOut.cytology_images:type_name -> CytologyImage
 	4,  // 7: GetCytologyImagesByDoctorIdAndPatientIdOut.cytology_images:type_name -> CytologyImage
 	0,  // 8: UpdateCytologyImageIn.diagnostic_marking:type_name -> DiagnosticMarking
 	1,  // 9: UpdateCytologyImageIn.material_type:type_name -> MaterialType
 	4,  // 10: UpdateCytologyImageOut.cytology_image:type_name -> CytologyImage
-	16, // 11: GetOriginalImageByIdOut.original_image:type_name -> OriginalImage
-	16, // 12: GetOriginalImagesByCytologyIdOut.original_images:type_name -> OriginalImage
-	16, // 13: UpdateOriginalImageOut.original_image:type_name -> OriginalImage
-	2,  // 14: SegmentationGroup.seg_type:type_name -> SegType
-	3,  // 15: SegmentationGroup.group_type:type_name -> GroupType
-	2,  // 16: CreateSegmentationGroupIn.seg_type:type_name -> SegType
-	3,  // 17: CreateSegmentationGroupIn.group_type:type_name -> GroupType
-	2,  // 18: GetSegmentationGroupsByCytologyIdIn.seg_type:type_name -> SegType
-	3,  // 19: GetSegmentationGroupsByCytologyIdIn.group_type:type_name -> GroupType
-	25, // 20: GetSegmentationGroupsByCytologyIdOut.segmentation_groups:type_name -> SegmentationGroup
-	2,  // 21: UpdateSegmentationGroupIn.seg_type:type_name -> SegType
-	25, // 22: UpdateSegmentationGroupOut.segmentation_group:type_name -> SegmentationGroup
-	33, // 23: Segmentation.points:type_name -> SegmentationPoint
-	36, // 24: CreateSegmentationIn.points:type_name -> SegmentationPointCreate
-	34, // 25: GetSegmentationByIdOut.segmentation:type_name -> Segmentation
-	34, // 26: GetSegmentsByGroupIdOut.segmentations:type_name -> Segmentation
-	36, // 27: UpdateSegmentationIn.points:type_name -> SegmentationPointCreate
-	34, // 28: UpdateSegmentationOut.segmentation:type_name -> Segmentation
-	5,  // 29: CytologySrv.CreateCytologyImage:input_type -> CreateCytologyImageIn
-	7,  // 30: CytologySrv.GetCytologyImageById:input_type -> GetCytologyImageByIdIn
-	9,  // 31: CytologySrv.GetCytologyImagesByExternalId:input_type -> GetCytologyImagesByExternalIdIn
-	11, // 32: CytologySrv.GetCytologyImagesByDoctorIdAndPatientId:input_type -> GetCytologyImagesByDoctorIdAndPatientIdIn
-	13, // 33: CytologySrv.UpdateCytologyImage:input_type -> UpdateCytologyImageIn
-	15, // 34: CytologySrv.DeleteCytologyImage:input_type -> DeleteCytologyImageIn
-	17, // 35: CytologySrv.CreateOriginalImage:input_type -> CreateOriginalImageIn
-	19, // 36: CytologySrv.GetOriginalImageById:input_type -> GetOriginalImageByIdIn
-	21, // 37: CytologySrv.GetOriginalImagesByCytologyId:input_type -> GetOriginalImagesByCytologyIdIn
-	23, // 38: CytologySrv.UpdateOriginalImage:input_type -> UpdateOriginalImageIn
-	26, // 39: CytologySrv.CreateSegmentationGroup:input_type -> CreateSegmentationGroupIn
-	28, // 40: CytologySrv.GetSegmentationGroupsByCytologyId:input_type -> GetSegmentationGroupsByCytologyIdIn
-	30, // 41: CytologySrv.UpdateSegmentationGroup:input_type -> UpdateSegmentationGroupIn
-	32, // 42: CytologySrv.DeleteSegmentationGroup:input_type -> DeleteSegmentationGroupIn
-	35, // 43: CytologySrv.CreateSegmentation:input_type -> CreateSegmentationIn
-	38, // 44: CytologySrv.GetSegmentationById:input_type -> GetSegmentationByIdIn
-	40, // 45: CytologySrv.GetSegmentsByGroupId:input_type -> GetSegmentsByGroupIdIn
-	42, // 46: CytologySrv.UpdateSegmentation:input_type -> UpdateSegmentationIn
-	44, // 47: CytologySrv.DeleteSegmentation:input_type -> DeleteSegmentationIn
-	6,  // 48: CytologySrv.CreateCytologyImage:output_type -> CreateCytologyImageOut
-	8,  // 49: CytologySrv.GetCytologyImageById:output_type -> GetCytologyImageByIdOut
-	10, // 50: CytologySrv.GetCytologyImagesByExternalId:output_type -> GetCytologyImagesByExternalIdOut
-	12, // 51: CytologySrv.GetCytologyImagesByDoctorIdAndPatientId:output_type -> GetCytologyImagesByDoctorIdAndPatientIdOut
-	14, // 52: CytologySrv.UpdateCytologyImage:output_type -> UpdateCytologyImageOut
-	45, // 53: CytologySrv.DeleteCytologyImage:output_type -> google.protobuf.Empty
-	18, // 54: CytologySrv.CreateOriginalImage:output_type -> CreateOriginalImageOut
-	20, // 55: CytologySrv.GetOriginalImageById:output_type -> GetOriginalImageByIdOut
-	22, // 56: CytologySrv.GetOriginalImagesByCytologyId:output_type -> GetOriginalImagesByCytologyIdOut
-	24, // 57: CytologySrv.UpdateOriginalImage:output_type -> UpdateOriginalImageOut
-	27, // 58: CytologySrv.CreateSegmentationGroup:output_type -> CreateSegmentationGroupOut
-	29, // 59: CytologySrv.GetSegmentationGroupsByCytologyId:output_type -> GetSegmentationGroupsByCytologyIdOut
-	31, // 60: CytologySrv.UpdateSegmentationGroup:output_type -> UpdateSegmentationGroupOut
-	45, // 61: CytologySrv.DeleteSegmentationGroup:output_type -> google.protobuf.Empty
-	37, // 62: CytologySrv.CreateSegmentation:output_type -> CreateSegmentationOut
-	39, // 63: CytologySrv.GetSegmentationById:output_type -> GetSegmentationByIdOut
-	41, // 64: CytologySrv.GetSegmentsByGroupId:output_type -> GetSegmentsByGroupIdOut
-	43, // 65: CytologySrv.UpdateSegmentation:output_type -> UpdateSegmentationOut
-	45, // 66: CytologySrv.DeleteSegmentation:output_type -> google.protobuf.Empty
-	48, // [48:67] is the sub-list for method output_type
-	29, // [29:48] is the sub-list for method input_type
-	29, // [29:29] is the sub-list for extension type_name
-	29, // [29:29] is the sub-list for extension extendee
-	0,  // [0:29] is the sub-list for field type_name
+	4,  // 11: CopyCytologyImageOut.cytology_image:type_name -> CytologyImage
+	4,  // 12: GetCytologyImageHistoryOut.cytology_images:type_name -> CytologyImage
+	20, // 13: GetOriginalImageByIdOut.original_image:type_name -> OriginalImage
+	20, // 14: GetOriginalImagesByCytologyIdOut.original_images:type_name -> OriginalImage
+	20, // 15: UpdateOriginalImageOut.original_image:type_name -> OriginalImage
+	2,  // 16: SegmentationGroup.seg_type:type_name -> SegType
+	3,  // 17: SegmentationGroup.group_type:type_name -> GroupType
+	2,  // 18: CreateSegmentationGroupIn.seg_type:type_name -> SegType
+	3,  // 19: CreateSegmentationGroupIn.group_type:type_name -> GroupType
+	2,  // 20: GetSegmentationGroupsByCytologyIdIn.seg_type:type_name -> SegType
+	3,  // 21: GetSegmentationGroupsByCytologyIdIn.group_type:type_name -> GroupType
+	29, // 22: GetSegmentationGroupsByCytologyIdOut.segmentation_groups:type_name -> SegmentationGroup
+	2,  // 23: UpdateSegmentationGroupIn.seg_type:type_name -> SegType
+	29, // 24: UpdateSegmentationGroupOut.segmentation_group:type_name -> SegmentationGroup
+	37, // 25: Segmentation.points:type_name -> SegmentationPoint
+	40, // 26: CreateSegmentationIn.points:type_name -> SegmentationPointCreate
+	38, // 27: GetSegmentationByIdOut.segmentation:type_name -> Segmentation
+	38, // 28: GetSegmentsByGroupIdOut.segmentations:type_name -> Segmentation
+	40, // 29: UpdateSegmentationIn.points:type_name -> SegmentationPointCreate
+	38, // 30: UpdateSegmentationOut.segmentation:type_name -> Segmentation
+	5,  // 31: CytologySrv.CreateCytologyImage:input_type -> CreateCytologyImageIn
+	7,  // 32: CytologySrv.GetCytologyImageById:input_type -> GetCytologyImageByIdIn
+	9,  // 33: CytologySrv.GetCytologyImagesByExternalId:input_type -> GetCytologyImagesByExternalIdIn
+	11, // 34: CytologySrv.GetCytologyImagesByDoctorIdAndPatientId:input_type -> GetCytologyImagesByDoctorIdAndPatientIdIn
+	13, // 35: CytologySrv.UpdateCytologyImage:input_type -> UpdateCytologyImageIn
+	15, // 36: CytologySrv.DeleteCytologyImage:input_type -> DeleteCytologyImageIn
+	16, // 37: CytologySrv.CopyCytologyImage:input_type -> CopyCytologyImageIn
+	18, // 38: CytologySrv.GetCytologyImageHistory:input_type -> GetCytologyImageHistoryIn
+	21, // 39: CytologySrv.CreateOriginalImage:input_type -> CreateOriginalImageIn
+	23, // 40: CytologySrv.GetOriginalImageById:input_type -> GetOriginalImageByIdIn
+	25, // 41: CytologySrv.GetOriginalImagesByCytologyId:input_type -> GetOriginalImagesByCytologyIdIn
+	27, // 42: CytologySrv.UpdateOriginalImage:input_type -> UpdateOriginalImageIn
+	30, // 43: CytologySrv.CreateSegmentationGroup:input_type -> CreateSegmentationGroupIn
+	32, // 44: CytologySrv.GetSegmentationGroupsByCytologyId:input_type -> GetSegmentationGroupsByCytologyIdIn
+	34, // 45: CytologySrv.UpdateSegmentationGroup:input_type -> UpdateSegmentationGroupIn
+	36, // 46: CytologySrv.DeleteSegmentationGroup:input_type -> DeleteSegmentationGroupIn
+	39, // 47: CytologySrv.CreateSegmentation:input_type -> CreateSegmentationIn
+	42, // 48: CytologySrv.GetSegmentationById:input_type -> GetSegmentationByIdIn
+	44, // 49: CytologySrv.GetSegmentsByGroupId:input_type -> GetSegmentsByGroupIdIn
+	46, // 50: CytologySrv.UpdateSegmentation:input_type -> UpdateSegmentationIn
+	48, // 51: CytologySrv.DeleteSegmentation:input_type -> DeleteSegmentationIn
+	6,  // 52: CytologySrv.CreateCytologyImage:output_type -> CreateCytologyImageOut
+	8,  // 53: CytologySrv.GetCytologyImageById:output_type -> GetCytologyImageByIdOut
+	10, // 54: CytologySrv.GetCytologyImagesByExternalId:output_type -> GetCytologyImagesByExternalIdOut
+	12, // 55: CytologySrv.GetCytologyImagesByDoctorIdAndPatientId:output_type -> GetCytologyImagesByDoctorIdAndPatientIdOut
+	14, // 56: CytologySrv.UpdateCytologyImage:output_type -> UpdateCytologyImageOut
+	49, // 57: CytologySrv.DeleteCytologyImage:output_type -> google.protobuf.Empty
+	17, // 58: CytologySrv.CopyCytologyImage:output_type -> CopyCytologyImageOut
+	19, // 59: CytologySrv.GetCytologyImageHistory:output_type -> GetCytologyImageHistoryOut
+	22, // 60: CytologySrv.CreateOriginalImage:output_type -> CreateOriginalImageOut
+	24, // 61: CytologySrv.GetOriginalImageById:output_type -> GetOriginalImageByIdOut
+	26, // 62: CytologySrv.GetOriginalImagesByCytologyId:output_type -> GetOriginalImagesByCytologyIdOut
+	28, // 63: CytologySrv.UpdateOriginalImage:output_type -> UpdateOriginalImageOut
+	31, // 64: CytologySrv.CreateSegmentationGroup:output_type -> CreateSegmentationGroupOut
+	33, // 65: CytologySrv.GetSegmentationGroupsByCytologyId:output_type -> GetSegmentationGroupsByCytologyIdOut
+	35, // 66: CytologySrv.UpdateSegmentationGroup:output_type -> UpdateSegmentationGroupOut
+	49, // 67: CytologySrv.DeleteSegmentationGroup:output_type -> google.protobuf.Empty
+	41, // 68: CytologySrv.CreateSegmentation:output_type -> CreateSegmentationOut
+	43, // 69: CytologySrv.GetSegmentationById:output_type -> GetSegmentationByIdOut
+	45, // 70: CytologySrv.GetSegmentsByGroupId:output_type -> GetSegmentsByGroupIdOut
+	47, // 71: CytologySrv.UpdateSegmentation:output_type -> UpdateSegmentationOut
+	49, // 72: CytologySrv.DeleteSegmentation:output_type -> google.protobuf.Empty
+	52, // [52:73] is the sub-list for method output_type
+	31, // [31:52] is the sub-list for method input_type
+	31, // [31:31] is the sub-list for extension type_name
+	31, // [31:31] is the sub-list for extension extendee
+	0,  // [0:31] is the sub-list for field type_name
 }
 
 func init() { file_proto_grpc_clients_cytology_proto_init() }
@@ -3072,20 +3268,20 @@ func file_proto_grpc_clients_cytology_proto_init() {
 	file_proto_grpc_clients_cytology_proto_msgTypes[1].OneofWrappers = []any{}
 	file_proto_grpc_clients_cytology_proto_msgTypes[4].OneofWrappers = []any{}
 	file_proto_grpc_clients_cytology_proto_msgTypes[9].OneofWrappers = []any{}
-	file_proto_grpc_clients_cytology_proto_msgTypes[12].OneofWrappers = []any{}
-	file_proto_grpc_clients_cytology_proto_msgTypes[13].OneofWrappers = []any{}
-	file_proto_grpc_clients_cytology_proto_msgTypes[19].OneofWrappers = []any{}
-	file_proto_grpc_clients_cytology_proto_msgTypes[21].OneofWrappers = []any{}
-	file_proto_grpc_clients_cytology_proto_msgTypes[22].OneofWrappers = []any{}
-	file_proto_grpc_clients_cytology_proto_msgTypes[24].OneofWrappers = []any{}
+	file_proto_grpc_clients_cytology_proto_msgTypes[16].OneofWrappers = []any{}
+	file_proto_grpc_clients_cytology_proto_msgTypes[17].OneofWrappers = []any{}
+	file_proto_grpc_clients_cytology_proto_msgTypes[23].OneofWrappers = []any{}
+	file_proto_grpc_clients_cytology_proto_msgTypes[25].OneofWrappers = []any{}
 	file_proto_grpc_clients_cytology_proto_msgTypes[26].OneofWrappers = []any{}
+	file_proto_grpc_clients_cytology_proto_msgTypes[28].OneofWrappers = []any{}
+	file_proto_grpc_clients_cytology_proto_msgTypes[30].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_grpc_clients_cytology_proto_rawDesc), len(file_proto_grpc_clients_cytology_proto_rawDesc)),
 			NumEnums:      4,
-			NumMessages:   41,
+			NumMessages:   45,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -313,119 +313,1306 @@ func (s *ContorItem) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes CytologiesExternalIDGetOKApplicationJSON as json.
-func (s CytologiesExternalIDGetOKApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := []CytologyImage(s)
-
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
-	}
-	e.ArrEnd()
-}
-
-// Decode decodes CytologiesExternalIDGetOKApplicationJSON from json.
-func (s *CytologiesExternalIDGetOKApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologiesExternalIDGetOKApplicationJSON to nil")
-	}
-	var unwrapped []CytologyImage
-	if err := func() error {
-		unwrapped = make([]CytologyImage, 0)
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem CytologyImage
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = CytologiesExternalIDGetOKApplicationJSON(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologiesExternalIDGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologiesExternalIDGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON as json.
-func (s CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := []CytologyImage(s)
-
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
-	}
-	e.ArrEnd()
-}
-
-// Decode decodes CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON from json.
-func (s *CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON to nil")
-	}
-	var unwrapped []CytologyImage
-	if err := func() error {
-		unwrapped = make([]CytologyImage, 0)
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem CytologyImage
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologiesPatientCardDoctorIDPatientIDGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode implements json.Marshaler.
-func (s *CytologyIDGetOK) Encode(e *jx.Encoder) {
+func (s *CytologyCopyCreateCreated) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyIDGetOK) encodeFields(e *jx.Encoder) {
+func (s *CytologyCopyCreateCreated) encodeFields(e *jx.Encoder) {
 	{
-		if s.CytologyImage.Set {
-			e.FieldStart("cytology_image")
-			s.CytologyImage.Encode(e)
+		if s.Pk.Set {
+			e.FieldStart("pk")
+			s.Pk.Encode(e)
+		}
+	}
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyCopyCreateCreated = [2]string{
+	0: "pk",
+	1: "id",
+}
+
+// Decode decodes CytologyCopyCreateCreated from json.
+func (s *CytologyCopyCreateCreated) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCopyCreateCreated to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "pk":
+			if err := func() error {
+				s.Pk.Reset()
+				if err := s.Pk.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"pk\"")
+			}
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyCopyCreateCreated")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyCopyCreateCreated) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCopyCreateCreated) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyCopyCreateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyCopyCreateReq) encodeFields(e *jx.Encoder) {
+	{
+		if s.Pk.Set {
+			e.FieldStart("pk")
+			s.Pk.Encode(e)
+		}
+	}
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyCopyCreateReq = [2]string{
+	0: "pk",
+	1: "id",
+}
+
+// Decode decodes CytologyCopyCreateReq from json.
+func (s *CytologyCopyCreateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCopyCreateReq to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "pk":
+			if err := func() error {
+				s.Pk.Reset()
+				if err := s.Pk.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"pk\"")
+			}
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyCopyCreateReq")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyCopyCreateReq) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCopyCreateReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyCreateCreateCreated) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyCreateCreateCreated) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		if s.Image.Set {
+			e.FieldStart("image")
+			s.Image.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.PatientCard.Set {
+			e.FieldStart("patient_card")
+			s.PatientCard.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyCreateCreateCreated = [14]string{
+	0:  "id",
+	1:  "image",
+	2:  "is_last",
+	3:  "diagnos_date",
+	4:  "details",
+	5:  "diagnostic_marking",
+	6:  "diagnostic_number",
+	7:  "material_type",
+	8:  "calcitonin",
+	9:  "calcitonin_in_flush",
+	10: "thyroglobulin",
+	11: "prev",
+	12: "parent_prev",
+	13: "patient_card",
+}
+
+// Decode decodes CytologyCreateCreateCreated from json.
+func (s *CytologyCreateCreateCreated) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateCreated to nil")
+	}
+	var requiredBitSet [2]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "image":
+			if err := func() error {
+				s.Image.Reset()
+				if err := s.Image.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"image\"")
+			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details = nil
+				var elem CytologyCreateCreateCreatedDetails
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Details = &elem
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "patient_card":
+			if err := func() error {
+				s.PatientCard.Reset()
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyCreateCreateCreated")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [2]uint8{
+		0b01000000,
+		0b00000000,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyCreateCreateCreated) {
+					name = jsonFieldsNameOfCytologyCreateCreateCreated[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyCreateCreateCreated) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateCreated) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyCreateCreateCreatedDetails) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyCreateCreateCreatedDetails) encodeFields(e *jx.Encoder) {
+}
+
+var jsonFieldsNameOfCytologyCreateCreateCreatedDetails = [0]string{}
+
+// Decode decodes CytologyCreateCreateCreatedDetails from json.
+func (s *CytologyCreateCreateCreatedDetails) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateCreatedDetails to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		default:
+			return d.Skip()
+		}
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyCreateCreateCreatedDetails")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyCreateCreateCreatedDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateCreatedDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyCreateCreateCreatedDiagnosticMarking as json.
+func (s CytologyCreateCreateCreatedDiagnosticMarking) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyCreateCreateCreatedDiagnosticMarking from json.
+func (s *CytologyCreateCreateCreatedDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateCreatedDiagnosticMarking to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyCreateCreateCreatedDiagnosticMarking(v) {
+	case CytologyCreateCreateCreatedDiagnosticMarking11:
+		*s = CytologyCreateCreateCreatedDiagnosticMarking11
+	case CytologyCreateCreateCreatedDiagnosticMarking23:
+		*s = CytologyCreateCreateCreatedDiagnosticMarking23
+	default:
+		*s = CytologyCreateCreateCreatedDiagnosticMarking(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyCreateCreateCreatedDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateCreatedDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyCreateCreateCreatedMaterialType as json.
+func (s CytologyCreateCreateCreatedMaterialType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyCreateCreateCreatedMaterialType from json.
+func (s *CytologyCreateCreateCreatedMaterialType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateCreatedMaterialType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyCreateCreateCreatedMaterialType(v) {
+	case CytologyCreateCreateCreatedMaterialTypeGS:
+		*s = CytologyCreateCreateCreatedMaterialTypeGS
+	case CytologyCreateCreateCreatedMaterialTypeBP:
+		*s = CytologyCreateCreateCreatedMaterialTypeBP
+	case CytologyCreateCreateCreatedMaterialTypeTP:
+		*s = CytologyCreateCreateCreatedMaterialTypeTP
+	case CytologyCreateCreateCreatedMaterialTypePTP:
+		*s = CytologyCreateCreateCreatedMaterialTypePTP
+	case CytologyCreateCreateCreatedMaterialTypeLNP:
+		*s = CytologyCreateCreateCreatedMaterialTypeLNP
+	default:
+		*s = CytologyCreateCreateCreatedMaterialType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyCreateCreateCreatedMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateCreatedMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyCreateCreateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyCreateCreateReq) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		if s.Image.Set {
+			e.FieldStart("image")
+			s.Image.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.PatientCard.Set {
+			e.FieldStart("patient_card")
+			s.PatientCard.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyCreateCreateReq = [14]string{
+	0:  "id",
+	1:  "image",
+	2:  "is_last",
+	3:  "diagnos_date",
+	4:  "details",
+	5:  "diagnostic_marking",
+	6:  "diagnostic_number",
+	7:  "material_type",
+	8:  "calcitonin",
+	9:  "calcitonin_in_flush",
+	10: "thyroglobulin",
+	11: "prev",
+	12: "parent_prev",
+	13: "patient_card",
+}
+
+// Decode decodes CytologyCreateCreateReq from json.
+func (s *CytologyCreateCreateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateReq to nil")
+	}
+	var requiredBitSet [2]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "image":
+			if err := func() error {
+				s.Image.Reset()
+				if err := s.Image.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"image\"")
+			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details = nil
+				var elem CytologyCreateCreateReqDetails
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Details = &elem
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "patient_card":
+			if err := func() error {
+				s.PatientCard.Reset()
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyCreateCreateReq")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [2]uint8{
+		0b01000000,
+		0b00000000,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyCreateCreateReq) {
+					name = jsonFieldsNameOfCytologyCreateCreateReq[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyCreateCreateReq) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyCreateCreateReqDetails) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyCreateCreateReqDetails) encodeFields(e *jx.Encoder) {
+}
+
+var jsonFieldsNameOfCytologyCreateCreateReqDetails = [0]string{}
+
+// Decode decodes CytologyCreateCreateReqDetails from json.
+func (s *CytologyCreateCreateReqDetails) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateReqDetails to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		default:
+			return d.Skip()
+		}
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyCreateCreateReqDetails")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyCreateCreateReqDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateReqDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyCreateCreateReqDiagnosticMarking as json.
+func (s CytologyCreateCreateReqDiagnosticMarking) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyCreateCreateReqDiagnosticMarking from json.
+func (s *CytologyCreateCreateReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateReqDiagnosticMarking to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyCreateCreateReqDiagnosticMarking(v) {
+	case CytologyCreateCreateReqDiagnosticMarking11:
+		*s = CytologyCreateCreateReqDiagnosticMarking11
+	case CytologyCreateCreateReqDiagnosticMarking23:
+		*s = CytologyCreateCreateReqDiagnosticMarking23
+	default:
+		*s = CytologyCreateCreateReqDiagnosticMarking(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyCreateCreateReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyCreateCreateReqMaterialType as json.
+func (s CytologyCreateCreateReqMaterialType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyCreateCreateReqMaterialType from json.
+func (s *CytologyCreateCreateReqMaterialType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyCreateCreateReqMaterialType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyCreateCreateReqMaterialType(v) {
+	case CytologyCreateCreateReqMaterialTypeGS:
+		*s = CytologyCreateCreateReqMaterialTypeGS
+	case CytologyCreateCreateReqMaterialTypeBP:
+		*s = CytologyCreateCreateReqMaterialTypeBP
+	case CytologyCreateCreateReqMaterialTypeTP:
+		*s = CytologyCreateCreateReqMaterialTypeTP
+	case CytologyCreateCreateReqMaterialTypePTP:
+		*s = CytologyCreateCreateReqMaterialTypePTP
+	case CytologyCreateCreateReqMaterialTypeLNP:
+		*s = CytologyCreateCreateReqMaterialTypeLNP
+	default:
+		*s = CytologyCreateCreateReqMaterialType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyCreateCreateReqMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyCreateCreateReqMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyHistoryReadOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyHistoryReadOK) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("count")
+		e.Int(s.Count)
+	}
+	{
+		if s.Next.Set {
+			e.FieldStart("next")
+			s.Next.Encode(e)
+		}
+	}
+	{
+		if s.Previous.Set {
+			e.FieldStart("previous")
+			s.Previous.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("results")
+		e.ArrStart()
+		for _, elem := range s.Results {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+}
+
+var jsonFieldsNameOfCytologyHistoryReadOK = [4]string{
+	0: "count",
+	1: "next",
+	2: "previous",
+	3: "results",
+}
+
+// Decode decodes CytologyHistoryReadOK from json.
+func (s *CytologyHistoryReadOK) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyHistoryReadOK to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "count":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.Count = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"count\"")
+			}
+		case "next":
+			if err := func() error {
+				s.Next.Reset()
+				if err := s.Next.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"next\"")
+			}
+		case "previous":
+			if err := func() error {
+				s.Previous.Reset()
+				if err := s.Previous.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"previous\"")
+			}
+		case "results":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				s.Results = make([]CytologyHistoryReadOKResultsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologyHistoryReadOKResultsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Results = append(s.Results, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"results\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyHistoryReadOK")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00001001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyHistoryReadOK) {
+					name = jsonFieldsNameOfCytologyHistoryReadOK[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyHistoryReadOK) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyHistoryReadOK) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyHistoryReadOKResultsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyHistoryReadOKResultsItem) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.PatientCard.Set {
+			e.FieldStart("patient_card")
+			s.PatientCard.Encode(e)
 		}
 	}
 	{
@@ -436,28 +1623,165 @@ func (s *CytologyIDGetOK) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfCytologyIDGetOK = [2]string{
-	0: "cytology_image",
-	1: "original_image",
+var jsonFieldsNameOfCytologyHistoryReadOKResultsItem = [14]string{
+	0:  "id",
+	1:  "is_last",
+	2:  "diagnos_date",
+	3:  "details",
+	4:  "diagnostic_marking",
+	5:  "diagnostic_number",
+	6:  "material_type",
+	7:  "calcitonin",
+	8:  "calcitonin_in_flush",
+	9:  "thyroglobulin",
+	10: "prev",
+	11: "parent_prev",
+	12: "patient_card",
+	13: "original_image",
 }
 
-// Decode decodes CytologyIDGetOK from json.
-func (s *CytologyIDGetOK) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyHistoryReadOKResultsItem from json.
+func (s *CytologyHistoryReadOKResultsItem) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDGetOK to nil")
+		return errors.New("invalid: unable to decode CytologyHistoryReadOKResultsItem to nil")
 	}
+	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "cytology_image":
+		case "id":
 			if err := func() error {
-				s.CytologyImage.Reset()
-				if err := s.CytologyImage.Decode(d); err != nil {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"cytology_image\"")
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details = nil
+				var elem CytologyHistoryReadOKResultsItemDetails
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Details = &elem
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 5
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "patient_card":
+			if err := func() error {
+				s.PatientCard.Reset()
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
 			}
 		case "original_image":
 			if err := func() error {
@@ -474,259 +1798,75 @@ func (s *CytologyIDGetOK) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyIDGetOK")
+		return errors.Wrap(err, "decode CytologyHistoryReadOKResultsItem")
 	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyIDGetOK) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDGetOK) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologyIDOriginalImageGetOKApplicationJSON as json.
-func (s CytologyIDOriginalImageGetOKApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := []OriginalImage(s)
-
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
-	}
-	e.ArrEnd()
-}
-
-// Decode decodes CytologyIDOriginalImageGetOKApplicationJSON from json.
-func (s *CytologyIDOriginalImageGetOKApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDOriginalImageGetOKApplicationJSON to nil")
-	}
-	var unwrapped []OriginalImage
-	if err := func() error {
-		unwrapped = make([]OriginalImage, 0)
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem OriginalImage
-			if err := elem.Decode(d); err != nil {
-				return err
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [2]uint8{
+		0b00100000,
+		0b00000000,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyHistoryReadOKResultsItem) {
+					name = jsonFieldsNameOfCytologyHistoryReadOKResultsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
 			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
 		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
 	}
-	*s = CytologyIDOriginalImageGetOKApplicationJSON(unwrapped)
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologyIDOriginalImageGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s *CytologyHistoryReadOKResultsItem) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDOriginalImageGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *CytologyHistoryReadOKResultsItem) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyIDPatchReq) Encode(e *jx.Encoder) {
+func (s *CytologyHistoryReadOKResultsItemDetails) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyIDPatchReq) encodeFields(e *jx.Encoder) {
-	{
-		if s.DiagnosticMarking.Set {
-			e.FieldStart("diagnostic_marking")
-			s.DiagnosticMarking.Encode(e)
-		}
-	}
-	{
-		if s.MaterialType.Set {
-			e.FieldStart("material_type")
-			s.MaterialType.Encode(e)
-		}
-	}
-	{
-		if s.Calcitonin.Set {
-			e.FieldStart("calcitonin")
-			s.Calcitonin.Encode(e)
-		}
-	}
-	{
-		if s.CalcitoninInFlush.Set {
-			e.FieldStart("calcitonin_in_flush")
-			s.CalcitoninInFlush.Encode(e)
-		}
-	}
-	{
-		if s.Thyroglobulin.Set {
-			e.FieldStart("thyroglobulin")
-			s.Thyroglobulin.Encode(e)
-		}
-	}
-	{
-		if s.Details != nil {
-			e.FieldStart("details")
-			s.Details.Encode(e)
-		}
-	}
-	{
-		if s.IsLast.Set {
-			e.FieldStart("is_last")
-			s.IsLast.Encode(e)
-		}
-	}
+func (s *CytologyHistoryReadOKResultsItemDetails) encodeFields(e *jx.Encoder) {
 }
 
-var jsonFieldsNameOfCytologyIDPatchReq = [7]string{
-	0: "diagnostic_marking",
-	1: "material_type",
-	2: "calcitonin",
-	3: "calcitonin_in_flush",
-	4: "thyroglobulin",
-	5: "details",
-	6: "is_last",
-}
+var jsonFieldsNameOfCytologyHistoryReadOKResultsItemDetails = [0]string{}
 
-// Decode decodes CytologyIDPatchReq from json.
-func (s *CytologyIDPatchReq) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyHistoryReadOKResultsItemDetails from json.
+func (s *CytologyHistoryReadOKResultsItemDetails) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDPatchReq to nil")
-	}
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "diagnostic_marking":
-			if err := func() error {
-				s.DiagnosticMarking.Reset()
-				if err := s.DiagnosticMarking.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
-			}
-		case "material_type":
-			if err := func() error {
-				s.MaterialType.Reset()
-				if err := s.MaterialType.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"material_type\"")
-			}
-		case "calcitonin":
-			if err := func() error {
-				s.Calcitonin.Reset()
-				if err := s.Calcitonin.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"calcitonin\"")
-			}
-		case "calcitonin_in_flush":
-			if err := func() error {
-				s.CalcitoninInFlush.Reset()
-				if err := s.CalcitoninInFlush.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
-			}
-		case "thyroglobulin":
-			if err := func() error {
-				s.Thyroglobulin.Reset()
-				if err := s.Thyroglobulin.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"thyroglobulin\"")
-			}
-		case "details":
-			if err := func() error {
-				s.Details = nil
-				var elem CytologyIDPatchReqDetails
-				if err := elem.Decode(d); err != nil {
-					return err
-				}
-				s.Details = &elem
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"details\"")
-			}
-		case "is_last":
-			if err := func() error {
-				s.IsLast.Reset()
-				if err := s.IsLast.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"is_last\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode CytologyIDPatchReq")
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyIDPatchReq) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDPatchReq) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *CytologyIDPatchReqDetails) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *CytologyIDPatchReqDetails) encodeFields(e *jx.Encoder) {
-}
-
-var jsonFieldsNameOfCytologyIDPatchReqDetails = [0]string{}
-
-// Decode decodes CytologyIDPatchReqDetails from json.
-func (s *CytologyIDPatchReqDetails) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDPatchReqDetails to nil")
+		return errors.New("invalid: unable to decode CytologyHistoryReadOKResultsItemDetails to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -735,257 +1875,170 @@ func (s *CytologyIDPatchReqDetails) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyIDPatchReqDetails")
+		return errors.Wrap(err, "decode CytologyHistoryReadOKResultsItemDetails")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyIDPatchReqDetails) MarshalJSON() ([]byte, error) {
+func (s *CytologyHistoryReadOKResultsItemDetails) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDPatchReqDetails) UnmarshalJSON(data []byte) error {
+func (s *CytologyHistoryReadOKResultsItemDetails) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyIDPatchReqDiagnosticMarking as json.
-func (s CytologyIDPatchReqDiagnosticMarking) Encode(e *jx.Encoder) {
+// Encode encodes CytologyHistoryReadOKResultsItemDiagnosticMarking as json.
+func (s CytologyHistoryReadOKResultsItemDiagnosticMarking) Encode(e *jx.Encoder) {
 	e.Str(string(s))
 }
 
-// Decode decodes CytologyIDPatchReqDiagnosticMarking from json.
-func (s *CytologyIDPatchReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyHistoryReadOKResultsItemDiagnosticMarking from json.
+func (s *CytologyHistoryReadOKResultsItemDiagnosticMarking) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDPatchReqDiagnosticMarking to nil")
+		return errors.New("invalid: unable to decode CytologyHistoryReadOKResultsItemDiagnosticMarking to nil")
 	}
 	v, err := d.StrBytes()
 	if err != nil {
 		return err
 	}
 	// Try to use constant string.
-	switch CytologyIDPatchReqDiagnosticMarking(v) {
-	case CytologyIDPatchReqDiagnosticMarking11:
-		*s = CytologyIDPatchReqDiagnosticMarking11
-	case CytologyIDPatchReqDiagnosticMarking23:
-		*s = CytologyIDPatchReqDiagnosticMarking23
+	switch CytologyHistoryReadOKResultsItemDiagnosticMarking(v) {
+	case CytologyHistoryReadOKResultsItemDiagnosticMarking11:
+		*s = CytologyHistoryReadOKResultsItemDiagnosticMarking11
+	case CytologyHistoryReadOKResultsItemDiagnosticMarking23:
+		*s = CytologyHistoryReadOKResultsItemDiagnosticMarking23
 	default:
-		*s = CytologyIDPatchReqDiagnosticMarking(v)
+		*s = CytologyHistoryReadOKResultsItemDiagnosticMarking(v)
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologyIDPatchReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+func (s CytologyHistoryReadOKResultsItemDiagnosticMarking) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDPatchReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+func (s *CytologyHistoryReadOKResultsItemDiagnosticMarking) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyIDPatchReqMaterialType as json.
-func (s CytologyIDPatchReqMaterialType) Encode(e *jx.Encoder) {
+// Encode encodes CytologyHistoryReadOKResultsItemMaterialType as json.
+func (s CytologyHistoryReadOKResultsItemMaterialType) Encode(e *jx.Encoder) {
 	e.Str(string(s))
 }
 
-// Decode decodes CytologyIDPatchReqMaterialType from json.
-func (s *CytologyIDPatchReqMaterialType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyHistoryReadOKResultsItemMaterialType from json.
+func (s *CytologyHistoryReadOKResultsItemMaterialType) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDPatchReqMaterialType to nil")
+		return errors.New("invalid: unable to decode CytologyHistoryReadOKResultsItemMaterialType to nil")
 	}
 	v, err := d.StrBytes()
 	if err != nil {
 		return err
 	}
 	// Try to use constant string.
-	switch CytologyIDPatchReqMaterialType(v) {
-	case CytologyIDPatchReqMaterialTypeGS:
-		*s = CytologyIDPatchReqMaterialTypeGS
-	case CytologyIDPatchReqMaterialTypeBP:
-		*s = CytologyIDPatchReqMaterialTypeBP
-	case CytologyIDPatchReqMaterialTypeTP:
-		*s = CytologyIDPatchReqMaterialTypeTP
-	case CytologyIDPatchReqMaterialTypePTP:
-		*s = CytologyIDPatchReqMaterialTypePTP
-	case CytologyIDPatchReqMaterialTypeLNP:
-		*s = CytologyIDPatchReqMaterialTypeLNP
+	switch CytologyHistoryReadOKResultsItemMaterialType(v) {
+	case CytologyHistoryReadOKResultsItemMaterialTypeGS:
+		*s = CytologyHistoryReadOKResultsItemMaterialTypeGS
+	case CytologyHistoryReadOKResultsItemMaterialTypeBP:
+		*s = CytologyHistoryReadOKResultsItemMaterialTypeBP
+	case CytologyHistoryReadOKResultsItemMaterialTypeTP:
+		*s = CytologyHistoryReadOKResultsItemMaterialTypeTP
+	case CytologyHistoryReadOKResultsItemMaterialTypePTP:
+		*s = CytologyHistoryReadOKResultsItemMaterialTypePTP
+	case CytologyHistoryReadOKResultsItemMaterialTypeLNP:
+		*s = CytologyHistoryReadOKResultsItemMaterialTypeLNP
 	default:
-		*s = CytologyIDPatchReqMaterialType(v)
+		*s = CytologyHistoryReadOKResultsItemMaterialType(v)
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologyIDPatchReqMaterialType) MarshalJSON() ([]byte, error) {
+func (s CytologyHistoryReadOKResultsItemMaterialType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDPatchReqMaterialType) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologyIDSegmentationGroupsGetOKApplicationJSON as json.
-func (s CytologyIDSegmentationGroupsGetOKApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := []SegmentationGroup(s)
-
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
-	}
-	e.ArrEnd()
-}
-
-// Decode decodes CytologyIDSegmentationGroupsGetOKApplicationJSON from json.
-func (s *CytologyIDSegmentationGroupsGetOKApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDSegmentationGroupsGetOKApplicationJSON to nil")
-	}
-	var unwrapped []SegmentationGroup
-	if err := func() error {
-		unwrapped = make([]SegmentationGroup, 0)
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem SegmentationGroup
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = CytologyIDSegmentationGroupsGetOKApplicationJSON(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologyIDSegmentationGroupsGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDSegmentationGroupsGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *CytologyHistoryReadOKResultsItemMaterialType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyIDSegmentationGroupsPostReq) Encode(e *jx.Encoder) {
+func (s *CytologyReadOK) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyIDSegmentationGroupsPostReq) encodeFields(e *jx.Encoder) {
+func (s *CytologyReadOK) encodeFields(e *jx.Encoder) {
 	{
-		e.FieldStart("seg_type")
-		s.SegType.Encode(e)
+		e.FieldStart("original_image")
+		s.OriginalImage.Encode(e)
 	}
 	{
-		e.FieldStart("group_type")
-		s.GroupType.Encode(e)
-	}
-	{
-		if s.IsAi.Set {
-			e.FieldStart("is_ai")
-			s.IsAi.Encode(e)
-		}
-	}
-	{
-		if s.Details != nil {
-			e.FieldStart("details")
-			s.Details.Encode(e)
-		}
+		e.FieldStart("info")
+		s.Info.Encode(e)
 	}
 }
 
-var jsonFieldsNameOfCytologyIDSegmentationGroupsPostReq = [4]string{
-	0: "seg_type",
-	1: "group_type",
-	2: "is_ai",
-	3: "details",
+var jsonFieldsNameOfCytologyReadOK = [2]string{
+	0: "original_image",
+	1: "info",
 }
 
-// Decode decodes CytologyIDSegmentationGroupsPostReq from json.
-func (s *CytologyIDSegmentationGroupsPostReq) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOK from json.
+func (s *CytologyReadOK) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDSegmentationGroupsPostReq to nil")
+		return errors.New("invalid: unable to decode CytologyReadOK to nil")
 	}
 	var requiredBitSet [1]uint8
-	s.setDefaults()
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "seg_type":
+		case "original_image":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				if err := s.SegType.Decode(d); err != nil {
+				if err := s.OriginalImage.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"seg_type\"")
+				return errors.Wrap(err, "decode field \"original_image\"")
 			}
-		case "group_type":
+		case "info":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				if err := s.GroupType.Decode(d); err != nil {
+				if err := s.Info.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"group_type\"")
-			}
-		case "is_ai":
-			if err := func() error {
-				s.IsAi.Reset()
-				if err := s.IsAi.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"is_ai\"")
-			}
-		case "details":
-			if err := func() error {
-				s.Details = nil
-				var elem CytologyIDSegmentationGroupsPostReqDetails
-				if err := elem.Decode(d); err != nil {
-					return err
-				}
-				s.Details = &elem
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"details\"")
+				return errors.Wrap(err, "decode field \"info\"")
 			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyIDSegmentationGroupsPostReq")
+		return errors.Wrap(err, "decode CytologyReadOK")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -1002,8 +2055,8 @@ func (s *CytologyIDSegmentationGroupsPostReq) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCytologyIDSegmentationGroupsPostReq) {
-					name = jsonFieldsNameOfCytologyIDSegmentationGroupsPostReq[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCytologyReadOK) {
+					name = jsonFieldsNameOfCytologyReadOK[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -1024,200 +2077,174 @@ func (s *CytologyIDSegmentationGroupsPostReq) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyIDSegmentationGroupsPostReq) MarshalJSON() ([]byte, error) {
+func (s *CytologyReadOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDSegmentationGroupsPostReq) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOK) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyIDSegmentationGroupsPostReqDetails) Encode(e *jx.Encoder) {
+func (s *CytologyReadOKInfo) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyIDSegmentationGroupsPostReqDetails) encodeFields(e *jx.Encoder) {
+func (s *CytologyReadOKInfo) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("patient")
+		s.Patient.Encode(e)
+	}
+	{
+		e.FieldStart("patient_card")
+		s.PatientCard.Encode(e)
+	}
+	{
+		e.FieldStart("image_group")
+		s.ImageGroup.Encode(e)
+	}
 }
 
-var jsonFieldsNameOfCytologyIDSegmentationGroupsPostReqDetails = [0]string{}
+var jsonFieldsNameOfCytologyReadOKInfo = [3]string{
+	0: "patient",
+	1: "patient_card",
+	2: "image_group",
+}
 
-// Decode decodes CytologyIDSegmentationGroupsPostReqDetails from json.
-func (s *CytologyIDSegmentationGroupsPostReqDetails) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOKInfo from json.
+func (s *CytologyReadOKInfo) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDSegmentationGroupsPostReqDetails to nil")
+		return errors.New("invalid: unable to decode CytologyReadOKInfo to nil")
 	}
+	var requiredBitSet [1]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "patient":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				if err := s.Patient.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient\"")
+			}
+		case "patient_card":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
+			}
+		case "image_group":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.ImageGroup.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"image_group\"")
+			}
 		default:
 			return d.Skip()
 		}
+		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyIDSegmentationGroupsPostReqDetails")
+		return errors.Wrap(err, "decode CytologyReadOKInfo")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000111,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyReadOKInfo) {
+					name = jsonFieldsNameOfCytologyReadOKInfo[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyIDSegmentationGroupsPostReqDetails) MarshalJSON() ([]byte, error) {
+func (s *CytologyReadOKInfo) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDSegmentationGroupsPostReqDetails) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologyIDSegmentationGroupsPostReqGroupType as json.
-func (s CytologyIDSegmentationGroupsPostReqGroupType) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes CytologyIDSegmentationGroupsPostReqGroupType from json.
-func (s *CytologyIDSegmentationGroupsPostReqGroupType) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDSegmentationGroupsPostReqGroupType to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch CytologyIDSegmentationGroupsPostReqGroupType(v) {
-	case CytologyIDSegmentationGroupsPostReqGroupTypeCE:
-		*s = CytologyIDSegmentationGroupsPostReqGroupTypeCE
-	case CytologyIDSegmentationGroupsPostReqGroupTypeCL:
-		*s = CytologyIDSegmentationGroupsPostReqGroupTypeCL
-	case CytologyIDSegmentationGroupsPostReqGroupTypeME:
-		*s = CytologyIDSegmentationGroupsPostReqGroupTypeME
-	default:
-		*s = CytologyIDSegmentationGroupsPostReqGroupType(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologyIDSegmentationGroupsPostReqGroupType) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDSegmentationGroupsPostReqGroupType) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologyIDSegmentationGroupsPostReqSegType as json.
-func (s CytologyIDSegmentationGroupsPostReqSegType) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes CytologyIDSegmentationGroupsPostReqSegType from json.
-func (s *CytologyIDSegmentationGroupsPostReqSegType) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyIDSegmentationGroupsPostReqSegType to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch CytologyIDSegmentationGroupsPostReqSegType(v) {
-	case CytologyIDSegmentationGroupsPostReqSegTypeNIL:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeNIL
-	case CytologyIDSegmentationGroupsPostReqSegTypeNIR:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeNIR
-	case CytologyIDSegmentationGroupsPostReqSegTypeNIM:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeNIM
-	case CytologyIDSegmentationGroupsPostReqSegTypeCNO:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeCNO
-	case CytologyIDSegmentationGroupsPostReqSegTypeCGE:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeCGE
-	case CytologyIDSegmentationGroupsPostReqSegTypeC2N:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeC2N
-	case CytologyIDSegmentationGroupsPostReqSegTypeCPS:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeCPS
-	case CytologyIDSegmentationGroupsPostReqSegTypeCFC:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeCFC
-	case CytologyIDSegmentationGroupsPostReqSegTypeCLY:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeCLY
-	case CytologyIDSegmentationGroupsPostReqSegTypeSOS:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSOS
-	case CytologyIDSegmentationGroupsPostReqSegTypeSDS:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSDS
-	case CytologyIDSegmentationGroupsPostReqSegTypeSMS:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSMS
-	case CytologyIDSegmentationGroupsPostReqSegTypeSTS:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSTS
-	case CytologyIDSegmentationGroupsPostReqSegTypeSPS:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSPS
-	case CytologyIDSegmentationGroupsPostReqSegTypeSNM:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSNM
-	case CytologyIDSegmentationGroupsPostReqSegTypeSTM:
-		*s = CytologyIDSegmentationGroupsPostReqSegTypeSTM
-	default:
-		*s = CytologyIDSegmentationGroupsPostReqSegType(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologyIDSegmentationGroupsPostReqSegType) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyIDSegmentationGroupsPostReqSegType) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOKInfo) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyImage) Encode(e *jx.Encoder) {
+func (s *CytologyReadOKInfoImageGroup) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyImage) encodeFields(e *jx.Encoder) {
+func (s *CytologyReadOKInfoImageGroup) encodeFields(e *jx.Encoder) {
 	{
-		e.FieldStart("id")
-		json.EncodeUUID(e, s.ID)
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
 	}
 	{
-		e.FieldStart("external_id")
-		json.EncodeUUID(e, s.ExternalID)
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
 	}
 	{
-		e.FieldStart("doctor_id")
-		json.EncodeUUID(e, s.DoctorID)
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
 	}
 	{
-		e.FieldStart("patient_id")
-		json.EncodeUUID(e, s.PatientID)
-	}
-	{
-		e.FieldStart("diagnostic_number")
-		e.Int(s.DiagnosticNumber)
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
 	}
 	{
 		if s.DiagnosticMarking.Set {
@@ -1226,18 +2253,14 @@ func (s *CytologyImage) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
 		if s.MaterialType.Set {
 			e.FieldStart("material_type")
 			s.MaterialType.Encode(e)
 		}
-	}
-	{
-		e.FieldStart("diagnos_date")
-		json.EncodeDateTime(e, s.DiagnosDate)
-	}
-	{
-		e.FieldStart("is_last")
-		e.Bool(s.IsLast)
 	}
 	{
 		if s.Calcitonin.Set {
@@ -1258,116 +2281,91 @@ func (s *CytologyImage) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.Details != nil {
-			e.FieldStart("details")
-			s.Details.Encode(e)
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
 		}
 	}
 	{
-		if s.PrevID.Set {
-			e.FieldStart("prev_id")
-			s.PrevID.Encode(e)
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
 		}
 	}
 	{
-		if s.ParentPrevID.Set {
-			e.FieldStart("parent_prev_id")
-			s.ParentPrevID.Encode(e)
+		if s.OriginalImage.Set {
+			e.FieldStart("original_image")
+			s.OriginalImage.Encode(e)
 		}
-	}
-	{
-		e.FieldStart("create_at")
-		json.EncodeDateTime(e, s.CreateAt)
 	}
 }
 
-var jsonFieldsNameOfCytologyImage = [16]string{
+var jsonFieldsNameOfCytologyReadOKInfoImageGroup = [13]string{
 	0:  "id",
-	1:  "external_id",
-	2:  "doctor_id",
-	3:  "patient_id",
-	4:  "diagnostic_number",
-	5:  "diagnostic_marking",
+	1:  "is_last",
+	2:  "diagnos_date",
+	3:  "details",
+	4:  "diagnostic_marking",
+	5:  "diagnostic_number",
 	6:  "material_type",
-	7:  "diagnos_date",
-	8:  "is_last",
-	9:  "calcitonin",
-	10: "calcitonin_in_flush",
-	11: "thyroglobulin",
-	12: "details",
-	13: "prev_id",
-	14: "parent_prev_id",
-	15: "create_at",
+	7:  "calcitonin",
+	8:  "calcitonin_in_flush",
+	9:  "thyroglobulin",
+	10: "prev",
+	11: "parent_prev",
+	12: "original_image",
 }
 
-// Decode decodes CytologyImage from json.
-func (s *CytologyImage) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOKInfoImageGroup from json.
+func (s *CytologyReadOKInfoImageGroup) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyImage to nil")
+		return errors.New("invalid: unable to decode CytologyReadOKInfoImageGroup to nil")
 	}
 	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
 		case "id":
-			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ID = v
-				if err != nil {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
-		case "external_id":
-			requiredBitSet[0] |= 1 << 1
+		case "is_last":
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ExternalID = v
-				if err != nil {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"external_id\"")
+				return errors.Wrap(err, "decode field \"is_last\"")
 			}
-		case "doctor_id":
-			requiredBitSet[0] |= 1 << 2
+		case "diagnos_date":
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.DoctorID = v
-				if err != nil {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"doctor_id\"")
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
 			}
-		case "patient_id":
-			requiredBitSet[0] |= 1 << 3
+		case "details":
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.PatientID = v
-				if err != nil {
+				s.Details = nil
+				var elem CytologyReadOKInfoImageGroupDetails
+				if err := elem.Decode(d); err != nil {
 					return err
 				}
+				s.Details = &elem
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"patient_id\"")
-			}
-		case "diagnostic_number":
-			requiredBitSet[0] |= 1 << 4
-			if err := func() error {
-				v, err := d.Int()
-				s.DiagnosticNumber = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+				return errors.Wrap(err, "decode field \"details\"")
 			}
 		case "diagnostic_marking":
 			if err := func() error {
@@ -1379,6 +2377,18 @@ func (s *CytologyImage) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
 			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 5
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
 		case "material_type":
 			if err := func() error {
 				s.MaterialType.Reset()
@@ -1388,30 +2398,6 @@ func (s *CytologyImage) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"material_type\"")
-			}
-		case "diagnos_date":
-			requiredBitSet[0] |= 1 << 7
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.DiagnosDate = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"diagnos_date\"")
-			}
-		case "is_last":
-			requiredBitSet[1] |= 1 << 0
-			if err := func() error {
-				v, err := d.Bool()
-				s.IsLast = bool(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"is_last\"")
 			}
 		case "calcitonin":
 			if err := func() error {
@@ -1443,62 +2429,48 @@ func (s *CytologyImage) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"thyroglobulin\"")
 			}
-		case "details":
+		case "prev":
 			if err := func() error {
-				s.Details = nil
-				var elem CytologyImageDetails
-				if err := elem.Decode(d); err != nil {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
 					return err
 				}
-				s.Details = &elem
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"details\"")
+				return errors.Wrap(err, "decode field \"prev\"")
 			}
-		case "prev_id":
+		case "parent_prev":
 			if err := func() error {
-				s.PrevID.Reset()
-				if err := s.PrevID.Decode(d); err != nil {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"prev_id\"")
+				return errors.Wrap(err, "decode field \"parent_prev\"")
 			}
-		case "parent_prev_id":
+		case "original_image":
 			if err := func() error {
-				s.ParentPrevID.Reset()
-				if err := s.ParentPrevID.Decode(d); err != nil {
+				s.OriginalImage.Reset()
+				if err := s.OriginalImage.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"parent_prev_id\"")
-			}
-		case "create_at":
-			requiredBitSet[1] |= 1 << 7
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.CreateAt = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"create_at\"")
+				return errors.Wrap(err, "decode field \"original_image\"")
 			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyImage")
+		return errors.Wrap(err, "decode CytologyReadOKInfoImageGroup")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b10011111,
-		0b10000001,
+		0b00100000,
+		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -1510,8 +2482,8 @@ func (s *CytologyImage) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCytologyImage) {
-					name = jsonFieldsNameOfCytologyImage[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCytologyReadOKInfoImageGroup) {
+					name = jsonFieldsNameOfCytologyReadOKInfoImageGroup[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -1532,35 +2504,35 @@ func (s *CytologyImage) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyImage) MarshalJSON() ([]byte, error) {
+func (s *CytologyReadOKInfoImageGroup) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyImage) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOKInfoImageGroup) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyImageDetails) Encode(e *jx.Encoder) {
+func (s *CytologyReadOKInfoImageGroupDetails) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyImageDetails) encodeFields(e *jx.Encoder) {
+func (s *CytologyReadOKInfoImageGroupDetails) encodeFields(e *jx.Encoder) {
 }
 
-var jsonFieldsNameOfCytologyImageDetails = [0]string{}
+var jsonFieldsNameOfCytologyReadOKInfoImageGroupDetails = [0]string{}
 
-// Decode decodes CytologyImageDetails from json.
-func (s *CytologyImageDetails) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOKInfoImageGroupDetails from json.
+func (s *CytologyReadOKInfoImageGroupDetails) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyImageDetails to nil")
+		return errors.New("invalid: unable to decode CytologyReadOKInfoImageGroupDetails to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -1569,120 +2541,132 @@ func (s *CytologyImageDetails) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyImageDetails")
+		return errors.Wrap(err, "decode CytologyReadOKInfoImageGroupDetails")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyImageDetails) MarshalJSON() ([]byte, error) {
+func (s *CytologyReadOKInfoImageGroupDetails) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyImageDetails) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOKInfoImageGroupDetails) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyImageDiagnosticMarking as json.
-func (s CytologyImageDiagnosticMarking) Encode(e *jx.Encoder) {
+// Encode encodes CytologyReadOKInfoImageGroupDiagnosticMarking as json.
+func (s CytologyReadOKInfoImageGroupDiagnosticMarking) Encode(e *jx.Encoder) {
 	e.Str(string(s))
 }
 
-// Decode decodes CytologyImageDiagnosticMarking from json.
-func (s *CytologyImageDiagnosticMarking) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOKInfoImageGroupDiagnosticMarking from json.
+func (s *CytologyReadOKInfoImageGroupDiagnosticMarking) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyImageDiagnosticMarking to nil")
+		return errors.New("invalid: unable to decode CytologyReadOKInfoImageGroupDiagnosticMarking to nil")
 	}
 	v, err := d.StrBytes()
 	if err != nil {
 		return err
 	}
 	// Try to use constant string.
-	switch CytologyImageDiagnosticMarking(v) {
-	case CytologyImageDiagnosticMarking11:
-		*s = CytologyImageDiagnosticMarking11
-	case CytologyImageDiagnosticMarking23:
-		*s = CytologyImageDiagnosticMarking23
+	switch CytologyReadOKInfoImageGroupDiagnosticMarking(v) {
+	case CytologyReadOKInfoImageGroupDiagnosticMarking11:
+		*s = CytologyReadOKInfoImageGroupDiagnosticMarking11
+	case CytologyReadOKInfoImageGroupDiagnosticMarking23:
+		*s = CytologyReadOKInfoImageGroupDiagnosticMarking23
 	default:
-		*s = CytologyImageDiagnosticMarking(v)
+		*s = CytologyReadOKInfoImageGroupDiagnosticMarking(v)
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologyImageDiagnosticMarking) MarshalJSON() ([]byte, error) {
+func (s CytologyReadOKInfoImageGroupDiagnosticMarking) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyImageDiagnosticMarking) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOKInfoImageGroupDiagnosticMarking) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyImageMaterialType as json.
-func (s CytologyImageMaterialType) Encode(e *jx.Encoder) {
+// Encode encodes CytologyReadOKInfoImageGroupMaterialType as json.
+func (s CytologyReadOKInfoImageGroupMaterialType) Encode(e *jx.Encoder) {
 	e.Str(string(s))
 }
 
-// Decode decodes CytologyImageMaterialType from json.
-func (s *CytologyImageMaterialType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOKInfoImageGroupMaterialType from json.
+func (s *CytologyReadOKInfoImageGroupMaterialType) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyImageMaterialType to nil")
+		return errors.New("invalid: unable to decode CytologyReadOKInfoImageGroupMaterialType to nil")
 	}
 	v, err := d.StrBytes()
 	if err != nil {
 		return err
 	}
 	// Try to use constant string.
-	switch CytologyImageMaterialType(v) {
-	case CytologyImageMaterialTypeGS:
-		*s = CytologyImageMaterialTypeGS
-	case CytologyImageMaterialTypeBP:
-		*s = CytologyImageMaterialTypeBP
-	case CytologyImageMaterialTypeTP:
-		*s = CytologyImageMaterialTypeTP
-	case CytologyImageMaterialTypePTP:
-		*s = CytologyImageMaterialTypePTP
-	case CytologyImageMaterialTypeLNP:
-		*s = CytologyImageMaterialTypeLNP
+	switch CytologyReadOKInfoImageGroupMaterialType(v) {
+	case CytologyReadOKInfoImageGroupMaterialTypeGS:
+		*s = CytologyReadOKInfoImageGroupMaterialTypeGS
+	case CytologyReadOKInfoImageGroupMaterialTypeBP:
+		*s = CytologyReadOKInfoImageGroupMaterialTypeBP
+	case CytologyReadOKInfoImageGroupMaterialTypeTP:
+		*s = CytologyReadOKInfoImageGroupMaterialTypeTP
+	case CytologyReadOKInfoImageGroupMaterialTypePTP:
+		*s = CytologyReadOKInfoImageGroupMaterialTypePTP
+	case CytologyReadOKInfoImageGroupMaterialTypeLNP:
+		*s = CytologyReadOKInfoImageGroupMaterialTypeLNP
 	default:
-		*s = CytologyImageMaterialType(v)
+		*s = CytologyReadOKInfoImageGroupMaterialType(v)
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologyImageMaterialType) MarshalJSON() ([]byte, error) {
+func (s CytologyReadOKInfoImageGroupMaterialType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyImageMaterialType) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOKInfoImageGroupMaterialType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyOriginalImageIDPatchReq) Encode(e *jx.Encoder) {
+func (s *CytologyReadOKOriginalImage) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyOriginalImageIDPatchReq) encodeFields(e *jx.Encoder) {
+func (s *CytologyReadOKOriginalImage) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		if s.CreateDate.Set {
+			e.FieldStart("create_date")
+			s.CreateDate.Encode(e, json.EncodeDateTime)
+		}
+	}
 	{
 		if s.DelayTime.Set {
 			e.FieldStart("delay_time")
@@ -1695,21 +2679,50 @@ func (s *CytologyOriginalImageIDPatchReq) encodeFields(e *jx.Encoder) {
 			s.ViewedFlag.Encode(e)
 		}
 	}
+	{
+		if s.Image.Set {
+			e.FieldStart("image")
+			s.Image.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfCytologyOriginalImageIDPatchReq = [2]string{
-	0: "delay_time",
-	1: "viewed_flag",
+var jsonFieldsNameOfCytologyReadOKOriginalImage = [5]string{
+	0: "id",
+	1: "create_date",
+	2: "delay_time",
+	3: "viewed_flag",
+	4: "image",
 }
 
-// Decode decodes CytologyOriginalImageIDPatchReq from json.
-func (s *CytologyOriginalImageIDPatchReq) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyReadOKOriginalImage from json.
+func (s *CytologyReadOKOriginalImage) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyOriginalImageIDPatchReq to nil")
+		return errors.New("invalid: unable to decode CytologyReadOKOriginalImage to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "create_date":
+			if err := func() error {
+				s.CreateDate.Reset()
+				if err := s.CreateDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"create_date\"")
+			}
 		case "delay_time":
 			if err := func() error {
 				s.DelayTime.Reset()
@@ -1730,60 +2743,2769 @@ func (s *CytologyOriginalImageIDPatchReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"viewed_flag\"")
 			}
+		case "image":
+			if err := func() error {
+				s.Image.Reset()
+				if err := s.Image.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"image\"")
+			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyOriginalImageIDPatchReq")
+		return errors.Wrap(err, "decode CytologyReadOKOriginalImage")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyOriginalImageIDPatchReq) MarshalJSON() ([]byte, error) {
+func (s *CytologyReadOKOriginalImage) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyOriginalImageIDPatchReq) UnmarshalJSON(data []byte) error {
+func (s *CytologyReadOKOriginalImage) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyPostReq) Encode(e *jx.Encoder) {
+func (s *CytologySegmentGroupCreateCreateCreated) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyPostReq) encodeFields(e *jx.Encoder) {
+func (s *CytologySegmentGroupCreateCreateCreated) encodeFields(e *jx.Encoder) {
 	{
-		e.FieldStart("external_id")
-		json.EncodeUUID(e, s.ExternalID)
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
 	}
 	{
-		e.FieldStart("doctor_id")
-		json.EncodeUUID(e, s.DoctorID)
+		if s.Data.Set {
+			e.FieldStart("data")
+			s.Data.Encode(e)
+		}
 	}
 	{
-		e.FieldStart("patient_id")
-		json.EncodeUUID(e, s.PatientID)
+		if s.SegType.Set {
+			e.FieldStart("seg_type")
+			s.SegType.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentGroupCreateCreateCreated = [3]string{
+	0: "id",
+	1: "data",
+	2: "seg_type",
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateCreated from json.
+func (s *CytologySegmentGroupCreateCreateCreated) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateCreated to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "data":
+			if err := func() error {
+				s.Data.Reset()
+				if err := s.Data.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"data\"")
+			}
+		case "seg_type":
+			if err := func() error {
+				s.SegType.Reset()
+				if err := s.SegType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"seg_type\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentGroupCreateCreateCreated")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentGroupCreateCreateCreated) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateCreated) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentGroupCreateCreateCreatedData) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentGroupCreateCreateCreatedData) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentGroupCreateCreateCreatedData = [1]string{
+	0: "points",
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateCreatedData from json.
+func (s *CytologySegmentGroupCreateCreateCreatedData) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateCreatedData to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentGroupCreateCreateCreatedDataPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentGroupCreateCreateCreatedDataPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentGroupCreateCreateCreatedData")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentGroupCreateCreateCreatedData) {
+					name = jsonFieldsNameOfCytologySegmentGroupCreateCreateCreatedData[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentGroupCreateCreateCreatedData) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateCreatedData) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentGroupCreateCreateCreatedDataPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentGroupCreateCreateCreatedDataPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
 	}
 	{
-		e.FieldStart("diagnostic_number")
-		e.Int(s.DiagnosticNumber)
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentGroupCreateCreateCreatedDataPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateCreatedDataPointsItem from json.
+func (s *CytologySegmentGroupCreateCreateCreatedDataPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateCreatedDataPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentGroupCreateCreateCreatedDataPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentGroupCreateCreateCreatedDataPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentGroupCreateCreateCreatedDataPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentGroupCreateCreateCreatedDataPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateCreatedDataPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentGroupCreateCreateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentGroupCreateCreateReq) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("data")
+		s.Data.Encode(e)
+	}
+	{
+		e.FieldStart("seg_type")
+		s.SegType.Encode(e)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentGroupCreateCreateReq = [2]string{
+	0: "data",
+	1: "seg_type",
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateReq from json.
+func (s *CytologySegmentGroupCreateCreateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateReq to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "data":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				if err := s.Data.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"data\"")
+			}
+		case "seg_type":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				if err := s.SegType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"seg_type\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentGroupCreateCreateReq")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentGroupCreateCreateReq) {
+					name = jsonFieldsNameOfCytologySegmentGroupCreateCreateReq[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentGroupCreateCreateReq) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentGroupCreateCreateReqData) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentGroupCreateCreateReqData) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentGroupCreateCreateReqData = [1]string{
+	0: "points",
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateReqData from json.
+func (s *CytologySegmentGroupCreateCreateReqData) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateReqData to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentGroupCreateCreateReqDataPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentGroupCreateCreateReqDataPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentGroupCreateCreateReqData")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentGroupCreateCreateReqData) {
+					name = jsonFieldsNameOfCytologySegmentGroupCreateCreateReqData[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentGroupCreateCreateReqData) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateReqData) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentGroupCreateCreateReqDataPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentGroupCreateCreateReqDataPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentGroupCreateCreateReqDataPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateReqDataPointsItem from json.
+func (s *CytologySegmentGroupCreateCreateReqDataPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateReqDataPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentGroupCreateCreateReqDataPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentGroupCreateCreateReqDataPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentGroupCreateCreateReqDataPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentGroupCreateCreateReqDataPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateReqDataPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologySegmentGroupCreateCreateReqSegType as json.
+func (s CytologySegmentGroupCreateCreateReqSegType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologySegmentGroupCreateCreateReqSegType from json.
+func (s *CytologySegmentGroupCreateCreateReqSegType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentGroupCreateCreateReqSegType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologySegmentGroupCreateCreateReqSegType(v) {
+	case CytologySegmentGroupCreateCreateReqSegTypeNIL:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeNIL
+	case CytologySegmentGroupCreateCreateReqSegTypeNIR:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeNIR
+	case CytologySegmentGroupCreateCreateReqSegTypeNIM:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeNIM
+	case CytologySegmentGroupCreateCreateReqSegTypeCNO:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeCNO
+	case CytologySegmentGroupCreateCreateReqSegTypeCGE:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeCGE
+	case CytologySegmentGroupCreateCreateReqSegTypeC2N:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeC2N
+	case CytologySegmentGroupCreateCreateReqSegTypeCPS:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeCPS
+	case CytologySegmentGroupCreateCreateReqSegTypeCFC:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeCFC
+	case CytologySegmentGroupCreateCreateReqSegTypeCLY:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeCLY
+	case CytologySegmentGroupCreateCreateReqSegTypeSOS:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSOS
+	case CytologySegmentGroupCreateCreateReqSegTypeSDS:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSDS
+	case CytologySegmentGroupCreateCreateReqSegTypeSMS:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSMS
+	case CytologySegmentGroupCreateCreateReqSegTypeSTS:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSTS
+	case CytologySegmentGroupCreateCreateReqSegTypeSPS:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSPS
+	case CytologySegmentGroupCreateCreateReqSegTypeSNM:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSNM
+	case CytologySegmentGroupCreateCreateReqSegTypeSTM:
+		*s = CytologySegmentGroupCreateCreateReqSegTypeSTM
+	default:
+		*s = CytologySegmentGroupCreateCreateReqSegType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologySegmentGroupCreateCreateReqSegType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentGroupCreateCreateReqSegType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdatePartialUpdateOK) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.SegmentGroup.Set {
+			e.FieldStart("segment_group")
+			s.SegmentGroup.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdatePartialUpdateOK = [2]string{
+	0: "points",
+	1: "segment_group",
+}
+
+// Decode decodes CytologySegmentUpdatePartialUpdateOK from json.
+func (s *CytologySegmentUpdatePartialUpdateOK) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdatePartialUpdateOK to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentUpdatePartialUpdateOKPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentUpdatePartialUpdateOKPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		case "segment_group":
+			if err := func() error {
+				s.SegmentGroup.Reset()
+				if err := s.SegmentGroup.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"segment_group\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdatePartialUpdateOK")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdatePartialUpdateOK) {
+					name = jsonFieldsNameOfCytologySegmentUpdatePartialUpdateOK[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateOK) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdatePartialUpdateOK) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateOKPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdatePartialUpdateOKPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdatePartialUpdateOKPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentUpdatePartialUpdateOKPointsItem from json.
+func (s *CytologySegmentUpdatePartialUpdateOKPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdatePartialUpdateOKPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdatePartialUpdateOKPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdatePartialUpdateOKPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentUpdatePartialUpdateOKPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateOKPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdatePartialUpdateOKPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdatePartialUpdateReq) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.SegmentGroup.Set {
+			e.FieldStart("segment_group")
+			s.SegmentGroup.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdatePartialUpdateReq = [2]string{
+	0: "points",
+	1: "segment_group",
+}
+
+// Decode decodes CytologySegmentUpdatePartialUpdateReq from json.
+func (s *CytologySegmentUpdatePartialUpdateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdatePartialUpdateReq to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentUpdatePartialUpdateReqPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentUpdatePartialUpdateReqPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		case "segment_group":
+			if err := func() error {
+				s.SegmentGroup.Reset()
+				if err := s.SegmentGroup.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"segment_group\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdatePartialUpdateReq")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdatePartialUpdateReq) {
+					name = jsonFieldsNameOfCytologySegmentUpdatePartialUpdateReq[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateReq) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdatePartialUpdateReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateReqPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdatePartialUpdateReqPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdatePartialUpdateReqPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentUpdatePartialUpdateReqPointsItem from json.
+func (s *CytologySegmentUpdatePartialUpdateReqPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdatePartialUpdateReqPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdatePartialUpdateReqPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdatePartialUpdateReqPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentUpdatePartialUpdateReqPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdatePartialUpdateReqPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdatePartialUpdateReqPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdateReadOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdateReadOK) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.SegmentGroup.Set {
+			e.FieldStart("segment_group")
+			s.SegmentGroup.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdateReadOK = [2]string{
+	0: "points",
+	1: "segment_group",
+}
+
+// Decode decodes CytologySegmentUpdateReadOK from json.
+func (s *CytologySegmentUpdateReadOK) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdateReadOK to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentUpdateReadOKPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentUpdateReadOKPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		case "segment_group":
+			if err := func() error {
+				s.SegmentGroup.Reset()
+				if err := s.SegmentGroup.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"segment_group\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdateReadOK")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdateReadOK) {
+					name = jsonFieldsNameOfCytologySegmentUpdateReadOK[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdateReadOK) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdateReadOK) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdateReadOKPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdateReadOKPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdateReadOKPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentUpdateReadOKPointsItem from json.
+func (s *CytologySegmentUpdateReadOKPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdateReadOKPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdateReadOKPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdateReadOKPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentUpdateReadOKPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdateReadOKPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdateReadOKPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdateUpdateOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdateUpdateOK) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.SegmentGroup.Set {
+			e.FieldStart("segment_group")
+			s.SegmentGroup.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdateUpdateOK = [2]string{
+	0: "points",
+	1: "segment_group",
+}
+
+// Decode decodes CytologySegmentUpdateUpdateOK from json.
+func (s *CytologySegmentUpdateUpdateOK) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdateUpdateOK to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentUpdateUpdateOKPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentUpdateUpdateOKPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		case "segment_group":
+			if err := func() error {
+				s.SegmentGroup.Reset()
+				if err := s.SegmentGroup.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"segment_group\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdateUpdateOK")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdateUpdateOK) {
+					name = jsonFieldsNameOfCytologySegmentUpdateUpdateOK[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdateUpdateOK) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdateUpdateOK) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdateUpdateOKPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdateUpdateOKPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdateUpdateOKPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentUpdateUpdateOKPointsItem from json.
+func (s *CytologySegmentUpdateUpdateOKPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdateUpdateOKPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdateUpdateOKPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdateUpdateOKPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentUpdateUpdateOKPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdateUpdateOKPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdateUpdateOKPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdateUpdateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdateUpdateReq) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.SegmentGroup.Set {
+			e.FieldStart("segment_group")
+			s.SegmentGroup.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdateUpdateReq = [2]string{
+	0: "points",
+	1: "segment_group",
+}
+
+// Decode decodes CytologySegmentUpdateUpdateReq from json.
+func (s *CytologySegmentUpdateUpdateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdateUpdateReq to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "points":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				s.Points = make([]CytologySegmentUpdateUpdateReqPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentUpdateUpdateReqPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		case "segment_group":
+			if err := func() error {
+				s.SegmentGroup.Reset()
+				if err := s.SegmentGroup.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"segment_group\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdateUpdateReq")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdateUpdateReq) {
+					name = jsonFieldsNameOfCytologySegmentUpdateUpdateReq[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdateUpdateReq) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdateUpdateReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentUpdateUpdateReqPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentUpdateUpdateReqPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentUpdateUpdateReqPointsItem = [2]string{
+	0: "x",
+	1: "y",
+}
+
+// Decode decodes CytologySegmentUpdateUpdateReqPointsItem from json.
+func (s *CytologySegmentUpdateUpdateReqPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentUpdateUpdateReqPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "x":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentUpdateUpdateReqPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentUpdateUpdateReqPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentUpdateUpdateReqPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentUpdateUpdateReqPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentUpdateUpdateReqPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOK) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("count")
+		e.Int(s.Count)
+	}
+	{
+		if s.Next.Set {
+			e.FieldStart("next")
+			s.Next.Encode(e)
+		}
+	}
+	{
+		if s.Previous.Set {
+			e.FieldStart("previous")
+			s.Previous.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("results")
+		e.ArrStart()
+		for _, elem := range s.Results {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentsListOK = [4]string{
+	0: "count",
+	1: "next",
+	2: "previous",
+	3: "results",
+}
+
+// Decode decodes CytologySegmentsListOK from json.
+func (s *CytologySegmentsListOK) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOK to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "count":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.Count = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"count\"")
+			}
+		case "next":
+			if err := func() error {
+				s.Next.Reset()
+				if err := s.Next.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"next\"")
+			}
+		case "previous":
+			if err := func() error {
+				s.Previous.Reset()
+				if err := s.Previous.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"previous\"")
+			}
+		case "results":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				s.Results = make([]CytologySegmentsListOKResultsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentsListOKResultsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Results = append(s.Results, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"results\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOK")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00001001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentsListOK) {
+					name = jsonFieldsNameOfCytologySegmentsListOK[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOK) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOK) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOKResultsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOKResultsItem) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("data")
+		e.ArrStart()
+		for _, elem := range s.Data {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.GroupType.Set {
+			e.FieldStart("group_type")
+			s.GroupType.Encode(e)
+		}
+	}
+	{
+		if s.SegType.Set {
+			e.FieldStart("seg_type")
+			s.SegType.Encode(e)
+		}
+	}
+	{
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.IsAi.Set {
+			e.FieldStart("is_ai")
+			s.IsAi.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentsListOKResultsItem = [6]string{
+	0: "id",
+	1: "data",
+	2: "group_type",
+	3: "seg_type",
+	4: "details",
+	5: "is_ai",
+}
+
+// Decode decodes CytologySegmentsListOKResultsItem from json.
+func (s *CytologySegmentsListOKResultsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "data":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				s.Data = make([]CytologySegmentsListOKResultsItemDataItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentsListOKResultsItemDataItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Data = append(s.Data, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"data\"")
+			}
+		case "group_type":
+			if err := func() error {
+				s.GroupType.Reset()
+				if err := s.GroupType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"group_type\"")
+			}
+		case "seg_type":
+			if err := func() error {
+				s.SegType.Reset()
+				if err := s.SegType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"seg_type\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details = nil
+				var elem CytologySegmentsListOKResultsItemDetails
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Details = &elem
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		case "is_ai":
+			if err := func() error {
+				s.IsAi.Reset()
+				if err := s.IsAi.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_ai\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000010,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentsListOKResultsItem) {
+					name = jsonFieldsNameOfCytologySegmentsListOKResultsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOKResultsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDataItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOKResultsItemDataItem) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("points")
+		e.ArrStart()
+		for _, elem := range s.Points {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		if s.Details.Set {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentsListOKResultsItemDataItem = [3]string{
+	0: "id",
+	1: "points",
+	2: "details",
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemDataItem from json.
+func (s *CytologySegmentsListOKResultsItemDataItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemDataItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "points":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				s.Points = make([]CytologySegmentsListOKResultsItemDataItemPointsItem, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem CytologySegmentsListOKResultsItemDataItemPointsItem
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.Points = append(s.Points, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"points\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details.Reset()
+				if err := s.Details.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItemDataItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000010,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentsListOKResultsItemDataItem) {
+					name = jsonFieldsNameOfCytologySegmentsListOKResultsItemDataItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDataItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemDataItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("uid")
+		e.Int(s.UID)
+	}
+	{
+		e.FieldStart("x")
+		e.Int(s.X)
+	}
+	{
+		e.FieldStart("y")
+		e.Int(s.Y)
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentsListOKResultsItemDataItemPointsItem = [4]string{
+	0: "id",
+	1: "uid",
+	2: "x",
+	3: "y",
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemDataItemPointsItem from json.
+func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemDataItemPointsItem to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "uid":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int()
+				s.UID = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"uid\"")
+			}
+		case "x":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				v, err := d.Int()
+				s.X = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"x\"")
+			}
+		case "y":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := d.Int()
+				s.Y = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"y\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItemDataItemPointsItem")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00001110,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologySegmentsListOKResultsItemDataItemPointsItem) {
+					name = jsonFieldsNameOfCytologySegmentsListOKResultsItemDataItemPointsItem[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDetails) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOKResultsItemDetails) encodeFields(e *jx.Encoder) {
+}
+
+var jsonFieldsNameOfCytologySegmentsListOKResultsItemDetails = [0]string{}
+
+// Decode decodes CytologySegmentsListOKResultsItemDetails from json.
+func (s *CytologySegmentsListOKResultsItemDetails) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemDetails to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		default:
+			return d.Skip()
+		}
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItemDetails")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologySegmentsListOKResultsItemGroupType as json.
+func (s CytologySegmentsListOKResultsItemGroupType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemGroupType from json.
+func (s *CytologySegmentsListOKResultsItemGroupType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemGroupType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologySegmentsListOKResultsItemGroupType(v) {
+	case CytologySegmentsListOKResultsItemGroupTypeCE:
+		*s = CytologySegmentsListOKResultsItemGroupTypeCE
+	case CytologySegmentsListOKResultsItemGroupTypeCL:
+		*s = CytologySegmentsListOKResultsItemGroupTypeCL
+	case CytologySegmentsListOKResultsItemGroupTypeME:
+		*s = CytologySegmentsListOKResultsItemGroupTypeME
+	default:
+		*s = CytologySegmentsListOKResultsItemGroupType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologySegmentsListOKResultsItemGroupType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemGroupType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologySegmentsListOKResultsItemSegType as json.
+func (s CytologySegmentsListOKResultsItemSegType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemSegType from json.
+func (s *CytologySegmentsListOKResultsItemSegType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemSegType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologySegmentsListOKResultsItemSegType(v) {
+	case CytologySegmentsListOKResultsItemSegTypeNIL:
+		*s = CytologySegmentsListOKResultsItemSegTypeNIL
+	case CytologySegmentsListOKResultsItemSegTypeNIR:
+		*s = CytologySegmentsListOKResultsItemSegTypeNIR
+	case CytologySegmentsListOKResultsItemSegTypeNIM:
+		*s = CytologySegmentsListOKResultsItemSegTypeNIM
+	case CytologySegmentsListOKResultsItemSegTypeCNO:
+		*s = CytologySegmentsListOKResultsItemSegTypeCNO
+	case CytologySegmentsListOKResultsItemSegTypeCGE:
+		*s = CytologySegmentsListOKResultsItemSegTypeCGE
+	case CytologySegmentsListOKResultsItemSegTypeC2N:
+		*s = CytologySegmentsListOKResultsItemSegTypeC2N
+	case CytologySegmentsListOKResultsItemSegTypeCPS:
+		*s = CytologySegmentsListOKResultsItemSegTypeCPS
+	case CytologySegmentsListOKResultsItemSegTypeCFC:
+		*s = CytologySegmentsListOKResultsItemSegTypeCFC
+	case CytologySegmentsListOKResultsItemSegTypeCLY:
+		*s = CytologySegmentsListOKResultsItemSegTypeCLY
+	case CytologySegmentsListOKResultsItemSegTypeSOS:
+		*s = CytologySegmentsListOKResultsItemSegTypeSOS
+	case CytologySegmentsListOKResultsItemSegTypeSDS:
+		*s = CytologySegmentsListOKResultsItemSegTypeSDS
+	case CytologySegmentsListOKResultsItemSegTypeSMS:
+		*s = CytologySegmentsListOKResultsItemSegTypeSMS
+	case CytologySegmentsListOKResultsItemSegTypeSTS:
+		*s = CytologySegmentsListOKResultsItemSegTypeSTS
+	case CytologySegmentsListOKResultsItemSegTypeSPS:
+		*s = CytologySegmentsListOKResultsItemSegTypeSPS
+	case CytologySegmentsListOKResultsItemSegTypeSNM:
+		*s = CytologySegmentsListOKResultsItemSegTypeSNM
+	case CytologySegmentsListOKResultsItemSegTypeSTM:
+		*s = CytologySegmentsListOKResultsItemSegTypeSTM
+	default:
+		*s = CytologySegmentsListOKResultsItemSegType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologySegmentsListOKResultsItemSegType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemSegType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdatePartialUpdateOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdatePartialUpdateOK) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("patient_card")
+		s.PatientCard.Encode(e)
+	}
+	{
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
 	}
 	{
 		if s.DiagnosticMarking.Set {
 			e.FieldStart("diagnostic_marking")
 			s.DiagnosticMarking.Encode(e)
 		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
 	}
 	{
 		if s.MaterialType.Set {
@@ -1810,96 +5532,102 @@ func (s *CytologyPostReq) encodeFields(e *jx.Encoder) {
 		}
 	}
 	{
-		if s.Details != nil {
-			e.FieldStart("details")
-			s.Details.Encode(e)
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
 		}
 	}
 	{
-		if s.PrevID.Set {
-			e.FieldStart("prev_id")
-			s.PrevID.Encode(e)
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
 		}
 	}
 	{
-		if s.ParentPrevID.Set {
-			e.FieldStart("parent_prev_id")
-			s.ParentPrevID.Encode(e)
+		if s.OriginalImage.Set {
+			e.FieldStart("original_image")
+			s.OriginalImage.Encode(e)
 		}
 	}
 }
 
-var jsonFieldsNameOfCytologyPostReq = [12]string{
-	0:  "external_id",
-	1:  "doctor_id",
-	2:  "patient_id",
-	3:  "diagnostic_number",
-	4:  "diagnostic_marking",
-	5:  "material_type",
-	6:  "calcitonin",
-	7:  "calcitonin_in_flush",
-	8:  "thyroglobulin",
-	9:  "details",
-	10: "prev_id",
-	11: "parent_prev_id",
+var jsonFieldsNameOfCytologyUpdatePartialUpdateOK = [14]string{
+	0:  "id",
+	1:  "patient_card",
+	2:  "details",
+	3:  "is_last",
+	4:  "diagnos_date",
+	5:  "diagnostic_marking",
+	6:  "diagnostic_number",
+	7:  "material_type",
+	8:  "calcitonin",
+	9:  "calcitonin_in_flush",
+	10: "thyroglobulin",
+	11: "prev",
+	12: "parent_prev",
+	13: "original_image",
 }
 
-// Decode decodes CytologyPostReq from json.
-func (s *CytologyPostReq) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateOK from json.
+func (s *CytologyUpdatePartialUpdateOK) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyPostReq to nil")
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateOK to nil")
 	}
 	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "external_id":
-			requiredBitSet[0] |= 1 << 0
+		case "id":
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ExternalID = v
-				if err != nil {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"external_id\"")
+				return errors.Wrap(err, "decode field \"id\"")
 			}
-		case "doctor_id":
+		case "patient_card":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.DoctorID = v
-				if err != nil {
+				if err := s.PatientCard.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"doctor_id\"")
+				return errors.Wrap(err, "decode field \"patient_card\"")
 			}
-		case "patient_id":
-			requiredBitSet[0] |= 1 << 2
+		case "details":
 			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.PatientID = v
-				if err != nil {
+				s.Details = nil
+				var elem CytologyUpdatePartialUpdateOKDetails
+				if err := elem.Decode(d); err != nil {
 					return err
 				}
+				s.Details = &elem
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"patient_id\"")
+				return errors.Wrap(err, "decode field \"details\"")
 			}
-		case "diagnostic_number":
-			requiredBitSet[0] |= 1 << 3
+		case "is_last":
 			if err := func() error {
-				v, err := d.Int()
-				s.DiagnosticNumber = int(v)
-				if err != nil {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
 			}
 		case "diagnostic_marking":
 			if err := func() error {
@@ -1910,6 +5638,18 @@ func (s *CytologyPostReq) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
 			}
 		case "material_type":
 			if err := func() error {
@@ -1951,49 +5691,47 @@ func (s *CytologyPostReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"thyroglobulin\"")
 			}
-		case "details":
+		case "prev":
 			if err := func() error {
-				s.Details = nil
-				var elem CytologyPostReqDetails
-				if err := elem.Decode(d); err != nil {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
 					return err
 				}
-				s.Details = &elem
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"details\"")
+				return errors.Wrap(err, "decode field \"prev\"")
 			}
-		case "prev_id":
+		case "parent_prev":
 			if err := func() error {
-				s.PrevID.Reset()
-				if err := s.PrevID.Decode(d); err != nil {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"prev_id\"")
+				return errors.Wrap(err, "decode field \"parent_prev\"")
 			}
-		case "parent_prev_id":
+		case "original_image":
 			if err := func() error {
-				s.ParentPrevID.Reset()
-				if err := s.ParentPrevID.Decode(d); err != nil {
+				s.OriginalImage.Reset()
+				if err := s.OriginalImage.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"parent_prev_id\"")
+				return errors.Wrap(err, "decode field \"original_image\"")
 			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyPostReq")
+		return errors.Wrap(err, "decode CytologyUpdatePartialUpdateOK")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [2]uint8{
-		0b00001111,
+		0b01000010,
 		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
@@ -2006,8 +5744,8 @@ func (s *CytologyPostReq) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCytologyPostReq) {
-					name = jsonFieldsNameOfCytologyPostReq[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCytologyUpdatePartialUpdateOK) {
+					name = jsonFieldsNameOfCytologyUpdatePartialUpdateOK[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -2028,35 +5766,35 @@ func (s *CytologyPostReq) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyPostReq) MarshalJSON() ([]byte, error) {
+func (s *CytologyUpdatePartialUpdateOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyPostReq) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdatePartialUpdateOK) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologyPostReqDetails) Encode(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateOKDetails) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologyPostReqDetails) encodeFields(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateOKDetails) encodeFields(e *jx.Encoder) {
 }
 
-var jsonFieldsNameOfCytologyPostReqDetails = [0]string{}
+var jsonFieldsNameOfCytologyUpdatePartialUpdateOKDetails = [0]string{}
 
-// Decode decodes CytologyPostReqDetails from json.
-func (s *CytologyPostReqDetails) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateOKDetails from json.
+func (s *CytologyUpdatePartialUpdateOKDetails) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologyPostReqDetails to nil")
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateOKDetails to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -2065,125 +5803,87 @@ func (s *CytologyPostReqDetails) Decode(d *jx.Decoder) error {
 			return d.Skip()
 		}
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologyPostReqDetails")
+		return errors.Wrap(err, "decode CytologyUpdatePartialUpdateOKDetails")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologyPostReqDetails) MarshalJSON() ([]byte, error) {
+func (s *CytologyUpdatePartialUpdateOKDetails) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyPostReqDetails) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologyPostReqDiagnosticMarking as json.
-func (s CytologyPostReqDiagnosticMarking) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes CytologyPostReqDiagnosticMarking from json.
-func (s *CytologyPostReqDiagnosticMarking) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyPostReqDiagnosticMarking to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch CytologyPostReqDiagnosticMarking(v) {
-	case CytologyPostReqDiagnosticMarking11:
-		*s = CytologyPostReqDiagnosticMarking11
-	case CytologyPostReqDiagnosticMarking23:
-		*s = CytologyPostReqDiagnosticMarking23
-	default:
-		*s = CytologyPostReqDiagnosticMarking(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologyPostReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyPostReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes CytologyPostReqMaterialType as json.
-func (s CytologyPostReqMaterialType) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes CytologyPostReqMaterialType from json.
-func (s *CytologyPostReqMaterialType) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologyPostReqMaterialType to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch CytologyPostReqMaterialType(v) {
-	case CytologyPostReqMaterialTypeGS:
-		*s = CytologyPostReqMaterialTypeGS
-	case CytologyPostReqMaterialTypeBP:
-		*s = CytologyPostReqMaterialTypeBP
-	case CytologyPostReqMaterialTypeTP:
-		*s = CytologyPostReqMaterialTypeTP
-	case CytologyPostReqMaterialTypePTP:
-		*s = CytologyPostReqMaterialTypePTP
-	case CytologyPostReqMaterialTypeLNP:
-		*s = CytologyPostReqMaterialTypeLNP
-	default:
-		*s = CytologyPostReqMaterialType(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s CytologyPostReqMaterialType) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologyPostReqMaterialType) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdatePartialUpdateOKDetails) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologySegmentationGroupIDPatchReq) Encode(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateOKPatientCard) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologySegmentationGroupIDPatchReq) encodeFields(e *jx.Encoder) {
-	{
-		if s.SegType.Set {
-			e.FieldStart("seg_type")
-			s.SegType.Encode(e)
+func (s *CytologyUpdatePartialUpdateOKPatientCard) encodeFields(e *jx.Encoder) {
+}
+
+var jsonFieldsNameOfCytologyUpdatePartialUpdateOKPatientCard = [0]string{}
+
+// Decode decodes CytologyUpdatePartialUpdateOKPatientCard from json.
+func (s *CytologyUpdatePartialUpdateOKPatientCard) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateOKPatientCard to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		default:
+			return d.Skip()
 		}
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyUpdatePartialUpdateOKPatientCard")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyUpdatePartialUpdateOKPatientCard) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdatePartialUpdateOKPatientCard) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdatePartialUpdateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdatePartialUpdateReq) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("patient_card")
+		s.PatientCard.Encode(e)
 	}
 	{
 		if s.Details != nil {
@@ -2191,35 +5891,122 @@ func (s *CytologySegmentationGroupIDPatchReq) encodeFields(e *jx.Encoder) {
 			s.Details.Encode(e)
 		}
 	}
-}
-
-var jsonFieldsNameOfCytologySegmentationGroupIDPatchReq = [2]string{
-	0: "seg_type",
-	1: "details",
-}
-
-// Decode decodes CytologySegmentationGroupIDPatchReq from json.
-func (s *CytologySegmentationGroupIDPatchReq) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode CytologySegmentationGroupIDPatchReq to nil")
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
 	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.OriginalImage.Set {
+			e.FieldStart("original_image")
+			s.OriginalImage.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyUpdatePartialUpdateReq = [14]string{
+	0:  "id",
+	1:  "patient_card",
+	2:  "details",
+	3:  "is_last",
+	4:  "diagnos_date",
+	5:  "diagnostic_marking",
+	6:  "diagnostic_number",
+	7:  "material_type",
+	8:  "calcitonin",
+	9:  "calcitonin_in_flush",
+	10: "thyroglobulin",
+	11: "prev",
+	12: "parent_prev",
+	13: "original_image",
+}
+
+// Decode decodes CytologyUpdatePartialUpdateReq from json.
+func (s *CytologyUpdatePartialUpdateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateReq to nil")
+	}
+	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "seg_type":
+		case "id":
 			if err := func() error {
-				s.SegType.Reset()
-				if err := s.SegType.Decode(d); err != nil {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"seg_type\"")
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "patient_card":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
 			}
 		case "details":
 			if err := func() error {
 				s.Details = nil
-				var elem CytologySegmentationGroupIDPatchReqDetails
+				var elem CytologyUpdatePartialUpdateReqDetails
 				if err := elem.Decode(d); err != nil {
 					return err
 				}
@@ -2228,47 +6015,192 @@ func (s *CytologySegmentationGroupIDPatchReq) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"details\"")
 			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "original_image":
+			if err := func() error {
+				s.OriginalImage.Reset()
+				if err := s.OriginalImage.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"original_image\"")
+			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologySegmentationGroupIDPatchReq")
+		return errors.Wrap(err, "decode CytologyUpdatePartialUpdateReq")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [2]uint8{
+		0b01000010,
+		0b00000000,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyUpdatePartialUpdateReq) {
+					name = jsonFieldsNameOfCytologyUpdatePartialUpdateReq[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologySegmentationGroupIDPatchReq) MarshalJSON() ([]byte, error) {
+func (s *CytologyUpdatePartialUpdateReq) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologySegmentationGroupIDPatchReq) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdatePartialUpdateReq) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologySegmentationGroupIDPatchReqDetails) Encode(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateReqDetails) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologySegmentationGroupIDPatchReqDetails) encodeFields(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateReqDetails) encodeFields(e *jx.Encoder) {
 }
 
-var jsonFieldsNameOfCytologySegmentationGroupIDPatchReqDetails = [0]string{}
+var jsonFieldsNameOfCytologyUpdatePartialUpdateReqDetails = [0]string{}
 
-// Decode decodes CytologySegmentationGroupIDPatchReqDetails from json.
-func (s *CytologySegmentationGroupIDPatchReqDetails) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateReqDetails from json.
+func (s *CytologyUpdatePartialUpdateReqDetails) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologySegmentationGroupIDPatchReqDetails to nil")
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateReqDetails to nil")
 	}
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
@@ -2277,204 +6209,481 @@ func (s *CytologySegmentationGroupIDPatchReqDetails) Decode(d *jx.Decoder) error
 			return d.Skip()
 		}
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologySegmentationGroupIDPatchReqDetails")
+		return errors.Wrap(err, "decode CytologyUpdatePartialUpdateReqDetails")
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologySegmentationGroupIDPatchReqDetails) MarshalJSON() ([]byte, error) {
+func (s *CytologyUpdatePartialUpdateReqDetails) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologySegmentationGroupIDPatchReqDetails) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdatePartialUpdateReqDetails) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologySegmentationGroupIDPatchReqSegType as json.
-func (s CytologySegmentationGroupIDPatchReqSegType) Encode(e *jx.Encoder) {
+// Encode encodes CytologyUpdatePartialUpdateReqDiagnosticMarking as json.
+func (s CytologyUpdatePartialUpdateReqDiagnosticMarking) Encode(e *jx.Encoder) {
 	e.Str(string(s))
 }
 
-// Decode decodes CytologySegmentationGroupIDPatchReqSegType from json.
-func (s *CytologySegmentationGroupIDPatchReqSegType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateReqDiagnosticMarking from json.
+func (s *CytologyUpdatePartialUpdateReqDiagnosticMarking) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologySegmentationGroupIDPatchReqSegType to nil")
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateReqDiagnosticMarking to nil")
 	}
 	v, err := d.StrBytes()
 	if err != nil {
 		return err
 	}
 	// Try to use constant string.
-	switch CytologySegmentationGroupIDPatchReqSegType(v) {
-	case CytologySegmentationGroupIDPatchReqSegTypeNIL:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeNIL
-	case CytologySegmentationGroupIDPatchReqSegTypeNIR:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeNIR
-	case CytologySegmentationGroupIDPatchReqSegTypeNIM:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeNIM
-	case CytologySegmentationGroupIDPatchReqSegTypeCNO:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeCNO
-	case CytologySegmentationGroupIDPatchReqSegTypeCGE:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeCGE
-	case CytologySegmentationGroupIDPatchReqSegTypeC2N:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeC2N
-	case CytologySegmentationGroupIDPatchReqSegTypeCPS:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeCPS
-	case CytologySegmentationGroupIDPatchReqSegTypeCFC:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeCFC
-	case CytologySegmentationGroupIDPatchReqSegTypeCLY:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeCLY
-	case CytologySegmentationGroupIDPatchReqSegTypeSOS:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSOS
-	case CytologySegmentationGroupIDPatchReqSegTypeSDS:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSDS
-	case CytologySegmentationGroupIDPatchReqSegTypeSMS:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSMS
-	case CytologySegmentationGroupIDPatchReqSegTypeSTS:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSTS
-	case CytologySegmentationGroupIDPatchReqSegTypeSPS:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSPS
-	case CytologySegmentationGroupIDPatchReqSegTypeSNM:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSNM
-	case CytologySegmentationGroupIDPatchReqSegTypeSTM:
-		*s = CytologySegmentationGroupIDPatchReqSegTypeSTM
+	switch CytologyUpdatePartialUpdateReqDiagnosticMarking(v) {
+	case CytologyUpdatePartialUpdateReqDiagnosticMarking11:
+		*s = CytologyUpdatePartialUpdateReqDiagnosticMarking11
+	case CytologyUpdatePartialUpdateReqDiagnosticMarking23:
+		*s = CytologyUpdatePartialUpdateReqDiagnosticMarking23
 	default:
-		*s = CytologySegmentationGroupIDPatchReqSegType(v)
+		*s = CytologyUpdatePartialUpdateReqDiagnosticMarking(v)
 	}
 
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologySegmentationGroupIDPatchReqSegType) MarshalJSON() ([]byte, error) {
+func (s CytologyUpdatePartialUpdateReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologySegmentationGroupIDPatchReqSegType) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdatePartialUpdateReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologySegmentationGroupIDSegmentsGetOKApplicationJSON as json.
-func (s CytologySegmentationGroupIDSegmentsGetOKApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := []Segmentation(s)
-
-	e.ArrStart()
-	for _, elem := range unwrapped {
-		elem.Encode(e)
-	}
-	e.ArrEnd()
+// Encode encodes CytologyUpdatePartialUpdateReqMaterialType as json.
+func (s CytologyUpdatePartialUpdateReqMaterialType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
 }
 
-// Decode decodes CytologySegmentationGroupIDSegmentsGetOKApplicationJSON from json.
-func (s *CytologySegmentationGroupIDSegmentsGetOKApplicationJSON) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateReqMaterialType from json.
+func (s *CytologyUpdatePartialUpdateReqMaterialType) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologySegmentationGroupIDSegmentsGetOKApplicationJSON to nil")
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateReqMaterialType to nil")
 	}
-	var unwrapped []Segmentation
-	if err := func() error {
-		unwrapped = make([]Segmentation, 0)
-		if err := d.Arr(func(d *jx.Decoder) error {
-			var elem Segmentation
-			if err := elem.Decode(d); err != nil {
-				return err
-			}
-			unwrapped = append(unwrapped, elem)
-			return nil
-		}); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
 	}
-	*s = CytologySegmentationGroupIDSegmentsGetOKApplicationJSON(unwrapped)
+	// Try to use constant string.
+	switch CytologyUpdatePartialUpdateReqMaterialType(v) {
+	case CytologyUpdatePartialUpdateReqMaterialTypeGS:
+		*s = CytologyUpdatePartialUpdateReqMaterialTypeGS
+	case CytologyUpdatePartialUpdateReqMaterialTypeBP:
+		*s = CytologyUpdatePartialUpdateReqMaterialTypeBP
+	case CytologyUpdatePartialUpdateReqMaterialTypeTP:
+		*s = CytologyUpdatePartialUpdateReqMaterialTypeTP
+	case CytologyUpdatePartialUpdateReqMaterialTypePTP:
+		*s = CytologyUpdatePartialUpdateReqMaterialTypePTP
+	case CytologyUpdatePartialUpdateReqMaterialTypeLNP:
+		*s = CytologyUpdatePartialUpdateReqMaterialTypeLNP
+	default:
+		*s = CytologyUpdatePartialUpdateReqMaterialType(v)
+	}
+
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CytologySegmentationGroupIDSegmentsGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s CytologyUpdatePartialUpdateReqMaterialType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologySegmentationGroupIDSegmentsGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdatePartialUpdateReqMaterialType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologySegmentationGroupIDSegmentsPostReq) Encode(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateReqPatientCard) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologySegmentationGroupIDSegmentsPostReq) encodeFields(e *jx.Encoder) {
+func (s *CytologyUpdatePartialUpdateReqPatientCard) encodeFields(e *jx.Encoder) {
 	{
-		e.FieldStart("points")
-		e.ArrStart()
-		for _, elem := range s.Points {
-			elem.Encode(e)
+		if s.Patient.Set {
+			e.FieldStart("patient")
+			s.Patient.Encode(e)
 		}
-		e.ArrEnd()
+	}
+	{
+		if s.AcceptanceDatetime.Set {
+			e.FieldStart("acceptance_datetime")
+			s.AcceptanceDatetime.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.Diagnosis.Set {
+			e.FieldStart("diagnosis")
+			s.Diagnosis.Encode(e)
+		}
 	}
 }
 
-var jsonFieldsNameOfCytologySegmentationGroupIDSegmentsPostReq = [1]string{
-	0: "points",
+var jsonFieldsNameOfCytologyUpdatePartialUpdateReqPatientCard = [3]string{
+	0: "patient",
+	1: "acceptance_datetime",
+	2: "diagnosis",
 }
 
-// Decode decodes CytologySegmentationGroupIDSegmentsPostReq from json.
-func (s *CytologySegmentationGroupIDSegmentsPostReq) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateReqPatientCard from json.
+func (s *CytologyUpdatePartialUpdateReqPatientCard) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologySegmentationGroupIDSegmentsPostReq to nil")
+		return errors.New("invalid: unable to decode CytologyUpdatePartialUpdateReqPatientCard to nil")
 	}
-	var requiredBitSet [1]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "points":
-			requiredBitSet[0] |= 1 << 0
+		case "patient":
 			if err := func() error {
-				s.Points = make([]SegmentationPoint, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem SegmentationPoint
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					s.Points = append(s.Points, elem)
-					return nil
-				}); err != nil {
+				s.Patient.Reset()
+				if err := s.Patient.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"points\"")
+				return errors.Wrap(err, "decode field \"patient\"")
+			}
+		case "acceptance_datetime":
+			if err := func() error {
+				s.AcceptanceDatetime.Reset()
+				if err := s.AcceptanceDatetime.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"acceptance_datetime\"")
+			}
+		case "diagnosis":
+			if err := func() error {
+				s.Diagnosis.Reset()
+				if err := s.Diagnosis.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnosis\"")
 			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologySegmentationGroupIDSegmentsPostReq")
+		return errors.Wrap(err, "decode CytologyUpdatePartialUpdateReqPatientCard")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyUpdatePartialUpdateReqPatientCard) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdatePartialUpdateReqPatientCard) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdateUpdateOK) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdateUpdateOK) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("patient_card")
+		s.PatientCard.Encode(e)
+	}
+	{
+		if s.Details != nil {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.OriginalImage.Set {
+			e.FieldStart("original_image")
+			s.OriginalImage.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyUpdateUpdateOK = [14]string{
+	0:  "id",
+	1:  "patient_card",
+	2:  "details",
+	3:  "is_last",
+	4:  "diagnos_date",
+	5:  "diagnostic_marking",
+	6:  "diagnostic_number",
+	7:  "material_type",
+	8:  "calcitonin",
+	9:  "calcitonin_in_flush",
+	10: "thyroglobulin",
+	11: "prev",
+	12: "parent_prev",
+	13: "original_image",
+}
+
+// Decode decodes CytologyUpdateUpdateOK from json.
+func (s *CytologyUpdateUpdateOK) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateOK to nil")
+	}
+	var requiredBitSet [2]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "patient_card":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details = nil
+				var elem CytologyUpdateUpdateOKDetails
+				if err := elem.Decode(d); err != nil {
+					return err
+				}
+				s.Details = &elem
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "original_image":
+			if err := func() error {
+				s.OriginalImage.Reset()
+				if err := s.OriginalImage.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"original_image\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyUpdateUpdateOK")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000001,
+	for i, mask := range [2]uint8{
+		0b01000010,
+		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -2486,8 +6695,8 @@ func (s *CytologySegmentationGroupIDSegmentsPostReq) Decode(d *jx.Decoder) error
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCytologySegmentationGroupIDSegmentsPostReq) {
-					name = jsonFieldsNameOfCytologySegmentationGroupIDSegmentsPostReq[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCytologyUpdateUpdateOK) {
+					name = jsonFieldsNameOfCytologyUpdateUpdateOK[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -2508,79 +6717,377 @@ func (s *CytologySegmentationGroupIDSegmentsPostReq) Decode(d *jx.Decoder) error
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologySegmentationGroupIDSegmentsPostReq) MarshalJSON() ([]byte, error) {
+func (s *CytologyUpdateUpdateOK) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologySegmentationGroupIDSegmentsPostReq) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdateUpdateOK) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
 // Encode implements json.Marshaler.
-func (s *CytologySegmentationIDPatchReq) Encode(e *jx.Encoder) {
+func (s *CytologyUpdateUpdateOKDetails) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *CytologySegmentationIDPatchReq) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("points")
-		e.ArrStart()
-		for _, elem := range s.Points {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
-	}
+func (s *CytologyUpdateUpdateOKDetails) encodeFields(e *jx.Encoder) {
 }
 
-var jsonFieldsNameOfCytologySegmentationIDPatchReq = [1]string{
-	0: "points",
-}
+var jsonFieldsNameOfCytologyUpdateUpdateOKDetails = [0]string{}
 
-// Decode decodes CytologySegmentationIDPatchReq from json.
-func (s *CytologySegmentationIDPatchReq) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdateUpdateOKDetails from json.
+func (s *CytologyUpdateUpdateOKDetails) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CytologySegmentationIDPatchReq to nil")
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateOKDetails to nil")
 	}
-	var requiredBitSet [1]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "points":
-			requiredBitSet[0] |= 1 << 0
+		default:
+			return d.Skip()
+		}
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyUpdateUpdateOKDetails")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyUpdateUpdateOKDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateOKDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdateUpdateOKPatientCard) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdateUpdateOKPatientCard) encodeFields(e *jx.Encoder) {
+}
+
+var jsonFieldsNameOfCytologyUpdateUpdateOKPatientCard = [0]string{}
+
+// Decode decodes CytologyUpdateUpdateOKPatientCard from json.
+func (s *CytologyUpdateUpdateOKPatientCard) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateOKPatientCard to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		default:
+			return d.Skip()
+		}
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyUpdateUpdateOKPatientCard")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyUpdateUpdateOKPatientCard) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateOKPatientCard) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdateUpdateReq) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdateUpdateReq) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("patient_card")
+		s.PatientCard.Encode(e)
+	}
+	{
+		if s.Details.Set {
+			e.FieldStart("details")
+			s.Details.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.OriginalImage.Set {
+			e.FieldStart("original_image")
+			s.OriginalImage.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyUpdateUpdateReq = [14]string{
+	0:  "id",
+	1:  "patient_card",
+	2:  "details",
+	3:  "is_last",
+	4:  "diagnos_date",
+	5:  "diagnostic_marking",
+	6:  "diagnostic_number",
+	7:  "material_type",
+	8:  "calcitonin",
+	9:  "calcitonin_in_flush",
+	10: "thyroglobulin",
+	11: "prev",
+	12: "parent_prev",
+	13: "original_image",
+}
+
+// Decode decodes CytologyUpdateUpdateReq from json.
+func (s *CytologyUpdateUpdateReq) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReq to nil")
+	}
+	var requiredBitSet [2]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
 			if err := func() error {
-				s.Points = make([]SegmentationPoint, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem SegmentationPoint
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					s.Points = append(s.Points, elem)
-					return nil
-				}); err != nil {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"points\"")
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "patient_card":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
+			}
+		case "details":
+			if err := func() error {
+				s.Details.Reset()
+				if err := s.Details.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"details\"")
+			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 6
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "original_image":
+			if err := func() error {
+				s.OriginalImage.Reset()
+				if err := s.OriginalImage.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"original_image\"")
 			}
 		default:
 			return d.Skip()
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode CytologySegmentationIDPatchReq")
+		return errors.Wrap(err, "decode CytologyUpdateUpdateReq")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000001,
+	for i, mask := range [2]uint8{
+		0b01000010,
+		0b00000000,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -2592,8 +7099,8 @@ func (s *CytologySegmentationIDPatchReq) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfCytologySegmentationIDPatchReq) {
-					name = jsonFieldsNameOfCytologySegmentationIDPatchReq[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfCytologyUpdateUpdateReq) {
+					name = jsonFieldsNameOfCytologyUpdateUpdateReq[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -2614,14 +7121,584 @@ func (s *CytologySegmentationIDPatchReq) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *CytologySegmentationIDPatchReq) MarshalJSON() ([]byte, error) {
+func (s *CytologyUpdateUpdateReq) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CytologySegmentationIDPatchReq) UnmarshalJSON(data []byte) error {
+func (s *CytologyUpdateUpdateReq) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdateUpdateReqDetails) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdateUpdateReqDetails) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		if s.IsLast.Set {
+			e.FieldStart("is_last")
+			s.IsLast.Encode(e)
+		}
+	}
+	{
+		if s.DiagnosDate.Set {
+			e.FieldStart("diagnos_date")
+			s.DiagnosDate.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.DiagnosticMarking.Set {
+			e.FieldStart("diagnostic_marking")
+			s.DiagnosticMarking.Encode(e)
+		}
+	}
+	{
+		e.FieldStart("diagnostic_number")
+		e.Int(s.DiagnosticNumber)
+	}
+	{
+		if s.MaterialType.Set {
+			e.FieldStart("material_type")
+			s.MaterialType.Encode(e)
+		}
+	}
+	{
+		if s.Calcitonin.Set {
+			e.FieldStart("calcitonin")
+			s.Calcitonin.Encode(e)
+		}
+	}
+	{
+		if s.CalcitoninInFlush.Set {
+			e.FieldStart("calcitonin_in_flush")
+			s.CalcitoninInFlush.Encode(e)
+		}
+	}
+	{
+		if s.Thyroglobulin.Set {
+			e.FieldStart("thyroglobulin")
+			s.Thyroglobulin.Encode(e)
+		}
+	}
+	{
+		if s.Prev.Set {
+			e.FieldStart("prev")
+			s.Prev.Encode(e)
+		}
+	}
+	{
+		if s.ParentPrev.Set {
+			e.FieldStart("parent_prev")
+			s.ParentPrev.Encode(e)
+		}
+	}
+	{
+		if s.PatientCard.Set {
+			e.FieldStart("patient_card")
+			s.PatientCard.Encode(e)
+		}
+	}
+	{
+		if s.OriginalImage.Set {
+			e.FieldStart("original_image")
+			s.OriginalImage.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyUpdateUpdateReqDetails = [13]string{
+	0:  "id",
+	1:  "is_last",
+	2:  "diagnos_date",
+	3:  "diagnostic_marking",
+	4:  "diagnostic_number",
+	5:  "material_type",
+	6:  "calcitonin",
+	7:  "calcitonin_in_flush",
+	8:  "thyroglobulin",
+	9:  "prev",
+	10: "parent_prev",
+	11: "patient_card",
+	12: "original_image",
+}
+
+// Decode decodes CytologyUpdateUpdateReqDetails from json.
+func (s *CytologyUpdateUpdateReqDetails) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReqDetails to nil")
+	}
+	var requiredBitSet [2]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "is_last":
+			if err := func() error {
+				s.IsLast.Reset()
+				if err := s.IsLast.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"is_last\"")
+			}
+		case "diagnos_date":
+			if err := func() error {
+				s.DiagnosDate.Reset()
+				if err := s.DiagnosDate.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnos_date\"")
+			}
+		case "diagnostic_marking":
+			if err := func() error {
+				s.DiagnosticMarking.Reset()
+				if err := s.DiagnosticMarking.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_marking\"")
+			}
+		case "diagnostic_number":
+			requiredBitSet[0] |= 1 << 4
+			if err := func() error {
+				v, err := d.Int()
+				s.DiagnosticNumber = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnostic_number\"")
+			}
+		case "material_type":
+			if err := func() error {
+				s.MaterialType.Reset()
+				if err := s.MaterialType.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"material_type\"")
+			}
+		case "calcitonin":
+			if err := func() error {
+				s.Calcitonin.Reset()
+				if err := s.Calcitonin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin\"")
+			}
+		case "calcitonin_in_flush":
+			if err := func() error {
+				s.CalcitoninInFlush.Reset()
+				if err := s.CalcitoninInFlush.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"calcitonin_in_flush\"")
+			}
+		case "thyroglobulin":
+			if err := func() error {
+				s.Thyroglobulin.Reset()
+				if err := s.Thyroglobulin.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"thyroglobulin\"")
+			}
+		case "prev":
+			if err := func() error {
+				s.Prev.Reset()
+				if err := s.Prev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"prev\"")
+			}
+		case "parent_prev":
+			if err := func() error {
+				s.ParentPrev.Reset()
+				if err := s.ParentPrev.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"parent_prev\"")
+			}
+		case "patient_card":
+			if err := func() error {
+				s.PatientCard.Reset()
+				if err := s.PatientCard.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient_card\"")
+			}
+		case "original_image":
+			if err := func() error {
+				s.OriginalImage.Reset()
+				if err := s.OriginalImage.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"original_image\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyUpdateUpdateReqDetails")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [2]uint8{
+		0b00010000,
+		0b00000000,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfCytologyUpdateUpdateReqDetails) {
+					name = jsonFieldsNameOfCytologyUpdateUpdateReqDetails[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyUpdateUpdateReqDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateReqDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqDetailsDiagnosticMarking as json.
+func (s CytologyUpdateUpdateReqDetailsDiagnosticMarking) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyUpdateUpdateReqDetailsDiagnosticMarking from json.
+func (s *CytologyUpdateUpdateReqDetailsDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReqDetailsDiagnosticMarking to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyUpdateUpdateReqDetailsDiagnosticMarking(v) {
+	case CytologyUpdateUpdateReqDetailsDiagnosticMarking11:
+		*s = CytologyUpdateUpdateReqDetailsDiagnosticMarking11
+	case CytologyUpdateUpdateReqDetailsDiagnosticMarking23:
+		*s = CytologyUpdateUpdateReqDetailsDiagnosticMarking23
+	default:
+		*s = CytologyUpdateUpdateReqDetailsDiagnosticMarking(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyUpdateUpdateReqDetailsDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateReqDetailsDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqDetailsMaterialType as json.
+func (s CytologyUpdateUpdateReqDetailsMaterialType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyUpdateUpdateReqDetailsMaterialType from json.
+func (s *CytologyUpdateUpdateReqDetailsMaterialType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReqDetailsMaterialType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyUpdateUpdateReqDetailsMaterialType(v) {
+	case CytologyUpdateUpdateReqDetailsMaterialTypeGS:
+		*s = CytologyUpdateUpdateReqDetailsMaterialTypeGS
+	case CytologyUpdateUpdateReqDetailsMaterialTypeBP:
+		*s = CytologyUpdateUpdateReqDetailsMaterialTypeBP
+	case CytologyUpdateUpdateReqDetailsMaterialTypeTP:
+		*s = CytologyUpdateUpdateReqDetailsMaterialTypeTP
+	case CytologyUpdateUpdateReqDetailsMaterialTypePTP:
+		*s = CytologyUpdateUpdateReqDetailsMaterialTypePTP
+	case CytologyUpdateUpdateReqDetailsMaterialTypeLNP:
+		*s = CytologyUpdateUpdateReqDetailsMaterialTypeLNP
+	default:
+		*s = CytologyUpdateUpdateReqDetailsMaterialType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyUpdateUpdateReqDetailsMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateReqDetailsMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqDiagnosticMarking as json.
+func (s CytologyUpdateUpdateReqDiagnosticMarking) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyUpdateUpdateReqDiagnosticMarking from json.
+func (s *CytologyUpdateUpdateReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReqDiagnosticMarking to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyUpdateUpdateReqDiagnosticMarking(v) {
+	case CytologyUpdateUpdateReqDiagnosticMarking11:
+		*s = CytologyUpdateUpdateReqDiagnosticMarking11
+	case CytologyUpdateUpdateReqDiagnosticMarking23:
+		*s = CytologyUpdateUpdateReqDiagnosticMarking23
+	default:
+		*s = CytologyUpdateUpdateReqDiagnosticMarking(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyUpdateUpdateReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqMaterialType as json.
+func (s CytologyUpdateUpdateReqMaterialType) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes CytologyUpdateUpdateReqMaterialType from json.
+func (s *CytologyUpdateUpdateReqMaterialType) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReqMaterialType to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch CytologyUpdateUpdateReqMaterialType(v) {
+	case CytologyUpdateUpdateReqMaterialTypeGS:
+		*s = CytologyUpdateUpdateReqMaterialTypeGS
+	case CytologyUpdateUpdateReqMaterialTypeBP:
+		*s = CytologyUpdateUpdateReqMaterialTypeBP
+	case CytologyUpdateUpdateReqMaterialTypeTP:
+		*s = CytologyUpdateUpdateReqMaterialTypeTP
+	case CytologyUpdateUpdateReqMaterialTypePTP:
+		*s = CytologyUpdateUpdateReqMaterialTypePTP
+	case CytologyUpdateUpdateReqMaterialTypeLNP:
+		*s = CytologyUpdateUpdateReqMaterialTypeLNP
+	default:
+		*s = CytologyUpdateUpdateReqMaterialType(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s CytologyUpdateUpdateReqMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateReqMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologyUpdateUpdateReqPatientCard) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologyUpdateUpdateReqPatientCard) encodeFields(e *jx.Encoder) {
+	{
+		if s.Patient.Set {
+			e.FieldStart("patient")
+			s.Patient.Encode(e)
+		}
+	}
+	{
+		if s.AcceptanceDatetime.Set {
+			e.FieldStart("acceptance_datetime")
+			s.AcceptanceDatetime.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.Diagnosis.Set {
+			e.FieldStart("diagnosis")
+			s.Diagnosis.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologyUpdateUpdateReqPatientCard = [3]string{
+	0: "patient",
+	1: "acceptance_datetime",
+	2: "diagnosis",
+}
+
+// Decode decodes CytologyUpdateUpdateReqPatientCard from json.
+func (s *CytologyUpdateUpdateReqPatientCard) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologyUpdateUpdateReqPatientCard to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "patient":
+			if err := func() error {
+				s.Patient.Reset()
+				if err := s.Patient.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient\"")
+			}
+		case "acceptance_datetime":
+			if err := func() error {
+				s.AcceptanceDatetime.Reset()
+				if err := s.AcceptanceDatetime.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"acceptance_datetime\"")
+			}
+		case "diagnosis":
+			if err := func() error {
+				s.Diagnosis.Reset()
+				if err := s.Diagnosis.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnosis\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologyUpdateUpdateReqPatientCard")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologyUpdateUpdateReqPatientCard) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologyUpdateUpdateReqPatientCard) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -4456,18 +9533,18 @@ func (s *OptBool) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyIDPatchReqDiagnosticMarking as json.
-func (o OptCytologyIDPatchReqDiagnosticMarking) Encode(e *jx.Encoder) {
+// Encode encodes CytologyCreateCreateCreatedDiagnosticMarking as json.
+func (o OptCytologyCreateCreateCreatedDiagnosticMarking) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologyIDPatchReqDiagnosticMarking from json.
-func (o *OptCytologyIDPatchReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyCreateCreateCreatedDiagnosticMarking from json.
+func (o *OptCytologyCreateCreateCreatedDiagnosticMarking) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyIDPatchReqDiagnosticMarking to nil")
+		return errors.New("invalid: unable to decode OptCytologyCreateCreateCreatedDiagnosticMarking to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4477,30 +9554,30 @@ func (o *OptCytologyIDPatchReqDiagnosticMarking) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyIDPatchReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+func (s OptCytologyCreateCreateCreatedDiagnosticMarking) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyIDPatchReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+func (s *OptCytologyCreateCreateCreatedDiagnosticMarking) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyIDPatchReqMaterialType as json.
-func (o OptCytologyIDPatchReqMaterialType) Encode(e *jx.Encoder) {
+// Encode encodes CytologyCreateCreateCreatedMaterialType as json.
+func (o OptCytologyCreateCreateCreatedMaterialType) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologyIDPatchReqMaterialType from json.
-func (o *OptCytologyIDPatchReqMaterialType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyCreateCreateCreatedMaterialType from json.
+func (o *OptCytologyCreateCreateCreatedMaterialType) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyIDPatchReqMaterialType to nil")
+		return errors.New("invalid: unable to decode OptCytologyCreateCreateCreatedMaterialType to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4510,30 +9587,228 @@ func (o *OptCytologyIDPatchReqMaterialType) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyIDPatchReqMaterialType) MarshalJSON() ([]byte, error) {
+func (s OptCytologyCreateCreateCreatedMaterialType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyIDPatchReqMaterialType) UnmarshalJSON(data []byte) error {
+func (s *OptCytologyCreateCreateCreatedMaterialType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyImage as json.
-func (o OptCytologyImage) Encode(e *jx.Encoder) {
+// Encode encodes CytologyCreateCreateReqDiagnosticMarking as json.
+func (o OptCytologyCreateCreateReqDiagnosticMarking) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyCreateCreateReqDiagnosticMarking from json.
+func (o *OptCytologyCreateCreateReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyCreateCreateReqDiagnosticMarking to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyCreateCreateReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyCreateCreateReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyCreateCreateReqMaterialType as json.
+func (o OptCytologyCreateCreateReqMaterialType) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyCreateCreateReqMaterialType from json.
+func (o *OptCytologyCreateCreateReqMaterialType) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyCreateCreateReqMaterialType to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyCreateCreateReqMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyCreateCreateReqMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyHistoryReadOKResultsItemDiagnosticMarking as json.
+func (o OptCytologyHistoryReadOKResultsItemDiagnosticMarking) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyHistoryReadOKResultsItemDiagnosticMarking from json.
+func (o *OptCytologyHistoryReadOKResultsItemDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyHistoryReadOKResultsItemDiagnosticMarking to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyHistoryReadOKResultsItemDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyHistoryReadOKResultsItemDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyHistoryReadOKResultsItemMaterialType as json.
+func (o OptCytologyHistoryReadOKResultsItemMaterialType) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyHistoryReadOKResultsItemMaterialType from json.
+func (o *OptCytologyHistoryReadOKResultsItemMaterialType) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyHistoryReadOKResultsItemMaterialType to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyHistoryReadOKResultsItemMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyHistoryReadOKResultsItemMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyReadOKInfoImageGroupDiagnosticMarking as json.
+func (o OptCytologyReadOKInfoImageGroupDiagnosticMarking) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyReadOKInfoImageGroupDiagnosticMarking from json.
+func (o *OptCytologyReadOKInfoImageGroupDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyReadOKInfoImageGroupDiagnosticMarking to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyReadOKInfoImageGroupDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyReadOKInfoImageGroupDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyReadOKInfoImageGroupMaterialType as json.
+func (o OptCytologyReadOKInfoImageGroupMaterialType) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyReadOKInfoImageGroupMaterialType from json.
+func (o *OptCytologyReadOKInfoImageGroupMaterialType) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyReadOKInfoImageGroupMaterialType to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyReadOKInfoImageGroupMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyReadOKInfoImageGroupMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologySegmentGroupCreateCreateCreatedData as json.
+func (o OptCytologySegmentGroupCreateCreateCreatedData) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	o.Value.Encode(e)
 }
 
-// Decode decodes CytologyImage from json.
-func (o *OptCytologyImage) Decode(d *jx.Decoder) error {
+// Decode decodes CytologySegmentGroupCreateCreateCreatedData from json.
+func (o *OptCytologySegmentGroupCreateCreateCreatedData) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyImage to nil")
+		return errors.New("invalid: unable to decode OptCytologySegmentGroupCreateCreateCreatedData to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4543,30 +9818,30 @@ func (o *OptCytologyImage) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyImage) MarshalJSON() ([]byte, error) {
+func (s OptCytologySegmentGroupCreateCreateCreatedData) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyImage) UnmarshalJSON(data []byte) error {
+func (s *OptCytologySegmentGroupCreateCreateCreatedData) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyImageDiagnosticMarking as json.
-func (o OptCytologyImageDiagnosticMarking) Encode(e *jx.Encoder) {
+// Encode encodes CytologySegmentsListOKResultsItemGroupType as json.
+func (o OptCytologySegmentsListOKResultsItemGroupType) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologyImageDiagnosticMarking from json.
-func (o *OptCytologyImageDiagnosticMarking) Decode(d *jx.Decoder) error {
+// Decode decodes CytologySegmentsListOKResultsItemGroupType from json.
+func (o *OptCytologySegmentsListOKResultsItemGroupType) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyImageDiagnosticMarking to nil")
+		return errors.New("invalid: unable to decode OptCytologySegmentsListOKResultsItemGroupType to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4576,30 +9851,30 @@ func (o *OptCytologyImageDiagnosticMarking) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyImageDiagnosticMarking) MarshalJSON() ([]byte, error) {
+func (s OptCytologySegmentsListOKResultsItemGroupType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyImageDiagnosticMarking) UnmarshalJSON(data []byte) error {
+func (s *OptCytologySegmentsListOKResultsItemGroupType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyImageMaterialType as json.
-func (o OptCytologyImageMaterialType) Encode(e *jx.Encoder) {
+// Encode encodes CytologySegmentsListOKResultsItemSegType as json.
+func (o OptCytologySegmentsListOKResultsItemSegType) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologyImageMaterialType from json.
-func (o *OptCytologyImageMaterialType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologySegmentsListOKResultsItemSegType from json.
+func (o *OptCytologySegmentsListOKResultsItemSegType) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyImageMaterialType to nil")
+		return errors.New("invalid: unable to decode OptCytologySegmentsListOKResultsItemSegType to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4609,30 +9884,30 @@ func (o *OptCytologyImageMaterialType) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyImageMaterialType) MarshalJSON() ([]byte, error) {
+func (s OptCytologySegmentsListOKResultsItemSegType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyImageMaterialType) UnmarshalJSON(data []byte) error {
+func (s *OptCytologySegmentsListOKResultsItemSegType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyPostReqDiagnosticMarking as json.
-func (o OptCytologyPostReqDiagnosticMarking) Encode(e *jx.Encoder) {
+// Encode encodes CytologyUpdatePartialUpdateReqDiagnosticMarking as json.
+func (o OptCytologyUpdatePartialUpdateReqDiagnosticMarking) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologyPostReqDiagnosticMarking from json.
-func (o *OptCytologyPostReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateReqDiagnosticMarking from json.
+func (o *OptCytologyUpdatePartialUpdateReqDiagnosticMarking) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyPostReqDiagnosticMarking to nil")
+		return errors.New("invalid: unable to decode OptCytologyUpdatePartialUpdateReqDiagnosticMarking to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4642,30 +9917,30 @@ func (o *OptCytologyPostReqDiagnosticMarking) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyPostReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+func (s OptCytologyUpdatePartialUpdateReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyPostReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+func (s *OptCytologyUpdatePartialUpdateReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologyPostReqMaterialType as json.
-func (o OptCytologyPostReqMaterialType) Encode(e *jx.Encoder) {
+// Encode encodes CytologyUpdatePartialUpdateReqMaterialType as json.
+func (o OptCytologyUpdatePartialUpdateReqMaterialType) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologyPostReqMaterialType from json.
-func (o *OptCytologyPostReqMaterialType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdatePartialUpdateReqMaterialType from json.
+func (o *OptCytologyUpdatePartialUpdateReqMaterialType) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologyPostReqMaterialType to nil")
+		return errors.New("invalid: unable to decode OptCytologyUpdatePartialUpdateReqMaterialType to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4675,30 +9950,63 @@ func (o *OptCytologyPostReqMaterialType) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologyPostReqMaterialType) MarshalJSON() ([]byte, error) {
+func (s OptCytologyUpdatePartialUpdateReqMaterialType) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologyPostReqMaterialType) UnmarshalJSON(data []byte) error {
+func (s *OptCytologyUpdatePartialUpdateReqMaterialType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
 
-// Encode encodes CytologySegmentationGroupIDPatchReqSegType as json.
-func (o OptCytologySegmentationGroupIDPatchReqSegType) Encode(e *jx.Encoder) {
+// Encode encodes CytologyUpdateUpdateReqDetails as json.
+func (o OptCytologyUpdateUpdateReqDetails) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes CytologyUpdateUpdateReqDetails from json.
+func (o *OptCytologyUpdateUpdateReqDetails) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyUpdateUpdateReqDetails to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyUpdateUpdateReqDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyUpdateUpdateReqDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqDetailsDiagnosticMarking as json.
+func (o OptCytologyUpdateUpdateReqDetailsDiagnosticMarking) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	e.Str(string(o.Value))
 }
 
-// Decode decodes CytologySegmentationGroupIDPatchReqSegType from json.
-func (o *OptCytologySegmentationGroupIDPatchReqSegType) Decode(d *jx.Decoder) error {
+// Decode decodes CytologyUpdateUpdateReqDetailsDiagnosticMarking from json.
+func (o *OptCytologyUpdateUpdateReqDetailsDiagnosticMarking) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologySegmentationGroupIDPatchReqSegType to nil")
+		return errors.New("invalid: unable to decode OptCytologyUpdateUpdateReqDetailsDiagnosticMarking to nil")
 	}
 	o.Set = true
 	if err := o.Value.Decode(d); err != nil {
@@ -4708,14 +10016,113 @@ func (o *OptCytologySegmentationGroupIDPatchReqSegType) Decode(d *jx.Decoder) er
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologySegmentationGroupIDPatchReqSegType) MarshalJSON() ([]byte, error) {
+func (s OptCytologyUpdateUpdateReqDetailsDiagnosticMarking) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologySegmentationGroupIDPatchReqSegType) UnmarshalJSON(data []byte) error {
+func (s *OptCytologyUpdateUpdateReqDetailsDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqDetailsMaterialType as json.
+func (o OptCytologyUpdateUpdateReqDetailsMaterialType) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyUpdateUpdateReqDetailsMaterialType from json.
+func (o *OptCytologyUpdateUpdateReqDetailsMaterialType) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyUpdateUpdateReqDetailsMaterialType to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyUpdateUpdateReqDetailsMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyUpdateUpdateReqDetailsMaterialType) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqDiagnosticMarking as json.
+func (o OptCytologyUpdateUpdateReqDiagnosticMarking) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyUpdateUpdateReqDiagnosticMarking from json.
+func (o *OptCytologyUpdateUpdateReqDiagnosticMarking) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyUpdateUpdateReqDiagnosticMarking to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyUpdateUpdateReqDiagnosticMarking) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyUpdateUpdateReqDiagnosticMarking) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologyUpdateUpdateReqMaterialType as json.
+func (o OptCytologyUpdateUpdateReqMaterialType) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	e.Str(string(o.Value))
+}
+
+// Decode decodes CytologyUpdateUpdateReqMaterialType from json.
+func (o *OptCytologyUpdateUpdateReqMaterialType) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologyUpdateUpdateReqMaterialType to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologyUpdateUpdateReqMaterialType) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologyUpdateUpdateReqMaterialType) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -4958,39 +10365,6 @@ func (s *OptNilUziNodesIDPatchReqValidation) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes OriginalImage as json.
-func (o OptOriginalImage) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes OriginalImage from json.
-func (o *OptOriginalImage) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptOriginalImage to nil")
-	}
-	o.Set = true
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptOriginalImage) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptOriginalImage) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes string as json.
 func (o OptString) Encode(e *jx.Encoder) {
 	if !o.Set {
@@ -5022,6 +10396,41 @@ func (s OptString) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptString) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes url.URL as json.
+func (o OptURI) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	json.EncodeURI(e, o.Value)
+}
+
+// Decode decodes url.URL from json.
+func (o *OptURI) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptURI to nil")
+	}
+	o.Set = true
+	v, err := json.DecodeURI(d)
+	if err != nil {
+		return err
+	}
+	o.Value = v
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptURI) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptURI) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -5222,187 +10631,6 @@ func (s OptYookassaWebhookRequestObjectPaymentMethodCard) MarshalJSON() ([]byte,
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptYookassaWebhookRequestObjectPaymentMethodCard) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *OriginalImage) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *OriginalImage) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("id")
-		json.EncodeUUID(e, s.ID)
-	}
-	{
-		e.FieldStart("cytology_id")
-		json.EncodeUUID(e, s.CytologyID)
-	}
-	{
-		e.FieldStart("image_path")
-		e.Str(s.ImagePath)
-	}
-	{
-		e.FieldStart("create_date")
-		json.EncodeDateTime(e, s.CreateDate)
-	}
-	{
-		if s.DelayTime.Set {
-			e.FieldStart("delay_time")
-			s.DelayTime.Encode(e)
-		}
-	}
-	{
-		e.FieldStart("viewed_flag")
-		e.Bool(s.ViewedFlag)
-	}
-}
-
-var jsonFieldsNameOfOriginalImage = [6]string{
-	0: "id",
-	1: "cytology_id",
-	2: "image_path",
-	3: "create_date",
-	4: "delay_time",
-	5: "viewed_flag",
-}
-
-// Decode decodes OriginalImage from json.
-func (s *OriginalImage) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode OriginalImage to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "id":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ID = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"id\"")
-			}
-		case "cytology_id":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.CytologyID = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"cytology_id\"")
-			}
-		case "image_path":
-			requiredBitSet[0] |= 1 << 2
-			if err := func() error {
-				v, err := d.Str()
-				s.ImagePath = string(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"image_path\"")
-			}
-		case "create_date":
-			requiredBitSet[0] |= 1 << 3
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.CreateDate = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"create_date\"")
-			}
-		case "delay_time":
-			if err := func() error {
-				s.DelayTime.Reset()
-				if err := s.DelayTime.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"delay_time\"")
-			}
-		case "viewed_flag":
-			requiredBitSet[0] |= 1 << 5
-			if err := func() error {
-				v, err := d.Bool()
-				s.ViewedFlag = bool(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"viewed_flag\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode OriginalImage")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00101111,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfOriginalImage) {
-					name = jsonFieldsNameOfOriginalImage[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *OriginalImage) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OriginalImage) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -5618,6 +10846,137 @@ func (s *Patient) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *Patient) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *PatientCard) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *PatientCard) encodeFields(e *jx.Encoder) {
+	{
+		if s.ID.Set {
+			e.FieldStart("id")
+			s.ID.Encode(e)
+		}
+	}
+	{
+		if s.AcceptanceDatetime.Set {
+			e.FieldStart("acceptance_datetime")
+			s.AcceptanceDatetime.Encode(e, json.EncodeDateTime)
+		}
+	}
+	{
+		if s.Diagnosis.Set {
+			e.FieldStart("diagnosis")
+			s.Diagnosis.Encode(e)
+		}
+	}
+	{
+		if s.Patient.Set {
+			e.FieldStart("patient")
+			s.Patient.Encode(e)
+		}
+	}
+	{
+		if s.MedWorker.Set {
+			e.FieldStart("med_worker")
+			s.MedWorker.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfPatientCard = [5]string{
+	0: "id",
+	1: "acceptance_datetime",
+	2: "diagnosis",
+	3: "patient",
+	4: "med_worker",
+}
+
+// Decode decodes PatientCard from json.
+func (s *PatientCard) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode PatientCard to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "id":
+			if err := func() error {
+				s.ID.Reset()
+				if err := s.ID.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"id\"")
+			}
+		case "acceptance_datetime":
+			if err := func() error {
+				s.AcceptanceDatetime.Reset()
+				if err := s.AcceptanceDatetime.Decode(d, json.DecodeDateTime); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"acceptance_datetime\"")
+			}
+		case "diagnosis":
+			if err := func() error {
+				s.Diagnosis.Reset()
+				if err := s.Diagnosis.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"diagnosis\"")
+			}
+		case "patient":
+			if err := func() error {
+				s.Patient.Reset()
+				if err := s.Patient.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"patient\"")
+			}
+		case "med_worker":
+			if err := func() error {
+				s.MedWorker.Reset()
+				if err := s.MedWorker.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"med_worker\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode PatientCard")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *PatientCard) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *PatientCard) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -6760,626 +12119,6 @@ func (s *Segment) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *Segment) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *Segmentation) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *Segmentation) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("id")
-		json.EncodeUUID(e, s.ID)
-	}
-	{
-		e.FieldStart("segmentation_group_id")
-		json.EncodeUUID(e, s.SegmentationGroupID)
-	}
-	{
-		e.FieldStart("points")
-		e.ArrStart()
-		for _, elem := range s.Points {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
-	}
-	{
-		e.FieldStart("create_at")
-		json.EncodeDateTime(e, s.CreateAt)
-	}
-}
-
-var jsonFieldsNameOfSegmentation = [4]string{
-	0: "id",
-	1: "segmentation_group_id",
-	2: "points",
-	3: "create_at",
-}
-
-// Decode decodes Segmentation from json.
-func (s *Segmentation) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode Segmentation to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "id":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ID = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"id\"")
-			}
-		case "segmentation_group_id":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.SegmentationGroupID = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"segmentation_group_id\"")
-			}
-		case "points":
-			requiredBitSet[0] |= 1 << 2
-			if err := func() error {
-				s.Points = make([]SegmentationPoint, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem SegmentationPoint
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					s.Points = append(s.Points, elem)
-					return nil
-				}); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"points\"")
-			}
-		case "create_at":
-			requiredBitSet[0] |= 1 << 3
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.CreateAt = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"create_at\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode Segmentation")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00001111,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfSegmentation) {
-					name = jsonFieldsNameOfSegmentation[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *Segmentation) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *Segmentation) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *SegmentationGroup) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *SegmentationGroup) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("id")
-		json.EncodeUUID(e, s.ID)
-	}
-	{
-		e.FieldStart("cytology_id")
-		json.EncodeUUID(e, s.CytologyID)
-	}
-	{
-		e.FieldStart("seg_type")
-		s.SegType.Encode(e)
-	}
-	{
-		e.FieldStart("group_type")
-		s.GroupType.Encode(e)
-	}
-	{
-		e.FieldStart("is_ai")
-		e.Bool(s.IsAi)
-	}
-	{
-		if s.Details != nil {
-			e.FieldStart("details")
-			s.Details.Encode(e)
-		}
-	}
-	{
-		e.FieldStart("create_at")
-		json.EncodeDateTime(e, s.CreateAt)
-	}
-}
-
-var jsonFieldsNameOfSegmentationGroup = [7]string{
-	0: "id",
-	1: "cytology_id",
-	2: "seg_type",
-	3: "group_type",
-	4: "is_ai",
-	5: "details",
-	6: "create_at",
-}
-
-// Decode decodes SegmentationGroup from json.
-func (s *SegmentationGroup) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode SegmentationGroup to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "id":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ID = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"id\"")
-			}
-		case "cytology_id":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.CytologyID = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"cytology_id\"")
-			}
-		case "seg_type":
-			requiredBitSet[0] |= 1 << 2
-			if err := func() error {
-				if err := s.SegType.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"seg_type\"")
-			}
-		case "group_type":
-			requiredBitSet[0] |= 1 << 3
-			if err := func() error {
-				if err := s.GroupType.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"group_type\"")
-			}
-		case "is_ai":
-			requiredBitSet[0] |= 1 << 4
-			if err := func() error {
-				v, err := d.Bool()
-				s.IsAi = bool(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"is_ai\"")
-			}
-		case "details":
-			if err := func() error {
-				s.Details = nil
-				var elem SegmentationGroupDetails
-				if err := elem.Decode(d); err != nil {
-					return err
-				}
-				s.Details = &elem
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"details\"")
-			}
-		case "create_at":
-			requiredBitSet[0] |= 1 << 6
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.CreateAt = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"create_at\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode SegmentationGroup")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b01011111,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfSegmentationGroup) {
-					name = jsonFieldsNameOfSegmentationGroup[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *SegmentationGroup) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *SegmentationGroup) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *SegmentationGroupDetails) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *SegmentationGroupDetails) encodeFields(e *jx.Encoder) {
-}
-
-var jsonFieldsNameOfSegmentationGroupDetails = [0]string{}
-
-// Decode decodes SegmentationGroupDetails from json.
-func (s *SegmentationGroupDetails) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode SegmentationGroupDetails to nil")
-	}
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		default:
-			return d.Skip()
-		}
-	}); err != nil {
-		return errors.Wrap(err, "decode SegmentationGroupDetails")
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *SegmentationGroupDetails) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *SegmentationGroupDetails) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes SegmentationGroupGroupType as json.
-func (s SegmentationGroupGroupType) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes SegmentationGroupGroupType from json.
-func (s *SegmentationGroupGroupType) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode SegmentationGroupGroupType to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch SegmentationGroupGroupType(v) {
-	case SegmentationGroupGroupTypeCE:
-		*s = SegmentationGroupGroupTypeCE
-	case SegmentationGroupGroupTypeCL:
-		*s = SegmentationGroupGroupTypeCL
-	case SegmentationGroupGroupTypeME:
-		*s = SegmentationGroupGroupTypeME
-	default:
-		*s = SegmentationGroupGroupType(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s SegmentationGroupGroupType) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *SegmentationGroupGroupType) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes SegmentationGroupSegType as json.
-func (s SegmentationGroupSegType) Encode(e *jx.Encoder) {
-	e.Str(string(s))
-}
-
-// Decode decodes SegmentationGroupSegType from json.
-func (s *SegmentationGroupSegType) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode SegmentationGroupSegType to nil")
-	}
-	v, err := d.StrBytes()
-	if err != nil {
-		return err
-	}
-	// Try to use constant string.
-	switch SegmentationGroupSegType(v) {
-	case SegmentationGroupSegTypeNIL:
-		*s = SegmentationGroupSegTypeNIL
-	case SegmentationGroupSegTypeNIR:
-		*s = SegmentationGroupSegTypeNIR
-	case SegmentationGroupSegTypeNIM:
-		*s = SegmentationGroupSegTypeNIM
-	case SegmentationGroupSegTypeCNO:
-		*s = SegmentationGroupSegTypeCNO
-	case SegmentationGroupSegTypeCGE:
-		*s = SegmentationGroupSegTypeCGE
-	case SegmentationGroupSegTypeC2N:
-		*s = SegmentationGroupSegTypeC2N
-	case SegmentationGroupSegTypeCPS:
-		*s = SegmentationGroupSegTypeCPS
-	case SegmentationGroupSegTypeCFC:
-		*s = SegmentationGroupSegTypeCFC
-	case SegmentationGroupSegTypeCLY:
-		*s = SegmentationGroupSegTypeCLY
-	case SegmentationGroupSegTypeSOS:
-		*s = SegmentationGroupSegTypeSOS
-	case SegmentationGroupSegTypeSDS:
-		*s = SegmentationGroupSegTypeSDS
-	case SegmentationGroupSegTypeSMS:
-		*s = SegmentationGroupSegTypeSMS
-	case SegmentationGroupSegTypeSTS:
-		*s = SegmentationGroupSegTypeSTS
-	case SegmentationGroupSegTypeSPS:
-		*s = SegmentationGroupSegTypeSPS
-	case SegmentationGroupSegTypeSNM:
-		*s = SegmentationGroupSegTypeSNM
-	case SegmentationGroupSegTypeSTM:
-		*s = SegmentationGroupSegTypeSTM
-	default:
-		*s = SegmentationGroupSegType(v)
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s SegmentationGroupSegType) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *SegmentationGroupSegType) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *SegmentationPoint) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *SegmentationPoint) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("x")
-		e.Int(s.X)
-	}
-	{
-		e.FieldStart("y")
-		e.Int(s.Y)
-	}
-}
-
-var jsonFieldsNameOfSegmentationPoint = [2]string{
-	0: "x",
-	1: "y",
-}
-
-// Decode decodes SegmentationPoint from json.
-func (s *SegmentationPoint) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode SegmentationPoint to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "x":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Int()
-				s.X = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"x\"")
-			}
-		case "y":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Int()
-				s.Y = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"y\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode SegmentationPoint")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000011,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfSegmentationPoint) {
-					name = jsonFieldsNameOfSegmentationPoint[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *SegmentationPoint) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *SegmentationPoint) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

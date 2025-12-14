@@ -32,3 +32,37 @@ func (OriginalImage) SliceDomain(imgs []domain.OriginalImage) []api.OriginalImag
 	}
 	return result
 }
+
+func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) api.CytologyReadOKOriginalImage {
+	if img == nil {
+		return api.CytologyReadOKOriginalImage{}
+	}
+
+	result := api.CytologyReadOKOriginalImage{
+		ID: api.OptInt{
+			// TODO: Преобразовать UUID в int
+			Set: false,
+		},
+		CreateDate: api.OptDateTime{
+			Value: img.CreateDate,
+			Set:   true,
+		},
+		ViewedFlag: api.OptBool{
+			Value: img.ViewedFlag,
+			Set:   true,
+		},
+		Image: api.OptURI{
+			// TODO: Создать URL из ImagePath
+			Set: false,
+		},
+	}
+
+	if img.DelayTime != nil {
+		result.DelayTime = api.OptFloat64{
+			Value: *img.DelayTime,
+			Set:   true,
+		}
+	}
+
+	return result
+}

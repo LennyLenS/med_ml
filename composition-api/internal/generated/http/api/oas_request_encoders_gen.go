@@ -16,45 +16,8 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
-func encodeCytologyIDOriginalImagePostRequest(
-	req *CytologyIDOriginalImagePostReq,
-	r *http.Request,
-) error {
-	const contentType = "multipart/form-data"
-	request := req
-
-	q := uri.NewFormEncoder(map[string]string{})
-	{
-		// Encode "delay_time" form field.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "delay_time",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := request.DelayTime.Get(); ok {
-				return e.EncodeValue(conv.Float64ToString(val))
-			}
-			return nil
-		}); err != nil {
-			return errors.Wrap(err, "encode query")
-		}
-	}
-	body, boundary := ht.CreateMultipartBody(func(w *multipart.Writer) error {
-		if err := request.File.WriteMultipart("file", w); err != nil {
-			return errors.Wrap(err, "write \"file\"")
-		}
-		if err := q.WriteMultipart(w); err != nil {
-			return errors.Wrap(err, "write multipart")
-		}
-		return nil
-	})
-	ht.SetCloserBody(r, body, mime.FormatMediaType(contentType, map[string]string{"boundary": boundary}))
-	return nil
-}
-
-func encodeCytologyIDPatchRequest(
-	req *CytologyIDPatchReq,
+func encodeCytologyCopyCreateRequest(
+	req *CytologyCopyCreateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -67,8 +30,8 @@ func encodeCytologyIDPatchRequest(
 	return nil
 }
 
-func encodeCytologyIDSegmentationGroupsPostRequest(
-	req *CytologyIDSegmentationGroupsPostReq,
+func encodeCytologyCreateCreateRequest(
+	req *CytologyCreateCreateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -81,8 +44,8 @@ func encodeCytologyIDSegmentationGroupsPostRequest(
 	return nil
 }
 
-func encodeCytologyOriginalImageIDPatchRequest(
-	req *CytologyOriginalImageIDPatchReq,
+func encodeCytologySegmentGroupCreateCreateRequest(
+	req *CytologySegmentGroupCreateCreateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -95,8 +58,8 @@ func encodeCytologyOriginalImageIDPatchRequest(
 	return nil
 }
 
-func encodeCytologyPostRequest(
-	req *CytologyPostReq,
+func encodeCytologySegmentUpdatePartialUpdateRequest(
+	req *CytologySegmentUpdatePartialUpdateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -109,8 +72,8 @@ func encodeCytologyPostRequest(
 	return nil
 }
 
-func encodeCytologySegmentationGroupIDPatchRequest(
-	req *CytologySegmentationGroupIDPatchReq,
+func encodeCytologySegmentUpdateUpdateRequest(
+	req *CytologySegmentUpdateUpdateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -123,8 +86,8 @@ func encodeCytologySegmentationGroupIDPatchRequest(
 	return nil
 }
 
-func encodeCytologySegmentationGroupIDSegmentsPostRequest(
-	req *CytologySegmentationGroupIDSegmentsPostReq,
+func encodeCytologyUpdatePartialUpdateRequest(
+	req *CytologyUpdatePartialUpdateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
@@ -137,8 +100,8 @@ func encodeCytologySegmentationGroupIDSegmentsPostRequest(
 	return nil
 }
 
-func encodeCytologySegmentationIDPatchRequest(
-	req *CytologySegmentationIDPatchReq,
+func encodeCytologyUpdateUpdateRequest(
+	req *CytologyUpdateUpdateReq,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
