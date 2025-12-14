@@ -12,7 +12,7 @@ func (h *handler) DownloadCytologyCytologyIDOriginalImageIDGet(ctx context.Conte
 		return nil, err
 	}
 
-	return &api.DownloadCytologyCytologyIDOriginalImageIDGetOK{
+	return &api.DownloadCytologyCytologyIDOriginalImageIDGetOKApplicationOctetStream{
 		Data: image,
 	}, nil
 }

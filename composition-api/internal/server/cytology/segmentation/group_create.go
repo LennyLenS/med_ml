@@ -16,7 +16,7 @@ import (
 func (h *handler) CytologySegmentGroupCreateCreate(ctx context.Context, req *api.CytologySegmentGroupCreateCreateReq, params api.CytologySegmentGroupCreateCreateParams) (api.CytologySegmentGroupCreateCreateRes, error) {
 	arg := mappers.SegmentationGroup{}.CreateArgFromCytologySegmentGroupCreateCreateReq(params.CytologyImgID, req)
 
-	id, err := h.services.CytologyService.CreateSegmentationGroup(ctx, arg)
+	_, err := h.services.CytologyService.CreateSegmentationGroup(ctx, arg)
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrBadRequest):

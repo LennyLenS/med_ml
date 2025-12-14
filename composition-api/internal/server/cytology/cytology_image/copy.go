@@ -36,7 +36,7 @@ func (h *handler) CytologyCopyCreate(ctx context.Context, req *api.CytologyCopyC
 		}, nil
 	}
 
-	img, err := h.services.CytologyService.CopyCytologyImage(ctx, id)
+	_, err := h.services.CytologyService.CopyCytologyImage(ctx, id)
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrNotFound):

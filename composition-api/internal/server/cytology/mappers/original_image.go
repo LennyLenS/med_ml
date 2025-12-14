@@ -7,31 +7,8 @@ import (
 
 type OriginalImage struct{}
 
-func (OriginalImage) Domain(img domain.OriginalImage) api.OriginalImage {
-	result := api.OriginalImage{
-		ID:         img.Id,
-		CytologyID: img.CytologyID,
-		ImagePath:  img.ImagePath,
-		ViewedFlag: img.ViewedFlag,
-	}
-
-	if img.DelayTime != nil {
-		result.DelayTime = api.OptFloat64{
-			Value: *img.DelayTime,
-			Set:   true,
-		}
-	}
-
-	return result
-}
-
-func (OriginalImage) SliceDomain(imgs []domain.OriginalImage) []api.OriginalImage {
-	result := make([]api.OriginalImage, 0, len(imgs))
-	for _, img := range imgs {
-		result = append(result, OriginalImage{}.Domain(img))
-	}
-	return result
-}
+// Методы Domain и SliceDomain удалены, так как тип api.OriginalImage не существует в сгенерированном API
+// Используются только методы для работы с CytologyReadOKOriginalImage
 
 func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) api.CytologyReadOKOriginalImage {
 	if img == nil {

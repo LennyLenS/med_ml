@@ -17,7 +17,7 @@ import (
 func (h *handler) CytologyHistoryRead(ctx context.Context, params api.CytologyHistoryReadParams) (api.CytologyHistoryReadRes, error) {
 	id, err := uuid.Parse(params.ID)
 	if err != nil {
-		return &api.CytologyHistoryReadBadRequest{
+		return &api.CytologyHistoryReadInternalServerError{
 			StatusCode: http.StatusBadRequest,
 			Response: api.Error{
 				Message: "Неверный формат ID",

@@ -16,7 +16,7 @@ import (
 func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCreateCreateReq) (api.CytologyCreateCreateRes, error) {
 	arg := mappers.CytologyImage{}.CreateArgFromCytologyCreateCreateReq(req)
 
-	id, err := h.services.CytologyService.CreateCytologyImage(ctx, arg)
+	_, err := h.services.CytologyService.CreateCytologyImage(ctx, arg)
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrBadRequest):

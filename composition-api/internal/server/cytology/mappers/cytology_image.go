@@ -10,113 +10,7 @@ import (
 
 type CytologyImage struct{}
 
-func (CytologyImage) Domain(img domain.CytologyImage) api.CytologyImage {
-	result := api.CytologyImage{
-		ID:               img.Id,
-		ExternalID:       img.ExternalID,
-		DoctorID:         img.DoctorID,
-		PatientID:        img.PatientID,
-		DiagnosticNumber: int(img.DiagnosticNumber),
-		DiagnosDate:      img.DiagnosDate,
-		IsLast:           img.IsLast,
-		CreateAt:         img.CreateAt,
-	}
-
-	if img.DiagnosticMarking != nil {
-		result.DiagnosticMarking = api.OptCytologyImageDiagnosticMarking{
-			Value: api.CytologyImageDiagnosticMarking(*img.DiagnosticMarking),
-			Set:   true,
-		}
-	}
-
-	if img.MaterialType != nil {
-		result.MaterialType = api.OptCytologyImageMaterialType{
-			Value: api.CytologyImageMaterialType(*img.MaterialType),
-			Set:   true,
-		}
-	}
-
-	if img.Calcitonin != nil {
-		result.Calcitonin = api.OptInt{
-			Value: int(*img.Calcitonin),
-			Set:   true,
-		}
-	}
-
-	if img.CalcitoninInFlush != nil {
-		result.CalcitoninInFlush = api.OptInt{
-			Value: int(*img.CalcitoninInFlush),
-			Set:   true,
-		}
-	}
-
-	if img.Thyroglobulin != nil {
-		result.Thyroglobulin = api.OptInt{
-			Value: int(*img.Thyroglobulin),
-			Set:   true,
-		}
-	}
-
-	return result
-}
-
-func (CytologyImage) SliceDomain(imgs []domain.CytologyImage) []api.CytologyImage {
-	result := make([]api.CytologyImage, 0, len(imgs))
-	for _, img := range imgs {
-		result = append(result, CytologyImage{}.Domain(img))
-	}
-	return result
-}
-
-func (CytologyImage) CreateArg(req *api.CytologyPostReq) cytologySrv.CreateCytologyImageArg {
-	arg := cytologySrv.CreateCytologyImageArg{
-		ExternalID:       req.ExternalID,
-		DoctorID:         req.DoctorID,
-		PatientID:        req.PatientID,
-		DiagnosticNumber: int(req.DiagnosticNumber),
-	}
-
-	if req.DiagnosticMarking.Set {
-		marking := domain.DiagnosticMarking(req.DiagnosticMarking.Value)
-		arg.DiagnosticMarking = &marking
-	}
-
-	if req.MaterialType.Set {
-		materialType := domain.MaterialType(req.MaterialType.Value)
-		arg.MaterialType = &materialType
-	}
-
-	if req.Calcitonin.Set {
-		calcitonin := int(req.Calcitonin.Value)
-		arg.Calcitonin = &calcitonin
-	}
-
-	if req.CalcitoninInFlush.Set {
-		calcitoninInFlush := int(req.CalcitoninInFlush.Value)
-		arg.CalcitoninInFlush = &calcitoninInFlush
-	}
-
-	if req.Thyroglobulin.Set {
-		thyroglobulin := int(req.Thyroglobulin.Value)
-		arg.Thyroglobulin = &thyroglobulin
-	}
-
-	if req.Details != nil {
-		// Details is a JSON string, we'll need to marshal it
-		// For now, we'll pass it as is if it's already a string
-		// This might need adjustment based on the actual structure
-	}
-
-	if req.PrevID.Set {
-		arg.PrevID = &req.PrevID.Value
-	}
-
-	if req.ParentPrevID.Set {
-		arg.ParentPrevID = &req.ParentPrevID.Value
-	}
-
-	return arg
-}
+// Удалены неиспользуемые методы Domain, SliceDomain, CreateArg - заменены на новые методы для работы с обновленными типами API
 
 func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreateCreateReq) cytologySrv.CreateCytologyImageArg {
 	arg := cytologySrv.CreateCytologyImageArg{
@@ -164,46 +58,7 @@ func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreat
 	return arg
 }
 
-func (CytologyImage) UpdateArg(id uuid.UUID, req *api.CytologyIDUpdatePatchReq) cytologySrv.UpdateCytologyImageArg {
-	arg := cytologySrv.UpdateCytologyImageArg{
-		Id: id,
-	}
-
-	if req.DiagnosticMarking.Set {
-		marking := domain.DiagnosticMarking(req.DiagnosticMarking.Value)
-		arg.DiagnosticMarking = &marking
-	}
-
-	if req.MaterialType.Set {
-		materialType := domain.MaterialType(req.MaterialType.Value)
-		arg.MaterialType = &materialType
-	}
-
-	if req.Calcitonin.Set {
-		calcitonin := int(req.Calcitonin.Value)
-		arg.Calcitonin = &calcitonin
-	}
-
-	if req.CalcitoninInFlush.Set {
-		calcitoninInFlush := int(req.CalcitoninInFlush.Value)
-		arg.CalcitoninInFlush = &calcitoninInFlush
-	}
-
-	if req.Thyroglobulin.Set {
-		thyroglobulin := int(req.Thyroglobulin.Value)
-		arg.Thyroglobulin = &thyroglobulin
-	}
-
-	if req.Details != nil {
-		// Details handling - might need to marshal to JSON string
-	}
-
-	if req.IsLast.Set {
-		arg.IsLast = &req.IsLast.Value
-	}
-
-	return arg
-}
+// Удален неиспользуемый метод UpdateArg - заменен на UpdateArgFromCytologyUpdateUpdateReq и UpdateArgFromCytologyUpdatePartialUpdateReq
 
 func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage) api.CytologyReadOKInfo {
 	// TODO: Patient и PatientCard должны быть получены из другого источника
@@ -450,15 +305,15 @@ func (CytologyImage) ToCytologyUpdateUpdateOK(img domain.CytologyImage, req *api
 	}
 
 	if img.DiagnosticMarking != nil {
-		result.DiagnosticMarking = api.OptCytologyUpdateUpdateOKDiagnosticMarking{
-			Value: api.CytologyUpdateUpdateOKDiagnosticMarking(*img.DiagnosticMarking),
+		result.DiagnosticMarking = api.OptString{
+			Value: string(*img.DiagnosticMarking),
 			Set:   true,
 		}
 	}
 
 	if img.MaterialType != nil {
-		result.MaterialType = api.OptCytologyUpdateUpdateOKMaterialType{
-			Value: api.CytologyUpdateUpdateOKMaterialType(*img.MaterialType),
+		result.MaterialType = api.OptString{
+			Value: string(*img.MaterialType),
 			Set:   true,
 		}
 	}
@@ -506,15 +361,15 @@ func (CytologyImage) ToCytologyUpdatePartialUpdateOK(img domain.CytologyImage, r
 	}
 
 	if img.DiagnosticMarking != nil {
-		result.DiagnosticMarking = api.OptCytologyUpdatePartialUpdateOKDiagnosticMarking{
-			Value: api.CytologyUpdatePartialUpdateOKDiagnosticMarking(*img.DiagnosticMarking),
+		result.DiagnosticMarking = api.OptString{
+			Value: string(*img.DiagnosticMarking),
 			Set:   true,
 		}
 	}
 
 	if img.MaterialType != nil {
-		result.MaterialType = api.OptCytologyUpdatePartialUpdateOKMaterialType{
-			Value: api.CytologyUpdatePartialUpdateOKMaterialType(*img.MaterialType),
+		result.MaterialType = api.OptString{
+			Value: string(*img.MaterialType),
 			Set:   true,
 		}
 	}
