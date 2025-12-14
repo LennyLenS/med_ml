@@ -2756,7 +2756,8 @@ paths:
                   - diagnostic_number
                 properties:
                   id:
-                    type: integer
+                    type: string
+                    format: uuid
                     readOnly: true
                   image:
                     type: string

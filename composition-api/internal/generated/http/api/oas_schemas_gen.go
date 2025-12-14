@@ -178,7 +178,7 @@ type CytologyCreateCreateBadRequest ErrorStatusCode
 func (*CytologyCreateCreateBadRequest) cytologyCreateCreateRes() {}
 
 type CytologyCreateCreateCreated struct {
-	ID                OptInt                                          `json:"id"`
+	ID                OptUUID                                         `json:"id"`
 	Image             OptURI                                          `json:"image"`
 	IsLast            OptBool                                         `json:"is_last"`
 	DiagnosDate       OptDateTime                                     `json:"diagnos_date"`
@@ -195,7 +195,7 @@ type CytologyCreateCreateCreated struct {
 }
 
 // GetID returns the value of ID.
-func (s *CytologyCreateCreateCreated) GetID() OptInt {
+func (s *CytologyCreateCreateCreated) GetID() OptUUID {
 	return s.ID
 }
 
@@ -265,7 +265,7 @@ func (s *CytologyCreateCreateCreated) GetPatientCard() OptInt {
 }
 
 // SetID sets the value of ID.
-func (s *CytologyCreateCreateCreated) SetID(val OptInt) {
+func (s *CytologyCreateCreateCreated) SetID(val OptUUID) {
 	s.ID = val
 }
 

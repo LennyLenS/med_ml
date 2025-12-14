@@ -46,18 +46,10 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 	}
 
 	// Возвращаем созданный объект согласно swagger.json
-	// Преобразуем UUID в integer для совместимости с Python API
-	// Используем первые 4 байта UUID как integer (простое преобразование)
-	uuidBytes := id[:4]
-	idInt := int32(uuidBytes[0])<<24 | int32(uuidBytes[1])<<16 | int32(uuidBytes[2])<<8 | int32(uuidBytes[3])
-	if idInt < 0 {
-		idInt = -idInt // Делаем положительным
-	}
-
 	result := api.CytologyCreateCreateCreated{
 		DiagnosticNumber: req.DiagnosticNumber,
-		ID: api.OptInt{
-			Value: int(idInt),
+		ID: api.OptUUID{
+			Value: id,
 			Set:   true,
 		},
 	}
