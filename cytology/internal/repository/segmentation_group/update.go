@@ -13,7 +13,7 @@ func (q *repo) UpdateSegmentationGroup(group entity.SegmentationGroup) error {
 	if group.SegType != "" {
 		updateMap[columnSegType] = group.SegType
 	}
-	if group.Details != nil {
+	if group.Details.Valid {
 		updateMap[columnDetails] = group.Details
 	}
 
