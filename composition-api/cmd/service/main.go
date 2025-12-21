@@ -84,9 +84,16 @@ func run() (exitCode int) {
 		return failExitCode
 	}
 
+	// Увеличиваем максимальный размер сообщения для cytology (для передачи больших изображений)
+	// 4GB должно быть достаточно для больших медицинских изображений
+	const maxMsgSize = 4 * 1024 * 1024 * 1024 // 4GB
 	cytologyConn, err := grpc.NewClient(
 		cfg.Adapters.CytologyUrl,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallRecvMsgSize(maxMsgSize),
+			grpc.MaxCallSendMsgSize(maxMsgSize),
+		),
 	)
 	if err != nil {
 		slog.Error("init cytologyConn", slog.Any("err", err))

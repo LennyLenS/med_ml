@@ -3548,18 +3548,27 @@ paths:
           description: id цитологического исследования
           schema:
             type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
         - name: limit
           in: query
           required: false
           description: Number of results to return per page.
           schema:
             type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+          example: 10
         - name: offset
           in: query
           required: false
           description: The initial index from which to return the results.
           schema:
             type: integer
+            default: 0
+            minimum: 0
+          example: 0
       responses:
         '200':
           description: история цитологического исследования
@@ -3633,6 +3642,58 @@ paths:
                         original_image:
                           type: integer
                           x-nullable: true
+              examples:
+                example1:
+                  summary: Пример успешного ответа с историей исследований
+                  value:
+                    count: 3
+                    next: null
+                    previous: null
+                    results:
+                      - id: 1
+                        diagnostic_number: 12345
+                        is_last: true
+                        diagnos_date: "2024-12-21T10:30:00Z"
+                        diagnostic_marking: "П11"
+                        material_type: "GS"
+                        calcitonin: 5
+                        calcitonin_in_flush: 2
+                        thyroglobulin: 10
+                        prev: null
+                        parent_prev: null
+                        patient_card: 100
+                        original_image: 200
+                        details:
+                          note: "Первичное исследование"
+                      - id: 2
+                        diagnostic_number: 12344
+                        is_last: false
+                        diagnos_date: "2024-12-20T14:20:00Z"
+                        diagnostic_marking: "Л23"
+                        material_type: "BP"
+                        calcitonin: 3
+                        calcitonin_in_flush: 1
+                        thyroglobulin: 8
+                        prev: 1
+                        parent_prev: null
+                        patient_card: 100
+                        original_image: 199
+                        details:
+                          note: "Повторное исследование"
+                      - id: 3
+                        diagnostic_number: 12343
+                        is_last: false
+                        diagnos_date: "2024-12-19T09:15:00Z"
+                        diagnostic_marking: "П11"
+                        material_type: "TP"
+                        calcitonin: 4
+                        calcitonin_in_flush: 2
+                        thyroglobulin: 9
+                        prev: 2
+                        parent_prev: null
+                        patient_card: 100
+                        original_image: 198
+                        details: null
         '404':
           description: Цитологическое исследование не найдено
           $ref: "#/components/responses/error"

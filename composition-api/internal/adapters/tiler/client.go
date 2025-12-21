@@ -21,8 +21,14 @@ type client struct {
 }
 
 func NewClient(baseURL string) Client {
+	// Добавляем протокол, если его нет
+	url := strings.TrimSpace(baseURL)
+	if url != "" && !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+		url = "http://" + url
+	}
+
 	return &client{
-		baseURL:    strings.TrimSuffix(baseURL, "/"),
+		baseURL:    strings.TrimSuffix(url, "/"),
 		httpClient: &http.Client{},
 	}
 }

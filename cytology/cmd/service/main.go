@@ -93,7 +93,12 @@ func run() (exitCode int) {
 
 	handler := grpchandler.New(services)
 
+	// Увеличиваем максимальный размер сообщения для передачи больших изображений
+	// 4GB должно быть достаточно для больших медицинских изображений
+	const maxMsgSize = 4 * 1024 * 1024 * 1024 // 4GB
 	server := grpc.NewServer(
+		grpc.MaxRecvMsgSize(maxMsgSize),
+		grpc.MaxSendMsgSize(maxMsgSize),
 		grpc.ChainUnaryInterceptor(
 			grpclib.PanicRecover,
 			observergrpclib.CrossServerCall,
