@@ -181,7 +181,7 @@ services:
     env_file:
       - ./tiler/.env-docker
     ports:
-      - 50080:50080
+      - 50080:50055
     depends_on:
       - minio
     profiles:

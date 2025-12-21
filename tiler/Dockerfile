@@ -3,7 +3,8 @@ FROM golang:1.21-alpine AS builder
 WORKDIR /app
 
 # Копируем go mod файлы
-COPY go.mod go.sum ./
+COPY go.mod ./
+COPY go.sum* ./
 RUN go mod download
 
 # Копируем исходный код
@@ -20,6 +21,6 @@ WORKDIR /root/
 
 COPY --from=builder /app/tiler .
 
-EXPOSE 50080
+EXPOSE 50055
 
 CMD ["./tiler"]
