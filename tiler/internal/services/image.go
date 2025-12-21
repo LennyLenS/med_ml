@@ -183,9 +183,19 @@ func (s *imageService) GetDZI(ctx context.Context, imagePath string) (*domain.DZ
 
 func encodeJPEG(img image.Image) ([]byte, error) {
 	// Используем imaging для кодирования
-	return imaging.Encode(img, imaging.JPEG)
+	var buf bytes.Buffer
+	err := imaging.Encode(&buf, img, imaging.JPEG)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
 
 func encodePNG(img image.Image) ([]byte, error) {
-	return imaging.Encode(img, imaging.PNG)
+	var buf bytes.Buffer
+	err := imaging.Encode(&buf, img, imaging.PNG)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
