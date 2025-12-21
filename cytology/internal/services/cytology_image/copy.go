@@ -95,9 +95,8 @@ func (s *service) copySegments(ctx context.Context, oldCytologyID, newCytologyID
 	// Создаем новые группы и копируем сегменты
 	for _, oldGroup := range oldGroups {
 		oldGroupDomain := oldGroup.ToDomain()
-		newGroupID := uuid.New()
 		newGroup := domain.SegmentationGroup{
-			Id:         newGroupID,
+			Id:         0, // ID будет сгенерирован БД
 			CytologyID: newCytologyID,
 			SegType:    oldGroupDomain.SegType,
 			GroupType:  oldGroupDomain.GroupType,
@@ -106,7 +105,8 @@ func (s *service) copySegments(ctx context.Context, oldCytologyID, newCytologyID
 			CreateAt:   time.Now(),
 		}
 
-		if err := s.dao.NewSegmentationGroupQuery(ctx).InsertSegmentationGroup(segmentationGroupEntity.SegmentationGroup{}.FromDomain(newGroup)); err != nil {
+		newGroupID, err := s.dao.NewSegmentationGroupQuery(ctx).InsertSegmentationGroup(segmentationGroupEntity.SegmentationGroup{}.FromDomain(newGroup))
+		if err != nil {
 			return fmt.Errorf("insert segmentation group: %w", err)
 		}
 
@@ -120,13 +120,14 @@ func (s *service) copySegments(ctx context.Context, oldCytologyID, newCytologyID
 		for _, oldSegment := range oldSegments {
 			oldSegmentDomain := oldSegment.ToDomain()
 			newSegment := domain.Segmentation{
-				Id:                  uuid.New(),
+				Id:                  0, // ID будет сгенерирован БД
 				SegmentationGroupID: newGroupID,
 				Points:              oldSegmentDomain.Points,
 				CreateAt:            time.Now(),
 			}
 
-			if err := s.dao.NewSegmentationQuery(ctx).InsertSegmentation(segmentationEntity.Segmentation{}.FromDomain(newSegment)); err != nil {
+			_, err = s.dao.NewSegmentationQuery(ctx).InsertSegmentation(segmentationEntity.Segmentation{}.FromDomain(newSegment))
+			if err != nil {
 				return fmt.Errorf("insert segmentation: %w", err)
 			}
 		}

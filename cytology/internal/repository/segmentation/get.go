@@ -5,13 +5,12 @@ import (
 	"errors"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/google/uuid"
 
 	daoEntity "cytology/internal/repository/entity"
 	"cytology/internal/repository/segmentation/entity"
 )
 
-func (q *repo) GetSegmentationByID(id uuid.UUID) (entity.Segmentation, error) {
+func (q *repo) GetSegmentationByID(id int) (entity.Segmentation, error) {
 	// Получаем сегментацию
 	query := q.QueryBuilder().
 		Select(
@@ -56,7 +55,7 @@ func (q *repo) GetSegmentationByID(id uuid.UUID) (entity.Segmentation, error) {
 	return seg, nil
 }
 
-func (q *repo) GetSegmentsByGroupID(groupID uuid.UUID) ([]entity.Segmentation, error) {
+func (q *repo) GetSegmentsByGroupID(groupID int) ([]entity.Segmentation, error) {
 	// Получаем все сегментации группы
 	query := q.QueryBuilder().
 		Select(

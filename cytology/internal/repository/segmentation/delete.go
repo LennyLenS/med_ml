@@ -1,14 +1,12 @@
 package segmentation
 
 import (
-	"github.com/google/uuid"
-
 	sq "github.com/Masterminds/squirrel"
 
 	repoEntity "cytology/internal/repository/entity"
 )
 
-func (r *repo) DeleteSegmentation(id uuid.UUID) error {
+func (r *repo) DeleteSegmentation(id int) error {
 	// Точки удалятся каскадно из-за ON DELETE CASCADE
 	query := r.QueryBuilder().
 		Delete(table).

@@ -11,7 +11,7 @@ import (
 	"cytology/internal/repository/segmentation_group/entity"
 )
 
-func (q *repo) GetSegmentationGroupByID(id uuid.UUID) (entity.SegmentationGroup, error) {
+func (q *repo) GetSegmentationGroupByID(id int) (entity.SegmentationGroup, error) {
 	query := q.QueryBuilder().
 		Select(
 			columnID,

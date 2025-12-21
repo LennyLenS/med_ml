@@ -47,7 +47,7 @@ COMMENT ON COLUMN original_image.viewed_flag IS 'Флаг просмотра и�
 
 CREATE TABLE segmentation_group
 (
-    id          uuid            PRIMARY KEY,
+    id          SERIAL          PRIMARY KEY,
     cytology_id uuid            NOT NULL REFERENCES cytology_image (id) ON DELETE CASCADE,
     seg_type    varchar(10)     NOT NULL,
     group_type  varchar(10)     NOT NULL,
@@ -64,8 +64,8 @@ COMMENT ON COLUMN segmentation_group.is_ai IS 'Создана ли группа 
 
 CREATE TABLE segmentation
 (
-    id                  uuid            PRIMARY KEY,
-    segmentation_group_id uuid          NOT NULL REFERENCES segmentation_group (id) ON DELETE CASCADE,
+    id                  SERIAL          PRIMARY KEY,
+    segmentation_group_id INTEGER       NOT NULL REFERENCES segmentation_group (id) ON DELETE CASCADE,
     create_at           timestamp       NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -73,8 +73,8 @@ COMMENT ON TABLE segmentation IS 'Хранилище сегментаций';
 
 CREATE TABLE segmentation_point
 (
-    id              uuid            PRIMARY KEY,
-    segmentation_id uuid            NOT NULL REFERENCES segmentation (id) ON DELETE CASCADE,
+    id              SERIAL          PRIMARY KEY,
+    segmentation_id INTEGER         NOT NULL REFERENCES segmentation (id) ON DELETE CASCADE,
     x               integer         NOT NULL,
     y               integer         NOT NULL,
     uid             integer         NOT NULL,

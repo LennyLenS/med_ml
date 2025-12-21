@@ -5,11 +5,10 @@ import (
 	"cytology/internal/repository/segmentation_group/entity"
 )
 
-func (q *repo) InsertSegmentationGroup(group entity.SegmentationGroup) error {
+func (q *repo) InsertSegmentationGroup(group entity.SegmentationGroup) (int, error) {
 	query := q.QueryBuilder().
 		Insert(table).
 		Columns(
-			columnID,
 			columnCytologyID,
 			columnSegType,
 			columnGroupType,
@@ -18,19 +17,20 @@ func (q *repo) InsertSegmentationGroup(group entity.SegmentationGroup) error {
 			columnCreateAt,
 		).
 		Values(
-			group.Id,
 			group.CytologyID,
 			group.SegType,
 			group.GroupType,
 			group.IsAI,
 			group.Details,
 			group.CreateAt,
-		)
+		).
+		Suffix("RETURNING id")
 
-	_, err := q.Runner().Execx(q.Context(), query)
+	var id int
+	err := q.Runner().Getx(q.Context(), &id, query)
 	if err != nil {
-		return repoEntity.WrapDBError(err)
+		return 0, repoEntity.WrapDBError(err)
 	}
 
-	return nil
+	return id, nil
 }

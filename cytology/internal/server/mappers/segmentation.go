@@ -57,7 +57,7 @@ var GroupTypeReverseMap = map[pb.GroupType]domain.GroupType{
 
 func SegmentationGroupToProto(d domain.SegmentationGroup) *pb.SegmentationGroup {
 	pbGroup := &pb.SegmentationGroup{
-		Id:         d.Id.String(),
+		Id:         int32(d.Id),
 		CytologyId: d.CytologyID.String(),
 		SegType:    SegTypeMap[d.SegType],
 		GroupType:  GroupTypeMap[d.GroupType],
@@ -83,16 +83,16 @@ func SegmentationGroupSliceToProto(groups []domain.SegmentationGroup) []*pb.Segm
 
 func SegmentationToProto(d domain.Segmentation) *pb.Segmentation {
 	pbSeg := &pb.Segmentation{
-		Id:                  d.Id.String(),
-		SegmentationGroupId: d.SegmentationGroupID.String(),
+		Id:                  int32(d.Id),
+		SegmentationGroupId: int32(d.SegmentationGroupID),
 		CreateAt:            d.CreateAt.Format("2006-01-02T15:04:05Z07:00"),
 		Points:              make([]*pb.SegmentationPoint, 0, len(d.Points)),
 	}
 
 	for _, point := range d.Points {
 		pbSeg.Points = append(pbSeg.Points, &pb.SegmentationPoint{
-			Id:             point.Id.String(),
-			SegmentationId: point.SegmentationID.String(),
+			Id:             int32(point.Id),
+			SegmentationId: int32(point.SegmentationID),
 			X:              int32(point.X),
 			Y:              int32(point.Y),
 			Uid:            point.UID,

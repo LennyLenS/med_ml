@@ -63,5 +63,5 @@ func (h *handler) CreateSegmentationGroup(ctx context.Context, in *pb.CreateSegm
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
 	}
 
-	return &pb.CreateSegmentationGroupOut{Id: id.String()}, nil
+	return &pb.CreateSegmentationGroupOut{Id: int32(id)}, nil
 }

@@ -4,20 +4,18 @@ import (
 	"time"
 
 	"cytology/internal/domain"
-
-	"github.com/google/uuid"
 )
 
 type Segmentation struct {
-	Id                uuid.UUID `db:"id"`
-	SegmentationGroupID uuid.UUID `db:"segmentation_group_id"`
-	CreateAt          time.Time `db:"create_at"`
-	Points            []SegmentationPoint
+	Id                  int       `db:"id"`
+	SegmentationGroupID int       `db:"segmentation_group_id"`
+	CreateAt            time.Time `db:"create_at"`
+	Points              []SegmentationPoint
 }
 
 type SegmentationPoint struct {
-	Id             uuid.UUID `db:"id"`
-	SegmentationID uuid.UUID `db:"segmentation_id"`
+	Id             int       `db:"id"`
+	SegmentationID int       `db:"segmentation_id"`
 	X              int       `db:"x"`
 	Y              int       `db:"y"`
 	UID            int64     `db:"uid"`
@@ -53,10 +51,10 @@ func (Segmentation) FromDomain(d domain.Segmentation) Segmentation {
 	}
 
 	return Segmentation{
-		Id:                d.Id,
+		Id:                  d.Id,
 		SegmentationGroupID: d.SegmentationGroupID,
-		CreateAt:          d.CreateAt,
-		Points:            points,
+		CreateAt:            d.CreateAt,
+		Points:              points,
 	}
 }
 
@@ -67,10 +65,10 @@ func (d Segmentation) ToDomain() domain.Segmentation {
 	}
 
 	return domain.Segmentation{
-		Id:                d.Id,
+		Id:                  d.Id,
 		SegmentationGroupID: d.SegmentationGroupID,
-		CreateAt:          d.CreateAt,
-		Points:            points,
+		CreateAt:            d.CreateAt,
+		Points:              points,
 	}
 }
 

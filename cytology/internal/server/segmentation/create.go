@@ -3,20 +3,16 @@ package segmentation
 import (
 	"context"
 
-	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/domain"
+	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/services/segmentation"
 
-	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (h *handler) CreateSegmentation(ctx context.Context, in *pb.CreateSegmentationIn) (*pb.CreateSegmentationOut, error) {
-	groupID, err := uuid.Parse(in.SegmentationGroupId)
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "segmentation_group_id is not a valid uuid: %s", err.Error())
-	}
+	groupID := int(in.SegmentationGroupId)
 
 	points := make([]domain.SegmentationPoint, 0, len(in.Points))
 	for _, p := range in.Points {
@@ -36,5 +32,5 @@ func (h *handler) CreateSegmentation(ctx context.Context, in *pb.CreateSegmentat
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
 	}
 
-	return &pb.CreateSegmentationOut{Id: id.String()}, nil
+	return &pb.CreateSegmentationOut{Id: int32(id)}, nil
 }

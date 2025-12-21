@@ -6,18 +6,18 @@ import (
 	"time"
 
 	"cytology/internal/domain"
-	segmentation_groupEntity "cytology/internal/repository/segmentation_group/entity"
 	"cytology/internal/repository"
+	segmentation_groupEntity "cytology/internal/repository/segmentation_group/entity"
 
 	"github.com/google/uuid"
 )
 
 type Service interface {
-	CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (uuid.UUID, error)
-	GetSegmentationGroupByID(ctx context.Context, id uuid.UUID) (domain.SegmentationGroup, error)
+	CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (int, error)
+	GetSegmentationGroupByID(ctx context.Context, id int) (domain.SegmentationGroup, error)
 	GetSegmentationGroupsByCytologyID(ctx context.Context, cytologyID uuid.UUID) ([]domain.SegmentationGroup, error)
 	UpdateSegmentationGroup(ctx context.Context, arg UpdateSegmentationGroupArg) (domain.SegmentationGroup, error)
-	DeleteSegmentationGroup(ctx context.Context, id uuid.UUID) error
+	DeleteSegmentationGroup(ctx context.Context, id int) error
 }
 
 type service struct {
@@ -39,12 +39,12 @@ type CreateSegmentationGroupArg struct {
 }
 
 type UpdateSegmentationGroupArg struct {
-	Id      uuid.UUID
+	Id      int
 	SegType *domain.SegType
 	Details []byte
 }
 
-func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (uuid.UUID, error) {
+func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (int, error) {
 	var details json.RawMessage
 	if arg.Details != nil && len(arg.Details) > 0 {
 		// Проверяем, что это валидный JSON
@@ -54,7 +54,7 @@ func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegment
 	}
 
 	group := domain.SegmentationGroup{
-		Id:         uuid.New(),
+		Id:         0, // ID будет сгенерирован БД
 		CytologyID: arg.CytologyID,
 		SegType:    arg.SegType,
 		GroupType:  arg.GroupType,
@@ -64,14 +64,15 @@ func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegment
 	}
 
 	entityGroup := segmentation_groupEntity.SegmentationGroup{}.FromDomain(group)
-	if err := s.dao.NewSegmentationGroupQuery(ctx).InsertSegmentationGroup(entityGroup); err != nil {
-		return uuid.Nil, err
+	id, err := s.dao.NewSegmentationGroupQuery(ctx).InsertSegmentationGroup(entityGroup)
+	if err != nil {
+		return 0, err
 	}
 
-	return group.Id, nil
+	return id, nil
 }
 
-func (s *service) GetSegmentationGroupByID(ctx context.Context, id uuid.UUID) (domain.SegmentationGroup, error) {
+func (s *service) GetSegmentationGroupByID(ctx context.Context, id int) (domain.SegmentationGroup, error) {
 	group, err := s.dao.NewSegmentationGroupQuery(ctx).GetSegmentationGroupByID(id)
 	if err != nil {
 		return domain.SegmentationGroup{}, err
@@ -109,6 +110,6 @@ func (s *service) UpdateSegmentationGroup(ctx context.Context, arg UpdateSegment
 	return domainGroup, nil
 }
 
-func (s *service) DeleteSegmentationGroup(ctx context.Context, id uuid.UUID) error {
+func (s *service) DeleteSegmentationGroup(ctx context.Context, id int) error {
 	return s.dao.NewSegmentationGroupQuery(ctx).DeleteSegmentationGroup(id)
 }

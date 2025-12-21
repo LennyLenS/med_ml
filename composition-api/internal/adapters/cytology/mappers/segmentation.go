@@ -40,7 +40,7 @@ func (m SegmentationGroup) Domain(pb *pb.SegmentationGroup) domain.SegmentationG
 	createAt, _ := time.Parse(time.RFC3339, pb.CreateAt)
 
 	return domain.SegmentationGroup{
-		Id:         uuid.MustParse(pb.Id),
+		Id:         int(pb.Id),
 		CytologyID: uuid.MustParse(pb.CytologyId),
 		SegType:    segTypeMap[pb.SegType],
 		GroupType:  groupTypeMap[pb.GroupType],
@@ -67,8 +67,8 @@ func (m Segmentation) Domain(pb *pb.Segmentation) domain.Segmentation {
 	for _, p := range pb.Points {
 		pointCreateAt, _ := time.Parse(time.RFC3339, "")
 		points = append(points, domain.SegmentationPoint{
-			Id:             uuid.MustParse(p.Id),
-			SegmentationID: uuid.MustParse(p.SegmentationId),
+			Id:             int(p.Id),
+			SegmentationID: int(p.SegmentationId),
 			X:              int(p.X),
 			Y:              int(p.Y),
 			UID:            p.Uid,
@@ -77,8 +77,8 @@ func (m Segmentation) Domain(pb *pb.Segmentation) domain.Segmentation {
 	}
 
 	return domain.Segmentation{
-		Id:                  uuid.MustParse(pb.Id),
-		SegmentationGroupID: uuid.MustParse(pb.SegmentationGroupId),
+		Id:                  int(pb.Id),
+		SegmentationGroupID: int(pb.SegmentationGroupId),
 		Points:              points,
 		CreateAt:            createAt,
 	}

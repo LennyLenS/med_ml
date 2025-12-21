@@ -22,16 +22,16 @@ type Service interface {
 	GetOriginalImagesByCytologyId(ctx context.Context, id uuid.UUID) ([]domain.OriginalImage, error)
 	UpdateOriginalImage(ctx context.Context, arg UpdateOriginalImageArg) (domain.OriginalImage, error)
 
-	CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (uuid.UUID, error)
+	CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (int, error)
 	GetSegmentationGroupsByCytologyId(ctx context.Context, id uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]domain.SegmentationGroup, error)
 	UpdateSegmentationGroup(ctx context.Context, arg UpdateSegmentationGroupArg) (domain.SegmentationGroup, error)
-	DeleteSegmentationGroup(ctx context.Context, id uuid.UUID) error
+	DeleteSegmentationGroup(ctx context.Context, id int) error
 
-	CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (uuid.UUID, error)
-	GetSegmentationById(ctx context.Context, id uuid.UUID) (domain.Segmentation, error)
-	GetSegmentsByGroupId(ctx context.Context, id uuid.UUID) ([]domain.Segmentation, error)
+	CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (int, error)
+	GetSegmentationById(ctx context.Context, id int) (domain.Segmentation, error)
+	GetSegmentsByGroupId(ctx context.Context, id int) ([]domain.Segmentation, error)
 	UpdateSegmentation(ctx context.Context, arg UpdateSegmentationArg) (domain.Segmentation, error)
-	DeleteSegmentation(ctx context.Context, id uuid.UUID) error
+	DeleteSegmentation(ctx context.Context, id int) error
 
 	CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.CytologyImage, error)
 	GetCytologyImageHistory(ctx context.Context, id uuid.UUID) ([]domain.CytologyImage, error)

@@ -20,12 +20,11 @@ func (q *repo) UpdateSegmentation(seg entity.Segmentation) error {
 		return repoEntity.WrapDBError(err)
 	}
 
-	// Вставляем новые точки
+	// Вставляем новые точки (ID будут сгенерированы автоматически БД)
 	if len(seg.Points) > 0 {
 		pointsQuery := q.QueryBuilder().
 			Insert(pointTable).
 			Columns(
-				pointColumnID,
 				pointColumnSegmentationID,
 				pointColumnX,
 				pointColumnY,
@@ -35,7 +34,6 @@ func (q *repo) UpdateSegmentation(seg entity.Segmentation) error {
 
 		for _, point := range seg.Points {
 			pointsQuery = pointsQuery.Values(
-				point.Id,
 				point.SegmentationID,
 				point.X,
 				point.Y,

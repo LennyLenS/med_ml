@@ -19,7 +19,7 @@ import (
 // CytologyHistoryReadParams is parameters of CytologyHistoryRead operation.
 type CytologyHistoryReadParams struct {
 	// Id цитологического исследования.
-	ID string
+	ID uuid.UUID
 	// Number of results to return per page.
 	Limit OptInt
 	// The initial index from which to return the results.
@@ -32,7 +32,7 @@ func unpackCytologyHistoryReadParams(packed middleware.Parameters) (params Cytol
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(string)
+		params.ID = packed[key].(uuid.UUID)
 	}
 	{
 		key := middleware.ParameterKey{
@@ -81,7 +81,7 @@ func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.R
 					return err
 				}
 
-				c, err := conv.ToString(val)
+				c, err := conv.ToUUID(val)
 				if err != nil {
 					return err
 				}
@@ -101,6 +101,11 @@ func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.R
 			In:   "path",
 			Err:  err,
 		}
+	}
+	// Set default value for query: limit.
+	{
+		val := int(10)
+		params.Limit.SetTo(val)
 	}
 	// Decode query: limit.
 	if err := func() error {
@@ -134,6 +139,30 @@ func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.R
 			}); err != nil {
 				return err
 			}
+			if err := func() error {
+				if value, ok := params.Limit.Get(); ok {
+					if err := func() error {
+						if err := (validate.Int{
+							MinSet:        true,
+							Min:           1,
+							MaxSet:        true,
+							Max:           100,
+							MinExclusive:  false,
+							MaxExclusive:  false,
+							MultipleOfSet: false,
+							MultipleOf:    0,
+						}).Validate(int64(value)); err != nil {
+							return errors.Wrap(err, "int")
+						}
+						return nil
+					}(); err != nil {
+						return err
+					}
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
 		}
 		return nil
 	}(); err != nil {
@@ -142,6 +171,11 @@ func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.R
 			In:   "query",
 			Err:  err,
 		}
+	}
+	// Set default value for query: offset.
+	{
+		val := int(0)
+		params.Offset.SetTo(val)
 	}
 	// Decode query: offset.
 	if err := func() error {
@@ -173,6 +207,30 @@ func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.R
 				params.Offset.SetTo(paramsDotOffsetVal)
 				return nil
 			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if value, ok := params.Offset.Get(); ok {
+					if err := func() error {
+						if err := (validate.Int{
+							MinSet:        true,
+							Min:           0,
+							MaxSet:        false,
+							Max:           0,
+							MinExclusive:  false,
+							MaxExclusive:  false,
+							MultipleOfSet: false,
+							MultipleOf:    0,
+						}).Validate(int64(value)); err != nil {
+							return errors.Wrap(err, "int")
+						}
+						return nil
+					}(); err != nil {
+						return err
+					}
+				}
+				return nil
+			}(); err != nil {
 				return err
 			}
 		}
@@ -322,7 +380,7 @@ func decodeCytologySegmentGroupCreateCreateParams(args [1]string, argsEscaped bo
 // CytologySegmentUpdateDeleteParams is parameters of CytologySegmentUpdateDelete operation.
 type CytologySegmentUpdateDeleteParams struct {
 	// Id сегментации.
-	ID uuid.UUID
+	ID int
 }
 
 func unpackCytologySegmentUpdateDeleteParams(packed middleware.Parameters) (params CytologySegmentUpdateDeleteParams) {
@@ -331,7 +389,7 @@ func unpackCytologySegmentUpdateDeleteParams(packed middleware.Parameters) (para
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
+		params.ID = packed[key].(int)
 	}
 	return params
 }
@@ -361,7 +419,7 @@ func decodeCytologySegmentUpdateDeleteParams(args [1]string, argsEscaped bool, r
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}
@@ -388,7 +446,7 @@ func decodeCytologySegmentUpdateDeleteParams(args [1]string, argsEscaped bool, r
 // CytologySegmentUpdatePartialUpdateParams is parameters of CytologySegmentUpdatePartialUpdate operation.
 type CytologySegmentUpdatePartialUpdateParams struct {
 	// Id сегментации.
-	ID uuid.UUID
+	ID int
 }
 
 func unpackCytologySegmentUpdatePartialUpdateParams(packed middleware.Parameters) (params CytologySegmentUpdatePartialUpdateParams) {
@@ -397,7 +455,7 @@ func unpackCytologySegmentUpdatePartialUpdateParams(packed middleware.Parameters
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
+		params.ID = packed[key].(int)
 	}
 	return params
 }
@@ -427,7 +485,7 @@ func decodeCytologySegmentUpdatePartialUpdateParams(args [1]string, argsEscaped 
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}
@@ -454,7 +512,7 @@ func decodeCytologySegmentUpdatePartialUpdateParams(args [1]string, argsEscaped 
 // CytologySegmentUpdateReadParams is parameters of CytologySegmentUpdateRead operation.
 type CytologySegmentUpdateReadParams struct {
 	// Id сегментации.
-	ID uuid.UUID
+	ID int
 }
 
 func unpackCytologySegmentUpdateReadParams(packed middleware.Parameters) (params CytologySegmentUpdateReadParams) {
@@ -463,7 +521,7 @@ func unpackCytologySegmentUpdateReadParams(packed middleware.Parameters) (params
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
+		params.ID = packed[key].(int)
 	}
 	return params
 }
@@ -493,7 +551,7 @@ func decodeCytologySegmentUpdateReadParams(args [1]string, argsEscaped bool, r *
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}
@@ -520,7 +578,7 @@ func decodeCytologySegmentUpdateReadParams(args [1]string, argsEscaped bool, r *
 // CytologySegmentUpdateUpdateParams is parameters of CytologySegmentUpdateUpdate operation.
 type CytologySegmentUpdateUpdateParams struct {
 	// Id сегментации.
-	ID uuid.UUID
+	ID int
 }
 
 func unpackCytologySegmentUpdateUpdateParams(packed middleware.Parameters) (params CytologySegmentUpdateUpdateParams) {
@@ -529,7 +587,7 @@ func unpackCytologySegmentUpdateUpdateParams(packed middleware.Parameters) (para
 			Name: "id",
 			In:   "path",
 		}
-		params.ID = packed[key].(uuid.UUID)
+		params.ID = packed[key].(int)
 	}
 	return params
 }
@@ -559,7 +617,7 @@ func decodeCytologySegmentUpdateUpdateParams(args [1]string, argsEscaped bool, r
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToInt(val)
 				if err != nil {
 					return err
 				}

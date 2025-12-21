@@ -60,7 +60,7 @@ func (h *handler) CytologySegmentsList(ctx context.Context, params api.CytologyS
 
 	// Преобразуем в формат согласно swagger.json (пагинированный список SegmentationData)
 	// Передаем функцию для получения сегментов для каждой группы
-	getSegments := func(groupID uuid.UUID) ([]domainCytology.Segmentation, error) {
+	getSegments := func(groupID int) ([]domainCytology.Segmentation, error) {
 		return h.services.CytologyService.GetSegmentsByGroupId(ctx, groupID)
 	}
 	results := mappers.SegmentationGroup{}.ToSegmentationDataList(groups, getSegments)

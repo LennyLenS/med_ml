@@ -8,16 +8,12 @@ import (
 	"cytology/internal/server/mappers"
 	"cytology/internal/services/segmentation_group"
 
-	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (h *handler) UpdateSegmentationGroup(ctx context.Context, in *pb.UpdateSegmentationGroupIn) (*pb.UpdateSegmentationGroupOut, error) {
-	id, err := uuid.Parse(in.Id)
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "id is not a valid uuid: %s", err.Error())
-	}
+	id := int(in.Id)
 
 	var details []byte
 	if in.Details != nil && *in.Details != "" {

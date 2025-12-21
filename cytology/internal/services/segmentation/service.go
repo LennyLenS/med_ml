@@ -5,18 +5,16 @@ import (
 	"time"
 
 	"cytology/internal/domain"
-	segmentationEntity "cytology/internal/repository/segmentation/entity"
 	"cytology/internal/repository"
-
-	"github.com/google/uuid"
+	segmentationEntity "cytology/internal/repository/segmentation/entity"
 )
 
 type Service interface {
-	CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (uuid.UUID, error)
-	GetSegmentationByID(ctx context.Context, id uuid.UUID) (domain.Segmentation, error)
-	GetSegmentsByGroupID(ctx context.Context, groupID uuid.UUID) ([]domain.Segmentation, error)
+	CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (int, error)
+	GetSegmentationByID(ctx context.Context, id int) (domain.Segmentation, error)
+	GetSegmentsByGroupID(ctx context.Context, groupID int) ([]domain.Segmentation, error)
 	UpdateSegmentation(ctx context.Context, arg UpdateSegmentationArg) (domain.Segmentation, error)
-	DeleteSegmentation(ctx context.Context, id uuid.UUID) error
+	DeleteSegmentation(ctx context.Context, id int) error
 }
 
 type service struct {
@@ -30,39 +28,40 @@ func New(dao repository.DAO) Service {
 }
 
 type CreateSegmentationArg struct {
-	SegmentationGroupID uuid.UUID
+	SegmentationGroupID int
 	Points              []domain.SegmentationPoint
 }
 
 type UpdateSegmentationArg struct {
-	Id     uuid.UUID
+	Id     int
 	Points []domain.SegmentationPoint
 }
 
-func (s *service) CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (uuid.UUID, error) {
+func (s *service) CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (int, error) {
 	seg := domain.Segmentation{
-		Id:                uuid.New(),
+		Id:                  0, // ID будет сгенерирован БД
 		SegmentationGroupID: arg.SegmentationGroupID,
-		Points:            arg.Points,
-		CreateAt:          time.Now(),
+		Points:              arg.Points,
+		CreateAt:            time.Now(),
 	}
 
-	// Генерируем ID для точек
+	// ID для точек будут сгенерированы БД
 	for i := range seg.Points {
-		seg.Points[i].Id = uuid.New()
-		seg.Points[i].SegmentationID = seg.Id
+		seg.Points[i].Id = 0             // ID будет сгенерирован БД
+		seg.Points[i].SegmentationID = 0 // Будет установлен после создания сегментации
 		seg.Points[i].CreateAt = time.Now()
 	}
 
 	entitySeg := segmentationEntity.Segmentation{}.FromDomain(seg)
-	if err := s.dao.NewSegmentationQuery(ctx).InsertSegmentation(entitySeg); err != nil {
-		return uuid.Nil, err
+	id, err := s.dao.NewSegmentationQuery(ctx).InsertSegmentation(entitySeg)
+	if err != nil {
+		return 0, err
 	}
 
-	return seg.Id, nil
+	return id, nil
 }
 
-func (s *service) GetSegmentationByID(ctx context.Context, id uuid.UUID) (domain.Segmentation, error) {
+func (s *service) GetSegmentationByID(ctx context.Context, id int) (domain.Segmentation, error) {
 	seg, err := s.dao.NewSegmentationQuery(ctx).GetSegmentationByID(id)
 	if err != nil {
 		return domain.Segmentation{}, err
@@ -70,7 +69,7 @@ func (s *service) GetSegmentationByID(ctx context.Context, id uuid.UUID) (domain
 	return seg.ToDomain(), nil
 }
 
-func (s *service) GetSegmentsByGroupID(ctx context.Context, groupID uuid.UUID) ([]domain.Segmentation, error) {
+func (s *service) GetSegmentsByGroupID(ctx context.Context, groupID int) ([]domain.Segmentation, error) {
 	segs, err := s.dao.NewSegmentationQuery(ctx).GetSegmentsByGroupID(groupID)
 	if err != nil {
 		return nil, err
@@ -87,9 +86,9 @@ func (s *service) UpdateSegmentation(ctx context.Context, arg UpdateSegmentation
 	domainSeg := seg.ToDomain()
 	domainSeg.Points = arg.Points
 
-	// Обновляем ID и время создания для точек
+	// ID для точек будут сгенерированы БД при обновлении
 	for i := range domainSeg.Points {
-		domainSeg.Points[i].Id = uuid.New()
+		domainSeg.Points[i].Id = 0 // ID будет сгенерирован БД
 		domainSeg.Points[i].SegmentationID = domainSeg.Id
 		domainSeg.Points[i].CreateAt = time.Now()
 	}
@@ -102,6 +101,6 @@ func (s *service) UpdateSegmentation(ctx context.Context, arg UpdateSegmentation
 	return domainSeg, nil
 }
 
-func (s *service) DeleteSegmentation(ctx context.Context, id uuid.UUID) error {
+func (s *service) DeleteSegmentation(ctx context.Context, id int) error {
 	return s.dao.NewSegmentationQuery(ctx).DeleteSegmentation(id)
 }

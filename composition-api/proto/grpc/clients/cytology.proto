@@ -231,7 +231,7 @@ enum GroupType {
 }
 
 message SegmentationGroup {
-  string id = 100;
+  int32 id = 100;
   string cytology_id = 200;
   SegType seg_type = 300;
   GroupType group_type = 400;
@@ -249,7 +249,7 @@ message CreateSegmentationGroupIn {
 }
 
 message CreateSegmentationGroupOut {
-  string id = 100;
+  int32 id = 100;
 }
 
 message GetSegmentationGroupsByCytologyIdIn {
@@ -264,7 +264,7 @@ message GetSegmentationGroupsByCytologyIdOut {
 }
 
 message UpdateSegmentationGroupIn {
-  string id = 100;
+  int32 id = 100;
   optional SegType seg_type = 200;
   optional string details = 300; // JSON string
 }
@@ -274,28 +274,28 @@ message UpdateSegmentationGroupOut {
 }
 
 message DeleteSegmentationGroupIn {
-  string id = 100;
+  int32 id = 100;
 }
 
 // SEGMENTATION
 
 message SegmentationPoint {
-  string id = 100;
-  string segmentation_id = 200;
+  int32 id = 100;
+  int32 segmentation_id = 200;
   int32 x = 300;
   int32 y = 400;
   int64 uid = 500;
 }
 
 message Segmentation {
-  string id = 100;
-  string segmentation_group_id = 200;
+  int32 id = 100;
+  int32 segmentation_group_id = 200;
   repeated SegmentationPoint points = 300;
   string create_at = 400;
 }
 
 message CreateSegmentationIn {
-  string segmentation_group_id = 100;
+  int32 segmentation_group_id = 100;
   repeated SegmentationPointCreate points = 200;
 }
 
@@ -305,11 +305,11 @@ message SegmentationPointCreate {
 }
 
 message CreateSegmentationOut {
-  string id = 100;
+  int32 id = 100;
 }
 
 message GetSegmentationByIdIn {
-  string id = 100;
+  int32 id = 100;
 }
 
 message GetSegmentationByIdOut {
@@ -317,7 +317,7 @@ message GetSegmentationByIdOut {
 }
 
 message GetSegmentsByGroupIdIn {
-  string segmentation_group_id = 100;
+  int32 segmentation_group_id = 100;
 }
 
 message GetSegmentsByGroupIdOut {
@@ -325,7 +325,7 @@ message GetSegmentsByGroupIdOut {
 }
 
 message UpdateSegmentationIn {
-  string id = 100;
+  int32 id = 100;
   repeated SegmentationPointCreate points = 200;
 }
 
@@ -334,5 +334,5 @@ message UpdateSegmentationOut {
 }
 
 message DeleteSegmentationIn {
-  string id = 100;
+  int32 id = 100;
 }

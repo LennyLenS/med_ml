@@ -3,21 +3,17 @@ package segmentation
 import (
 	"context"
 
-	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/domain"
+	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/server/mappers"
 	"cytology/internal/services/segmentation"
 
-	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (h *handler) UpdateSegmentation(ctx context.Context, in *pb.UpdateSegmentationIn) (*pb.UpdateSegmentationOut, error) {
-	id, err := uuid.Parse(in.Id)
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "id is not a valid uuid: %s", err.Error())
-	}
+	id := int(in.Id)
 
 	points := make([]domain.SegmentationPoint, 0, len(in.Points))
 	for _, p := range in.Points {

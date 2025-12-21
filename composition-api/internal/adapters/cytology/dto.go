@@ -57,17 +57,17 @@ type CreateSegmentationGroupIn struct {
 }
 
 type UpdateSegmentationGroupIn struct {
-	Id      uuid.UUID
+	Id      int
 	SegType *domain.SegType
 	Details *string
 }
 
 type CreateSegmentationIn struct {
-	SegmentationGroupID uuid.UUID
+	SegmentationGroupID int
 	Points              []domain.SegmentationPoint
 }
 
 type UpdateSegmentationIn struct {
-	Id     uuid.UUID
+	Id     int
 	Points []domain.SegmentationPoint
 }

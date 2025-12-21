@@ -9,7 +9,7 @@ import (
 	domain "composition-api/internal/domain/cytology"
 )
 
-func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (uuid.UUID, error) {
+func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (int, error) {
 	return s.adapters.Cytology.CreateSegmentationGroup(ctx, cytology.CreateSegmentationGroupIn{
 		CytologyID: arg.CytologyID,
 		SegType:    arg.SegType,
@@ -31,22 +31,22 @@ func (s *service) UpdateSegmentationGroup(ctx context.Context, arg UpdateSegment
 	})
 }
 
-func (s *service) DeleteSegmentationGroup(ctx context.Context, id uuid.UUID) error {
+func (s *service) DeleteSegmentationGroup(ctx context.Context, id int) error {
 	return s.adapters.Cytology.DeleteSegmentationGroup(ctx, id)
 }
 
-func (s *service) CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (uuid.UUID, error) {
+func (s *service) CreateSegmentation(ctx context.Context, arg CreateSegmentationArg) (int, error) {
 	return s.adapters.Cytology.CreateSegmentation(ctx, cytology.CreateSegmentationIn{
 		SegmentationGroupID: arg.SegmentationGroupID,
 		Points:              arg.Points,
 	})
 }
 
-func (s *service) GetSegmentationById(ctx context.Context, id uuid.UUID) (domain.Segmentation, error) {
+func (s *service) GetSegmentationById(ctx context.Context, id int) (domain.Segmentation, error) {
 	return s.adapters.Cytology.GetSegmentationById(ctx, id)
 }
 
-func (s *service) GetSegmentsByGroupId(ctx context.Context, id uuid.UUID) ([]domain.Segmentation, error) {
+func (s *service) GetSegmentsByGroupId(ctx context.Context, id int) ([]domain.Segmentation, error) {
 	return s.adapters.Cytology.GetSegmentsByGroupId(ctx, id)
 }
 
@@ -57,6 +57,6 @@ func (s *service) UpdateSegmentation(ctx context.Context, arg UpdateSegmentation
 	})
 }
 
-func (s *service) DeleteSegmentation(ctx context.Context, id uuid.UUID) error {
+func (s *service) DeleteSegmentation(ctx context.Context, id int) error {
 	return s.adapters.Cytology.DeleteSegmentation(ctx, id)
 }

@@ -1,14 +1,12 @@
 package segmentation_group
 
 import (
-	"github.com/google/uuid"
-
 	sq "github.com/Masterminds/squirrel"
 
 	repoEntity "cytology/internal/repository/entity"
 )
 
-func (r *repo) DeleteSegmentationGroup(id uuid.UUID) error {
+func (r *repo) DeleteSegmentationGroup(id int) error {
 	query := r.QueryBuilder().
 		Delete(table).
 		Where(sq.Eq{

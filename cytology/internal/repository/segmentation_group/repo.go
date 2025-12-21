@@ -20,11 +20,11 @@ const (
 )
 
 type Repository interface {
-	InsertSegmentationGroup(group entity.SegmentationGroup) error
-	GetSegmentationGroupByID(id uuid.UUID) (entity.SegmentationGroup, error)
+	InsertSegmentationGroup(group entity.SegmentationGroup) (int, error)
+	GetSegmentationGroupByID(id int) (entity.SegmentationGroup, error)
 	GetSegmentationGroupsByCytologyID(cytologyID uuid.UUID) ([]entity.SegmentationGroup, error)
 	UpdateSegmentationGroup(group entity.SegmentationGroup) error
-	DeleteSegmentationGroup(id uuid.UUID) error
+	DeleteSegmentationGroup(id int) error
 }
 
 type repo struct {

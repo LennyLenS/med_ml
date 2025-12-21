@@ -58,8 +58,8 @@ func (h *handler) CytologySegmentGroupCreateCreate(ctx context.Context, req *api
 	// Возвращаем согласно swagger.json
 	result := api.CytologySegmentGroupCreateCreateCreated{
 		ID: api.OptInt{
-			// UUID не преобразуется в int, оставляем пустым
-			Set: false,
+			Value: groupID,
+			Set:   true,
 		},
 		Data: api.OptCytologySegmentGroupCreateCreateCreatedData{
 			Value: api.CytologySegmentGroupCreateCreateCreatedData{

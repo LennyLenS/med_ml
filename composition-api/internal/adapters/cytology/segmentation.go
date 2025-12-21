@@ -36,7 +36,7 @@ var groupTypeMap = map[domain.GroupType]pb.GroupType{
 	domain.GroupTypeME: pb.GroupType_GROUP_TYPE_ME,
 }
 
-func (a *adapter) CreateSegmentationGroup(ctx context.Context, in CreateSegmentationGroupIn) (uuid.UUID, error) {
+func (a *adapter) CreateSegmentationGroup(ctx context.Context, in CreateSegmentationGroupIn) (int, error) {
 	req := &pb.CreateSegmentationGroupIn{
 		CytologyId: in.CytologyID.String(),
 		SegType:    segTypeMap[in.SegType],
@@ -47,10 +47,10 @@ func (a *adapter) CreateSegmentationGroup(ctx context.Context, in CreateSegmenta
 
 	res, err := a.client.CreateSegmentationGroup(ctx, req)
 	if err != nil {
-		return uuid.Nil, adapter_errors.HandleGRPCError(err)
+		return 0, adapter_errors.HandleGRPCError(err)
 	}
 
-	return uuid.MustParse(res.Id), nil
+	return int(res.Id), nil
 }
 
 func (a *adapter) GetSegmentationGroupsByCytologyId(ctx context.Context, id uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]domain.SegmentationGroup, error) {
@@ -82,7 +82,7 @@ func (a *adapter) GetSegmentationGroupsByCytologyId(ctx context.Context, id uuid
 
 func (a *adapter) UpdateSegmentationGroup(ctx context.Context, in UpdateSegmentationGroupIn) (domain.SegmentationGroup, error) {
 	req := &pb.UpdateSegmentationGroupIn{
-		Id:      in.Id.String(),
+		Id:      int32(in.Id),
 		Details: in.Details,
 	}
 
@@ -99,12 +99,12 @@ func (a *adapter) UpdateSegmentationGroup(ctx context.Context, in UpdateSegmenta
 	return mappers.SegmentationGroup{}.Domain(res.SegmentationGroup), nil
 }
 
-func (a *adapter) DeleteSegmentationGroup(ctx context.Context, id uuid.UUID) error {
-	_, err := a.client.DeleteSegmentationGroup(ctx, &pb.DeleteSegmentationGroupIn{Id: id.String()})
+func (a *adapter) DeleteSegmentationGroup(ctx context.Context, id int) error {
+	_, err := a.client.DeleteSegmentationGroup(ctx, &pb.DeleteSegmentationGroupIn{Id: int32(id)})
 	return adapter_errors.HandleGRPCError(err)
 }
 
-func (a *adapter) CreateSegmentation(ctx context.Context, in CreateSegmentationIn) (uuid.UUID, error) {
+func (a *adapter) CreateSegmentation(ctx context.Context, in CreateSegmentationIn) (int, error) {
 	points := make([]*pb.SegmentationPointCreate, 0, len(in.Points))
 	for _, p := range in.Points {
 		points = append(points, &pb.SegmentationPointCreate{
@@ -114,20 +114,20 @@ func (a *adapter) CreateSegmentation(ctx context.Context, in CreateSegmentationI
 	}
 
 	req := &pb.CreateSegmentationIn{
-		SegmentationGroupId: in.SegmentationGroupID.String(),
+		SegmentationGroupId: int32(in.SegmentationGroupID),
 		Points:              points,
 	}
 
 	res, err := a.client.CreateSegmentation(ctx, req)
 	if err != nil {
-		return uuid.Nil, adapter_errors.HandleGRPCError(err)
+		return 0, adapter_errors.HandleGRPCError(err)
 	}
 
-	return uuid.MustParse(res.Id), nil
+	return int(res.Id), nil
 }
 
-func (a *adapter) GetSegmentationById(ctx context.Context, id uuid.UUID) (domain.Segmentation, error) {
-	res, err := a.client.GetSegmentationById(ctx, &pb.GetSegmentationByIdIn{Id: id.String()})
+func (a *adapter) GetSegmentationById(ctx context.Context, id int) (domain.Segmentation, error) {
+	res, err := a.client.GetSegmentationById(ctx, &pb.GetSegmentationByIdIn{Id: int32(id)})
 	if err != nil {
 		return domain.Segmentation{}, adapter_errors.HandleGRPCError(err)
 	}
@@ -135,8 +135,8 @@ func (a *adapter) GetSegmentationById(ctx context.Context, id uuid.UUID) (domain
 	return mappers.Segmentation{}.Domain(res.Segmentation), nil
 }
 
-func (a *adapter) GetSegmentsByGroupId(ctx context.Context, id uuid.UUID) ([]domain.Segmentation, error) {
-	res, err := a.client.GetSegmentsByGroupId(ctx, &pb.GetSegmentsByGroupIdIn{SegmentationGroupId: id.String()})
+func (a *adapter) GetSegmentsByGroupId(ctx context.Context, id int) ([]domain.Segmentation, error) {
+	res, err := a.client.GetSegmentsByGroupId(ctx, &pb.GetSegmentsByGroupIdIn{SegmentationGroupId: int32(id)})
 	if err != nil {
 		return nil, adapter_errors.HandleGRPCError(err)
 	}
@@ -154,7 +154,7 @@ func (a *adapter) UpdateSegmentation(ctx context.Context, in UpdateSegmentationI
 	}
 
 	req := &pb.UpdateSegmentationIn{
-		Id:     in.Id.String(),
+		Id:     int32(in.Id),
 		Points: points,
 	}
 
@@ -166,7 +166,7 @@ func (a *adapter) UpdateSegmentation(ctx context.Context, in UpdateSegmentationI
 	return mappers.Segmentation{}.Domain(res.Segmentation), nil
 }
 
-func (a *adapter) DeleteSegmentation(ctx context.Context, id uuid.UUID) error {
-	_, err := a.client.DeleteSegmentation(ctx, &pb.DeleteSegmentationIn{Id: id.String()})
+func (a *adapter) DeleteSegmentation(ctx context.Context, id int) error {
+	_, err := a.client.DeleteSegmentation(ctx, &pb.DeleteSegmentationIn{Id: int32(id)})
 	return adapter_errors.HandleGRPCError(err)
 }

@@ -11,7 +11,7 @@ import (
 )
 
 type SegmentationGroup struct {
-	Id         uuid.UUID      `db:"id"`
+	Id         int            `db:"id"`
 	CytologyID uuid.UUID      `db:"cytology_id"`
 	SegType    string         `db:"seg_type"`
 	GroupType  string         `db:"group_type"`

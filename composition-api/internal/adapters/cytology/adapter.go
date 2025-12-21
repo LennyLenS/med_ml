@@ -27,17 +27,17 @@ type Adapter interface {
 	UpdateOriginalImage(ctx context.Context, in UpdateOriginalImageIn) (domain.OriginalImage, error)
 
 	// SEGMENTATION GROUP
-	CreateSegmentationGroup(ctx context.Context, in CreateSegmentationGroupIn) (uuid.UUID, error)
+	CreateSegmentationGroup(ctx context.Context, in CreateSegmentationGroupIn) (int, error)
 	GetSegmentationGroupsByCytologyId(ctx context.Context, id uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]domain.SegmentationGroup, error)
 	UpdateSegmentationGroup(ctx context.Context, in UpdateSegmentationGroupIn) (domain.SegmentationGroup, error)
-	DeleteSegmentationGroup(ctx context.Context, id uuid.UUID) error
+	DeleteSegmentationGroup(ctx context.Context, id int) error
 
 	// SEGMENTATION
-	CreateSegmentation(ctx context.Context, in CreateSegmentationIn) (uuid.UUID, error)
-	GetSegmentationById(ctx context.Context, id uuid.UUID) (domain.Segmentation, error)
-	GetSegmentsByGroupId(ctx context.Context, id uuid.UUID) ([]domain.Segmentation, error)
+	CreateSegmentation(ctx context.Context, in CreateSegmentationIn) (int, error)
+	GetSegmentationById(ctx context.Context, id int) (domain.Segmentation, error)
+	GetSegmentsByGroupId(ctx context.Context, id int) ([]domain.Segmentation, error)
 	UpdateSegmentation(ctx context.Context, in UpdateSegmentationIn) (domain.Segmentation, error)
-	DeleteSegmentation(ctx context.Context, id uuid.UUID) error
+	DeleteSegmentation(ctx context.Context, id int) error
 }
 
 type adapter struct {

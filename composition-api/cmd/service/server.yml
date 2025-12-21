@@ -881,8 +881,7 @@ components:
         - create_at
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
           description: id группы сегментаций
         cytology_id:
           type: string
@@ -926,7 +925,7 @@ components:
           format: date-time
           description: дата создания
       example:
-        id: "123e4567-e89b-12d3-a456-426614174000"
+        id: 1
         cytology_id: "123e4567-e89b-12d3-a456-426614174000"
         seg_type: "NIL"
         group_type: "CE"
@@ -962,12 +961,10 @@ components:
         - create_at
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
           description: id сегментации
         segmentation_group_id:
-          type: string
-          format: uuid
+          type: integer
           description: id группы сегментаций
         points:
           type: array
@@ -979,8 +976,8 @@ components:
           format: date-time
           description: дата создания
       example:
-        id: "123e4567-e89b-12d3-a456-426614174000"
-        segmentation_group_id: "123e4567-e89b-12d3-a456-426614174000"
+        id: 1
+        segmentation_group_id: 1
         points:
           - x: 100
             y: 200
@@ -3822,8 +3819,7 @@ paths:
           required: true
           description: id сегментации
           schema:
-            type: string
-            format: uuid
+            type: integer
       responses:
         '200':
           description: сегментация
@@ -3867,8 +3863,7 @@ paths:
           required: true
           description: id сегментации
           schema:
-            type: string
-            format: uuid
+            type: integer
       requestBody:
         required: true
         content:
@@ -3940,8 +3935,7 @@ paths:
           required: true
           description: id сегментации
           schema:
-            type: string
-            format: uuid
+            type: integer
       requestBody:
         required: true
         content:
@@ -4013,8 +4007,7 @@ paths:
           required: true
           description: id сегментации
           schema:
-            type: string
-            format: uuid
+            type: integer
       responses:
         '204':
           description: сегментация удалена

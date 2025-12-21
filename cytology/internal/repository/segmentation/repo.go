@@ -2,7 +2,6 @@ package segmentation
 
 import (
 	daolib "github.com/WantBeASleep/med_ml_lib/dao"
-	"github.com/google/uuid"
 
 	"cytology/internal/repository/segmentation/entity"
 )
@@ -10,9 +9,9 @@ import (
 const (
 	table = "segmentation"
 
-	columnID                = "id"
+	columnID                  = "id"
 	columnSegmentationGroupID = "segmentation_group_id"
-	columnCreateAt          = "create_at"
+	columnCreateAt            = "create_at"
 )
 
 const (
@@ -27,11 +26,11 @@ const (
 )
 
 type Repository interface {
-	InsertSegmentation(seg entity.Segmentation) error
-	GetSegmentationByID(id uuid.UUID) (entity.Segmentation, error)
-	GetSegmentsByGroupID(groupID uuid.UUID) ([]entity.Segmentation, error)
+	InsertSegmentation(seg entity.Segmentation) (int, error)
+	GetSegmentationByID(id int) (entity.Segmentation, error)
+	GetSegmentsByGroupID(groupID int) ([]entity.Segmentation, error)
 	UpdateSegmentation(seg entity.Segmentation) error
-	DeleteSegmentation(id uuid.UUID) error
+	DeleteSegmentation(id int) error
 }
 
 type repo struct {

@@ -5,32 +5,31 @@ import (
 	"cytology/internal/repository/segmentation/entity"
 )
 
-func (q *repo) InsertSegmentation(seg entity.Segmentation) error {
-	// Вставляем сегментацию
+func (q *repo) InsertSegmentation(seg entity.Segmentation) (int, error) {
+	// Вставляем сегментацию (ID будет сгенерирован автоматически, так как это SERIAL)
 	query := q.QueryBuilder().
 		Insert(table).
 		Columns(
-			columnID,
 			columnSegmentationGroupID,
 			columnCreateAt,
 		).
 		Values(
-			seg.Id,
 			seg.SegmentationGroupID,
 			seg.CreateAt,
-		)
+		).
+		Suffix("RETURNING id")
 
-	_, err := q.Runner().Execx(q.Context(), query)
+	var id int
+	err := q.Runner().Getx(q.Context(), &id, query)
 	if err != nil {
-		return repoEntity.WrapDBError(err)
+		return 0, repoEntity.WrapDBError(err)
 	}
 
-	// Вставляем точки
+	// Вставляем точки (ID будут сгенерированы автоматически)
 	if len(seg.Points) > 0 {
 		pointsQuery := q.QueryBuilder().
 			Insert(pointTable).
 			Columns(
-				pointColumnID,
 				pointColumnSegmentationID,
 				pointColumnX,
 				pointColumnY,
@@ -40,8 +39,7 @@ func (q *repo) InsertSegmentation(seg entity.Segmentation) error {
 
 		for _, point := range seg.Points {
 			pointsQuery = pointsQuery.Values(
-				point.Id,
-				point.SegmentationID,
+				id, // Используем созданный ID сегментации
 				point.X,
 				point.Y,
 				point.UID,
@@ -51,9 +49,9 @@ func (q *repo) InsertSegmentation(seg entity.Segmentation) error {
 
 		_, err = q.Runner().Execx(q.Context(), pointsQuery)
 		if err != nil {
-			return repoEntity.WrapDBError(err)
+			return 0, repoEntity.WrapDBError(err)
 		}
 	}
 
-	return nil
+	return id, nil
 }

@@ -18,7 +18,7 @@ type Segmentation struct{}
 
 // Удалены неиспользуемые методы Domain, SliceDomain, CreateArg, UpdateArg - заменены на новые методы для работы с обновленными типами API
 
-func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGroup, getSegments func(uuid.UUID) ([]domain.Segmentation, error)) []api.CytologySegmentsListOKResultsItem {
+func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGroup, getSegments func(int) ([]domain.Segmentation, error)) []api.CytologySegmentsListOKResultsItem {
 	result := make([]api.CytologySegmentsListOKResultsItem, 0, len(groups))
 	for _, group := range groups {
 		// Получаем сегменты для группы
@@ -35,8 +35,8 @@ func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGrou
 			for _, point := range seg.Points {
 				points = append(points, api.CytologySegmentsListOKResultsItemDataItemPointsItem{
 					ID: api.OptInt{
-						// UUID не преобразуется в int, оставляем пустым
-						Set: false,
+						Value: point.Id,
+						Set:   true,
 					},
 					UID: int(point.UID), // UID имеет тип int в API
 					X:   point.X,
@@ -45,8 +45,8 @@ func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGrou
 			}
 			dataItems = append(dataItems, api.CytologySegmentsListOKResultsItemDataItem{
 				ID: api.OptInt{
-					// UUID не преобразуется в int, оставляем пустым
-					Set: false,
+					Value: seg.Id,
+					Set:   true,
 				},
 				Points: points,
 				Details: api.OptString{
@@ -58,8 +58,8 @@ func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGrou
 
 		item := api.CytologySegmentsListOKResultsItem{
 			ID: api.OptInt{
-				// UUID не преобразуется в int, оставляем пустым
-				Set: false,
+				Value: group.Id,
+				Set:   true,
 			},
 			Data: dataItems,
 			GroupType: api.OptCytologySegmentsListOKResultsItemGroupType{
@@ -127,7 +127,8 @@ func (SegmentationGroup) CreateArgFromCytologySegmentGroupCreateCreateReq(cytolo
 	// Возвращаем оба аргумента - сначала нужно создать группу, потом сегмент
 	// Но group ID будет известен только после создания, поэтому возвращаем только points
 	segArg := cytologySrv.CreateSegmentationArg{
-		Points: points,
+		SegmentationGroupID: 0, // Будет установлен после создания группы
+		Points:              points,
 	}
 
 	return groupArg, segArg
@@ -148,8 +149,8 @@ func (Segmentation) ToCytologySegmentUpdateReadOK(seg domain.Segmentation) api.C
 	result := api.CytologySegmentUpdateReadOK{
 		Points: make([]api.CytologySegmentUpdateReadOKPointsItem, 0, len(seg.Points)),
 		SegmentGroup: api.OptInt{
-			// TODO: Преобразовать UUID в int
-			Set: false,
+			Value: seg.SegmentationGroupID,
+			Set:   true,
 		},
 	}
 
@@ -163,7 +164,7 @@ func (Segmentation) ToCytologySegmentUpdateReadOK(seg domain.Segmentation) api.C
 	return result
 }
 
-func (Segmentation) UpdateArgFromCytologySegmentUpdateUpdateReq(id uuid.UUID, req *api.CytologySegmentUpdateUpdateReq) cytologySrv.UpdateSegmentationArg {
+func (Segmentation) UpdateArgFromCytologySegmentUpdateUpdateReq(id int, req *api.CytologySegmentUpdateUpdateReq) cytologySrv.UpdateSegmentationArg {
 	points := make([]domain.SegmentationPoint, 0, len(req.Points))
 	for _, point := range req.Points {
 		points = append(points, domain.SegmentationPoint{
@@ -178,7 +179,7 @@ func (Segmentation) UpdateArgFromCytologySegmentUpdateUpdateReq(id uuid.UUID, re
 	}
 }
 
-func (Segmentation) UpdateArgFromCytologySegmentUpdatePartialUpdateReq(id uuid.UUID, req *api.CytologySegmentUpdatePartialUpdateReq) cytologySrv.UpdateSegmentationArg {
+func (Segmentation) UpdateArgFromCytologySegmentUpdatePartialUpdateReq(id int, req *api.CytologySegmentUpdatePartialUpdateReq) cytologySrv.UpdateSegmentationArg {
 	points := make([]domain.SegmentationPoint, 0, len(req.Points))
 	for _, point := range req.Points {
 		points = append(points, domain.SegmentationPoint{
@@ -197,8 +198,8 @@ func (Segmentation) ToCytologySegmentUpdateUpdateOK(seg domain.Segmentation, req
 	result := api.CytologySegmentUpdateUpdateOK{
 		Points: make([]api.CytologySegmentUpdateUpdateOKPointsItem, 0, len(seg.Points)),
 		SegmentGroup: api.OptInt{
-			// TODO: Преобразовать UUID в int
-			Set: false,
+			Value: seg.SegmentationGroupID,
+			Set:   true,
 		},
 	}
 
@@ -216,8 +217,8 @@ func (Segmentation) ToCytologySegmentUpdatePartialUpdateOK(seg domain.Segmentati
 	result := api.CytologySegmentUpdatePartialUpdateOK{
 		Points: make([]api.CytologySegmentUpdatePartialUpdateOKPointsItem, 0, len(seg.Points)),
 		SegmentGroup: api.OptInt{
-			// TODO: Преобразовать UUID в int
-			Set: false,
+			Value: seg.SegmentationGroupID,
+			Set:   true,
 		},
 	}
 

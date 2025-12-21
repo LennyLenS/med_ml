@@ -36,8 +36,8 @@ const (
 )
 
 type SegmentationPoint struct {
-	Id             uuid.UUID
-	SegmentationID uuid.UUID
+	Id             int
+	SegmentationID int
 	X              int
 	Y              int
 	UID            int64
@@ -45,14 +45,14 @@ type SegmentationPoint struct {
 }
 
 type Segmentation struct {
-	Id                  uuid.UUID
-	SegmentationGroupID uuid.UUID
+	Id                  int
+	SegmentationGroupID int
 	Points              []SegmentationPoint
 	CreateAt            time.Time
 }
 
 type SegmentationGroup struct {
-	Id         uuid.UUID
+	Id         int
 	CytologyID uuid.UUID
 	SegType    SegType
 	GroupType  GroupType

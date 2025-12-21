@@ -7,13 +7,12 @@
 package cytology
 
 import (
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
 )
 
 const (
@@ -1751,7 +1750,7 @@ func (x *UpdateOriginalImageOut) GetOriginalImage() *OriginalImage {
 
 type SegmentationGroup struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	CytologyId    string                 `protobuf:"bytes,200,opt,name=cytology_id,json=cytologyId,proto3" json:"cytology_id,omitempty"`
 	SegType       SegType                `protobuf:"varint,300,opt,name=seg_type,json=segType,proto3,enum=SegType" json:"seg_type,omitempty"`
 	GroupType     GroupType              `protobuf:"varint,400,opt,name=group_type,json=groupType,proto3,enum=GroupType" json:"group_type,omitempty"`
@@ -1792,11 +1791,11 @@ func (*SegmentationGroup) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *SegmentationGroup) GetId() string {
+func (x *SegmentationGroup) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *SegmentationGroup) GetCytologyId() string {
@@ -1919,7 +1918,7 @@ func (x *CreateSegmentationGroupIn) GetDetails() string {
 
 type CreateSegmentationGroupOut struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1954,11 +1953,11 @@ func (*CreateSegmentationGroupOut) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *CreateSegmentationGroupOut) GetId() string {
+func (x *CreateSegmentationGroupOut) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type GetSegmentationGroupsByCytologyIdIn struct {
@@ -2075,7 +2074,7 @@ func (x *GetSegmentationGroupsByCytologyIdOut) GetSegmentationGroups() []*Segmen
 
 type UpdateSegmentationGroupIn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	SegType       *SegType               `protobuf:"varint,200,opt,name=seg_type,json=segType,proto3,enum=SegType,oneof" json:"seg_type,omitempty"`
 	Details       *string                `protobuf:"bytes,300,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
 	unknownFields protoimpl.UnknownFields
@@ -2112,11 +2111,11 @@ func (*UpdateSegmentationGroupIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{30}
 }
 
-func (x *UpdateSegmentationGroupIn) GetId() string {
+func (x *UpdateSegmentationGroupIn) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *UpdateSegmentationGroupIn) GetSegType() SegType {
@@ -2179,7 +2178,7 @@ func (x *UpdateSegmentationGroupOut) GetSegmentationGroup() *SegmentationGroup {
 
 type DeleteSegmentationGroupIn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2214,17 +2213,17 @@ func (*DeleteSegmentationGroupIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{32}
 }
 
-func (x *DeleteSegmentationGroupIn) GetId() string {
+func (x *DeleteSegmentationGroupIn) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type SegmentationPoint struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Id             string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
-	SegmentationId string                 `protobuf:"bytes,200,opt,name=segmentation_id,json=segmentationId,proto3" json:"segmentation_id,omitempty"`
+	Id             int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
+	SegmentationId int32                  `protobuf:"varint,200,opt,name=segmentation_id,json=segmentationId,proto3" json:"segmentation_id,omitempty"`
 	X              int32                  `protobuf:"varint,300,opt,name=x,proto3" json:"x,omitempty"`
 	Y              int32                  `protobuf:"varint,400,opt,name=y,proto3" json:"y,omitempty"`
 	Uid            int64                  `protobuf:"varint,500,opt,name=uid,proto3" json:"uid,omitempty"`
@@ -2262,18 +2261,18 @@ func (*SegmentationPoint) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{33}
 }
 
-func (x *SegmentationPoint) GetId() string {
+func (x *SegmentationPoint) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
-func (x *SegmentationPoint) GetSegmentationId() string {
+func (x *SegmentationPoint) GetSegmentationId() int32 {
 	if x != nil {
 		return x.SegmentationId
 	}
-	return ""
+	return 0
 }
 
 func (x *SegmentationPoint) GetX() int32 {
@@ -2299,8 +2298,8 @@ func (x *SegmentationPoint) GetUid() int64 {
 
 type Segmentation struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	Id                  string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
-	SegmentationGroupId string                 `protobuf:"bytes,200,opt,name=segmentation_group_id,json=segmentationGroupId,proto3" json:"segmentation_group_id,omitempty"`
+	Id                  int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
+	SegmentationGroupId int32                  `protobuf:"varint,200,opt,name=segmentation_group_id,json=segmentationGroupId,proto3" json:"segmentation_group_id,omitempty"`
 	Points              []*SegmentationPoint   `protobuf:"bytes,300,rep,name=points,proto3" json:"points,omitempty"`
 	CreateAt            string                 `protobuf:"bytes,400,opt,name=create_at,json=createAt,proto3" json:"create_at,omitempty"`
 	unknownFields       protoimpl.UnknownFields
@@ -2337,18 +2336,18 @@ func (*Segmentation) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{34}
 }
 
-func (x *Segmentation) GetId() string {
+func (x *Segmentation) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
-func (x *Segmentation) GetSegmentationGroupId() string {
+func (x *Segmentation) GetSegmentationGroupId() int32 {
 	if x != nil {
 		return x.SegmentationGroupId
 	}
-	return ""
+	return 0
 }
 
 func (x *Segmentation) GetPoints() []*SegmentationPoint {
@@ -2367,7 +2366,7 @@ func (x *Segmentation) GetCreateAt() string {
 
 type CreateSegmentationIn struct {
 	state               protoimpl.MessageState     `protogen:"open.v1"`
-	SegmentationGroupId string                     `protobuf:"bytes,100,opt,name=segmentation_group_id,json=segmentationGroupId,proto3" json:"segmentation_group_id,omitempty"`
+	SegmentationGroupId int32                      `protobuf:"varint,100,opt,name=segmentation_group_id,json=segmentationGroupId,proto3" json:"segmentation_group_id,omitempty"`
 	Points              []*SegmentationPointCreate `protobuf:"bytes,200,rep,name=points,proto3" json:"points,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
@@ -2403,11 +2402,11 @@ func (*CreateSegmentationIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{35}
 }
 
-func (x *CreateSegmentationIn) GetSegmentationGroupId() string {
+func (x *CreateSegmentationIn) GetSegmentationGroupId() int32 {
 	if x != nil {
 		return x.SegmentationGroupId
 	}
-	return ""
+	return 0
 }
 
 func (x *CreateSegmentationIn) GetPoints() []*SegmentationPointCreate {
@@ -2471,7 +2470,7 @@ func (x *SegmentationPointCreate) GetY() int32 {
 
 type CreateSegmentationOut struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2506,16 +2505,16 @@ func (*CreateSegmentationOut) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{37}
 }
 
-func (x *CreateSegmentationOut) GetId() string {
+func (x *CreateSegmentationOut) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type GetSegmentationByIdIn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2550,11 +2549,11 @@ func (*GetSegmentationByIdIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *GetSegmentationByIdIn) GetId() string {
+func (x *GetSegmentationByIdIn) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 type GetSegmentationByIdOut struct {
@@ -2603,7 +2602,7 @@ func (x *GetSegmentationByIdOut) GetSegmentation() *Segmentation {
 
 type GetSegmentsByGroupIdIn struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
-	SegmentationGroupId string                 `protobuf:"bytes,100,opt,name=segmentation_group_id,json=segmentationGroupId,proto3" json:"segmentation_group_id,omitempty"`
+	SegmentationGroupId int32                  `protobuf:"varint,100,opt,name=segmentation_group_id,json=segmentationGroupId,proto3" json:"segmentation_group_id,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -2638,11 +2637,11 @@ func (*GetSegmentsByGroupIdIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{40}
 }
 
-func (x *GetSegmentsByGroupIdIn) GetSegmentationGroupId() string {
+func (x *GetSegmentsByGroupIdIn) GetSegmentationGroupId() int32 {
 	if x != nil {
 		return x.SegmentationGroupId
 	}
-	return ""
+	return 0
 }
 
 type GetSegmentsByGroupIdOut struct {
@@ -2691,7 +2690,7 @@ func (x *GetSegmentsByGroupIdOut) GetSegmentations() []*Segmentation {
 
 type UpdateSegmentationIn struct {
 	state         protoimpl.MessageState     `protogen:"open.v1"`
-	Id            string                     `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                      `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	Points        []*SegmentationPointCreate `protobuf:"bytes,200,rep,name=points,proto3" json:"points,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -2727,11 +2726,11 @@ func (*UpdateSegmentationIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{42}
 }
 
-func (x *UpdateSegmentationIn) GetId() string {
+func (x *UpdateSegmentationIn) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 func (x *UpdateSegmentationIn) GetPoints() []*SegmentationPointCreate {
@@ -2787,7 +2786,7 @@ func (x *UpdateSegmentationOut) GetSegmentation() *Segmentation {
 
 type DeleteSegmentationIn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int32                  `protobuf:"varint,100,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2822,11 +2821,11 @@ func (*DeleteSegmentationIn) Descriptor() ([]byte, []int) {
 	return file_proto_grpc_clients_cytology_proto_rawDescGZIP(), []int{44}
 }
 
-func (x *DeleteSegmentationIn) GetId() string {
+func (x *DeleteSegmentationIn) GetId() int32 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
 var File_proto_grpc_clients_cytology_proto protoreflect.FileDescriptor
@@ -2994,7 +2993,7 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x16UpdateOriginalImageOut\x125\n" +
 	"\x0eoriginal_image\x18d \x01(\v2\x0e.OriginalImageR\roriginalImage\"\xf7\x01\n" +
 	"\x11SegmentationGroup\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\x12 \n" +
+	"\x02id\x18d \x01(\x05R\x02id\x12 \n" +
 	"\vcytology_id\x18\xc8\x01 \x01(\tR\n" +
 	"cytologyId\x12$\n" +
 	"\bseg_type\x18\xac\x02 \x01(\x0e2\b.SegTypeR\asegType\x12*\n" +
@@ -3018,7 +3017,7 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\n" +
 	"\b_details\",\n" +
 	"\x1aCreateSegmentationGroupOut\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\"\xe3\x01\n" +
+	"\x02id\x18d \x01(\x05R\x02id\"\xe3\x01\n" +
 	"#GetSegmentationGroupsByCytologyIdIn\x12\x1f\n" +
 	"\vcytology_id\x18d \x01(\tR\n" +
 	"cytologyId\x12)\n" +
@@ -3033,7 +3032,7 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"$GetSegmentationGroupsByCytologyIdOut\x12C\n" +
 	"\x13segmentation_groups\x18d \x03(\v2\x12.SegmentationGroupR\x12segmentationGroups\"\x8f\x01\n" +
 	"\x19UpdateSegmentationGroupIn\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\x12)\n" +
+	"\x02id\x18d \x01(\x05R\x02id\x12)\n" +
 	"\bseg_type\x18\xc8\x01 \x01(\x0e2\b.SegTypeH\x00R\asegType\x88\x01\x01\x12\x1e\n" +
 	"\adetails\x18\xac\x02 \x01(\tH\x01R\adetails\x88\x01\x01B\v\n" +
 	"\t_seg_typeB\n" +
@@ -3042,41 +3041,41 @@ const file_proto_grpc_clients_cytology_proto_rawDesc = "" +
 	"\x1aUpdateSegmentationGroupOut\x12A\n" +
 	"\x12segmentation_group\x18d \x01(\v2\x12.SegmentationGroupR\x11segmentationGroup\"+\n" +
 	"\x19DeleteSegmentationGroupIn\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\"~\n" +
+	"\x02id\x18d \x01(\x05R\x02id\"~\n" +
 	"\x11SegmentationPoint\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\x12(\n" +
-	"\x0fsegmentation_id\x18\xc8\x01 \x01(\tR\x0esegmentationId\x12\r\n" +
+	"\x02id\x18d \x01(\x05R\x02id\x12(\n" +
+	"\x0fsegmentation_id\x18\xc8\x01 \x01(\x05R\x0esegmentationId\x12\r\n" +
 	"\x01x\x18\xac\x02 \x01(\x05R\x01x\x12\r\n" +
 	"\x01y\x18\x90\x03 \x01(\x05R\x01y\x12\x11\n" +
 	"\x03uid\x18\xf4\x03 \x01(\x03R\x03uid\"\x9e\x01\n" +
 	"\fSegmentation\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\x123\n" +
-	"\x15segmentation_group_id\x18\xc8\x01 \x01(\tR\x13segmentationGroupId\x12+\n" +
+	"\x02id\x18d \x01(\x05R\x02id\x123\n" +
+	"\x15segmentation_group_id\x18\xc8\x01 \x01(\x05R\x13segmentationGroupId\x12+\n" +
 	"\x06points\x18\xac\x02 \x03(\v2\x12.SegmentationPointR\x06points\x12\x1c\n" +
 	"\tcreate_at\x18\x90\x03 \x01(\tR\bcreateAt\"}\n" +
 	"\x14CreateSegmentationIn\x122\n" +
-	"\x15segmentation_group_id\x18d \x01(\tR\x13segmentationGroupId\x121\n" +
+	"\x15segmentation_group_id\x18d \x01(\x05R\x13segmentationGroupId\x121\n" +
 	"\x06points\x18\xc8\x01 \x03(\v2\x18.SegmentationPointCreateR\x06points\"6\n" +
 	"\x17SegmentationPointCreate\x12\f\n" +
 	"\x01x\x18d \x01(\x05R\x01x\x12\r\n" +
 	"\x01y\x18\xc8\x01 \x01(\x05R\x01y\"'\n" +
 	"\x15CreateSegmentationOut\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\"'\n" +
+	"\x02id\x18d \x01(\x05R\x02id\"'\n" +
 	"\x15GetSegmentationByIdIn\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\"K\n" +
+	"\x02id\x18d \x01(\x05R\x02id\"K\n" +
 	"\x16GetSegmentationByIdOut\x121\n" +
 	"\fsegmentation\x18d \x01(\v2\r.SegmentationR\fsegmentation\"L\n" +
 	"\x16GetSegmentsByGroupIdIn\x122\n" +
-	"\x15segmentation_group_id\x18d \x01(\tR\x13segmentationGroupId\"N\n" +
+	"\x15segmentation_group_id\x18d \x01(\x05R\x13segmentationGroupId\"N\n" +
 	"\x17GetSegmentsByGroupIdOut\x123\n" +
 	"\rsegmentations\x18d \x03(\v2\r.SegmentationR\rsegmentations\"Y\n" +
 	"\x14UpdateSegmentationIn\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id\x121\n" +
+	"\x02id\x18d \x01(\x05R\x02id\x121\n" +
 	"\x06points\x18\xc8\x01 \x03(\v2\x18.SegmentationPointCreateR\x06points\"J\n" +
 	"\x15UpdateSegmentationOut\x121\n" +
 	"\fsegmentation\x18d \x01(\v2\r.SegmentationR\fsegmentation\"&\n" +
 	"\x14DeleteSegmentationIn\x12\x0e\n" +
-	"\x02id\x18d \x01(\tR\x02id*o\n" +
+	"\x02id\x18d \x01(\x05R\x02id*o\n" +
 	"\x11DiagnosticMarking\x12\"\n" +
 	"\x1eDIAGNOSTIC_MARKING_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16DIAGNOSTIC_MARKING_P11\x10\x01\x12\x1a\n" +
