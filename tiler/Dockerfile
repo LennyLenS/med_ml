@@ -5,6 +5,11 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
+# Настраиваем Go для работы с приватными репозиториями
+ENV GOPRIVATE=github.com/WantBeASleep/*
+ENV GONOPROXY=github.com/WantBeASleep/*
+ENV GONOSUMDB=github.com/WantBeASleep/*
+
 # Копируем go mod файлы
 COPY go.mod ./
 COPY go.sum* ./
