@@ -3,8 +3,6 @@ package entity
 import (
 	"database/sql"
 
-	gtclib "github.com/WantBeASleep/med_ml_lib/gtc"
-
 	"med/internal/domain"
 
 	"github.com/google/uuid"
@@ -18,19 +16,36 @@ type Card struct {
 }
 
 func (Card) FromDomain(p domain.Card) Card {
-	return Card{
-		ID:        gtclib.Int.PointerToSql(p.ID),
+	card := Card{
 		DoctorID:  p.DoctorID,
 		PatientID: p.PatientID,
-		Diagnosis: gtclib.String.PointerToSql(p.Diagnosis),
 	}
+
+	if p.ID != nil {
+		card.ID = sql.NullInt32{Int32: int32(*p.ID), Valid: true}
+	}
+
+	if p.Diagnosis != nil {
+		card.Diagnosis = sql.NullString{String: *p.Diagnosis, Valid: true}
+	}
+
+	return card
 }
 
 func (p Card) ToDomain() domain.Card {
-	return domain.Card{
-		ID:        gtclib.Int.SqlToPointer(p.ID),
+	card := domain.Card{
 		DoctorID:  p.DoctorID,
 		PatientID: p.PatientID,
-		Diagnosis: gtclib.String.SqlToPointer(p.Diagnosis),
 	}
+
+	if p.ID.Valid {
+		id := int(p.ID.Int32)
+		card.ID = &id
+	}
+
+	if p.Diagnosis.Valid {
+		card.Diagnosis = &p.Diagnosis.String
+	}
+
+	return card
 }
