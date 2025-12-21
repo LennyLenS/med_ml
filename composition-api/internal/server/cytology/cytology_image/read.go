@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"composition-api/internal/domain"
+	med_domain "composition-api/internal/domain/med"
 
 	"github.com/AlekSi/pointer"
 	"github.com/google/uuid"
@@ -40,10 +41,30 @@ func (h *handler) CytologyRead(ctx context.Context, params api.CytologyReadParam
 		}
 	}
 
+	// Получаем данные о пациенте
+	var patient med_domain.Patient
+	if img.PatientID != uuid.Nil {
+		patient, err = h.services.PatientService.GetPatient(ctx, img.PatientID)
+		if err != nil {
+			// Если не удалось получить пациента, продолжаем с пустым объектом
+			patient = med_domain.Patient{}
+		}
+	}
+
+	// Получаем данные о карточке пациента
+	var patientCard med_domain.Card
+	if img.DoctorID != uuid.Nil && img.PatientID != uuid.Nil {
+		patientCard, err = h.services.CardService.GetCard(ctx, img.DoctorID, img.PatientID)
+		if err != nil {
+			// Если не удалось получить карточку, продолжаем с пустым объектом
+			patientCard = med_domain.Card{}
+		}
+	}
+
 	// Маппим в структуру согласно swagger.json
 	result := api.CytologyReadOK{
 		OriginalImage: mappers.OriginalImage{}.ToCytologyReadOKOriginalImage(origImg),
-		Info:          mappers.CytologyImage{}.ToCytologyReadOKInfo(img),
+		Info:          mappers.CytologyImage{}.ToCytologyReadOKInfo(img, patient, patientCard),
 	}
 
 	return pointer.To(result), nil

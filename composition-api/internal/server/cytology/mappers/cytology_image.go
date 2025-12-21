@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 
 	domain "composition-api/internal/domain/cytology"
+	med_domain "composition-api/internal/domain/med"
 	api "composition-api/internal/generated/http/api"
 	cytologySrv "composition-api/internal/services/cytology"
 )
@@ -73,29 +74,44 @@ func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreat
 
 // Удален неиспользуемый метод UpdateArg - заменен на UpdateArgFromCytologyUpdateUpdateReq и UpdateArgFromCytologyUpdatePartialUpdateReq
 
-func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage) api.CytologyReadOKInfo {
-	// TODO: Patient и PatientCard должны быть получены из другого источника
-	// Пока создаем заглушки
-	patient := api.Patient{
-		ID:       img.PatientID,
-		Fullname: "", // Нужно получить из другого источника
-		Email:    "", // Нужно получить из другого источника
-		Policy:   "", // Нужно получить из другого источника
-		Active:   true,
+func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage, patient med_domain.Patient, patientCard med_domain.Card) api.CytologyReadOKInfo {
+	// Маппим данные о пациенте
+	apiPatient := api.Patient{
+		ID:         patient.Id,
+		Fullname:   patient.FullName,
+		Email:      patient.Email,
+		Policy:     patient.Policy,
+		Active:     patient.Active,
+		Malignancy: patient.Malignancy,
+		BirthDate:  patient.BirthDate,
+	}
+	if patient.LastUziDate != nil {
+		apiPatient.LastUziDate = api.OptDate{
+			Value: *patient.LastUziDate,
+			Set:   true,
+		}
 	}
 
-	patientCard := api.PatientCard{
+	// Маппим данные о карточке пациента
+	apiPatientCard := api.PatientCard{
 		Patient: api.OptInt{
-			// Нужно преобразовать UUID в int или получить из другого источника
+			// TODO: Преобразовать UUID в int (нужен lookup или другой способ)
 			Set: false,
 		},
 		MedWorker: api.OptInt{
-			// Нужно преобразовать UUID в int или получить из другого источника
+			// TODO: Преобразовать UUID в int (нужен lookup или другой способ)
 			Set: false,
 		},
 		Diagnosis: api.OptString{
-			Set: false,
+			Value: "",
+			Set:   false,
 		},
+	}
+	if patientCard.Diagnosis != nil {
+		apiPatientCard.Diagnosis = api.OptString{
+			Value: *patientCard.Diagnosis,
+			Set:   true,
+		}
 	}
 
 	imageGroup := api.CytologyReadOKInfoImageGroup{
@@ -148,8 +164,8 @@ func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage) api.Cytology
 	}
 
 	return api.CytologyReadOKInfo{
-		Patient:     patient,
-		PatientCard: patientCard,
+		Patient:     apiPatient,
+		PatientCard: apiPatientCard,
 		ImageGroup:  imageGroup,
 	}
 }
