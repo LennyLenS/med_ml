@@ -23,11 +23,14 @@ import (
 
 	grpchandler "cytology/internal/server"
 
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 )
 
 const (
@@ -99,6 +102,17 @@ func run() (exitCode int) {
 	server := grpc.NewServer(
 		grpc.MaxRecvMsgSize(maxMsgSize),
 		grpc.MaxSendMsgSize(maxMsgSize),
+		grpc.KeepaliveParams(keepalive.ServerParameters{
+			MaxConnectionIdle:     30 * time.Minute,
+			MaxConnectionAge:      1 * time.Hour,
+			MaxConnectionAgeGrace: 10 * time.Minute,
+			Time:                  10 * time.Minute,
+			Timeout:               20 * time.Second,
+		}),
+		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+			MinTime:             10 * time.Second,
+			PermitWithoutStream: true,
+		}),
 		grpc.ChainUnaryInterceptor(
 			grpclib.PanicRecover,
 			observergrpclib.CrossServerCall,

@@ -100,8 +100,8 @@ func run() (exitCode int) {
 			cfg.Adapters.CytologyUrl,
 			grpc.WithTransportCredentials(insecure.NewCredentials()),
 			grpc.WithKeepaliveParams(keepalive.ClientParameters{
-				Time:                30 * time.Second,
-				Timeout:             60 * time.Second,
+				Time:                10 * time.Minute,
+				Timeout:             20 * time.Second,
 				PermitWithoutStream: true,
 			}),
 			grpc.WithDefaultCallOptions(
