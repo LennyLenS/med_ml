@@ -93,7 +93,7 @@ func run() (exitCode int) {
 		return failExitCode
 	}
 
-	adapters := adapters.NewAdapters(uziConn, authConn, medConn, billingConn, cytologyConn)
+	adapters := adapters.NewAdapters(uziConn, authConn, medConn, billingConn, cytologyConn, cfg.Adapters.TilerUrl)
 
 	// infra
 	s3Client, err := minio.New(cfg.S3.Endpoint, &minio.Options{

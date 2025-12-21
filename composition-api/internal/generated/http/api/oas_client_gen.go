@@ -226,6 +226,18 @@ type Invoker interface {
 	//
 	// GET /tariff_plans/{id}
 	TariffPlansIDGet(ctx context.Context, params TariffPlansIDGetParams) (TariffPlansIDGetRes, error)
+	// TilerDziFilePathFilesLevelColRowFormatGet invokes TilerDziFilePathFilesLevelColRowFormatGet operation.
+	//
+	// Получить тайл изображения.
+	//
+	// GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
+	TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (TilerDziFilePathFilesLevelColRowFormatGetRes, error)
+	// TilerDziFilePathGet invokes TilerDziFilePathGet operation.
+	//
+	// Получить DZI XML метаданные для изображения.
+	//
+	// GET /tiler/dzi/{file_path}
+	TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (TilerDziFilePathGetRes, error)
 	// UziDevicePost invokes POST /uzi/device operation.
 	//
 	// Добавить uzi аппарат.
@@ -4317,6 +4329,328 @@ func (c *Client) sendTariffPlansIDGet(ctx context.Context, params TariffPlansIDG
 
 	stage = "DecodeResponse"
 	result, err := decodeTariffPlansIDGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// TilerDziFilePathFilesLevelColRowFormatGet invokes TilerDziFilePathFilesLevelColRowFormatGet operation.
+//
+// Получить тайл изображения.
+//
+// GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
+func (c *Client) TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (TilerDziFilePathFilesLevelColRowFormatGetRes, error) {
+	res, err := c.sendTilerDziFilePathFilesLevelColRowFormatGet(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendTilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (res TilerDziFilePathFilesLevelColRowFormatGetRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("TilerDziFilePathFilesLevelColRowFormatGet"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, TilerDziFilePathFilesLevelColRowFormatGetOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [10]string
+	pathParts[0] = "/tiler/dzi/"
+	{
+		// Encode "file_path" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "file_path",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.FilePath))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	pathParts[2] = "/files/"
+	{
+		// Encode "level" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "level",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.Level))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[3] = encoded
+	}
+	pathParts[4] = "/"
+	{
+		// Encode "col" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "col",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.Col))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[5] = encoded
+	}
+	pathParts[6] = "_"
+	{
+		// Encode "row" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "row",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.Row))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[7] = encoded
+	}
+	pathParts[8] = "."
+	{
+		// Encode "format" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "format",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(string(params.Format)))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[9] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, TilerDziFilePathFilesLevelColRowFormatGetOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeTilerDziFilePathFilesLevelColRowFormatGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// TilerDziFilePathGet invokes TilerDziFilePathGet operation.
+//
+// Получить DZI XML метаданные для изображения.
+//
+// GET /tiler/dzi/{file_path}
+func (c *Client) TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (TilerDziFilePathGetRes, error) {
+	res, err := c.sendTilerDziFilePathGet(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendTilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (res TilerDziFilePathGetRes, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("TilerDziFilePathGet"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/tiler/dzi/{file_path}"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(elapsedDuration)/float64(time.Millisecond), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, TilerDziFilePathGetOperation,
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/tiler/dzi/"
+	{
+		// Encode "file_path" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "file_path",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.FilePath))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+			stage = "Security:BearerAuth"
+			switch err := c.securityBearerAuth(ctx, TilerDziFilePathGetOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"BearerAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeTilerDziFilePathGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

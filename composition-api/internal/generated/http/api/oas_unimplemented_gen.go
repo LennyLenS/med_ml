@@ -306,6 +306,24 @@ func (UnimplementedHandler) TariffPlansIDGet(ctx context.Context, params TariffP
 	return r, ht.ErrNotImplemented
 }
 
+// TilerDziFilePathFilesLevelColRowFormatGet implements TilerDziFilePathFilesLevelColRowFormatGet operation.
+//
+// Получить тайл изображения.
+//
+// GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
+func (UnimplementedHandler) TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (r TilerDziFilePathFilesLevelColRowFormatGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// TilerDziFilePathGet implements TilerDziFilePathGet operation.
+//
+// Получить DZI XML метаданные для изображения.
+//
+// GET /tiler/dzi/{file_path}
+func (UnimplementedHandler) TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (r TilerDziFilePathGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // UziDevicePost implements POST /uzi/device operation.
 //
 // Добавить uzi аппарат.

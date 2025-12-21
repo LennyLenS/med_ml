@@ -2527,6 +2527,94 @@ paths:
         default:
           $ref: "#/components/responses/error"
 
+  /tiler/dzi/{file_path}:
+    get:
+      operationId: TilerDziFilePathGet
+      summary: Получить DZI XML метаданные для изображения
+      tags:
+        - tiler
+      parameters:
+        - name: file_path
+          in: path
+          required: true
+          description: путь к файлу изображения
+          schema:
+            type: string
+      responses:
+        '200':
+          description: DZI XML метаданные
+          content:
+            application/xml:
+              schema:
+                type: string
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}:
+    get:
+      operationId: TilerDziFilePathFilesLevelColRowFormatGet
+      summary: Получить тайл изображения
+      tags:
+        - tiler
+      parameters:
+        - name: file_path
+          in: path
+          required: true
+          description: путь к файлу изображения
+          schema:
+            type: string
+        - name: level
+          in: path
+          required: true
+          description: уровень масштабирования (0 - оригинальное изображение)
+          schema:
+            type: integer
+            minimum: 0
+        - name: col
+          in: path
+          required: true
+          description: номер колонки тайла
+          schema:
+            type: integer
+            minimum: 0
+        - name: row
+          in: path
+          required: true
+          description: номер строки тайла
+          schema:
+            type: integer
+            minimum: 0
+        - name: format
+          in: path
+          required: true
+          description: формат изображения
+          schema:
+            type: string
+            enum:
+              - jpeg
+              - jpg
+              - png
+      responses:
+        '200':
+          description: тайл изображения
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
   /tariff_plans/{id}:
     get:
       summary: Получить тарифный план по ID

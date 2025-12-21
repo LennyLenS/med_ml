@@ -59,7 +59,11 @@ func (h *handler) CytologySegmentsList(ctx context.Context, params api.CytologyS
 	}
 
 	// Преобразуем в формат согласно swagger.json (пагинированный список SegmentationData)
-	results := mappers.SegmentationGroup{}.ToSegmentationDataList(groups)
+	// Передаем функцию для получения сегментов для каждой группы
+	getSegments := func(groupID uuid.UUID) ([]domainCytology.Segmentation, error) {
+		return h.services.CytologyService.GetSegmentsByGroupId(ctx, groupID)
+	}
+	results := mappers.SegmentationGroup{}.ToSegmentationDataList(groups, getSegments)
 
 	// Создаем пагинированный ответ
 	// TODO: Реализовать правильную пагинацию с limit и offset

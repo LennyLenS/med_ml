@@ -2731,6 +2731,19 @@ func (s TariffPlansGetOKApplicationJSON) Validate() error {
 	return nil
 }
 
+func (s TilerDziFilePathFilesLevelColRowFormatGetFormat) Validate() error {
+	switch s {
+	case "jpeg":
+		return nil
+	case "jpg":
+		return nil
+	case "png":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+
 func (s *Uzi) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer

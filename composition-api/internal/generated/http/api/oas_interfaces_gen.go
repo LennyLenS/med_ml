@@ -129,6 +129,14 @@ type TariffPlansIDGetRes interface {
 	tariffPlansIDGetRes()
 }
 
+type TilerDziFilePathFilesLevelColRowFormatGetRes interface {
+	tilerDziFilePathFilesLevelColRowFormatGetRes()
+}
+
+type TilerDziFilePathGetRes interface {
+	tilerDziFilePathGetRes()
+}
+
 type UziDevicePostRes interface {
 	uziDevicePostRes()
 }

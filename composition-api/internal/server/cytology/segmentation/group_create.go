@@ -14,9 +14,10 @@ import (
 )
 
 func (h *handler) CytologySegmentGroupCreateCreate(ctx context.Context, req *api.CytologySegmentGroupCreateCreateReq, params api.CytologySegmentGroupCreateCreateParams) (api.CytologySegmentGroupCreateCreateRes, error) {
-	arg := mappers.SegmentationGroup{}.CreateArgFromCytologySegmentGroupCreateCreateReq(params.CytologyImgID, req)
+	groupArg, segArg := mappers.SegmentationGroup{}.CreateArgFromCytologySegmentGroupCreateCreateReq(params.CytologyImgID, req)
 
-	_, err := h.services.CytologyService.CreateSegmentationGroup(ctx, arg)
+	// Сначала создаем группу сегментации
+	groupID, err := h.services.CytologyService.CreateSegmentationGroup(ctx, groupArg)
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrBadRequest):
@@ -45,8 +46,21 @@ func (h *handler) CytologySegmentGroupCreateCreate(ctx context.Context, req *api
 		}
 	}
 
+	// Затем создаем сегмент с точками
+	segArg.SegmentationGroupID = groupID
+	_, err = h.services.CytologyService.CreateSegmentation(ctx, segArg)
+	if err != nil {
+		// Если не удалось создать сегмент, возвращаем ошибку
+		// TODO: Возможно, стоит удалить созданную группу
+		return nil, err
+	}
+
 	// Возвращаем согласно swagger.json
 	result := api.CytologySegmentGroupCreateCreateCreated{
+		ID: api.OptInt{
+			// UUID не преобразуется в int, оставляем пустым
+			Set: false,
+		},
 		Data: api.OptCytologySegmentGroupCreateCreateCreatedData{
 			Value: api.CytologySegmentGroupCreateCreateCreatedData{
 				Points: mappers.SegmentationGroup{}.ToCytologySegmentGroupCreateCreateCreatedDataPoints(req.Data.Points),

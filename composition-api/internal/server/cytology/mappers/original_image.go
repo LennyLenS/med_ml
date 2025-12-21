@@ -1,6 +1,8 @@
 package mappers
 
 import (
+	"net/url"
+
 	domain "composition-api/internal/domain/cytology"
 	api "composition-api/internal/generated/http/api"
 )
@@ -17,7 +19,7 @@ func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) ap
 
 	result := api.CytologyReadOKOriginalImage{
 		ID: api.OptInt{
-			// TODO: Преобразовать UUID в int
+			// UUID не преобразуется в int, оставляем пустым
 			Set: false,
 		},
 		CreateDate: api.OptDateTime{
@@ -29,9 +31,21 @@ func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) ap
 			Set:   true,
 		},
 		Image: api.OptURI{
-			// TODO: Создать URL из ImagePath
-			Set: false,
+			// Создаем URL из ImagePath
+			Set: img.ImagePath != "",
 		},
+	}
+
+	if img.ImagePath != "" {
+		// Формат: /download/cytology/{cytology_id}/{original_image_id}
+		imageURLStr := "/download/cytology/" + img.CytologyID.String() + "/" + img.Id.String()
+		imageURL, err := url.Parse(imageURLStr)
+		if err == nil {
+			result.Image = api.OptURI{
+				Value: *imageURL,
+				Set:   true,
+			}
+		}
 	}
 
 	if img.DelayTime != nil {

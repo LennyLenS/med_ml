@@ -38,6 +38,8 @@ const (
 	SubscriptionsPurchasePostOperation                    OperationName = "SubscriptionsPurchasePost"
 	TariffPlansGetOperation                               OperationName = "TariffPlansGet"
 	TariffPlansIDGetOperation                             OperationName = "TariffPlansIDGet"
+	TilerDziFilePathFilesLevelColRowFormatGetOperation    OperationName = "TilerDziFilePathFilesLevelColRowFormatGet"
+	TilerDziFilePathGetOperation                          OperationName = "TilerDziFilePathGet"
 	UziDevicePostOperation                                OperationName = "UziDevicePost"
 	UziDevicesGetOperation                                OperationName = "UziDevicesGet"
 	UziIDDeleteOperation                                  OperationName = "UziIDDelete"

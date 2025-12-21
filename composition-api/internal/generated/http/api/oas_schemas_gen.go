@@ -4238,14 +4238,16 @@ func (s *ErrorStatusCode) SetResponse(val Error) {
 	s.Response = val
 }
 
-func (*ErrorStatusCode) downloadUziIDImageIDGetRes()     {}
-func (*ErrorStatusCode) paymentProvidersGetRes()         {}
-func (*ErrorStatusCode) subscriptionsCheckActiveGetRes() {}
-func (*ErrorStatusCode) subscriptionsPurchasePostRes()   {}
-func (*ErrorStatusCode) tariffPlansGetRes()              {}
-func (*ErrorStatusCode) tariffPlansIDGetRes()            {}
-func (*ErrorStatusCode) uziDevicesGetRes()               {}
-func (*ErrorStatusCode) yookassaWebhooksPostRes()        {}
+func (*ErrorStatusCode) downloadUziIDImageIDGetRes()                   {}
+func (*ErrorStatusCode) paymentProvidersGetRes()                       {}
+func (*ErrorStatusCode) subscriptionsCheckActiveGetRes()               {}
+func (*ErrorStatusCode) subscriptionsPurchasePostRes()                 {}
+func (*ErrorStatusCode) tariffPlansGetRes()                            {}
+func (*ErrorStatusCode) tariffPlansIDGetRes()                          {}
+func (*ErrorStatusCode) tilerDziFilePathFilesLevelColRowFormatGetRes() {}
+func (*ErrorStatusCode) tilerDziFilePathGetRes()                       {}
+func (*ErrorStatusCode) uziDevicesGetRes()                             {}
+func (*ErrorStatusCode) yookassaWebhooksPostRes()                      {}
 
 // Изображение.
 // Ref: #/components/schemas/image
@@ -7238,6 +7240,104 @@ func (*TariffPlan) tariffPlansIDGetRes() {}
 type TariffPlansGetOKApplicationJSON []TariffPlan
 
 func (*TariffPlansGetOKApplicationJSON) tariffPlansGetRes() {}
+
+type TilerDziFilePathFilesLevelColRowFormatGetFormat string
+
+const (
+	TilerDziFilePathFilesLevelColRowFormatGetFormatJpeg TilerDziFilePathFilesLevelColRowFormatGetFormat = "jpeg"
+	TilerDziFilePathFilesLevelColRowFormatGetFormatJPG  TilerDziFilePathFilesLevelColRowFormatGetFormat = "jpg"
+	TilerDziFilePathFilesLevelColRowFormatGetFormatPNG  TilerDziFilePathFilesLevelColRowFormatGetFormat = "png"
+)
+
+// AllValues returns all TilerDziFilePathFilesLevelColRowFormatGetFormat values.
+func (TilerDziFilePathFilesLevelColRowFormatGetFormat) AllValues() []TilerDziFilePathFilesLevelColRowFormatGetFormat {
+	return []TilerDziFilePathFilesLevelColRowFormatGetFormat{
+		TilerDziFilePathFilesLevelColRowFormatGetFormatJpeg,
+		TilerDziFilePathFilesLevelColRowFormatGetFormatJPG,
+		TilerDziFilePathFilesLevelColRowFormatGetFormatPNG,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s TilerDziFilePathFilesLevelColRowFormatGetFormat) MarshalText() ([]byte, error) {
+	switch s {
+	case TilerDziFilePathFilesLevelColRowFormatGetFormatJpeg:
+		return []byte(s), nil
+	case TilerDziFilePathFilesLevelColRowFormatGetFormatJPG:
+		return []byte(s), nil
+	case TilerDziFilePathFilesLevelColRowFormatGetFormatPNG:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *TilerDziFilePathFilesLevelColRowFormatGetFormat) UnmarshalText(data []byte) error {
+	switch TilerDziFilePathFilesLevelColRowFormatGetFormat(data) {
+	case TilerDziFilePathFilesLevelColRowFormatGetFormatJpeg:
+		*s = TilerDziFilePathFilesLevelColRowFormatGetFormatJpeg
+		return nil
+	case TilerDziFilePathFilesLevelColRowFormatGetFormatJPG:
+		*s = TilerDziFilePathFilesLevelColRowFormatGetFormatJPG
+		return nil
+	case TilerDziFilePathFilesLevelColRowFormatGetFormatPNG:
+		*s = TilerDziFilePathFilesLevelColRowFormatGetFormatPNG
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+type TilerDziFilePathFilesLevelColRowFormatGetOKImageJpeg struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s TilerDziFilePathFilesLevelColRowFormatGetOKImageJpeg) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*TilerDziFilePathFilesLevelColRowFormatGetOKImageJpeg) tilerDziFilePathFilesLevelColRowFormatGetRes() {
+}
+
+type TilerDziFilePathFilesLevelColRowFormatGetOKImagePNG struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s TilerDziFilePathFilesLevelColRowFormatGetOKImagePNG) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*TilerDziFilePathFilesLevelColRowFormatGetOKImagePNG) tilerDziFilePathFilesLevelColRowFormatGetRes() {
+}
+
+type TilerDziFilePathGetOK struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s TilerDziFilePathGetOK) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*TilerDziFilePathGetOK) tilerDziFilePathGetRes() {}
 
 // Узи.
 // Ref: #/components/schemas/uzi

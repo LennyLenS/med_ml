@@ -18,6 +18,7 @@ import (
 	"composition-api/internal/services/segment"
 	"composition-api/internal/services/subscription"
 	"composition-api/internal/services/tariff_plan"
+	"composition-api/internal/services/tiler"
 	"composition-api/internal/services/tokens"
 	"composition-api/internal/services/uzi"
 	"composition-api/internal/services/yookassa_webhook"
@@ -41,6 +42,7 @@ type Services struct {
 	PaymentProviderService payment_provider.Service
 	YookassaWebhookService yookassa_webhook.Service
 	CytologyService        cytology.Service
+	TilerService           tiler.Service
 }
 
 func New(
@@ -65,6 +67,7 @@ func New(
 	paymentProviderService := payment_provider.New(adapters)
 	yookassaWebhookService := yookassa_webhook.New(adapters)
 	cytologyService := cytology.New(adapters)
+	tilerService := tiler.New(adapters.Tiler)
 
 	return &Services{
 		DeviceService:          deviceService,
@@ -84,5 +87,6 @@ func New(
 		PaymentProviderService: paymentProviderService,
 		YookassaWebhookService: yookassaWebhookService,
 		CytologyService:        cytologyService,
+		TilerService:           tilerService,
 	}
 }

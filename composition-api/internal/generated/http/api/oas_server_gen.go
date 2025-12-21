@@ -205,6 +205,18 @@ type Handler interface {
 	//
 	// GET /tariff_plans/{id}
 	TariffPlansIDGet(ctx context.Context, params TariffPlansIDGetParams) (TariffPlansIDGetRes, error)
+	// TilerDziFilePathFilesLevelColRowFormatGet implements TilerDziFilePathFilesLevelColRowFormatGet operation.
+	//
+	// Получить тайл изображения.
+	//
+	// GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
+	TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (TilerDziFilePathFilesLevelColRowFormatGetRes, error)
+	// TilerDziFilePathGet implements TilerDziFilePathGet operation.
+	//
+	// Получить DZI XML метаданные для изображения.
+	//
+	// GET /tiler/dzi/{file_path}
+	TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (TilerDziFilePathGetRes, error)
 	// UziDevicePost implements POST /uzi/device operation.
 	//
 	// Добавить uzi аппарат.

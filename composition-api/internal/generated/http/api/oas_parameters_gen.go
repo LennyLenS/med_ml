@@ -1936,6 +1936,413 @@ func decodeTariffPlansIDGetParams(args [1]string, argsEscaped bool, r *http.Requ
 	return params, nil
 }
 
+// TilerDziFilePathFilesLevelColRowFormatGetParams is parameters of TilerDziFilePathFilesLevelColRowFormatGet operation.
+type TilerDziFilePathFilesLevelColRowFormatGetParams struct {
+	// Путь к файлу изображения.
+	FilePath string
+	// Уровень масштабирования (0 - оригинальное изображение).
+	Level int
+	// Номер колонки тайла.
+	Col int
+	// Номер строки тайла.
+	Row int
+	// Формат изображения.
+	Format TilerDziFilePathFilesLevelColRowFormatGetFormat
+}
+
+func unpackTilerDziFilePathFilesLevelColRowFormatGetParams(packed middleware.Parameters) (params TilerDziFilePathFilesLevelColRowFormatGetParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "file_path",
+			In:   "path",
+		}
+		params.FilePath = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "level",
+			In:   "path",
+		}
+		params.Level = packed[key].(int)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "col",
+			In:   "path",
+		}
+		params.Col = packed[key].(int)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "row",
+			In:   "path",
+		}
+		params.Row = packed[key].(int)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "format",
+			In:   "path",
+		}
+		params.Format = packed[key].(TilerDziFilePathFilesLevelColRowFormatGetFormat)
+	}
+	return params
+}
+
+func decodeTilerDziFilePathFilesLevelColRowFormatGetParams(args [5]string, argsEscaped bool, r *http.Request) (params TilerDziFilePathFilesLevelColRowFormatGetParams, _ error) {
+	// Decode path: file_path.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "file_path",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.FilePath = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "file_path",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: level.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "level",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.Level = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := (validate.Int{
+					MinSet:        true,
+					Min:           0,
+					MaxSet:        false,
+					Max:           0,
+					MinExclusive:  false,
+					MaxExclusive:  false,
+					MultipleOfSet: false,
+					MultipleOf:    0,
+				}).Validate(int64(params.Level)); err != nil {
+					return errors.Wrap(err, "int")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "level",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: col.
+	if err := func() error {
+		param := args[2]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[2])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "col",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.Col = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := (validate.Int{
+					MinSet:        true,
+					Min:           0,
+					MaxSet:        false,
+					Max:           0,
+					MinExclusive:  false,
+					MaxExclusive:  false,
+					MultipleOfSet: false,
+					MultipleOf:    0,
+				}).Validate(int64(params.Col)); err != nil {
+					return errors.Wrap(err, "int")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "col",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: row.
+	if err := func() error {
+		param := args[3]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[3])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "row",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToInt(val)
+				if err != nil {
+					return err
+				}
+
+				params.Row = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := (validate.Int{
+					MinSet:        true,
+					Min:           0,
+					MaxSet:        false,
+					Max:           0,
+					MinExclusive:  false,
+					MaxExclusive:  false,
+					MultipleOfSet: false,
+					MultipleOf:    0,
+				}).Validate(int64(params.Row)); err != nil {
+					return errors.Wrap(err, "int")
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "row",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: format.
+	if err := func() error {
+		param := args[4]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[4])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "format",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Format = TilerDziFilePathFilesLevelColRowFormatGetFormat(c)
+				return nil
+			}(); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Format.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "format",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// TilerDziFilePathGetParams is parameters of TilerDziFilePathGet operation.
+type TilerDziFilePathGetParams struct {
+	// Путь к файлу изображения.
+	FilePath string
+}
+
+func unpackTilerDziFilePathGetParams(packed middleware.Parameters) (params TilerDziFilePathGetParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "file_path",
+			In:   "path",
+		}
+		params.FilePath = packed[key].(string)
+	}
+	return params
+}
+
+func decodeTilerDziFilePathGetParams(args [1]string, argsEscaped bool, r *http.Request) (params TilerDziFilePathGetParams, _ error) {
+	// Decode path: file_path.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "file_path",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.FilePath = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "file_path",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // UziIDDeleteParams is parameters of DELETE /uzi/{id} operation.
 type UziIDDeleteParams struct {
 	// Id узи.

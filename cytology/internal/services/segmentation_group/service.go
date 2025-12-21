@@ -2,6 +2,7 @@ package segmentation_group
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"cytology/internal/domain"
@@ -44,13 +45,21 @@ type UpdateSegmentationGroupArg struct {
 }
 
 func (s *service) CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (uuid.UUID, error) {
+	var details json.RawMessage
+	if arg.Details != nil && len(arg.Details) > 0 {
+		// Проверяем, что это валидный JSON
+		if string(arg.Details) != "null" {
+			details = arg.Details
+		}
+	}
+
 	group := domain.SegmentationGroup{
 		Id:         uuid.New(),
 		CytologyID: arg.CytologyID,
 		SegType:    arg.SegType,
 		GroupType:  arg.GroupType,
 		IsAI:       arg.IsAI,
-		Details:    arg.Details,
+		Details:    details,
 		CreateAt:   time.Now(),
 	}
 
