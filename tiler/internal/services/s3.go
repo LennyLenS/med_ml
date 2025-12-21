@@ -2,7 +2,9 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"io"
+	"strings"
 
 	"github.com/minio/minio-go/v7"
 )
@@ -24,15 +26,18 @@ func (s *s3Client) GetObject(ctx context.Context, bucketName, objectName string)
 		bucketName = s.bucketName
 	}
 
+	// Убираем ведущий слэш из objectName, если он есть
+	objectName = strings.TrimPrefix(objectName, "/")
+
 	obj, err := s.client.GetObject(ctx, bucketName, objectName, minio.GetObjectOptions{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get object from S3 (bucket: %s, object: %s): %w", bucketName, objectName, err)
 	}
 	defer obj.Close()
 
 	data, err := io.ReadAll(obj)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read object data: %w", err)
 	}
 
 	return data, nil

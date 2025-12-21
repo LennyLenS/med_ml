@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -29,8 +30,15 @@ func (h *Handler) GetDZI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Декодируем URL-encoded путь
+	decodedPath, err := url.PathUnescape(path)
+	if err != nil {
+		// Если декодирование не удалось, используем исходный путь
+		decodedPath = path
+	}
+
 	ctx := r.Context()
-	dzi, err := h.imageService.GetDZI(ctx, path)
+	dzi, err := h.imageService.GetDZI(ctx, decodedPath)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to get DZI: %v", err), http.StatusInternalServerError)
 		return
@@ -56,6 +64,12 @@ func (h *Handler) GetTile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := strings.TrimPrefix(parts[0], "/dzi/")
+	// Декодируем URL-encoded путь
+	decodedFilePath, err := url.PathUnescape(filePath)
+	if err != nil {
+		// Если декодирование не удалось, используем исходный путь
+		decodedFilePath = filePath
+	}
 	tilePart := parts[1]
 
 	// Парсим level/col_row.format
@@ -98,7 +112,7 @@ func (h *Handler) GetTile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := r.Context()
-	tile, err := h.imageService.GetTile(ctx, filePath, level, col, row, format)
+	tile, err := h.imageService.GetTile(ctx, decodedFilePath, level, col, row, format)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to get tile: %v", err), http.StatusInternalServerError)
 		return

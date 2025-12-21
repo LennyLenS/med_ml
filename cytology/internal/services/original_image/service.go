@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"path/filepath"
 	"time"
 
 	"cytology/internal/domain"
@@ -49,7 +48,8 @@ func (s *service) CreateOriginalImage(ctx context.Context, arg CreateOriginalIma
 	imageID := uuid.New()
 
 	// Формируем путь в S3: {cytology_id}/{image_id}/{image_id}
-	imagePath := filepath.Join(arg.CytologyID.String(), imageID.String(), imageID.String())
+	// Используем "/" для S3, так как filepath.Join может давать разные результаты на разных ОС
+	imagePath := arg.CytologyID.String() + "/" + imageID.String() + "/" + imageID.String()
 
 	// Загружаем файл в S3
 	fileRepo := s.dao.NewFileRepo()

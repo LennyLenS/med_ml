@@ -40,9 +40,10 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 
 func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*domain.ImageInfo, error) {
 	// Загружаем изображение из S3
+	// imagePath должен быть путем внутри bucket (например: "cytology_id/image_id/image_id")
 	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get image from S3: %w", err)
+		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 	}
 
 	// Декодируем изображение
@@ -71,9 +72,10 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 
 func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
 	// Загружаем изображение из S3
+	// imagePath должен быть путем внутри bucket (например: "cytology_id/image_id/image_id")
 	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get image from S3: %w", err)
+		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 	}
 
 	// Декодируем изображение
