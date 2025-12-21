@@ -170,6 +170,13 @@ services:
       - ./cytology/.env-docker
     ports:
       - 50070:50055
+    restart: always
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "50055"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     profiles:
       - app
 
@@ -197,12 +204,19 @@ services:
     ports:
       - 8080:50055
     depends_on:
-      - redpanda-0
-      - uzi_service
-      - med_service
-      - auth_service
-      - cytology_service
-      - tiler_service
+      redpanda-0:
+        condition: service_started
+      uzi_service:
+        condition: service_started
+      med_service:
+        condition: service_started
+      auth_service:
+        condition: service_started
+      cytology_service:
+        condition: service_healthy
+      tiler_service:
+        condition: service_started
+    restart: always
     profiles:
       - app
 

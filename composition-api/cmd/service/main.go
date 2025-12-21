@@ -10,14 +10,18 @@ import (
 
 	"github.com/IBM/sarama"
 
+	"time"
+
 	loglib "github.com/WantBeASleep/med_ml_lib/observer/log"
 	"github.com/flowchartsman/swaggerui"
 	"github.com/go-chi/chi/v5"
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 
 	"composition-api/internal/adapters"
 	"composition-api/internal/config"
@@ -87,17 +91,35 @@ func run() (exitCode int) {
 	// Увеличиваем максимальный размер сообщения для cytology (для передачи больших изображений)
 	// 4GB должно быть достаточно для больших медицинских изображений
 	const maxMsgSize = 4 * 1024 * 1024 * 1024 // 4GB
-	cytologyConn, err := grpc.NewClient(
-		cfg.Adapters.CytologyUrl,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithDefaultCallOptions(
-			grpc.MaxCallRecvMsgSize(maxMsgSize),
-			grpc.MaxCallSendMsgSize(maxMsgSize),
-		),
-	)
-	if err != nil {
-		slog.Error("init cytologyConn", slog.Any("err", err))
-		return failExitCode
+
+	// Пытаемся подключиться с несколькими попытками, так как сервис может быть еще не готов
+	var cytologyConn *grpc.ClientConn
+	maxRetries := 5
+	for i := 0; i < maxRetries; i++ {
+		conn, err := grpc.NewClient(
+			cfg.Adapters.CytologyUrl,
+			grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.WithKeepaliveParams(keepalive.ClientParameters{
+				Time:                30 * time.Second,
+				Timeout:             60 * time.Second,
+				PermitWithoutStream: true,
+			}),
+			grpc.WithDefaultCallOptions(
+				grpc.MaxCallRecvMsgSize(maxMsgSize),
+				grpc.MaxCallSendMsgSize(maxMsgSize),
+			),
+		)
+		if err == nil {
+			cytologyConn = conn
+			break
+		}
+		if i < maxRetries-1 {
+			slog.Warn("failed to connect to cytology service, retrying", slog.Int("attempt", i+1), slog.Any("err", err))
+			time.Sleep(2 * time.Second)
+		} else {
+			slog.Error("init cytologyConn", slog.Any("err", err))
+			return failExitCode
+		}
 	}
 
 	adapters := adapters.NewAdapters(uziConn, authConn, medConn, billingConn, cytologyConn, cfg.Adapters.TilerUrl)
