@@ -173,6 +173,20 @@ services:
     profiles:
       - app
 
+  tiler_service:
+    container_name: tiler_service
+    build:
+      context: ./tiler/
+      dockerfile: Dockerfile
+    env_file:
+      - ./tiler/.env-docker
+    ports:
+      - 50080:50080
+    depends_on:
+      - minio
+    profiles:
+      - app
+
   composition_api:
     container_name: composition_api
     build:
@@ -188,6 +202,7 @@ services:
       - med_service
       - auth_service
       - cytology_service
+      - tiler_service
     profiles:
       - app
 
