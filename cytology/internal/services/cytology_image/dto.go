@@ -19,6 +19,8 @@ type CreateCytologyImageArg struct {
 	Details           []byte
 	PrevID            *uuid.UUID
 	ParentPrevID      *uuid.UUID
+	File              []byte
+	ContentType       string
 }
 
 type UpdateCytologyImageArg struct {

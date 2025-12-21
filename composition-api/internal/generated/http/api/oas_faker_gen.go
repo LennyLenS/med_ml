@@ -436,6 +436,11 @@ func (s *CytologyReadOKOriginalImage) SetFake() {
 			s.Image.SetFake()
 		}
 	}
+	{
+		{
+			s.FilePath.SetFake()
+		}
+	}
 }
 
 // SetFake set fake values.

@@ -1351,6 +1351,8 @@ type CytologyReadOKOriginalImage struct {
 	DelayTime  OptFloat64  `json:"delay_time"`
 	ViewedFlag OptBool     `json:"viewed_flag"`
 	Image      OptURI      `json:"image"`
+	// Путь к файлу изображения для DZI.
+	FilePath OptString `json:"file_path"`
 }
 
 // GetID returns the value of ID.
@@ -1378,6 +1380,11 @@ func (s *CytologyReadOKOriginalImage) GetImage() OptURI {
 	return s.Image
 }
 
+// GetFilePath returns the value of FilePath.
+func (s *CytologyReadOKOriginalImage) GetFilePath() OptString {
+	return s.FilePath
+}
+
 // SetID sets the value of ID.
 func (s *CytologyReadOKOriginalImage) SetID(val OptInt) {
 	s.ID = val
@@ -1401,6 +1408,11 @@ func (s *CytologyReadOKOriginalImage) SetViewedFlag(val OptBool) {
 // SetImage sets the value of Image.
 func (s *CytologyReadOKOriginalImage) SetImage(val OptURI) {
 	s.Image = val
+}
+
+// SetFilePath sets the value of FilePath.
+func (s *CytologyReadOKOriginalImage) SetFilePath(val OptString) {
+	s.FilePath = val
 }
 
 type CytologySegmentGroupCreateCreateBadRequest ErrorStatusCode

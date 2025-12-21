@@ -84,6 +84,8 @@ message CreateCytologyImageIn {
   optional string details = 1000; // JSON string
   optional string prev_id = 1100;
   optional string parent_prev_id = 1200;
+  optional bytes file = 1300; // файл изображения
+  optional string content_type = 1400; // Content-Type файла
 }
 
 message CreateCytologyImageOut {

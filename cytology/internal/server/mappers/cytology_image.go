@@ -73,6 +73,14 @@ func CreateCytologyImageArgFromProto(in *pb.CreateCytologyImageIn, externalID, d
 		arg.Details = []byte(*in.Details)
 	}
 
+	if in.File != nil && len(in.File) > 0 {
+		arg.File = in.File
+	}
+
+	if in.ContentType != nil && *in.ContentType != "" {
+		arg.ContentType = *in.ContentType
+	}
+
 	return arg
 }
 

@@ -34,6 +34,10 @@ func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) ap
 			// Создаем URL из ImagePath
 			Set: img.ImagePath != "",
 		},
+		FilePath: api.OptString{
+			Value: img.ImagePath,
+			Set:   img.ImagePath != "",
+		},
 	}
 
 	if img.ImagePath != "" {

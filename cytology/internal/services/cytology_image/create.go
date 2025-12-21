@@ -9,6 +9,7 @@ import (
 	"cytology/internal/domain"
 	cytologyImageEntity "cytology/internal/repository/cytology_image/entity"
 	"cytology/internal/repository/entity"
+	original_image "cytology/internal/services/original_image"
 
 	"github.com/google/uuid"
 )
@@ -45,6 +46,20 @@ func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyIma
 			return uuid.Nil, domain.ErrUnprocessableEntity
 		}
 		return uuid.Nil, fmt.Errorf("insert cytology image: %w", err)
+	}
+
+	// Если передан файл, создаем original_image
+	if len(arg.File) > 0 && arg.ContentType != "" {
+		originalImageService := original_image.New(s.dao)
+		_, err = originalImageService.CreateOriginalImage(ctx, original_image.CreateOriginalImageArg{
+			CytologyID:  img.Id,
+			File:        arg.File,
+			ContentType: arg.ContentType,
+			DelayTime:   nil,
+		})
+		if err != nil {
+			return uuid.Nil, fmt.Errorf("create original image: %w", err)
+		}
 	}
 
 	if err := s.dao.CommitTx(ctx); err != nil {

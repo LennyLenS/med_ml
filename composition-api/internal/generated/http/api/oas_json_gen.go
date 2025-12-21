@@ -2235,14 +2235,21 @@ func (s *CytologyReadOKOriginalImage) encodeFields(e *jx.Encoder) {
 			s.Image.Encode(e)
 		}
 	}
+	{
+		if s.FilePath.Set {
+			e.FieldStart("file_path")
+			s.FilePath.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfCytologyReadOKOriginalImage = [5]string{
+var jsonFieldsNameOfCytologyReadOKOriginalImage = [6]string{
 	0: "id",
 	1: "create_date",
 	2: "delay_time",
 	3: "viewed_flag",
 	4: "image",
+	5: "file_path",
 }
 
 // Decode decodes CytologyReadOKOriginalImage from json.
@@ -2302,6 +2309,16 @@ func (s *CytologyReadOKOriginalImage) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"image\"")
+			}
+		case "file_path":
+			if err := func() error {
+				s.FilePath.Reset()
+				if err := s.FilePath.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"file_path\"")
 			}
 		default:
 			return d.Skip()

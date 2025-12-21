@@ -2943,6 +2943,10 @@ paths:
                         type: string
                         format: uri
                         readOnly: true
+                      file_path:
+                        type: string
+                        description: путь к файлу изображения для DZI
+                        readOnly: true
                   info:
                     type: object
                     required:
