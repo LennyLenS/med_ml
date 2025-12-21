@@ -1,5 +1,8 @@
 FROM golang:1.21-alpine AS builder
 
+# Устанавливаем git для загрузки зависимостей
+RUN apk add --no-cache git
+
 WORKDIR /app
 
 # Копируем go mod файлы
