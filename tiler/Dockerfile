@@ -1,34 +1,16 @@
-FROM golang:1.21-alpine AS builder
+FROM golang:alpine
 
-# Устанавливаем git для загрузки зависимостей
-RUN apk add --no-cache git
+WORKDIR /service
 
-WORKDIR /app
-
-# Настраиваем Go для работы с приватными репозиториями
-ENV GOPRIVATE=github.com/WantBeASleep/*
-ENV GONOPROXY=github.com/WantBeASleep/*
-ENV GONOSUMDB=github.com/WantBeASleep/*
-
-# Копируем go mod файлы
-COPY go.mod ./
-COPY go.sum* ./
+# Copy go mod files first for better caching
+COPY go.mod go.sum* ./
 RUN go mod download
 
-# Копируем исходный код
+# Copy the rest of the code
 COPY . .
 
-# Собираем приложение
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o tiler ./cmd/service
-
-FROM alpine:latest
-
-RUN apk --no-cache add ca-certificates
-
-WORKDIR /root/
-
-COPY --from=builder /app/tiler .
+RUN go build -o bin/tiler cmd/service/main.go
 
 EXPOSE 50055
 
-CMD ["./tiler"]
+CMD ["./bin/tiler"]
