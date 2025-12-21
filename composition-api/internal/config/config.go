@@ -25,7 +25,7 @@ type Adapters struct {
 	MedUrl      string `env:"ADAPTERS_MEDURL" env-required:"true"`
 	BillingUrl  string `env:"ADAPTERS_BILLINGURL" env-required:"true"`
 	CytologyUrl string `env:"ADAPTERS_CYTOLOGYURL" env-required:"true"`
-	TilerUrl    string `env:"ADAPTERS_TILERURL" env-required:"true"`
+	TilerUrl    string `env:"ADAPTERS_TILERURL" env-default:"localhost:50080"`
 }
 
 type S3 struct {
