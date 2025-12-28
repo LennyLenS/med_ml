@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"composition-api/internal/repository"
+	"composition-api/internal/services/cytology"
 
 	"github.com/google/uuid"
 )
@@ -15,13 +16,16 @@ type Service interface {
 }
 
 type service struct {
-	repo repository.DAO
+	repo            repository.DAO
+	cytologyService cytology.Service
 }
 
 func New(
 	repo repository.DAO,
+	cytologyService cytology.Service,
 ) Service {
 	return &service{
-		repo: repo,
+		repo:            repo,
+		cytologyService: cytologyService,
 	}
 }

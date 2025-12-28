@@ -61,12 +61,12 @@ func New(
 	doctorService := doctor.New(adapters)
 	patientService := patient.New(adapters)
 	registerService := register.New(adapters)
-	downloadService := download.New(dao)
+	cytologyService := cytology.New(adapters)
+	downloadService := download.New(dao, cytologyService)
 	tariffPlanService := tariff_plan.New(adapters)
 	subscriptionService := subscription.New(adapters)
 	paymentProviderService := payment_provider.New(adapters)
 	yookassaWebhookService := yookassa_webhook.New(adapters)
-	cytologyService := cytology.New(adapters)
 	tilerService := tiler.New(adapters.Tiler)
 
 	return &Services{
