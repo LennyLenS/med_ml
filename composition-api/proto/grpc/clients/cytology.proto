@@ -127,6 +127,8 @@ message UpdateCytologyImageIn {
   optional int32 thyroglobulin = 600;
   optional string details = 700; // JSON string
   optional bool is_last = 800;
+  optional string prev_id = 900;
+  optional string parent_prev_id = 1000;
 }
 
 message UpdateCytologyImageOut {
