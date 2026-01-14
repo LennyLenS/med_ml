@@ -110,29 +110,29 @@ type CytologyCopyCreateBadRequest ErrorStatusCode
 func (*CytologyCopyCreateBadRequest) cytologyCopyCreateRes() {}
 
 type CytologyCopyCreateCreated struct {
-	// Первичный ключ нового исследования.
-	Pk OptInt `json:"pk"`
-	// ID нового скопированного исследования.
-	ID OptInt `json:"id"`
+	// UUID нового исследования.
+	Pk OptUUID `json:"pk"`
+	// UUID нового скопированного исследования.
+	ID OptUUID `json:"id"`
 }
 
 // GetPk returns the value of Pk.
-func (s *CytologyCopyCreateCreated) GetPk() OptInt {
+func (s *CytologyCopyCreateCreated) GetPk() OptUUID {
 	return s.Pk
 }
 
 // GetID returns the value of ID.
-func (s *CytologyCopyCreateCreated) GetID() OptInt {
+func (s *CytologyCopyCreateCreated) GetID() OptUUID {
 	return s.ID
 }
 
 // SetPk sets the value of Pk.
-func (s *CytologyCopyCreateCreated) SetPk(val OptInt) {
+func (s *CytologyCopyCreateCreated) SetPk(val OptUUID) {
 	s.Pk = val
 }
 
 // SetID sets the value of ID.
-func (s *CytologyCopyCreateCreated) SetID(val OptInt) {
+func (s *CytologyCopyCreateCreated) SetID(val OptUUID) {
 	s.ID = val
 }
 
@@ -148,29 +148,29 @@ func (*CytologyCopyCreateNotFound) cytologyCopyCreateRes() {}
 
 type CytologyCopyCreateReq struct {
 	// Первичный ключ (не используется в запросе).
-	Pk OptInt `json:"pk"`
-	// ID существующего цитологического исследования для
+	Pk OptUUID `json:"pk"`
+	// UUID существующего цитологического исследования для
 	// копирования.
-	ID int `json:"id"`
+	ID uuid.UUID `json:"id"`
 }
 
 // GetPk returns the value of Pk.
-func (s *CytologyCopyCreateReq) GetPk() OptInt {
+func (s *CytologyCopyCreateReq) GetPk() OptUUID {
 	return s.Pk
 }
 
 // GetID returns the value of ID.
-func (s *CytologyCopyCreateReq) GetID() int {
+func (s *CytologyCopyCreateReq) GetID() uuid.UUID {
 	return s.ID
 }
 
 // SetPk sets the value of Pk.
-func (s *CytologyCopyCreateReq) SetPk(val OptInt) {
+func (s *CytologyCopyCreateReq) SetPk(val OptUUID) {
 	s.Pk = val
 }
 
 // SetID sets the value of ID.
-func (s *CytologyCopyCreateReq) SetID(val int) {
+func (s *CytologyCopyCreateReq) SetID(val uuid.UUID) {
 	s.ID = val
 }
 

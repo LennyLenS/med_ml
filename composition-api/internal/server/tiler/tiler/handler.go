@@ -29,8 +29,8 @@ func NewHandler(services *services.Services) TilerHandler {
 func (h *handler) TilerDziFilePathGet(ctx context.Context, params api.TilerDziFilePathGetParams) (api.TilerDziFilePathGetRes, error) {
 	dzi, err := h.services.TilerService.GetDZI(ctx, params.FilePath)
 	if err != nil {
-		return &api.ErrorStatusCode{
-			StatusCode: http.StatusInternalServerError,
+		return &api.TilerDziFilePathGetBadRequest{
+			StatusCode: http.StatusBadRequest,
 			Response: api.Error{
 				Message: "Failed to get DZI: " + err.Error(),
 			},
@@ -48,8 +48,8 @@ func (h *handler) TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context,
 
 	tile, err := h.services.TilerService.GetTile(ctx, params.FilePath, params.Level, params.Col, params.Row, formatStr)
 	if err != nil {
-		return &api.ErrorStatusCode{
-			StatusCode: http.StatusInternalServerError,
+		return &api.TilerDziFilePathFilesLevelColRowFormatGetBadRequest{
+			StatusCode: http.StatusBadRequest,
 			Response: api.Error{
 				Message: "Failed to get tile: " + err.Error(),
 			},
@@ -59,8 +59,8 @@ func (h *handler) TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context,
 
 	data, err := io.ReadAll(tile)
 	if err != nil {
-		return &api.ErrorStatusCode{
-			StatusCode: http.StatusInternalServerError,
+		return &api.TilerDziFilePathFilesLevelColRowFormatGetBadRequest{
+			StatusCode: http.StatusBadRequest,
 			Response: api.Error{
 				Message: "Failed to read tile: " + err.Error(),
 			},

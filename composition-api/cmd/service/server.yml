@@ -3570,12 +3570,14 @@ paths:
                 - id
               properties:
                 pk:
-                  type: integer
+                  type: string
+                  format: uuid
                   readOnly: true
                   description: Первичный ключ (не используется в запросе)
                 id:
-                  type: integer
-                  description: ID существующего цитологического исследования для копирования
+                  type: string
+                  format: uuid
+                  description: UUID существующего цитологического исследования для копирования
               example:
                 id: 123
             examples:
@@ -3583,7 +3585,7 @@ paths:
                 summary: Копирование исследования по ID
                 description: Пример запроса для копирования исследования с ID 123
                 value:
-                  id: 123
+                  id: "123e4567-e89b-12d3-a456-426614174000"
       responses:
         '201':
           description: скопированное цитологическое исследование
@@ -3593,16 +3595,18 @@ paths:
                 type: object
                 properties:
                   pk:
-                    type: integer
+                    type: string
+                    format: uuid
                     readOnly: true
-                    description: Первичный ключ нового исследования
+                    description: UUID нового исследования
                   id:
-                    type: integer
+                    type: string
+                    format: uuid
                     readOnly: true
-                    description: ID нового скопированного исследования
+                    description: UUID нового скопированного исследования
               example:
-                pk: 124
-                id: 124
+                pk: "123e4567-e89b-12d3-a456-426614174000"
+                id: "123e4567-e89b-12d3-a456-426614174001"
         '400':
           description: Неверный формат запроса
           $ref: "#/components/responses/error"

@@ -99,7 +99,7 @@ func TestCytologyCopyCreateCreated_Examples(t *testing.T) {
 	for i, tc := range []struct {
 		Input string
 	}{
-		{Input: "{\"id\":124,\"pk\":124}"},
+		{Input: "{\"id\":\"123e4567-e89b-12d3-a456-426614174001\",\"pk\":\"123e4567-e89b-12d3-a456-426614174000\"}"},
 	} {
 		tc := tc
 		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
@@ -140,6 +140,7 @@ func TestCytologyCopyCreateReq_Examples(t *testing.T) {
 	for i, tc := range []struct {
 		Input string
 	}{
+		{Input: "{\"id\":\"123e4567-e89b-12d3-a456-426614174000\"}"},
 		{Input: "{\"id\":123}"},
 	} {
 		tc := tc
