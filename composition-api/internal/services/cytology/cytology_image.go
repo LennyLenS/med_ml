@@ -3,6 +3,8 @@ package cytology
 import (
 	"context"
 	"fmt"
+	"io"
+	"log/slog"
 
 	"github.com/google/uuid"
 
@@ -34,7 +36,7 @@ func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyIma
 
 	// Если передан файл, загружаем его в S3 напрямую (как в УЗИ)
 	if arg.File != nil && (*arg.File).File != nil {
-		// Генерируем ID для original_image
+		// Генерируем ID для original_image заранее, чтобы использовать один и тот же ID
 		originalImageID := uuid.New()
 
 		// Формируем путь в S3: {cytology_id}/{original_image_id}/{original_image_id}
@@ -48,8 +50,20 @@ func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyIma
 			return uuid.Nil, fmt.Errorf("load cytology file to s3: %w", err)
 		}
 
+		// Перемещаем указатель файла в начало, так как после загрузки в S3 он находится в конце
+		// Это необходимо для повторного чтения файла при создании original_image через gRPC
+		if seeker, ok := (*arg.File).File.(io.Seeker); ok {
+			_, err = seeker.Seek(0, io.SeekStart)
+			if err != nil {
+				// Если Seek не удался, это не критично - микросервис цитологии загрузит файл в S3 снова
+				// Но это может привести к дублированию файла в S3
+				slog.Warn("failed to seek file to start, file may be read incorrectly", "err", err)
+			}
+		}
+
 		// Создаем original_image через gRPC
 		// Файл уже загружен в S3, но для создания записи в БД нужно передать файл через gRPC
+		// Микросервис цитологии загрузит файл в S3 снова, но с тем же путем (если мы передадим правильный ID)
 		// Это временное решение - в будущем можно изменить протокол, чтобы передавать только путь к файлу
 		// Проблема: файл все равно читается в память в адаптере CreateOriginalImage
 		// Но основная проблема (таймауты при создании cytology_image) решена - файл не передается через gRPC при создании cytology_image
