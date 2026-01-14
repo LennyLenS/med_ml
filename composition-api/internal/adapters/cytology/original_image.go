@@ -13,16 +13,25 @@ import (
 )
 
 func (a *adapter) CreateOriginalImage(ctx context.Context, in CreateOriginalImageIn) (uuid.UUID, error) {
-	fileData, err := io.ReadAll(in.File.File)
-	if err != nil {
-		return uuid.Nil, adapter_errors.HandleGRPCError(err)
-	}
-
 	req := &pb.CreateOriginalImageIn{
 		CytologyId:  in.CytologyID.String(),
-		File:        fileData,
 		ContentType: in.ContentType,
 		DelayTime:   in.DelayTime,
+	}
+
+	// Если передан путь к файлу, используем его (файл уже загружен в S3)
+	if in.ImagePath != nil && *in.ImagePath != "" {
+		// Файл уже загружен в S3 в composition-api
+		// Передаем путь вместо файла, чтобы не отправлять файл по сети
+		req.ImagePath = in.ImagePath
+		req.File = nil // Не передаем файл, так как он уже в S3
+	} else {
+		// Если путь не передан, читаем файл и передаем его (старый способ)
+		fileData, err := io.ReadAll(in.File.File)
+		if err != nil {
+			return uuid.Nil, adapter_errors.HandleGRPCError(err)
+		}
+		req.File = fileData
 	}
 
 	res, err := a.client.CreateOriginalImage(ctx, req)

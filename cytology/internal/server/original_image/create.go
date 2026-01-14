@@ -17,12 +17,15 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 		return nil, status.Errorf(codes.InvalidArgument, "cytology_id is not a valid uuid: %s", err.Error())
 	}
 
-	if len(in.File) == 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "file is required")
-	}
-
-	if in.ContentType == "" {
-		return nil, status.Errorf(codes.InvalidArgument, "content_type is required")
+	// Если передан путь к файлу, используем его (файл уже загружен в S3)
+	// Иначе проверяем, что передан файл
+	if in.ImagePath == nil || *in.ImagePath == "" {
+		if len(in.File) == 0 {
+			return nil, status.Errorf(codes.InvalidArgument, "file or image_path is required")
+		}
+		if in.ContentType == "" {
+			return nil, status.Errorf(codes.InvalidArgument, "content_type is required")
+		}
 	}
 
 	arg := original_image.CreateOriginalImageArg{
@@ -30,6 +33,7 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 		File:        in.File,
 		ContentType: in.ContentType,
 		DelayTime:   in.DelayTime,
+		ImagePath:   in.ImagePath,
 	}
 
 	id, err := h.services.OriginalImage.CreateOriginalImage(ctx, arg)

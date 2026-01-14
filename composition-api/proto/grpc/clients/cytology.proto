@@ -171,6 +171,7 @@ message CreateOriginalImageIn {
   bytes file = 200;
   string content_type = 300;
   optional double delay_time = 400;
+  optional string image_path = 500; // путь к файлу в S3 (если файл уже загружен)
 }
 
 message CreateOriginalImageOut {

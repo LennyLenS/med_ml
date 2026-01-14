@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"cytology/internal/domain"
-	original_imageEntity "cytology/internal/repository/original_image/entity"
 	"cytology/internal/repository"
+	original_imageEntity "cytology/internal/repository/original_image/entity"
 
 	"github.com/google/uuid"
 )
@@ -32,9 +33,10 @@ func New(dao repository.DAO) Service {
 
 type CreateOriginalImageArg struct {
 	CytologyID  uuid.UUID
-	File        []byte
+	File        []byte // Используется только если ImagePath не указан
 	ContentType string
 	DelayTime   *float64
+	ImagePath   *string // Путь к файлу в S3 (если файл уже загружен)
 }
 
 type UpdateOriginalImageArg struct {
@@ -44,23 +46,43 @@ type UpdateOriginalImageArg struct {
 }
 
 func (s *service) CreateOriginalImage(ctx context.Context, arg CreateOriginalImageArg) (uuid.UUID, error) {
-	// Генерируем ID для изображения
-	imageID := uuid.New()
+	var imageID uuid.UUID
+	var imagePath string
 
-	// Формируем путь в S3: {cytology_id}/{image_id}/{image_id}
-	// Используем "/" для S3, так как filepath.Join может давать разные результаты на разных ОС
-	imagePath := arg.CytologyID.String() + "/" + imageID.String() + "/" + imageID.String()
+	// Если передан путь к файлу, используем его (файл уже загружен в S3)
+	if arg.ImagePath != nil && *arg.ImagePath != "" {
+		imagePath = *arg.ImagePath
+		// Извлекаем imageID из пути: {cytology_id}/{image_id}/{image_id}
+		// Путь имеет формат: {cytology_id}/{image_id}/{image_id}
+		parts := strings.Split(imagePath, "/")
+		if len(parts) >= 2 {
+			var err error
+			imageID, err = uuid.Parse(parts[1])
+			if err != nil {
+				return uuid.Nil, fmt.Errorf("invalid image_id in image_path: %w", err)
+			}
+		} else {
+			return uuid.Nil, fmt.Errorf("invalid image_path format: %s", imagePath)
+		}
+	} else {
+		// Если путь не передан, генерируем ID и загружаем файл в S3
+		imageID = uuid.New()
 
-	// Загружаем файл в S3
-	fileRepo := s.dao.NewFileRepo()
-	file := domain.File{
-		Format: arg.ContentType,
-		Size:   int64(len(arg.File)),
-		Buf:    bytes.NewReader(arg.File),
-	}
+		// Формируем путь в S3: {cytology_id}/{image_id}/{image_id}
+		// Используем "/" для S3, так как filepath.Join может давать разные результаты на разных ОС
+		imagePath = arg.CytologyID.String() + "/" + imageID.String() + "/" + imageID.String()
 
-	if err := fileRepo.LoadFile(ctx, imagePath, file); err != nil {
-		return uuid.Nil, fmt.Errorf("load file to S3: %w", err)
+		// Загружаем файл в S3
+		fileRepo := s.dao.NewFileRepo()
+		file := domain.File{
+			Format: arg.ContentType,
+			Size:   int64(len(arg.File)),
+			Buf:    bytes.NewReader(arg.File),
+		}
+
+		if err := fileRepo.LoadFile(ctx, imagePath, file); err != nil {
+			return uuid.Nil, fmt.Errorf("load file to S3: %w", err)
+		}
 	}
 
 	// Создаем запись в БД

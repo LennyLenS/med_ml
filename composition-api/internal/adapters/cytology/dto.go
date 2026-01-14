@@ -39,9 +39,10 @@ type UpdateCytologyImageIn struct {
 
 type CreateOriginalImageIn struct {
 	CytologyID  uuid.UUID
-	File        ht.MultipartFile
+	File        ht.MultipartFile // Используется только если ImagePath не указан
 	ContentType string
 	DelayTime   *float64
+	ImagePath   *string // Путь к файлу в S3 (если файл уже загружен)
 }
 
 type UpdateOriginalImageIn struct {
