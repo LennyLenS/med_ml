@@ -169,6 +169,8 @@ func run() (exitCode int) {
 
 	// Проксирование запросов к tiler напрямую на tiler_service
 	r.Mount("/tiler/", http.StripPrefix("/tiler", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now()
+
 		// Формируем URL для проксирования на tiler_service
 		tilerURL := cfg.Adapters.TilerUrl
 		if !strings.HasPrefix(tilerURL, "http://") && !strings.HasPrefix(tilerURL, "https://") {
@@ -180,6 +182,7 @@ func run() (exitCode int) {
 		// Правильно формируем URL
 		proxyURL, err := url.Parse(tilerURL)
 		if err != nil {
+			slog.Error("tiler proxy: invalid tiler URL", "tiler_url", tilerURL, "err", err)
 			http.Error(w, fmt.Sprintf("Invalid tiler URL: %v", err), http.StatusInternalServerError)
 			return
 		}
@@ -187,9 +190,18 @@ func run() (exitCode int) {
 		// r.URL.Path уже содержит ведущий слэш после StripPrefix
 		proxyURL.Path = r.URL.Path
 
+		proxyURLStr := proxyURL.String()
+		slog.Info("tiler proxy: proxying request",
+			"method", r.Method,
+			"original_path", r.URL.Path,
+			"proxy_url", proxyURLStr,
+			"remote_addr", r.RemoteAddr,
+		)
+
 		// Создаем новый запрос к tiler_service
-		proxyReq, err := http.NewRequest(r.Method, proxyURL.String(), r.Body)
+		proxyReq, err := http.NewRequest(r.Method, proxyURLStr, r.Body)
 		if err != nil {
+			slog.Error("tiler proxy: failed to create request", "proxy_url", proxyURLStr, "err", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -204,11 +216,25 @@ func run() (exitCode int) {
 		// Выполняем запрос
 		client := &http.Client{}
 		resp, err := client.Do(proxyReq)
+		duration := time.Since(startTime)
 		if err != nil {
+			slog.Error("tiler proxy: request failed",
+				"proxy_url", proxyURLStr,
+				"original_path", r.URL.Path,
+				"err", err,
+				"duration_ms", duration.Milliseconds(),
+			)
 			http.Error(w, err.Error(), http.StatusBadGateway)
 			return
 		}
 		defer resp.Body.Close()
+
+		slog.Info("tiler proxy: request completed",
+			"proxy_url", proxyURLStr,
+			"original_path", r.URL.Path,
+			"status_code", resp.StatusCode,
+			"duration_ms", duration.Milliseconds(),
+		)
 
 		// Копируем заголовки ответа
 		for key, values := range resp.Header {

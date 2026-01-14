@@ -3539,6 +3539,9 @@ paths:
     post:
       operationId: CytologyCopyCreate
       summary: Создание нового исследования, на основе предыдущего
+      description: |
+        Создает новое цитологическое исследование на основе существующего.
+        Копирует все данные из исходного исследования, включая изображения и сегментации.
       tags:
         - cytology
       requestBody:
@@ -3547,13 +3550,24 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - id
               properties:
                 pk:
                   type: integer
                   readOnly: true
+                  description: Первичный ключ (не используется в запросе)
                 id:
                   type: integer
-                  readOnly: true
+                  description: ID существующего цитологического исследования для копирования
+              example:
+                id: 123
+            examples:
+              example1:
+                summary: Копирование исследования по ID
+                description: Пример запроса для копирования исследования с ID 123
+                value:
+                  id: 123
       responses:
         '201':
           description: скопированное цитологическое исследование
@@ -3565,9 +3579,14 @@ paths:
                   pk:
                     type: integer
                     readOnly: true
+                    description: Первичный ключ нового исследования
                   id:
                     type: integer
                     readOnly: true
+                    description: ID нового скопированного исследования
+              example:
+                pk: 124
+                id: 124
         '400':
           description: Неверный формат запроса
           $ref: "#/components/responses/error"
