@@ -50,6 +50,8 @@ func (s *service) UpdateCytologyImage(ctx context.Context, arg UpdateCytologyIma
 		Thyroglobulin:     arg.Thyroglobulin,
 		Details:           arg.Details,
 		IsLast:            arg.IsLast,
+		PrevID:            arg.PrevID,
+		ParentPrevID:      arg.ParentPrevID,
 	})
 }
 

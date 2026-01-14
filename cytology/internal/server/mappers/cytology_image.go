@@ -122,6 +122,20 @@ func UpdateCytologyImageArgFromProto(in *pb.UpdateCytologyImageIn, id uuid.UUID)
 		arg.IsLast = in.IsLast
 	}
 
+	if in.PrevId != nil && *in.PrevId != "" {
+		parsed, err := uuid.Parse(*in.PrevId)
+		if err == nil {
+			arg.PrevID = &parsed
+		}
+	}
+
+	if in.ParentPrevId != nil && *in.ParentPrevId != "" {
+		parsed, err := uuid.Parse(*in.ParentPrevId)
+		if err == nil {
+			arg.ParentPrevID = &parsed
+		}
+	}
+
 	return arg
 }
 

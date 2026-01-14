@@ -110,7 +110,9 @@ type CytologyCopyCreateBadRequest ErrorStatusCode
 func (*CytologyCopyCreateBadRequest) cytologyCopyCreateRes() {}
 
 type CytologyCopyCreateCreated struct {
+	// Первичный ключ нового исследования.
 	Pk OptInt `json:"pk"`
+	// ID нового скопированного исследования.
 	ID OptInt `json:"id"`
 }
 
@@ -145,8 +147,11 @@ type CytologyCopyCreateNotFound ErrorStatusCode
 func (*CytologyCopyCreateNotFound) cytologyCopyCreateRes() {}
 
 type CytologyCopyCreateReq struct {
+	// Первичный ключ (не используется в запросе).
 	Pk OptInt `json:"pk"`
-	ID OptInt `json:"id"`
+	// ID существующего цитологического исследования для
+	// копирования.
+	ID int `json:"id"`
 }
 
 // GetPk returns the value of Pk.
@@ -155,7 +160,7 @@ func (s *CytologyCopyCreateReq) GetPk() OptInt {
 }
 
 // GetID returns the value of ID.
-func (s *CytologyCopyCreateReq) GetID() OptInt {
+func (s *CytologyCopyCreateReq) GetID() int {
 	return s.ID
 }
 
@@ -165,7 +170,7 @@ func (s *CytologyCopyCreateReq) SetPk(val OptInt) {
 }
 
 // SetID sets the value of ID.
-func (s *CytologyCopyCreateReq) SetID(val OptInt) {
+func (s *CytologyCopyCreateReq) SetID(val int) {
 	s.ID = val
 }
 
@@ -189,8 +194,8 @@ type CytologyCreateCreateCreated struct {
 	Calcitonin        OptInt                                          `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                          `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                          `json:"thyroglobulin"`
-	Prev              OptInt                                          `json:"prev"`
-	ParentPrev        OptInt                                          `json:"parent_prev"`
+	Prev              OptUUID                                         `json:"prev"`
+	ParentPrev        OptUUID                                         `json:"parent_prev"`
 	PatientCard       OptInt                                          `json:"patient_card"`
 }
 
@@ -250,12 +255,12 @@ func (s *CytologyCreateCreateCreated) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyCreateCreateCreated) GetPrev() OptInt {
+func (s *CytologyCreateCreateCreated) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyCreateCreateCreated) GetParentPrev() OptInt {
+func (s *CytologyCreateCreateCreated) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -320,12 +325,12 @@ func (s *CytologyCreateCreateCreated) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyCreateCreateCreated) SetPrev(val OptInt) {
+func (s *CytologyCreateCreateCreated) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyCreateCreateCreated) SetParentPrev(val OptInt) {
+func (s *CytologyCreateCreateCreated) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -456,8 +461,8 @@ type CytologyCreateCreateReq struct {
 	Calcitonin        OptInt                                      `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                      `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                      `json:"thyroglobulin"`
-	Prev              OptInt                                      `json:"prev"`
-	ParentPrev        OptInt                                      `json:"parent_prev"`
+	Prev              OptUUID                                     `json:"prev"`
+	ParentPrev        OptUUID                                     `json:"parent_prev"`
 	PatientCard       OptInt                                      `json:"patient_card"`
 	// Детали диагностики в формате JSON.
 	Details OptString `json:"details"`
@@ -502,12 +507,12 @@ func (s *CytologyCreateCreateReq) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyCreateCreateReq) GetPrev() OptInt {
+func (s *CytologyCreateCreateReq) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyCreateCreateReq) GetParentPrev() OptInt {
+func (s *CytologyCreateCreateReq) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -567,12 +572,12 @@ func (s *CytologyCreateCreateReq) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyCreateCreateReq) SetPrev(val OptInt) {
+func (s *CytologyCreateCreateReq) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyCreateCreateReq) SetParentPrev(val OptInt) {
+func (s *CytologyCreateCreateReq) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -772,8 +777,8 @@ type CytologyHistoryReadOKResultsItem struct {
 	Calcitonin        OptInt                                               `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                               `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                               `json:"thyroglobulin"`
-	Prev              OptInt                                               `json:"prev"`
-	ParentPrev        OptInt                                               `json:"parent_prev"`
+	Prev              OptUUID                                              `json:"prev"`
+	ParentPrev        OptUUID                                              `json:"parent_prev"`
 	PatientCard       OptInt                                               `json:"patient_card"`
 	OriginalImage     OptInt                                               `json:"original_image"`
 }
@@ -829,12 +834,12 @@ func (s *CytologyHistoryReadOKResultsItem) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyHistoryReadOKResultsItem) GetPrev() OptInt {
+func (s *CytologyHistoryReadOKResultsItem) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyHistoryReadOKResultsItem) GetParentPrev() OptInt {
+func (s *CytologyHistoryReadOKResultsItem) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -899,12 +904,12 @@ func (s *CytologyHistoryReadOKResultsItem) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyHistoryReadOKResultsItem) SetPrev(val OptInt) {
+func (s *CytologyHistoryReadOKResultsItem) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyHistoryReadOKResultsItem) SetParentPrev(val OptInt) {
+func (s *CytologyHistoryReadOKResultsItem) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -1105,8 +1110,8 @@ type CytologyReadOKInfoImageGroup struct {
 	Calcitonin        OptInt                                           `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                           `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                           `json:"thyroglobulin"`
-	Prev              OptInt                                           `json:"prev"`
-	ParentPrev        OptInt                                           `json:"parent_prev"`
+	Prev              OptUUID                                          `json:"prev"`
+	ParentPrev        OptUUID                                          `json:"parent_prev"`
 	OriginalImage     OptInt                                           `json:"original_image"`
 }
 
@@ -1161,12 +1166,12 @@ func (s *CytologyReadOKInfoImageGroup) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyReadOKInfoImageGroup) GetPrev() OptInt {
+func (s *CytologyReadOKInfoImageGroup) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyReadOKInfoImageGroup) GetParentPrev() OptInt {
+func (s *CytologyReadOKInfoImageGroup) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -1226,12 +1231,12 @@ func (s *CytologyReadOKInfoImageGroup) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyReadOKInfoImageGroup) SetPrev(val OptInt) {
+func (s *CytologyReadOKInfoImageGroup) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyReadOKInfoImageGroup) SetParentPrev(val OptInt) {
+func (s *CytologyReadOKInfoImageGroup) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -2622,8 +2627,8 @@ type CytologyUpdatePartialUpdateOK struct {
 	Calcitonin        OptInt                                   `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                   `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                   `json:"thyroglobulin"`
-	Prev              OptInt                                   `json:"prev"`
-	ParentPrev        OptInt                                   `json:"parent_prev"`
+	Prev              OptUUID                                  `json:"prev"`
+	ParentPrev        OptUUID                                  `json:"parent_prev"`
 	OriginalImage     OptInt                                   `json:"original_image"`
 }
 
@@ -2683,12 +2688,12 @@ func (s *CytologyUpdatePartialUpdateOK) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdatePartialUpdateOK) GetPrev() OptInt {
+func (s *CytologyUpdatePartialUpdateOK) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateOK) GetParentPrev() OptInt {
+func (s *CytologyUpdatePartialUpdateOK) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -2753,12 +2758,12 @@ func (s *CytologyUpdatePartialUpdateOK) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdatePartialUpdateOK) SetPrev(val OptInt) {
+func (s *CytologyUpdatePartialUpdateOK) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateOK) SetParentPrev(val OptInt) {
+func (s *CytologyUpdatePartialUpdateOK) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -2785,8 +2790,8 @@ type CytologyUpdatePartialUpdateReq struct {
 	Calcitonin        OptInt                                             `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                             `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                             `json:"thyroglobulin"`
-	Prev              OptInt                                             `json:"prev"`
-	ParentPrev        OptInt                                             `json:"parent_prev"`
+	Prev              OptUUID                                            `json:"prev"`
+	ParentPrev        OptUUID                                            `json:"parent_prev"`
 	OriginalImage     OptInt                                             `json:"original_image"`
 }
 
@@ -2846,12 +2851,12 @@ func (s *CytologyUpdatePartialUpdateReq) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdatePartialUpdateReq) GetPrev() OptInt {
+func (s *CytologyUpdatePartialUpdateReq) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateReq) GetParentPrev() OptInt {
+func (s *CytologyUpdatePartialUpdateReq) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -2916,12 +2921,12 @@ func (s *CytologyUpdatePartialUpdateReq) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdatePartialUpdateReq) SetPrev(val OptInt) {
+func (s *CytologyUpdatePartialUpdateReq) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateReq) SetParentPrev(val OptInt) {
+func (s *CytologyUpdatePartialUpdateReq) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -3099,8 +3104,8 @@ type CytologyUpdateUpdateOK struct {
 	Calcitonin        OptInt                            `json:"calcitonin"`
 	CalcitoninInFlush OptInt                            `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                            `json:"thyroglobulin"`
-	Prev              OptInt                            `json:"prev"`
-	ParentPrev        OptInt                            `json:"parent_prev"`
+	Prev              OptUUID                           `json:"prev"`
+	ParentPrev        OptUUID                           `json:"parent_prev"`
 	OriginalImage     OptInt                            `json:"original_image"`
 }
 
@@ -3160,12 +3165,12 @@ func (s *CytologyUpdateUpdateOK) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdateUpdateOK) GetPrev() OptInt {
+func (s *CytologyUpdateUpdateOK) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdateUpdateOK) GetParentPrev() OptInt {
+func (s *CytologyUpdateUpdateOK) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -3230,12 +3235,12 @@ func (s *CytologyUpdateUpdateOK) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdateUpdateOK) SetPrev(val OptInt) {
+func (s *CytologyUpdateUpdateOK) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdateUpdateOK) SetParentPrev(val OptInt) {
+func (s *CytologyUpdateUpdateOK) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -3262,8 +3267,8 @@ type CytologyUpdateUpdateReq struct {
 	Calcitonin        OptInt                                      `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                      `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                      `json:"thyroglobulin"`
-	Prev              OptInt                                      `json:"prev"`
-	ParentPrev        OptInt                                      `json:"parent_prev"`
+	Prev              OptUUID                                     `json:"prev"`
+	ParentPrev        OptUUID                                     `json:"parent_prev"`
 	OriginalImage     OptInt                                      `json:"original_image"`
 }
 
@@ -3323,12 +3328,12 @@ func (s *CytologyUpdateUpdateReq) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdateUpdateReq) GetPrev() OptInt {
+func (s *CytologyUpdateUpdateReq) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdateUpdateReq) GetParentPrev() OptInt {
+func (s *CytologyUpdateUpdateReq) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -3393,12 +3398,12 @@ func (s *CytologyUpdateUpdateReq) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdateUpdateReq) SetPrev(val OptInt) {
+func (s *CytologyUpdateUpdateReq) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdateUpdateReq) SetParentPrev(val OptInt) {
+func (s *CytologyUpdateUpdateReq) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -3417,8 +3422,8 @@ type CytologyUpdateUpdateReqDetails struct {
 	Calcitonin        OptInt                                             `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                             `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                             `json:"thyroglobulin"`
-	Prev              OptInt                                             `json:"prev"`
-	ParentPrev        OptInt                                             `json:"parent_prev"`
+	Prev              OptUUID                                            `json:"prev"`
+	ParentPrev        OptUUID                                            `json:"parent_prev"`
 	PatientCard       OptInt                                             `json:"patient_card"`
 	OriginalImage     OptInt                                             `json:"original_image"`
 }
@@ -3469,12 +3474,12 @@ func (s *CytologyUpdateUpdateReqDetails) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdateUpdateReqDetails) GetPrev() OptInt {
+func (s *CytologyUpdateUpdateReqDetails) GetPrev() OptUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdateUpdateReqDetails) GetParentPrev() OptInt {
+func (s *CytologyUpdateUpdateReqDetails) GetParentPrev() OptUUID {
 	return s.ParentPrev
 }
 
@@ -3534,12 +3539,12 @@ func (s *CytologyUpdateUpdateReqDetails) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdateUpdateReqDetails) SetPrev(val OptInt) {
+func (s *CytologyUpdateUpdateReqDetails) SetPrev(val OptUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdateUpdateReqDetails) SetParentPrev(val OptInt) {
+func (s *CytologyUpdateUpdateReqDetails) SetParentPrev(val OptUUID) {
 	s.ParentPrev = val
 }
 
@@ -4250,16 +4255,14 @@ func (s *ErrorStatusCode) SetResponse(val Error) {
 	s.Response = val
 }
 
-func (*ErrorStatusCode) downloadUziIDImageIDGetRes()                   {}
-func (*ErrorStatusCode) paymentProvidersGetRes()                       {}
-func (*ErrorStatusCode) subscriptionsCheckActiveGetRes()               {}
-func (*ErrorStatusCode) subscriptionsPurchasePostRes()                 {}
-func (*ErrorStatusCode) tariffPlansGetRes()                            {}
-func (*ErrorStatusCode) tariffPlansIDGetRes()                          {}
-func (*ErrorStatusCode) tilerDziFilePathFilesLevelColRowFormatGetRes() {}
-func (*ErrorStatusCode) tilerDziFilePathGetRes()                       {}
-func (*ErrorStatusCode) uziDevicesGetRes()                             {}
-func (*ErrorStatusCode) yookassaWebhooksPostRes()                      {}
+func (*ErrorStatusCode) downloadUziIDImageIDGetRes()     {}
+func (*ErrorStatusCode) paymentProvidersGetRes()         {}
+func (*ErrorStatusCode) subscriptionsCheckActiveGetRes() {}
+func (*ErrorStatusCode) subscriptionsPurchasePostRes()   {}
+func (*ErrorStatusCode) tariffPlansGetRes()              {}
+func (*ErrorStatusCode) tariffPlansIDGetRes()            {}
+func (*ErrorStatusCode) uziDevicesGetRes()               {}
+func (*ErrorStatusCode) yookassaWebhooksPostRes()        {}
 
 // Изображение.
 // Ref: #/components/schemas/image
@@ -7253,6 +7256,11 @@ type TariffPlansGetOKApplicationJSON []TariffPlan
 
 func (*TariffPlansGetOKApplicationJSON) tariffPlansGetRes() {}
 
+type TilerDziFilePathFilesLevelColRowFormatGetBadRequest ErrorStatusCode
+
+func (*TilerDziFilePathFilesLevelColRowFormatGetBadRequest) tilerDziFilePathFilesLevelColRowFormatGetRes() {
+}
+
 type TilerDziFilePathFilesLevelColRowFormatGetFormat string
 
 const (
@@ -7301,6 +7309,16 @@ func (s *TilerDziFilePathFilesLevelColRowFormatGetFormat) UnmarshalText(data []b
 	}
 }
 
+type TilerDziFilePathFilesLevelColRowFormatGetInternalServerError ErrorStatusCode
+
+func (*TilerDziFilePathFilesLevelColRowFormatGetInternalServerError) tilerDziFilePathFilesLevelColRowFormatGetRes() {
+}
+
+type TilerDziFilePathFilesLevelColRowFormatGetNotFound ErrorStatusCode
+
+func (*TilerDziFilePathFilesLevelColRowFormatGetNotFound) tilerDziFilePathFilesLevelColRowFormatGetRes() {
+}
+
 type TilerDziFilePathFilesLevelColRowFormatGetOKImageJpeg struct {
 	Data io.Reader
 }
@@ -7334,6 +7352,18 @@ func (s TilerDziFilePathFilesLevelColRowFormatGetOKImagePNG) Read(p []byte) (n i
 
 func (*TilerDziFilePathFilesLevelColRowFormatGetOKImagePNG) tilerDziFilePathFilesLevelColRowFormatGetRes() {
 }
+
+type TilerDziFilePathGetBadRequest ErrorStatusCode
+
+func (*TilerDziFilePathGetBadRequest) tilerDziFilePathGetRes() {}
+
+type TilerDziFilePathGetInternalServerError ErrorStatusCode
+
+func (*TilerDziFilePathGetInternalServerError) tilerDziFilePathGetRes() {}
+
+type TilerDziFilePathGetNotFound ErrorStatusCode
+
+func (*TilerDziFilePathGetNotFound) tilerDziFilePathGetRes() {}
 
 type TilerDziFilePathGetOK struct {
 	Data io.Reader

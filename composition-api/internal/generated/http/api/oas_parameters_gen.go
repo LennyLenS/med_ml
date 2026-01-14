@@ -1996,15 +1996,21 @@ func decodeTariffPlansIDGetParams(args [1]string, argsEscaped bool, r *http.Requ
 
 // TilerDziFilePathFilesLevelColRowFormatGetParams is parameters of TilerDziFilePathFilesLevelColRowFormatGet operation.
 type TilerDziFilePathFilesLevelColRowFormatGetParams struct {
-	// Путь к файлу изображения.
+	// Путь к файлу изображения в S3 хранилище.
+	// Формат пути из cytology: `{cytology_id}/{image_id}/{image_id}`
+	// Пример:
+	// `123e4567-e89b-12d3-a456-426614174000/123e4567-e89b-12d3-a456-426614174001/123e4567-e89b-12d3-a456-426614174001`
+	// Путь должен быть URL-encoded.
 	FilePath string
-	// Уровень масштабирования (0 - оригинальное изображение).
+	// Уровень масштабирования (zoom level).
+	// 0 - оригинальное разрешение изображения, каждый
+	// следующий уровень уменьшает разрешение в 2 раза.
 	Level int
-	// Номер колонки тайла.
+	// Номер колонки тайла (начинается с 0).
 	Col int
-	// Номер строки тайла.
+	// Номер строки тайла (начинается с 0).
 	Row int
-	// Формат изображения.
+	// Формат изображения тайла.
 	Format TilerDziFilePathFilesLevelColRowFormatGetFormat
 }
 
@@ -2337,7 +2343,11 @@ func decodeTilerDziFilePathFilesLevelColRowFormatGetParams(args [5]string, argsE
 
 // TilerDziFilePathGetParams is parameters of TilerDziFilePathGet operation.
 type TilerDziFilePathGetParams struct {
-	// Путь к файлу изображения.
+	// Путь к файлу изображения в S3 хранилище.
+	// Формат пути из cytology: `{cytology_id}/{image_id}/{image_id}`
+	// Пример:
+	// `123e4567-e89b-12d3-a456-426614174000/123e4567-e89b-12d3-a456-426614174001/123e4567-e89b-12d3-a456-426614174001`
+	// Путь должен быть URL-encoded.
 	FilePath string
 }
 

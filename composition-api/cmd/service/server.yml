@@ -2855,11 +2855,13 @@ paths:
                   minimum: -2147483648
                   maximum: 2147483647
                 prev:
-                  type: integer
+                  type: string
+                  format: uuid
                   readOnly: true
                   x-nullable: true
                 parent_prev:
-                  type: integer
+                  type: string
+                  format: uuid
                   readOnly: true
                   x-nullable: true
                 patient_card:
@@ -2927,11 +2929,13 @@ paths:
                   thyroglobulin:
                     type: integer
                   prev:
-                    type: integer
+                    type: string
+                    format: uuid
                     readOnly: true
                     x-nullable: true
                   parent_prev:
-                    type: integer
+                    type: string
+                    format: uuid
                     readOnly: true
                     x-nullable: true
                   patient_card:
@@ -3044,10 +3048,12 @@ paths:
                           thyroglobulin:
                             type: integer
                           prev:
-                            type: integer
+                            type: string
+                            format: uuid
                             x-nullable: true
                           parent_prev:
-                            type: integer
+                            type: string
+                            format: uuid
                             x-nullable: true
                           original_image:
                             type: integer
@@ -3299,10 +3305,12 @@ paths:
                     thyroglobulin:
                       type: integer
                     prev:
-                      type: integer
+                      type: string
+                      format: uuid
                       x-nullable: true
                     parent_prev:
-                      type: integer
+                      type: string
+                      format: uuid
                       x-nullable: true
                     patient_card:
                       type: integer
@@ -3338,10 +3346,12 @@ paths:
                 thyroglobulin:
                   type: integer
                 prev:
-                  type: integer
+                  type: string
+                  format: uuid
                   x-nullable: true
                 parent_prev:
-                  type: integer
+                  type: string
+                  format: uuid
                   x-nullable: true
                 original_image:
                   type: integer
@@ -3382,10 +3392,12 @@ paths:
                   thyroglobulin:
                     type: integer
                   prev:
-                    type: integer
+                    type: string
+                    format: uuid
                     x-nullable: true
                   parent_prev:
-                    type: integer
+                    type: string
+                    format: uuid
                     x-nullable: true
                   original_image:
                     type: integer
@@ -3469,10 +3481,12 @@ paths:
                 thyroglobulin:
                   type: integer
                 prev:
-                  type: integer
+                  type: string
+                  format: uuid
                   x-nullable: true
                 parent_prev:
-                  type: integer
+                  type: string
+                  format: uuid
                   x-nullable: true
                 original_image:
                   type: integer
@@ -3513,10 +3527,12 @@ paths:
                   thyroglobulin:
                     type: integer
                   prev:
-                    type: integer
+                    type: string
+                    format: uuid
                     x-nullable: true
                   parent_prev:
-                    type: integer
+                    type: string
+                    format: uuid
                     x-nullable: true
                   original_image:
                     type: integer
@@ -3698,10 +3714,12 @@ paths:
                         thyroglobulin:
                           type: integer
                         prev:
-                          type: integer
+                          type: string
+                          format: uuid
                           x-nullable: true
                         parent_prev:
-                          type: integer
+                          type: string
+                          format: uuid
                           x-nullable: true
                         patient_card:
                           type: integer
@@ -3741,7 +3759,7 @@ paths:
                         calcitonin: 3
                         calcitonin_in_flush: 1
                         thyroglobulin: 8
-                        prev: 1
+                        prev: "123e4567-e89b-12d3-a456-426614174000"
                         parent_prev: null
                         patient_card: 100
                         original_image: 199
@@ -3756,7 +3774,7 @@ paths:
                         calcitonin: 4
                         calcitonin_in_flush: 2
                         thyroglobulin: 9
-                        prev: 2
+                        prev: "123e4567-e89b-12d3-a456-426614174001"
                         parent_prev: null
                         patient_card: 100
                         original_image: 198

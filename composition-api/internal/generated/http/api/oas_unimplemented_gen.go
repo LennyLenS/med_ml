@@ -15,7 +15,10 @@ var _ Handler = UnimplementedHandler{}
 
 // CytologyCopyCreate implements CytologyCopyCreate operation.
 //
-// Создание нового исследования, на основе предыдущего.
+// Создает новое цитологическое исследование на основе
+// существующего.
+// Копирует все данные из исходного исследования,
+// включая изображения и сегментации.
 //
 // POST /cytology/copy
 func (UnimplementedHandler) CytologyCopyCreate(ctx context.Context, req *CytologyCopyCreateReq) (r CytologyCopyCreateRes, _ error) {
@@ -308,7 +311,11 @@ func (UnimplementedHandler) TariffPlansIDGet(ctx context.Context, params TariffP
 
 // TilerDziFilePathFilesLevelColRowFormatGet implements TilerDziFilePathFilesLevelColRowFormatGet operation.
 //
-// Получить тайл изображения.
+// Возвращает конкретный тайл (плитку) изображения для
+// указанного уровня масштабирования,
+// колонки и строки. Запрос проксируется напрямую на
+// tiler_service.
+// Формат пути: `/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}`.
 //
 // GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
 func (UnimplementedHandler) TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (r TilerDziFilePathFilesLevelColRowFormatGetRes, _ error) {
@@ -317,7 +324,10 @@ func (UnimplementedHandler) TilerDziFilePathFilesLevelColRowFormatGet(ctx contex
 
 // TilerDziFilePathGet implements TilerDziFilePathGet operation.
 //
-// Получить DZI XML метаданные для изображения.
+// Возвращает XML метаданные в формате Deep Zoom Image (DZI) для
+// указанного изображения.
+// Путь к файлу должен быть URL-encoded. Запрос проксируется
+// напрямую на tiler_service.
 //
 // GET /tiler/dzi/{file_path}
 func (UnimplementedHandler) TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (r TilerDziFilePathGetRes, _ error) {

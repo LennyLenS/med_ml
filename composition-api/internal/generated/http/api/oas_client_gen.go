@@ -31,7 +31,10 @@ func trimTrailingSlashes(u *url.URL) {
 type Invoker interface {
 	// CytologyCopyCreate invokes CytologyCopyCreate operation.
 	//
-	// Создание нового исследования, на основе предыдущего.
+	// Создает новое цитологическое исследование на основе
+	// существующего.
+	// Копирует все данные из исходного исследования,
+	// включая изображения и сегментации.
 	//
 	// POST /cytology/copy
 	CytologyCopyCreate(ctx context.Context, request *CytologyCopyCreateReq) (CytologyCopyCreateRes, error)
@@ -228,13 +231,20 @@ type Invoker interface {
 	TariffPlansIDGet(ctx context.Context, params TariffPlansIDGetParams) (TariffPlansIDGetRes, error)
 	// TilerDziFilePathFilesLevelColRowFormatGet invokes TilerDziFilePathFilesLevelColRowFormatGet operation.
 	//
-	// Получить тайл изображения.
+	// Возвращает конкретный тайл (плитку) изображения для
+	// указанного уровня масштабирования,
+	// колонки и строки. Запрос проксируется напрямую на
+	// tiler_service.
+	// Формат пути: `/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}`.
 	//
 	// GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
 	TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (TilerDziFilePathFilesLevelColRowFormatGetRes, error)
 	// TilerDziFilePathGet invokes TilerDziFilePathGet operation.
 	//
-	// Получить DZI XML метаданные для изображения.
+	// Возвращает XML метаданные в формате Deep Zoom Image (DZI) для
+	// указанного изображения.
+	// Путь к файлу должен быть URL-encoded. Запрос проксируется
+	// напрямую на tiler_service.
 	//
 	// GET /tiler/dzi/{file_path}
 	TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (TilerDziFilePathGetRes, error)
@@ -417,7 +427,10 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 
 // CytologyCopyCreate invokes CytologyCopyCreate operation.
 //
-// Создание нового исследования, на основе предыдущего.
+// Создает новое цитологическое исследование на основе
+// существующего.
+// Копирует все данные из исходного исследования,
+// включая изображения и сегментации.
 //
 // POST /cytology/copy
 func (c *Client) CytologyCopyCreate(ctx context.Context, request *CytologyCopyCreateReq) (CytologyCopyCreateRes, error) {
@@ -4338,7 +4351,11 @@ func (c *Client) sendTariffPlansIDGet(ctx context.Context, params TariffPlansIDG
 
 // TilerDziFilePathFilesLevelColRowFormatGet invokes TilerDziFilePathFilesLevelColRowFormatGet operation.
 //
-// Получить тайл изображения.
+// Возвращает конкретный тайл (плитку) изображения для
+// указанного уровня масштабирования,
+// колонки и строки. Запрос проксируется напрямую на
+// tiler_service.
+// Формат пути: `/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}`.
 //
 // GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
 func (c *Client) TilerDziFilePathFilesLevelColRowFormatGet(ctx context.Context, params TilerDziFilePathFilesLevelColRowFormatGetParams) (TilerDziFilePathFilesLevelColRowFormatGetRes, error) {
@@ -4486,39 +4503,6 @@ func (c *Client) sendTilerDziFilePathFilesLevelColRowFormatGet(ctx context.Conte
 		return res, errors.Wrap(err, "create request")
 	}
 
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, TilerDziFilePathFilesLevelColRowFormatGetOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
 	stage = "SendRequest"
 	resp, err := c.cfg.Client.Do(r)
 	if err != nil {
@@ -4537,7 +4521,10 @@ func (c *Client) sendTilerDziFilePathFilesLevelColRowFormatGet(ctx context.Conte
 
 // TilerDziFilePathGet invokes TilerDziFilePathGet operation.
 //
-// Получить DZI XML метаданные для изображения.
+// Возвращает XML метаданные в формате Deep Zoom Image (DZI) для
+// указанного изображения.
+// Путь к файлу должен быть URL-encoded. Запрос проксируется
+// напрямую на tiler_service.
 //
 // GET /tiler/dzi/{file_path}
 func (c *Client) TilerDziFilePathGet(ctx context.Context, params TilerDziFilePathGetParams) (TilerDziFilePathGetRes, error) {
@@ -4607,39 +4594,6 @@ func (c *Client) sendTilerDziFilePathGet(ctx context.Context, params TilerDziFil
 	r, err := ht.NewRequest(ctx, "GET", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			stage = "Security:BearerAuth"
-			switch err := c.securityBearerAuth(ctx, TilerDziFilePathGetOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"BearerAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
 	}
 
 	stage = "SendRequest"

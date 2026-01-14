@@ -32,6 +32,8 @@ type UpdateCytologyImageArg struct {
 	Thyroglobulin     *int
 	Details           []byte
 	IsLast            *bool
+	PrevID            *uuid.UUID
+	ParentPrevID      *uuid.UUID
 }
 
 func (u UpdateCytologyImageArg) UpdateDomain(d *domain.CytologyImage) {
@@ -55,5 +57,11 @@ func (u UpdateCytologyImageArg) UpdateDomain(d *domain.CytologyImage) {
 	}
 	if u.IsLast != nil {
 		d.IsLast = *u.IsLast
+	}
+	if u.PrevID != nil {
+		d.PrevID = u.PrevID
+	}
+	if u.ParentPrevID != nil {
+		d.ParentPrevID = u.ParentPrevID
 	}
 }

@@ -33,6 +33,8 @@ type UpdateCytologyImageIn struct {
 	Thyroglobulin     *int
 	Details           *string
 	IsLast            *bool
+	PrevID            *uuid.UUID
+	ParentPrevID      *uuid.UUID
 }
 
 type CreateOriginalImageIn struct {

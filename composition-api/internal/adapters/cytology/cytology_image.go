@@ -170,6 +170,16 @@ func (a *adapter) UpdateCytologyImage(ctx context.Context, in UpdateCytologyImag
 		req.IsLast = in.IsLast
 	}
 
+	if in.PrevID != nil {
+		prevIDStr := in.PrevID.String()
+		req.PrevId = &prevIDStr
+	}
+
+	if in.ParentPrevID != nil {
+		parentPrevIDStr := in.ParentPrevID.String()
+		req.ParentPrevId = &parentPrevIDStr
+	}
+
 	res, err := a.client.UpdateCytologyImage(ctx, req)
 	if err != nil {
 		return domain.CytologyImage{}, adapter_errors.HandleGRPCError(err)

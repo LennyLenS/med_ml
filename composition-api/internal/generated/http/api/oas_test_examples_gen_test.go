@@ -93,6 +93,35 @@ func TestCytologyCopyCreateCreated_EncodeDecode(t *testing.T) {
 	var typ2 CytologyCopyCreateCreated
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
+
+func TestCytologyCopyCreateCreated_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"id\":124,\"pk\":124}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyCopyCreateCreated
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyCopyCreateCreated
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
 func TestCytologyCopyCreateReq_EncodeDecode(t *testing.T) {
 	var typ CytologyCopyCreateReq
 	typ.SetFake()
@@ -104,6 +133,35 @@ func TestCytologyCopyCreateReq_EncodeDecode(t *testing.T) {
 
 	var typ2 CytologyCopyCreateReq
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyCopyCreateReq_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"id\":123}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyCopyCreateReq
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyCopyCreateReq
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
 }
 func TestCytologyCreateCreateCreated_EncodeDecode(t *testing.T) {
 	var typ CytologyCreateCreateCreated
@@ -171,7 +229,7 @@ func TestCytologyHistoryReadOK_Examples(t *testing.T) {
 	for i, tc := range []struct {
 		Input string
 	}{
-		{Input: "{\"count\":3,\"next\":null,\"previous\":null,\"results\":[{\"calcitonin\":5,\"calcitonin_in_flush\":2,\"details\":{\"note\":\"Первичное исследование\"},\"diagnos_date\":\"2024-12-21T10:30:00Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":12345,\"id\":1,\"is_last\":true,\"material_type\":\"GS\",\"original_image\":200,\"parent_prev\":null,\"patient_card\":100,\"prev\":null,\"thyroglobulin\":10},{\"calcitonin\":3,\"calcitonin_in_flush\":1,\"details\":{\"note\":\"Повторное исследование\"},\"diagnos_date\":\"2024-12-20T14:20:00Z\",\"diagnostic_marking\":\"Л23\",\"diagnostic_number\":12344,\"id\":2,\"is_last\":false,\"material_type\":\"BP\",\"original_image\":199,\"parent_prev\":null,\"patient_card\":100,\"prev\":1,\"thyroglobulin\":8},{\"calcitonin\":4,\"calcitonin_in_flush\":2,\"details\":null,\"diagnos_date\":\"2024-12-19T09:15:00Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":12343,\"id\":3,\"is_last\":false,\"material_type\":\"TP\",\"original_image\":198,\"parent_prev\":null,\"patient_card\":100,\"prev\":2,\"thyroglobulin\":9}]}"},
+		{Input: "{\"count\":3,\"next\":null,\"previous\":null,\"results\":[{\"calcitonin\":5,\"calcitonin_in_flush\":2,\"details\":{\"note\":\"Первичное исследование\"},\"diagnos_date\":\"2024-12-21T10:30:00Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":12345,\"id\":1,\"is_last\":true,\"material_type\":\"GS\",\"original_image\":200,\"parent_prev\":null,\"patient_card\":100,\"prev\":null,\"thyroglobulin\":10},{\"calcitonin\":3,\"calcitonin_in_flush\":1,\"details\":{\"note\":\"Повторное исследование\"},\"diagnos_date\":\"2024-12-20T14:20:00Z\",\"diagnostic_marking\":\"Л23\",\"diagnostic_number\":12344,\"id\":2,\"is_last\":false,\"material_type\":\"BP\",\"original_image\":199,\"parent_prev\":null,\"patient_card\":100,\"prev\":\"123e4567-e89b-12d3-a456-426614174000\",\"thyroglobulin\":8},{\"calcitonin\":4,\"calcitonin_in_flush\":2,\"details\":null,\"diagnos_date\":\"2024-12-19T09:15:00Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":12343,\"id\":3,\"is_last\":false,\"material_type\":\"TP\",\"original_image\":198,\"parent_prev\":null,\"patient_card\":100,\"prev\":\"123e4567-e89b-12d3-a456-426614174001\",\"thyroglobulin\":9}]}"},
 	} {
 		tc := tc
 		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {

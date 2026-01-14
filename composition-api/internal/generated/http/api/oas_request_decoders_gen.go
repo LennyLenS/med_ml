@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
+	"github.com/google/uuid"
 	"go.uber.org/multierr"
 
 	"github.com/ogen-go/ogen/conv"
@@ -440,14 +441,14 @@ func (s *Server) decodeCytologyCreateCreateRequest(r *http.Request) (
 			}
 			if err := q.HasParam(cfg); err == nil {
 				if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-					var requestDotPrevVal int
+					var requestDotPrevVal uuid.UUID
 					if err := func() error {
 						val, err := d.DecodeValue()
 						if err != nil {
 							return err
 						}
 
-						c, err := conv.ToInt(val)
+						c, err := conv.ToUUID(val)
 						if err != nil {
 							return err
 						}
@@ -472,14 +473,14 @@ func (s *Server) decodeCytologyCreateCreateRequest(r *http.Request) (
 			}
 			if err := q.HasParam(cfg); err == nil {
 				if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-					var requestDotParentPrevVal int
+					var requestDotParentPrevVal uuid.UUID
 					if err := func() error {
 						val, err := d.DecodeValue()
 						if err != nil {
 							return err
 						}
 
-						c, err := conv.ToInt(val)
+						c, err := conv.ToUUID(val)
 						if err != nil {
 							return err
 						}

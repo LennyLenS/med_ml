@@ -65,9 +65,7 @@ func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreat
 		arg.Details = &detailsStr
 	}
 
-	// Prev и ParentPrev в swagger.json - это integer, но в нашей системе это UUID
-	// Нужно будет преобразовать или получить из другого источника
-	// Пока оставляем nil
+	// Prev и ParentPrev теперь UUID (строки) в API, соответствуют UUID в БД
 
 	return arg
 }
@@ -163,6 +161,20 @@ func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage, patient med_
 		Set:   true,
 	}
 
+	// Маппинг prev и parent_prev
+	if img.PrevID != nil {
+		imageGroup.Prev = api.OptUUID{
+			Value: *img.PrevID,
+			Set:   true,
+		}
+	}
+	if img.ParentPrevID != nil {
+		imageGroup.ParentPrev = api.OptUUID{
+			Value: *img.ParentPrevID,
+			Set:   true,
+		}
+	}
+
 	return api.CytologyReadOKInfo{
 		Patient:     apiPatient,
 		PatientCard: apiPatientCard,
@@ -222,6 +234,20 @@ func (CytologyImage) ToCytologyImageModelList(imgs []domain.CytologyImage) []api
 
 		if img.Details != nil {
 			item.Details = &api.CytologyHistoryReadOKResultsItemDetails{}
+		}
+
+		// Маппинг prev и parent_prev
+		if img.PrevID != nil {
+			item.Prev = api.OptUUID{
+				Value: *img.PrevID,
+				Set:   true,
+			}
+		}
+		if img.ParentPrevID != nil {
+			item.ParentPrev = api.OptUUID{
+				Value: *img.ParentPrevID,
+				Set:   true,
+			}
 		}
 
 		result = append(result, item)
@@ -284,6 +310,25 @@ func (CytologyImage) UpdateArgFromCytologyUpdateUpdateReq(id uuid.UUID, req *api
 		arg.IsLast = &req.IsLast.Value
 	}
 
+	// Обработка prev и parent_prev из req.Details
+	if req.Details.Set {
+		details := req.Details.Value
+		if details.Prev.Set {
+			arg.PrevID = &details.Prev.Value
+		}
+		if details.ParentPrev.Set {
+			arg.ParentPrevID = &details.ParentPrev.Value
+		}
+	}
+
+	// Также проверяем верхний уровень
+	if req.Prev.Set {
+		arg.PrevID = &req.Prev.Value
+	}
+	if req.ParentPrev.Set {
+		arg.ParentPrevID = &req.ParentPrev.Value
+	}
+
 	return arg
 }
 
@@ -314,6 +359,14 @@ func (CytologyImage) UpdateArgFromCytologyUpdatePartialUpdateReq(id uuid.UUID, r
 	}
 	if req.IsLast.Set {
 		arg.IsLast = &req.IsLast.Value
+	}
+
+	// Обработка prev и parent_prev
+	if req.Prev.Set {
+		arg.PrevID = &req.Prev.Value
+	}
+	if req.ParentPrev.Set {
+		arg.ParentPrevID = &req.ParentPrev.Value
 	}
 
 	return arg
@@ -372,6 +425,20 @@ func (CytologyImage) ToCytologyUpdateUpdateOK(img domain.CytologyImage, req *api
 		result.Details = &api.CytologyUpdateUpdateOKDetails{}
 	}
 
+	// Маппинг prev и parent_prev
+	if img.PrevID != nil {
+		result.Prev = api.OptUUID{
+			Value: *img.PrevID,
+			Set:   true,
+		}
+	}
+	if img.ParentPrevID != nil {
+		result.ParentPrev = api.OptUUID{
+			Value: *img.ParentPrevID,
+			Set:   true,
+		}
+	}
+
 	return result
 }
 
@@ -426,6 +493,20 @@ func (CytologyImage) ToCytologyUpdatePartialUpdateOK(img domain.CytologyImage, r
 
 	if img.Details != nil {
 		result.Details = &api.CytologyUpdatePartialUpdateOKDetails{}
+	}
+
+	// Маппинг prev и parent_prev
+	if img.PrevID != nil {
+		result.Prev = api.OptUUID{
+			Value: *img.PrevID,
+			Set:   true,
+		}
+	}
+	if img.ParentPrevID != nil {
+		result.ParentPrev = api.OptUUID{
+			Value: *img.ParentPrevID,
+			Set:   true,
+		}
 	}
 
 	return result

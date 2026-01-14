@@ -32,7 +32,10 @@ func (c *codeRecorder) WriteHeader(status int) {
 
 // handleCytologyCopyCreateRequest handles CytologyCopyCreate operation.
 //
-// Создание нового исследования, на основе предыдущего.
+// Создает новое цитологическое исследование на основе
+// существующего.
+// Копирует все данные из исходного исследования,
+// включая изображения и сегментации.
 //
 // POST /cytology/copy
 func (s *Server) handleCytologyCopyCreateRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -6166,7 +6169,11 @@ func (s *Server) handleTariffPlansIDGetRequest(args [1]string, argsEscaped bool,
 
 // handleTilerDziFilePathFilesLevelColRowFormatGetRequest handles TilerDziFilePathFilesLevelColRowFormatGet operation.
 //
-// Получить тайл изображения.
+// Возвращает конкретный тайл (плитку) изображения для
+// указанного уровня масштабирования,
+// колонки и строки. Запрос проксируется напрямую на
+// tiler_service.
+// Формат пути: `/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}`.
 //
 // GET /tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}
 func (s *Server) handleTilerDziFilePathFilesLevelColRowFormatGetRequest(args [5]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -6238,52 +6245,6 @@ func (s *Server) handleTilerDziFilePathFilesLevelColRowFormatGetRequest(args [5]
 			ID:   "TilerDziFilePathFilesLevelColRowFormatGet",
 		}
 	)
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			sctx, ok, err := s.securityBearerAuth(ctx, TilerDziFilePathFilesLevelColRowFormatGetOperation, r)
-			if err != nil {
-				err = &ogenerrors.SecurityError{
-					OperationContext: opErrContext,
-					Security:         "BearerAuth",
-					Err:              err,
-				}
-				if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
-					defer recordError("Security:BearerAuth", err)
-				}
-				return
-			}
-			if ok {
-				satisfied[0] |= 1 << 0
-				ctx = sctx
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			err = &ogenerrors.SecurityError{
-				OperationContext: opErrContext,
-				Err:              ogenerrors.ErrSecurityRequirementIsNotSatisfied,
-			}
-			if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
-				defer recordError("Security", err)
-			}
-			return
-		}
-	}
 	params, err := decodeTilerDziFilePathFilesLevelColRowFormatGetParams(args, argsEscaped, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
@@ -6377,7 +6338,10 @@ func (s *Server) handleTilerDziFilePathFilesLevelColRowFormatGetRequest(args [5]
 
 // handleTilerDziFilePathGetRequest handles TilerDziFilePathGet operation.
 //
-// Получить DZI XML метаданные для изображения.
+// Возвращает XML метаданные в формате Deep Zoom Image (DZI) для
+// указанного изображения.
+// Путь к файлу должен быть URL-encoded. Запрос проксируется
+// напрямую на tiler_service.
 //
 // GET /tiler/dzi/{file_path}
 func (s *Server) handleTilerDziFilePathGetRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -6449,52 +6413,6 @@ func (s *Server) handleTilerDziFilePathGetRequest(args [1]string, argsEscaped bo
 			ID:   "TilerDziFilePathGet",
 		}
 	)
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			sctx, ok, err := s.securityBearerAuth(ctx, TilerDziFilePathGetOperation, r)
-			if err != nil {
-				err = &ogenerrors.SecurityError{
-					OperationContext: opErrContext,
-					Security:         "BearerAuth",
-					Err:              err,
-				}
-				if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
-					defer recordError("Security:BearerAuth", err)
-				}
-				return
-			}
-			if ok {
-				satisfied[0] |= 1 << 0
-				ctx = sctx
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			err = &ogenerrors.SecurityError{
-				OperationContext: opErrContext,
-				Err:              ogenerrors.ErrSecurityRequirementIsNotSatisfied,
-			}
-			if encodeErr := encodeErrorResponse(s.h.NewError(ctx, err), w, span); encodeErr != nil {
-				defer recordError("Security", err)
-			}
-			return
-		}
-	}
 	params, err := decodeTilerDziFilePathGetParams(args, argsEscaped, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{

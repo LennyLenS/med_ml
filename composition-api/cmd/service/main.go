@@ -164,6 +164,18 @@ func run() (exitCode int) {
 	}
 
 	r := chi.NewRouter()
+
+	// Middleware для увеличения лимита размера тела запроса для больших файлов
+	r.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Увеличиваем лимит для multipart форм до 4GB
+			if err := r.ParseMultipartForm(4 << 30); err != nil && err != http.ErrNotMultipart {
+				slog.Warn("failed to parse multipart form", "err", err)
+			}
+			next.ServeHTTP(w, r)
+		})
+	})
+
 	r.Mount("/api/v1/", http.StripPrefix("/api/v1", server))
 	r.Mount("/docs/", http.StripPrefix("/docs", swaggerui.Handler(spec)))
 
@@ -213,8 +225,10 @@ func run() (exitCode int) {
 			}
 		}
 
-		// Выполняем запрос
-		client := &http.Client{}
+		// Выполняем запрос с увеличенными таймаутами для больших файлов
+		client := &http.Client{
+			Timeout: 30 * time.Minute, // 30 минут для загрузки больших файлов
+		}
 		resp, err := client.Do(proxyReq)
 		duration := time.Since(startTime)
 		if err != nil {
@@ -248,8 +262,18 @@ func run() (exitCode int) {
 		io.Copy(w, resp.Body)
 	})))
 
+	// Настройка HTTP сервера с увеличенными таймаутами для больших файлов
+	srv := &http.Server{
+		Addr:           cfg.App.Url,
+		Handler:        r,
+		ReadTimeout:    30 * time.Minute,  // 30 минут на чтение запроса
+		WriteTimeout:   30 * time.Minute,  // 30 минут на запись ответа
+		IdleTimeout:    120 * time.Second, // 2 минуты для idle соединений
+		MaxHeaderBytes: 1 << 20,           // 1MB для заголовков
+	}
+
 	slog.Info("start serve", slog.String("url", cfg.App.Url))
-	if err := http.ListenAndServe(cfg.App.Url, r); err != nil {
+	if err := srv.ListenAndServe(); err != nil {
 		slog.Error("listen and serve", slog.Any("err", err))
 		return failExitCode
 	}

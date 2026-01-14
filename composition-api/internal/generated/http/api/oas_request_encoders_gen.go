@@ -140,7 +140,7 @@ func encodeCytologyCreateCreateRequest(
 		}
 		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
 			if val, ok := request.Prev.Get(); ok {
-				return e.EncodeValue(conv.IntToString(val))
+				return e.EncodeValue(conv.UUIDToString(val))
 			}
 			return nil
 		}); err != nil {
@@ -156,7 +156,7 @@ func encodeCytologyCreateCreateRequest(
 		}
 		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
 			if val, ok := request.ParentPrev.Get(); ok {
-				return e.EncodeValue(conv.IntToString(val))
+				return e.EncodeValue(conv.UUIDToString(val))
 			}
 			return nil
 		}); err != nil {

@@ -81,7 +81,7 @@ func (s *CytologyCopyCreateReq) SetFake() {
 	}
 	{
 		{
-			s.ID.SetFake()
+			s.ID = int(0)
 		}
 	}
 }
