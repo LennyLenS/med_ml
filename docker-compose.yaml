@@ -236,8 +236,14 @@ services:
     image: nginx:alpine
     container_name: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+      - type: bind
+        source: ./certs
+        target: /etc/nginx/certs
+        read_only: true
     ports:
       - "80:80"
       - "443:443"
