@@ -42,7 +42,8 @@ func (s *service) CreateCytologyImage(ctx context.Context, arg CreateCytologyIma
 		imagePath := cytologyID.String() + "/" + originalImageID.String() + "/" + originalImageID.String()
 
 		// Загружаем файл в S3 напрямую (потоковая загрузка, без чтения в память)
-		err = s.dao.NewFileRepo().LoadFile(ctx, imagePath, *arg.File)
+		// Используем bucket "cytology" для цитологических файлов
+		err = s.dao.NewFileRepoWithBucket("cytology").LoadFile(ctx, imagePath, *arg.File)
 		if err != nil {
 			return uuid.Nil, fmt.Errorf("load cytology file to s3: %w", err)
 		}
