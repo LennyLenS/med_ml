@@ -39,7 +39,9 @@ func (c *client) GetDZI(ctx context.Context, filePath string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	u.Path = path.Join("/dzi", filePath)
+	// Убираем ведущий слэш из filePath, если он есть, чтобы path.Join работал правильно
+	filePath = strings.TrimPrefix(filePath, "/")
+	u.Path = "/dzi/" + filePath
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
 	if err != nil {
@@ -67,13 +69,15 @@ func (c *client) GetDZI(ctx context.Context, filePath string) (string, error) {
 func (c *client) GetTile(ctx context.Context, filePath string, level, col, row int, format string) ([]byte, error) {
 	// Формируем URL для тайла
 	// Формат: /dzi/{file_path}/files/{level}/{col}_{row}.{format}
+	// Убираем ведущий слэш из filePath, если он есть
+	filePath = strings.TrimPrefix(filePath, "/")
 	tilePath := filePath + "/files/" + fmt.Sprintf("%d/%d_%d.%s", level, col, row, format)
 
 	u, err := url.Parse(c.baseURL)
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path.Join("/dzi", tilePath)
+	u.Path = "/dzi/" + tilePath
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
 	if err != nil {

@@ -2528,15 +2528,24 @@ paths:
     get:
       operationId: TilerDziFilePathGet
       summary: Получить DZI XML метаданные для изображения
+      description: |
+        Возвращает XML метаданные в формате Deep Zoom Image (DZI) для указанного изображения.
+        Путь к файлу должен быть URL-encoded. Запрос проксируется напрямую на tiler_service.
       tags:
         - tiler
+      security: []
       parameters:
         - name: file_path
           in: path
           required: true
-          description: путь к файлу изображения
+          description: |
+            Путь к файлу изображения в S3 хранилище.
+            Формат пути из cytology: `{cytology_id}/{image_id}/{image_id}`
+            Пример: `123e4567-e89b-12d3-a456-426614174000/123e4567-e89b-12d3-a456-426614174001/123e4567-e89b-12d3-a456-426614174001`
+            Путь должен быть URL-encoded.
           schema:
             type: string
+          example: "123e4567-e89b-12d3-a456-426614174000/123e4567-e89b-12d3-a456-426614174001/123e4567-e89b-12d3-a456-426614174001"
       responses:
         '200':
           description: DZI XML метаданные
@@ -2544,6 +2553,20 @@ paths:
             application/xml:
               schema:
                 type: string
+                example: |
+                  <?xml version="1.0" encoding="UTF-8"?>
+                  <Image xmlns="http://schemas.microsoft.com/deepzoom/2008">
+                    <Size Width="10000" Height="8000"/>
+                    <TileSize>256</TileSize>
+                    <Overlap>1</Overlap>
+                    <Format>jpg</Format>
+                  </Image>
+        '400':
+          description: Неверный формат запроса или путь к файлу
+          $ref: "#/components/responses/error"
+        '404':
+          description: Файл изображения не найден
+          $ref: "#/components/responses/error"
         '500':
           description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"
@@ -2554,58 +2577,82 @@ paths:
     get:
       operationId: TilerDziFilePathFilesLevelColRowFormatGet
       summary: Получить тайл изображения
+      description: |
+        Возвращает конкретный тайл (плитку) изображения для указанного уровня масштабирования,
+        колонки и строки. Запрос проксируется напрямую на tiler_service.
+        Формат пути: `/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format}`
       tags:
         - tiler
+      security: []
       parameters:
         - name: file_path
           in: path
           required: true
-          description: путь к файлу изображения
+          description: |
+            Путь к файлу изображения в S3 хранилище.
+            Формат пути из cytology: `{cytology_id}/{image_id}/{image_id}`
+            Пример: `123e4567-e89b-12d3-a456-426614174000/123e4567-e89b-12d3-a456-426614174001/123e4567-e89b-12d3-a456-426614174001`
+            Путь должен быть URL-encoded.
           schema:
             type: string
+          example: "123e4567-e89b-12d3-a456-426614174000/123e4567-e89b-12d3-a456-426614174001/123e4567-e89b-12d3-a456-426614174001"
         - name: level
           in: path
           required: true
-          description: уровень масштабирования (0 - оригинальное изображение)
+          description: |
+            Уровень масштабирования (zoom level).
+            0 - оригинальное разрешение изображения, каждый следующий уровень уменьшает разрешение в 2 раза.
           schema:
             type: integer
             minimum: 0
+          example: 5
         - name: col
           in: path
           required: true
-          description: номер колонки тайла
+          description: Номер колонки тайла (начинается с 0)
           schema:
             type: integer
             minimum: 0
+          example: 10
         - name: row
           in: path
           required: true
-          description: номер строки тайла
+          description: Номер строки тайла (начинается с 0)
           schema:
             type: integer
             minimum: 0
+          example: 20
         - name: format
           in: path
           required: true
-          description: формат изображения
+          description: Формат изображения тайла
           schema:
             type: string
             enum:
               - jpeg
               - jpg
               - png
+          example: "jpeg"
       responses:
         '200':
-          description: тайл изображения
+          description: Тайл изображения в указанном формате
           content:
             image/jpeg:
               schema:
                 type: string
                 format: binary
+              description: Тайл в формате JPEG
             image/png:
               schema:
                 type: string
                 format: binary
+              description: Тайл в формате PNG
+        '400':
+          description: Неверный формат запроса или параметров
+          $ref: "#/components/responses/error"
+        '404':
+          description: Тайл не найден (неверный путь, уровень, колонка или строка)
+          $ref: "#/components/responses/error"
         '500':
           description: Внутренняя ошибка сервера
           $ref: "#/components/responses/error"

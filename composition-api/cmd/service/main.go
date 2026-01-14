@@ -2,9 +2,14 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"os"
+	"path"
+	"strings"
 
 	"composition-api/internal/dbus/producers"
 
@@ -162,6 +167,61 @@ func run() (exitCode int) {
 	r := chi.NewRouter()
 	r.Mount("/api/v1/", http.StripPrefix("/api/v1", server))
 	r.Mount("/docs/", http.StripPrefix("/docs", swaggerui.Handler(spec)))
+
+	// Проксирование запросов к tiler напрямую на tiler_service
+	r.Mount("/tiler/", http.StripPrefix("/tiler", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Формируем URL для проксирования на tiler_service
+		tilerURL := cfg.Adapters.TilerUrl
+		if !strings.HasPrefix(tilerURL, "http://") && !strings.HasPrefix(tilerURL, "https://") {
+			tilerURL = "http://" + tilerURL
+		}
+		// Убираем завершающий слэш, если есть
+		tilerURL = strings.TrimSuffix(tilerURL, "/")
+
+		// Правильно формируем URL
+		proxyURL, err := url.Parse(tilerURL)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Invalid tiler URL: %v", err), http.StatusInternalServerError)
+			return
+		}
+		// Объединяем базовый URL с путем запроса
+		// r.URL.Path уже содержит ведущий слэш после StripPrefix
+		proxyURL.Path = r.URL.Path
+
+		// Создаем новый запрос к tiler_service
+		proxyReq, err := http.NewRequest(r.Method, proxyURL.String(), r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Копируем заголовки
+		for key, values := range r.Header {
+			for _, value := range values {
+				proxyReq.Header.Add(key, value)
+			}
+		}
+
+		// Выполняем запрос
+		client := &http.Client{}
+		resp, err := client.Do(proxyReq)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadGateway)
+			return
+		}
+		defer resp.Body.Close()
+
+		// Копируем заголовки ответа
+		for key, values := range resp.Header {
+			for _, value := range values {
+				w.Header().Add(key, value)
+			}
+		}
+
+		// Копируем статус и тело ответа
+		w.WriteHeader(resp.StatusCode)
+		io.Copy(w, resp.Body)
+	})))
 
 	slog.Info("start serve", slog.String("url", cfg.App.Url))
 	if err := http.ListenAndServe(cfg.App.Url, r); err != nil {
