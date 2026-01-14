@@ -3,6 +3,8 @@ package cytology
 import (
 	"context"
 	"io"
+	"log/slog"
+	"time"
 
 	"composition-api/internal/adapters/cytology/mappers"
 	adapter_errors "composition-api/internal/adapters/errors"
@@ -26,6 +28,10 @@ var materialTypeMap = map[domain.MaterialType]pb.MaterialType{
 }
 
 func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImageIn) (uuid.UUID, error) {
+	// Создаем контекст с увеличенным таймаутом для больших файлов (30 минут)
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Minute)
+	defer cancel()
+
 	req := &pb.CreateCytologyImageIn{
 		ExternalId:       in.ExternalID.String(),
 		DoctorId:         in.DoctorID.String(),
@@ -35,10 +41,30 @@ func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImag
 
 	// Обработка файла изображения (опционально)
 	if in.File != nil && (*in.File).File != nil {
+		fileSize := (*in.File).Size
+		slog.Info("CreateCytologyImage: reading file",
+			"file_size", fileSize,
+		)
+
+		startTime := time.Now()
 		fileData, err := io.ReadAll((*in.File).File)
+		readDuration := time.Since(startTime)
+
 		if err != nil {
+			slog.Error("CreateCytologyImage: failed to read file",
+				"err", err,
+				"file_size", fileSize,
+				"duration_ms", readDuration.Milliseconds(),
+			)
 			return uuid.Nil, adapter_errors.HandleGRPCError(err)
 		}
+
+		slog.Info("CreateCytologyImage: file read successfully",
+			"file_size", fileSize,
+			"data_size", len(fileData),
+			"duration_ms", readDuration.Milliseconds(),
+		)
+
 		if len(fileData) > 0 {
 			req.File = fileData
 			if in.ContentType != "" {
@@ -86,10 +112,26 @@ func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImag
 		req.ParentPrevId = &parent
 	}
 
+	slog.Info("CreateCytologyImage: sending gRPC request",
+		"file_size", len(req.File),
+	)
+
+	startTime := time.Now()
 	res, err := a.client.CreateCytologyImage(ctx, req)
+	duration := time.Since(startTime)
+
 	if err != nil {
+		slog.Error("CreateCytologyImage: gRPC call failed",
+			"err", err,
+			"duration_ms", duration.Milliseconds(),
+		)
 		return uuid.Nil, adapter_errors.HandleGRPCError(err)
 	}
+
+	slog.Info("CreateCytologyImage: gRPC call succeeded",
+		"id", res.Id,
+		"duration_ms", duration.Milliseconds(),
+	)
 
 	return uuid.MustParse(res.Id), nil
 }

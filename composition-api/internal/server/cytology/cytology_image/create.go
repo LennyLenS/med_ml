@@ -3,8 +3,10 @@ package cytology_image
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"net/http"
 	"net/url"
+	"time"
 
 	"composition-api/internal/domain"
 
@@ -15,10 +17,28 @@ import (
 )
 
 func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCreateCreateReq) (api.CytologyCreateCreateRes, error) {
+	slog.Info("CytologyCreateCreate: received request",
+		"diagnostic_number", req.DiagnosticNumber,
+		"has_image", req.Image.Set,
+		"image_size", func() int64 {
+			if req.Image.Set {
+				return req.Image.Value.Size
+			}
+			return 0
+		}(),
+	)
+
 	arg := mappers.CytologyImage{}.CreateArgFromCytologyCreateCreateReq(req)
 
+	startTime := time.Now()
 	id, err := h.services.CytologyService.CreateCytologyImage(ctx, arg)
+	duration := time.Since(startTime)
+
 	if err != nil {
+		slog.Error("CytologyCreateCreate: failed to create",
+			"err", err,
+			"duration_ms", duration.Milliseconds(),
+		)
 		switch {
 		case errors.Is(err, domain.ErrBadRequest):
 			return &api.CytologyCreateCreateBadRequest{
@@ -111,6 +131,11 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 	if req.PatientCard.Set {
 		result.PatientCard = req.PatientCard
 	}
+
+	slog.Info("CytologyCreateCreate: successfully created",
+		"id", id,
+		"duration_ms", duration.Milliseconds(),
+	)
 
 	return pointer.To(result), nil
 }

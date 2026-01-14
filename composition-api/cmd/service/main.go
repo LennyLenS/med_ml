@@ -157,24 +157,18 @@ func run() (exitCode int) {
 	// security
 	security := security.New(&cfg)
 
-	server, err := api.NewServer(handlers, security)
+	// Создаем сервер с увеличенным лимитом для multipart форм (4GB)
+	server, err := api.NewServer(
+		handlers,
+		security,
+		api.WithMaxMultipartMemory(4<<30), // 4GB для больших файлов
+	)
 	if err != nil {
 		slog.Error("init server", slog.Any("err", err))
 		return failExitCode
 	}
 
 	r := chi.NewRouter()
-
-	// Middleware для увеличения лимита размера тела запроса для больших файлов
-	r.Use(func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Увеличиваем лимит для multipart форм до 4GB
-			if err := r.ParseMultipartForm(4 << 30); err != nil && err != http.ErrNotMultipart {
-				slog.Warn("failed to parse multipart form", "err", err)
-			}
-			next.ServeHTTP(w, r)
-		})
-	})
 
 	r.Mount("/api/v1/", http.StripPrefix("/api/v1", server))
 	r.Mount("/docs/", http.StripPrefix("/docs", swaggerui.Handler(spec)))
