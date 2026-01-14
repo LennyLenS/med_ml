@@ -918,6 +918,8 @@ type UpdateCytologyImageIn struct {
 	Thyroglobulin     *int32                 `protobuf:"varint,600,opt,name=thyroglobulin,proto3,oneof" json:"thyroglobulin,omitempty"`
 	Details           *string                `protobuf:"bytes,700,opt,name=details,proto3,oneof" json:"details,omitempty"` // JSON string
 	IsLast            *bool                  `protobuf:"varint,800,opt,name=is_last,json=isLast,proto3,oneof" json:"is_last,omitempty"`
+	PrevId            *string                `protobuf:"bytes,900,opt,name=prev_id,json=prevId,proto3,oneof" json:"prev_id,omitempty"`
+	ParentPrevId      *string                `protobuf:"bytes,1000,opt,name=parent_prev_id,json=parentPrevId,proto3,oneof" json:"parent_prev_id,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -1006,6 +1008,20 @@ func (x *UpdateCytologyImageIn) GetIsLast() bool {
 		return *x.IsLast
 	}
 	return false
+}
+
+func (x *UpdateCytologyImageIn) GetPrevId() string {
+	if x != nil && x.PrevId != nil {
+		return *x.PrevId
+	}
+	return ""
+}
+
+func (x *UpdateCytologyImageIn) GetParentPrevId() string {
+	if x != nil && x.ParentPrevId != nil {
+		return *x.ParentPrevId
+	}
+	return ""
 }
 
 type UpdateCytologyImageOut struct {
@@ -2917,7 +2933,7 @@ const file_proto_grpc_service_proto_rawDesc = "" +
 	"\n" +
 	"patient_id\x18\xc8\x01 \x01(\tR\tpatientId\"e\n" +
 	"*GetCytologyImagesByDoctorIdAndPatientIdOut\x127\n" +
-	"\x0fcytology_images\x18d \x03(\v2\x0e.CytologyImageR\x0ecytologyImages\"\xeb\x03\n" +
+	"\x0fcytology_images\x18d \x03(\v2\x0e.CytologyImageR\x0ecytologyImages\"\xd5\x04\n" +
 	"\x15UpdateCytologyImageIn\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\x12G\n" +
 	"\x12diagnostic_marking\x18\xc8\x01 \x01(\x0e2\x12.DiagnosticMarkingH\x00R\x11diagnosticMarking\x88\x01\x01\x128\n" +
@@ -2928,7 +2944,9 @@ const file_proto_grpc_service_proto_rawDesc = "" +
 	"\x13calcitonin_in_flush\x18\xf4\x03 \x01(\x05H\x03R\x11calcitoninInFlush\x88\x01\x01\x12*\n" +
 	"\rthyroglobulin\x18\xd8\x04 \x01(\x05H\x04R\rthyroglobulin\x88\x01\x01\x12\x1e\n" +
 	"\adetails\x18\xbc\x05 \x01(\tH\x05R\adetails\x88\x01\x01\x12\x1d\n" +
-	"\ais_last\x18\xa0\x06 \x01(\bH\x06R\x06isLast\x88\x01\x01B\x15\n" +
+	"\ais_last\x18\xa0\x06 \x01(\bH\x06R\x06isLast\x88\x01\x01\x12\x1d\n" +
+	"\aprev_id\x18\x84\a \x01(\tH\aR\x06prevId\x88\x01\x01\x12*\n" +
+	"\x0eparent_prev_id\x18\xe8\a \x01(\tH\bR\fparentPrevId\x88\x01\x01B\x15\n" +
 	"\x13_diagnostic_markingB\x10\n" +
 	"\x0e_material_typeB\r\n" +
 	"\v_calcitoninB\x16\n" +
@@ -2937,7 +2955,10 @@ const file_proto_grpc_service_proto_rawDesc = "" +
 	"\n" +
 	"\b_detailsB\n" +
 	"\n" +
-	"\b_is_last\"O\n" +
+	"\b_is_lastB\n" +
+	"\n" +
+	"\b_prev_idB\x11\n" +
+	"\x0f_parent_prev_id\"O\n" +
 	"\x16UpdateCytologyImageOut\x125\n" +
 	"\x0ecytology_image\x18d \x01(\v2\x0e.CytologyImageR\rcytologyImage\"'\n" +
 	"\x15DeleteCytologyImageIn\x12\x0e\n" +
