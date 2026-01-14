@@ -61,7 +61,7 @@ func New(
 	doctorService := doctor.New(adapters)
 	patientService := patient.New(adapters)
 	registerService := register.New(adapters)
-	cytologyService := cytology.New(adapters)
+	cytologyService := cytology.New(adapters, dao, producers)
 	downloadService := download.New(dao, cytologyService)
 	tariffPlanService := tariff_plan.New(adapters)
 	subscriptionService := subscription.New(adapters)

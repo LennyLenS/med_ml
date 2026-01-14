@@ -2,7 +2,6 @@ package cytology
 
 import (
 	"context"
-	"io"
 	"log/slog"
 	"time"
 
@@ -28,10 +27,6 @@ var materialTypeMap = map[domain.MaterialType]pb.MaterialType{
 }
 
 func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImageIn) (uuid.UUID, error) {
-	// Создаем контекст с увеличенным таймаутом для больших файлов (30 минут)
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Minute)
-	defer cancel()
-
 	req := &pb.CreateCytologyImageIn{
 		ExternalId:       in.ExternalID.String(),
 		DoctorId:         in.DoctorID.String(),
@@ -39,39 +34,8 @@ func (a *adapter) CreateCytologyImage(ctx context.Context, in CreateCytologyImag
 		DiagnosticNumber: int32(in.DiagnosticNumber),
 	}
 
-	// Обработка файла изображения (опционально)
-	if in.File != nil && (*in.File).File != nil {
-		fileSize := (*in.File).Size
-		slog.Info("CreateCytologyImage: reading file",
-			"file_size", fileSize,
-		)
-
-		startTime := time.Now()
-		fileData, err := io.ReadAll((*in.File).File)
-		readDuration := time.Since(startTime)
-
-		if err != nil {
-			slog.Error("CreateCytologyImage: failed to read file",
-				"err", err,
-				"file_size", fileSize,
-				"duration_ms", readDuration.Milliseconds(),
-			)
-			return uuid.Nil, adapter_errors.HandleGRPCError(err)
-		}
-
-		slog.Info("CreateCytologyImage: file read successfully",
-			"file_size", fileSize,
-			"data_size", len(fileData),
-			"duration_ms", readDuration.Milliseconds(),
-		)
-
-		if len(fileData) > 0 {
-			req.File = fileData
-			if in.ContentType != "" {
-				req.ContentType = &in.ContentType
-			}
-		}
-	}
+	// Файл больше не передается через gRPC, он загружается напрямую в S3 в сервисе
+	// Оставляем File пустым, чтобы не читать файл в память
 
 	if in.DiagnosticMarking != nil {
 		dm := diagnosticMarkingMap[*in.DiagnosticMarking]

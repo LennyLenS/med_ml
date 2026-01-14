@@ -6,7 +6,9 @@ import (
 	"github.com/google/uuid"
 
 	"composition-api/internal/adapters"
+	dbus "composition-api/internal/dbus/producers"
 	domain "composition-api/internal/domain/cytology"
+	"composition-api/internal/repository"
 )
 
 type Service interface {
@@ -39,10 +41,14 @@ type Service interface {
 
 type service struct {
 	adapters *adapters.Adapters
+	dao      repository.DAO
+	dbus     dbus.Producer
 }
 
-func New(adapters *adapters.Adapters) Service {
+func New(adapters *adapters.Adapters, dao repository.DAO, dbus dbus.Producer) Service {
 	return &service{
 		adapters: adapters,
+		dao:      dao,
+		dbus:     dbus,
 	}
 }
