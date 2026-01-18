@@ -7,7 +7,11 @@ import (
 	"fmt"
 	"image"
 	"math"
+	"os"
+	"path/filepath"
 	"strings"
+	"sync"
+	"time"
 
 	"tiler/internal/domain"
 
@@ -22,10 +26,22 @@ type ImageService interface {
 	GetDZI(ctx context.Context, imagePath string) (*domain.DZI, error)
 }
 
+type cachedImage struct {
+	path      string
+	image     *vips.ImageRef
+	lastUsed  time.Time
+	accessMux sync.RWMutex
+}
+
 type imageService struct {
-	s3Client S3Client
-	tileSize int
-	overlap  int
+	s3Client     S3Client
+	tileSize     int
+	overlap      int
+	cache        map[string]*cachedImage
+	cacheMux     sync.RWMutex
+	cacheDir     string
+	maxCacheSize int
+	cacheTTL     time.Duration
 }
 
 type S3Client interface {
@@ -36,40 +52,27 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 	// Инициализируем libvips (требуется только один раз)
 	vips.Startup(nil)
 
+	// Создаем временную директорию для кэша файлов
+	cacheDir := filepath.Join(os.TempDir(), "tiler_cache")
+	os.MkdirAll(cacheDir, 0755)
+
 	return &imageService{
-		s3Client: s3Client,
-		tileSize: tileSize,
-		overlap:  overlap,
+		s3Client:     s3Client,
+		tileSize:     tileSize,
+		overlap:      overlap,
+		cache:        make(map[string]*cachedImage),
+		cacheDir:     cacheDir,
+		maxCacheSize: 10,        // Максимум 10 открытых файлов в кэше
+		cacheTTL:     time.Hour, // Время жизни кэша
 	}
 }
 
 func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*domain.ImageInfo, error) {
-	// Загружаем изображение из S3
-	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
+	// Используем кэшированное изображение для получения метаданных
+	// libvips читает только заголовок файла, не весь файл
+	img, err := s.getOrLoadImage(ctx, imagePath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
-	}
-
-	// Используем govips для получения метаданных
-	// govips поддерживает SVS файлы и compression value 7
-	img, err := vips.NewImageFromBuffer(imgData)
-	if err != nil {
-		// Fallback на стандартный декодер для совместимости
-		cfg, _, decodeErr := image.DecodeConfig(bytes.NewReader(imgData))
-		if decodeErr != nil {
-			return nil, fmt.Errorf("failed to decode image (govips error: %v, standard decoder error: %w)", err, decodeErr)
-		}
-		width := cfg.Width
-		height := cfg.Height
-		maxDim := math.Max(float64(width), float64(height))
-		levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
-		return &domain.ImageInfo{
-			Width:    width,
-			Height:   height,
-			Levels:   levels,
-			TileSize: s.tileSize,
-			Overlap:  s.overlap,
-		}, nil
+		return nil, err
 	}
 	defer img.Close()
 
@@ -89,27 +92,92 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 	}, nil
 }
 
-func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
-	// Загружаем файл из S3
-	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
+// getOrLoadImage получает изображение из кэша или загружает его
+func (s *imageService) getOrLoadImage(ctx context.Context, imagePath string) (*vips.ImageRef, error) {
+	// Проверяем кэш
+	s.cacheMux.RLock()
+	cached, exists := s.cache[imagePath]
+	s.cacheMux.RUnlock()
+
+	if exists {
+		cached.accessMux.Lock()
+		cached.lastUsed = time.Now()
+		// Создаем копию изображения для использования
+		imgCopy, err := cached.image.Copy()
+		cached.accessMux.Unlock()
+		if err == nil {
+			return imgCopy, nil
+		}
+		// Если копирование не удалось, удаляем из кэша и загружаем заново
+		s.cacheMux.Lock()
+		delete(s.cache, imagePath)
+		s.cacheMux.Unlock()
 	}
 
-	// Используем govips для декодирования - поддерживает SVS и compression value 7
-	vipsImg, err := vips.NewImageFromBuffer(imgData)
-	if err != nil {
-		// Fallback на стандартный декодер
-		img, _, decodeErr := image.Decode(bytes.NewReader(imgData))
-		if decodeErr != nil {
-			return nil, fmt.Errorf("failed to decode image (govips error: %v, standard decoder error: %w)", err, decodeErr)
+	// Файл не в кэше, загружаем его
+	localPath := filepath.Join(s.cacheDir, strings.ReplaceAll(imagePath, "/", "_"))
+
+	// Проверяем, существует ли файл локально
+	if _, err := os.Stat(localPath); os.IsNotExist(err) {
+		// Скачиваем файл из S3
+		imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 		}
-		return s.getTileFromStandardImage(img, level, col, row, format)
+
+		// Сохраняем во временный файл
+		if err := os.WriteFile(localPath, imgData, 0644); err != nil {
+			return nil, fmt.Errorf("failed to save image to cache: %w", err)
+		}
+		// Освобождаем память
+		imgData = nil
+	}
+
+	// Открываем файл через libvips с random access
+	// libvips автоматически будет читать только нужные тайлы из tiled TIFF
+	vipsImg, err := vips.NewImageFromFile(localPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open image with libvips: %w", err)
+	}
+
+	// Добавляем в кэш
+	s.cacheMux.Lock()
+	// Очищаем старые записи, если кэш переполнен
+	if len(s.cache) >= s.maxCacheSize {
+		s.cleanupCache()
+	}
+	s.cache[imagePath] = &cachedImage{
+		path:     localPath,
+		image:    vipsImg,
+		lastUsed: time.Now(),
+	}
+	s.cacheMux.Unlock()
+
+	// Возвращаем копию для использования
+	return vipsImg.Copy()
+}
+
+// cleanupCache удаляет старые записи из кэша
+func (s *imageService) cleanupCache() {
+	now := time.Now()
+	for path, cached := range s.cache {
+		if now.Sub(cached.lastUsed) > s.cacheTTL {
+			cached.accessMux.Lock()
+			cached.image.Close()
+			cached.accessMux.Unlock()
+			delete(s.cache, path)
+		}
+	}
+}
+
+func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
+	// Получаем изображение из кэша или загружаем его
+	// libvips будет читать только нужные тайлы из файла благодаря random access
+	vipsImg, err := s.getOrLoadImage(ctx, imagePath)
+	if err != nil {
+		return nil, err
 	}
 	defer vipsImg.Close()
-
-	// Освобождаем память как можно скорее
-	imgData = nil
 
 	// Масштабируем изображение до нужного уровня
 	if level > 0 {
@@ -136,11 +204,22 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	cropHeight := int(math.Min(float64(vipsImg.Height()-cropY), float64(s.tileSize+2*s.overlap)))
 
 	// Извлекаем тайл
-	tileImg := vipsImg
+	// ExtractArea модифицирует исходное изображение, поэтому нужно создать копию
+	var tileImg *vips.ImageRef
 	if cropX > 0 || cropY > 0 || cropWidth < vipsImg.Width() || cropHeight < vipsImg.Height() {
+		// Создаем копию изображения для извлечения области
+		tileImg, err = vipsImg.Copy()
+		if err != nil {
+			return nil, fmt.Errorf("failed to copy image: %w", err)
+		}
+		defer tileImg.Close()
+
 		if err := tileImg.ExtractArea(cropX, cropY, cropWidth, cropHeight); err != nil {
 			return nil, fmt.Errorf("failed to extract tile: %w", err)
 		}
+	} else {
+		// Если не нужно обрезать, используем исходное изображение
+		tileImg = vipsImg
 	}
 
 	// Кодируем тайл в нужный формат

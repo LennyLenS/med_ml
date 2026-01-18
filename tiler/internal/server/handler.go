@@ -78,6 +78,18 @@ func (h *Handler) GetDZI(w http.ResponseWriter, r *http.Request) {
 
 // GetTile возвращает тайл изображения
 func (h *Handler) GetTile(w http.ResponseWriter, r *http.Request) {
+	// Обработка паники для предотвращения падения контейнера
+	defer func() {
+		if err := recover(); err != nil {
+			slog.Error("GetTile: panic recovered",
+				"err", err,
+				"path", r.URL.Path,
+				"remote_addr", r.RemoteAddr,
+			)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		}
+	}()
+
 	startTime := time.Now()
 
 	// Извлекаем параметры из URL
