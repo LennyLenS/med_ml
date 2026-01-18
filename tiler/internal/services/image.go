@@ -41,23 +41,22 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 
 func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*domain.ImageInfo, error) {
 	// Загружаем изображение из S3
-	// imagePath должен быть путем внутри bucket (например: "cytology_id/image_id/image_id")
+	// Для больших файлов (3GB) это может быть проблематично, но для получения размеров
+	// используем DecodeConfig, который читает только метаданные, а не декодирует весь файл
 	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 	}
 
-	// Декодируем изображение
-	// Используем image.Decode, который автоматически выберет правильный декодер
-	// golang.org/x/image/tiff должен поддерживать compression value 7 в новых версиях
-	img, _, err := image.Decode(bytes.NewReader(imgData))
+	// Используем DecodeConfig вместо Decode - он читает только метаданные (размеры)
+	// и не декодирует весь файл в память, что критично для больших SVS файлов
+	cfg, _, err := image.DecodeConfig(bytes.NewReader(imgData))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode image: %w", err)
+		return nil, fmt.Errorf("failed to decode image config (compression value 7 may not be supported): %w", err)
 	}
 
-	bounds := img.Bounds()
-	width := bounds.Dx()
-	height := bounds.Dy()
+	width := cfg.Width
+	height := cfg.Height
 
 	// Вычисляем количество уровней (levels)
 	// Уровень 0 - оригинальное изображение, каждый следующий уровень в 2 раза меньше
