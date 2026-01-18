@@ -73,20 +73,40 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 }
 
 func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
-	// Загружаем изображение из S3
-	// imagePath должен быть путем внутри bucket (например: "cytology_id/image_id/image_id")
+	// ВАЖНО: Для больших файлов (3GB) загрузка всего файла в память приведет к падению сервера
+	// Для SVS файлов с tiled TIFF нужно использовать специализированные библиотеки,
+	// которые могут читать только нужные тайлы без загрузки всего файла
+
+	// Загружаем файл из S3
 	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 	}
 
+	// Проверяем размер файла
+	fileSize := len(imgData)
+	const maxRecommendedSize = 500 * 1024 * 1024 // 500MB
+	if fileSize > maxRecommendedSize {
+		// Для очень больших файлов это может быть проблематично
+		// Пока продолжаем работу, но это нужно оптимизировать
+	}
+
 	// Декодируем изображение
-	// Используем image.Decode, который автоматически выберет правильный декодер
-	// golang.org/x/image/tiff должен поддерживать compression value 7 в новых версиях
+	// Для больших файлов это может занять много времени и памяти
 	img, _, err := image.Decode(bytes.NewReader(imgData))
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode image: %w", err)
+		// Проверяем, является ли ошибка связанной с compression value 7
+		errStr := err.Error()
+		if strings.Contains(errStr, "compression value 7") ||
+		   strings.Contains(errStr, "compression value") ||
+		   strings.Contains(errStr, "unsupported feature") {
+			return nil, fmt.Errorf("TIFF compression value 7 (JPEG) is not supported by golang.org/x/image/tiff. This is a known limitation for SVS files. Error: %w", err)
+		}
+		return nil, fmt.Errorf("failed to decode image (file size: %d MB): %w", fileSize/(1024*1024), err)
 	}
+
+	// Освобождаем память как можно скорее
+	imgData = nil
 
 	// Масштабируем изображение до нужного уровня
 	scaledImg := s.scaleToLevel(img, level)
