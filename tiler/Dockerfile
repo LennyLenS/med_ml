@@ -1,5 +1,8 @@
 FROM golang:alpine
 
+# Устанавливаем git, необходимый для загрузки зависимостей из git репозиториев
+RUN apk add --no-cache git
+
 WORKDIR /service
 
 # Копируем go.mod и go.sum для загрузки зависимостей
