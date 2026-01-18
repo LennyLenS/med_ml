@@ -76,9 +76,7 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 
 	// Заполняем поля из созданного объекта
 	if origImg != nil && origImg.ImagePath != "" {
-		// Создаем URL для изображения
-		// Формат: /download/cytology/{cytology_id}/{original_image_id}
-		imageURLStr := "/download/cytology/" + id.String() + "/" + origImg.Id.String()
+		imageURLStr := id.String() + "/" + origImg.Id.String()
 		imageURL, err := url.Parse(imageURLStr)
 		if err == nil {
 			result.Image = api.OptURI{
