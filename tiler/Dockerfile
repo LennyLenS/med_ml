@@ -5,16 +5,17 @@ RUN apk add --no-cache git
 
 WORKDIR /service
 
-# Копируем go.mod и go.sum для загрузки зависимостей
+# Копируем go.mod и go.sum для кэширования слоев Docker
 COPY go.mod go.sum ./
 
-# Получаем последнюю версию библиотеки и загружаем зависимости
-RUN go get github.com/sunshineplan/tiff@latest
-RUN go mod download
-RUN go mod tidy
+# Загружаем существующие зависимости (если go.sum есть)
+RUN go mod download || true
 
-# Копируем остальные файлы
+# Копируем весь исходный код
 COPY . .
+
+# Получаем недостающие зависимости и обновляем go.mod/go.sum
+RUN go mod tidy
 
 # Собираем приложение
 RUN go build -o bin/tiler cmd/service/main.go
