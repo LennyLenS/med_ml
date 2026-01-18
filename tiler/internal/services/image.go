@@ -149,10 +149,10 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	switch strings.ToLower(format) {
 	case "jpeg", "jpg":
 		ep := vips.NewJpegExportParams()
-		tileData, encodeErr = tileImg.ExportJpeg(ep)
+		tileData, _, encodeErr = tileImg.ExportJpeg(ep)
 	case "png":
 		ep := vips.NewPngExportParams()
-		tileData, encodeErr = tileImg.ExportPng(ep)
+		tileData, _, encodeErr = tileImg.ExportPng(ep)
 	default:
 		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
