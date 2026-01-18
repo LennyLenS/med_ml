@@ -8,8 +8,10 @@ WORKDIR /service
 # Копируем go.mod и go.sum для загрузки зависимостей
 COPY go.mod go.sum ./
 
-# Загружаем и обновляем зависимости
-RUN go mod download && go mod tidy
+# Получаем последнюю версию библиотеки и загружаем зависимости
+RUN go get github.com/sunshineplan/tiff@latest
+RUN go mod download
+RUN go mod tidy
 
 # Копируем остальные файлы
 COPY . .
