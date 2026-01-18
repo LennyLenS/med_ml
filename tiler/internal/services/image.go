@@ -12,7 +12,7 @@ import (
 	"tiler/internal/domain"
 
 	"github.com/disintegration/imaging"
-	"github.com/sunshineplan/tiff"
+	_ "golang.org/x/image/tiff" // Регистрирует TIFF декодер
 )
 
 type ImageService interface {
@@ -48,14 +48,11 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 	}
 
 	// Декодируем изображение
-	// Пытаемся использовать TIFF декодер с поддержкой JPEG compression
-	img, err := tiff.Decode(bytes.NewReader(imgData))
+	// Используем image.Decode, который автоматически выберет правильный декодер
+	// golang.org/x/image/tiff должен поддерживать compression value 7 в новых версиях
+	img, _, err := image.Decode(bytes.NewReader(imgData))
 	if err != nil {
-		// Если не TIFF, пробуем стандартный декодер
-		img, _, err = image.Decode(bytes.NewReader(imgData))
-		if err != nil {
-			return nil, fmt.Errorf("failed to decode image: %w", err)
-		}
+		return nil, fmt.Errorf("failed to decode image: %w", err)
 	}
 
 	bounds := img.Bounds()
@@ -85,14 +82,11 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	}
 
 	// Декодируем изображение
-	// Пытаемся использовать TIFF декодер с поддержкой JPEG compression
-	img, err := tiff.Decode(bytes.NewReader(imgData))
+	// Используем image.Decode, который автоматически выберет правильный декодер
+	// golang.org/x/image/tiff должен поддерживать compression value 7 в новых версиях
+	img, _, err := image.Decode(bytes.NewReader(imgData))
 	if err != nil {
-		// Если не TIFF, пробуем стандартный декодер
-		img, _, err = image.Decode(bytes.NewReader(imgData))
-		if err != nil {
-			return nil, fmt.Errorf("failed to decode image: %w", err)
-		}
+		return nil, fmt.Errorf("failed to decode image: %w", err)
 	}
 
 	// Масштабируем изображение до нужного уровня

@@ -8,7 +8,6 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/minio/minio-go/v7 v7.0.66
 	github.com/rs/cors v1.10.1
-	github.com/sunshineplan/tiff v0.0.0
 )
 
 require (
