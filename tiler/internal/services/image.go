@@ -11,8 +11,9 @@ import (
 
 	"tiler/internal/domain"
 
+	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/disintegration/imaging"
-	_ "golang.org/x/image/tiff" // Регистрирует TIFF декодер
+	_ "golang.org/x/image/tiff" // Регистрирует TIFF декодер для fallback
 )
 
 type ImageService interface {
@@ -32,6 +33,9 @@ type S3Client interface {
 }
 
 func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
+	// Инициализируем libvips (требуется только один раз)
+	vips.Startup(nil)
+
 	return &imageService{
 		s3Client: s3Client,
 		tileSize: tileSize,
@@ -41,25 +45,38 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 
 func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*domain.ImageInfo, error) {
 	// Загружаем изображение из S3
-	// Для больших файлов (3GB) это может быть проблематично, но для получения размеров
-	// используем DecodeConfig, который читает только метаданные, а не декодирует весь файл
 	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 	}
 
-	// Используем DecodeConfig вместо Decode - он читает только метаданные (размеры)
-	// и не декодирует весь файл в память, что критично для больших SVS файлов
-	cfg, _, err := image.DecodeConfig(bytes.NewReader(imgData))
+	// Используем govips для получения метаданных
+	// govips поддерживает SVS файлы и compression value 7
+	img, err := vips.NewImageFromBuffer(imgData)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode image config (compression value 7 may not be supported): %w", err)
+		// Fallback на стандартный декодер для совместимости
+		cfg, _, decodeErr := image.DecodeConfig(bytes.NewReader(imgData))
+		if decodeErr != nil {
+			return nil, fmt.Errorf("failed to decode image (govips error: %v, standard decoder error: %w)", err, decodeErr)
+		}
+		width := cfg.Width
+		height := cfg.Height
+		maxDim := math.Max(float64(width), float64(height))
+		levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
+		return &domain.ImageInfo{
+			Width:    width,
+			Height:   height,
+			Levels:   levels,
+			TileSize: s.tileSize,
+			Overlap:  s.overlap,
+		}, nil
 	}
+	defer img.Close()
 
-	width := cfg.Width
-	height := cfg.Height
+	width := img.Width()
+	height := img.Height()
 
 	// Вычисляем количество уровней (levels)
-	// Уровень 0 - оригинальное изображение, каждый следующий уровень в 2 раза меньше
 	maxDim := math.Max(float64(width), float64(height))
 	levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
 
@@ -73,41 +90,88 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 }
 
 func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
-	// ВАЖНО: Для больших файлов (3GB) загрузка всего файла в память приведет к падению сервера
-	// Для SVS файлов с tiled TIFF нужно использовать специализированные библиотеки,
-	// которые могут читать только нужные тайлы без загрузки всего файла
-
 	// Загружаем файл из S3
 	imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
 	}
 
-	// Проверяем размер файла
-	fileSize := len(imgData)
-	const maxRecommendedSize = 500 * 1024 * 1024 // 500MB
-	if fileSize > maxRecommendedSize {
-		// Для очень больших файлов это может быть проблематично
-		// Пока продолжаем работу, но это нужно оптимизировать
-	}
-
-	// Декодируем изображение
-	// Для больших файлов это может занять много времени и памяти
-	img, _, err := image.Decode(bytes.NewReader(imgData))
+	// Используем govips для декодирования - поддерживает SVS и compression value 7
+	vipsImg, err := vips.NewImageFromBuffer(imgData)
 	if err != nil {
-		// Проверяем, является ли ошибка связанной с compression value 7
-		errStr := err.Error()
-		if strings.Contains(errStr, "compression value 7") ||
-		   strings.Contains(errStr, "compression value") ||
-		   strings.Contains(errStr, "unsupported feature") {
-			return nil, fmt.Errorf("TIFF compression value 7 (JPEG) is not supported by golang.org/x/image/tiff. This is a known limitation for SVS files. Error: %w", err)
+		// Fallback на стандартный декодер
+		img, _, decodeErr := image.Decode(bytes.NewReader(imgData))
+		if decodeErr != nil {
+			return nil, fmt.Errorf("failed to decode image (govips error: %v, standard decoder error: %w)", err, decodeErr)
 		}
-		return nil, fmt.Errorf("failed to decode image (file size: %d MB): %w", fileSize/(1024*1024), err)
+		return s.getTileFromStandardImage(img, level, col, row, format)
 	}
+	defer vipsImg.Close()
 
 	// Освобождаем память как можно скорее
 	imgData = nil
 
+	// Масштабируем изображение до нужного уровня
+	if level > 0 {
+		scale := math.Pow(2, float64(level))
+		scaleFactor := 1.0 / scale
+		if err := vipsImg.Resize(scaleFactor, vips.KernelLanczos3); err != nil {
+			return nil, fmt.Errorf("failed to resize image: %w", err)
+		}
+	}
+
+	// Вычисляем координаты тайла
+	x := col * s.tileSize
+	y := row * s.tileSize
+
+	// Проверяем границы
+	if x >= vipsImg.Width() || y >= vipsImg.Height() {
+		return nil, errors.New("tile coordinates out of bounds")
+	}
+
+	// Обрезаем тайл с учетом overlap
+	cropX := int(math.Max(0, float64(x-s.overlap)))
+	cropY := int(math.Max(0, float64(y-s.overlap)))
+	cropWidth := int(math.Min(float64(vipsImg.Width()-cropX), float64(s.tileSize+2*s.overlap)))
+	cropHeight := int(math.Min(float64(vipsImg.Height()-cropY), float64(s.tileSize+2*s.overlap)))
+
+	// Извлекаем тайл
+	tileImg := vipsImg
+	if cropX > 0 || cropY > 0 || cropWidth < vipsImg.Width() || cropHeight < vipsImg.Height() {
+		if err := tileImg.ExtractArea(cropX, cropY, cropWidth, cropHeight); err != nil {
+			return nil, fmt.Errorf("failed to extract tile: %w", err)
+		}
+	}
+
+	// Кодируем тайл в нужный формат
+	var tileData []byte
+	var encodeErr error
+	switch strings.ToLower(format) {
+	case "jpeg", "jpg":
+		ep := vips.NewJpegExportParams()
+		tileData, encodeErr = tileImg.ExportJpeg(ep)
+	case "png":
+		ep := vips.NewPngExportParams()
+		tileData, encodeErr = tileImg.ExportPng(ep)
+	default:
+		return nil, fmt.Errorf("unsupported format: %s", format)
+	}
+
+	if encodeErr != nil {
+		return nil, fmt.Errorf("failed to encode tile: %w", encodeErr)
+	}
+
+	return &domain.Tile{
+		Level:  level,
+		Col:    col,
+		Row:    row,
+		Data:   tileData,
+		Format: format,
+	}, nil
+}
+
+// getTileFromStandardImage - fallback метод для стандартного image.Decode
+func (s *imageService) getTileFromStandardImage(img image.Image, level, col, row int, format string) (*domain.Tile, error) {
 	// Масштабируем изображение до нужного уровня
 	scaledImg := s.scaleToLevel(img, level)
 
@@ -149,17 +213,18 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 
 	// Кодируем тайл в нужный формат
 	var tileData []byte
+	var encodeErr error
 	switch strings.ToLower(format) {
 	case "jpeg", "jpg":
-		tileData, err = encodeJPEG(tileImg)
+		tileData, encodeErr = encodeJPEG(tileImg)
 	case "png":
-		tileData, err = encodePNG(tileImg)
+		tileData, encodeErr = encodePNG(tileImg)
 	default:
 		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to encode tile: %w", err)
+	if encodeErr != nil {
+		return nil, fmt.Errorf("failed to encode tile: %w", encodeErr)
 	}
 
 	return &domain.Tile{

@@ -5,6 +5,7 @@ go 1.24.0
 require (
 	github.com/WantBeASleep/med_ml_lib v1.0.8
 	github.com/disintegration/imaging v1.6.2
+	github.com/davidbyttow/govips/v2 v2.14.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/minio/minio-go/v7 v7.0.66
 	github.com/rs/cors v1.10.1
