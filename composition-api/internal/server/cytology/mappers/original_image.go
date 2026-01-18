@@ -31,7 +31,6 @@ func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) ap
 			Set:   true,
 		},
 		Image: api.OptURI{
-			// Создаем URL из ImagePath
 			Set: img.ImagePath != "",
 		},
 		FilePath: api.OptString{
@@ -41,9 +40,8 @@ func (OriginalImage) ToCytologyReadOKOriginalImage(img *domain.OriginalImage) ap
 	}
 
 	if img.ImagePath != "" {
-		// Формат: /download/cytology/{cytology_id}/{original_image_id}
-		imageURLStr := "/download/cytology/" + img.CytologyID.String() + "/" + img.Id.String()
-		imageURL, err := url.Parse(imageURLStr)
+		// Используем ImagePath напрямую как относительный путь
+		imageURL, err := url.Parse(img.ImagePath)
 		if err == nil {
 			result.Image = api.OptURI{
 				Value: *imageURL,
