@@ -12,6 +12,7 @@ import (
 	"tiler/internal/domain"
 
 	"github.com/disintegration/imaging"
+	_ "github.com/sunshineplan/tiff" // Регистрирует TIFF декодер с поддержкой JPEG compression
 )
 
 type ImageService interface {
