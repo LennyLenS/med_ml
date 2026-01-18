@@ -19,7 +19,13 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 
 	// Если передан путь к файлу, используем его (файл уже загружен в S3)
 	// Иначе проверяем, что передан файл
-	if in.ImagePath == nil || *in.ImagePath == "" {
+	imagePath := in.GetImagePath()
+	var imagePathPtr *string
+	if imagePath != "" {
+		imagePathPtr = &imagePath
+	}
+
+	if imagePathPtr == nil || *imagePathPtr == "" {
 		if len(in.File) == 0 {
 			return nil, status.Errorf(codes.InvalidArgument, "file or image_path is required")
 		}
@@ -28,12 +34,18 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 		}
 	}
 
+	var delayTimePtr *float64
+	if in.DelayTime != nil {
+		delayTime := in.GetDelayTime()
+		delayTimePtr = &delayTime
+	}
+
 	arg := original_image.CreateOriginalImageArg{
 		CytologyID:  cytologyID,
 		File:        in.File,
 		ContentType: in.ContentType,
-		DelayTime:   in.DelayTime,
-		ImagePath:   in.ImagePath,
+		DelayTime:   delayTimePtr,
+		ImagePath:   imagePathPtr,
 	}
 
 	id, err := h.services.OriginalImage.CreateOriginalImage(ctx, arg)
