@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"io"
+	"log/slog"
 	"math"
 	"os"
 	"path/filepath"
@@ -42,12 +44,14 @@ type imageService struct {
 	infoCache    map[string]*domain.ImageInfo // Кэш информации об изображениях
 	infoCacheMux sync.RWMutex
 	cacheDir     string
+	tileCacheDir string // Директория для кэширования тайлов
 	maxCacheSize int
 	cacheTTL     time.Duration
 }
 
 type S3Client interface {
 	GetObject(ctx context.Context, bucketName, objectName string) ([]byte, error)
+	GetObjectStream(ctx context.Context, bucketName, objectName string) (io.ReadCloser, error)
 }
 
 func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
@@ -58,6 +62,10 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 	cacheDir := filepath.Join(os.TempDir(), "tiler_cache")
 	os.MkdirAll(cacheDir, 0755)
 
+	// Создаем директорию для кэширования тайлов
+	tileCacheDir := filepath.Join(os.TempDir(), "tiler_tile_cache")
+	os.MkdirAll(tileCacheDir, 0755)
+
 	return &imageService{
 		s3Client:     s3Client,
 		tileSize:     tileSize,
@@ -65,6 +73,7 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 		cache:        make(map[string]*cachedImage),
 		infoCache:    make(map[string]*domain.ImageInfo),
 		cacheDir:     cacheDir,
+		tileCacheDir: tileCacheDir,
 		maxCacheSize: 10,        // Максимум 10 открытых файлов в кэше
 		cacheTTL:     time.Hour, // Время жизни кэша
 	}
@@ -193,21 +202,7 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 // для изображения заданного размера
 //
 // Формула: levels = ceil(log2(max(width, height) / tileSize)) + 1
-//
-// ВАЖНО: OpenSeadragon может запрашивать дополнительные уровни сверх расчетных,
-// поэтому добавляем небольшой запас (+1 уровень) для совместимости
-//
-// Параметры:
-//   - width, height: размеры изображения в пикселях
-//
-// Возвращает:
-//   - количество уровней (минимум 1)
-//
-// Примеры:
-//   - 256x256, tileSize=256 -> 1 уровень
-//   - 512x512, tileSize=256 -> 2 уровня
-//   - 100000x80000, tileSize=256 -> 10 уровней
-//   - 197208x88437, tileSize=256 -> 12 уровней (11 расчетных + 1 запас)
+
 func (s *imageService) calculateMaxLevels(width, height int) int {
 	maxDim := math.Max(float64(width), float64(height))
 	if maxDim <= 0 {
@@ -260,18 +255,26 @@ func (s *imageService) getOrLoadImage(ctx context.Context, imagePath string) (*v
 
 	// Проверяем, существует ли файл локально
 	if _, err := os.Stat(localPath); os.IsNotExist(err) {
-		// Скачиваем файл из S3
-		imgData, err := s.s3Client.GetObject(ctx, "", imagePath)
+		// Используем streaming для загрузки из S3 (более эффективно для больших файлов)
+		stream, err := s.s3Client.GetObjectStream(ctx, "", imagePath)
 		if err != nil {
-			return nil, fmt.Errorf("failed to get image from S3 (path: %s): %w", imagePath, err)
+			return nil, fmt.Errorf("failed to get image stream from S3 (path: %s): %w", imagePath, err)
 		}
+		defer stream.Close()
 
-		// Сохраняем во временный файл
-		if err := os.WriteFile(localPath, imgData, 0644); err != nil {
+		// Создаем файл и копируем данные напрямую из потока
+		outFile, err := os.Create(localPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create cache file: %w", err)
+		}
+		defer outFile.Close()
+
+		// Копируем данные из потока в файл
+		_, err = io.Copy(outFile, stream)
+		if err != nil {
+			os.Remove(localPath) // Удаляем частично загруженный файл
 			return nil, fmt.Errorf("failed to save image to cache: %w", err)
 		}
-		// Освобождаем память
-		imgData = nil
 	}
 
 	// Открываем файл через libvips с random access
@@ -355,21 +358,50 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 		return s.createEmptyTile(level, col, row, format)
 	}
 
+	// Проверяем кэш тайлов на диске
+	tileCacheKey := fmt.Sprintf("%s_%d_%d_%d.%s", strings.ReplaceAll(imagePath, "/", "_"), level, col, row, format)
+	tileCachePath := filepath.Join(s.tileCacheDir, tileCacheKey)
+
+	// Пытаемся прочитать тайл из кэша
+	if cachedTile, err := os.ReadFile(tileCachePath); err == nil {
+		return &domain.Tile{
+			Level:  level,
+			Col:    col,
+			Row:    row,
+			Data:   cachedTile,
+			Format: format,
+		}, nil
+	}
+
 	// Получаем изображение из кэша или загружаем его
 	// libvips будет читать только нужные тайлы из файла благодаря random access
-	vipsImg, err := s.getOrLoadImage(ctx, imagePath)
+	baseImg, err := s.getOrLoadImage(ctx, imagePath)
 	if err != nil {
 		return nil, err
 	}
-	defer vipsImg.Close()
+	defer baseImg.Close()
 
 	// Масштабируем изображение до нужного уровня
+	// Для SVS файлов libvips автоматически использует встроенные пирамидальные уровни
+	// при чтении файла, но для других форматов нужно масштабировать вручную
+	var vipsImg *vips.ImageRef
 	if level > 0 {
 		scale := math.Pow(2, float64(level))
 		scaleFactor := 1.0 / scale
-		if err := vipsImg.Resize(scaleFactor, vips.KernelLanczos3); err != nil {
+		// Создаем копию для масштабирования, чтобы не модифицировать кэшированное изображение
+		scaledImg, err := baseImg.Copy()
+		if err != nil {
+			return nil, fmt.Errorf("failed to copy image for scaling: %w", err)
+		}
+		defer scaledImg.Close()
+
+		if err := scaledImg.Resize(scaleFactor, vips.KernelLanczos3); err != nil {
 			return nil, fmt.Errorf("failed to resize image: %w", err)
 		}
+		vipsImg = scaledImg
+	} else {
+		// Для уровня 0 используем исходное изображение
+		vipsImg = baseImg
 	}
 
 	// Вычисляем координаты тайла
@@ -389,21 +421,14 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 
 	// Извлекаем тайл
 	// ExtractArea модифицирует исходное изображение, поэтому нужно создать копию
-	var tileImg *vips.ImageRef
-	if cropX > 0 || cropY > 0 || cropWidth < vipsImg.Width() || cropHeight < vipsImg.Height() {
-		// Создаем копию изображения для извлечения области
-		tileImg, err = vipsImg.Copy()
-		if err != nil {
-			return nil, fmt.Errorf("failed to copy image: %w", err)
-		}
-		defer tileImg.Close()
+	tileImg, err := vipsImg.Copy()
+	if err != nil {
+		return nil, fmt.Errorf("failed to copy image: %w", err)
+	}
+	defer tileImg.Close()
 
-		if err := tileImg.ExtractArea(cropX, cropY, cropWidth, cropHeight); err != nil {
-			return nil, fmt.Errorf("failed to extract tile: %w", err)
-		}
-	} else {
-		// Если не нужно обрезать, используем исходное изображение
-		tileImg = vipsImg
+	if err := tileImg.ExtractArea(cropX, cropY, cropWidth, cropHeight); err != nil {
+		return nil, fmt.Errorf("failed to extract tile: %w", err)
 	}
 
 	// Кодируем тайл в нужный формат
@@ -412,6 +437,7 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	switch strings.ToLower(format) {
 	case "jpeg", "jpg":
 		ep := vips.NewJpegExportParams()
+		ep.Quality = 85 // Оптимизируем качество для баланса между размером и качеством
 		tileData, _, encodeErr = tileImg.ExportJpeg(ep)
 	case "png":
 		ep := vips.NewPngExportParams()
@@ -423,6 +449,14 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	if encodeErr != nil {
 		return nil, fmt.Errorf("failed to encode tile: %w", encodeErr)
 	}
+
+	// Сохраняем тайл в кэш на диске (асинхронно, чтобы не блокировать ответ)
+	go func() {
+		if err := os.WriteFile(tileCachePath, tileData, 0644); err != nil {
+			// Игнорируем ошибки записи в кэш, чтобы не влиять на основной поток
+			slog.Debug("failed to cache tile", "path", tileCachePath, "err", err)
+		}
+	}()
 
 	return &domain.Tile{
 		Level:  level,
