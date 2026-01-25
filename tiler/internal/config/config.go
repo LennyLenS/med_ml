@@ -8,9 +8,9 @@ type Config struct {
 type App struct {
 	URL         string `env:"APP_URL" env-default:"localhost:50080"`
 	MediaPath   string `env:"MEDIA_PATH" env-default:"./media"`
-	TileSize    int    `env:"TILE_SIZE" env-default:"256"`
-	Overlap     int    `env:"OVERLAP" env-default:"1"`
-	LimitBounds bool   `env:"LIMIT_BOUNDS" env-default:"true"`
+	TileSize    int    `env:"TILE_SIZE" env-default:"510"` // Соответствует citology/bidder (tile_size=510)
+	Overlap     int    `env:"OVERLAP" env-default:"1"`     // Соответствует citology/bidder (overlap=1)
+	LimitBounds bool   `env:"LIMIT_BOUNDS" env-default:"true"` // Соответствует citology/bidder (limit_bounds=True)
 }
 
 type S3 struct {

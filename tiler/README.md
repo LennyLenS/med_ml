@@ -15,7 +15,7 @@
 
 Пример: `GET /dzi/path/to/image.svs`
 
-### GET /dzi/{file_path}_files/{level}/{col}_{row}.{format}
+### GET /dzi/{file_path}/files/{level}/{col}_{row}.{format}
 Возвращает тайл изображения.
 
 Параметры:
@@ -24,15 +24,17 @@
 - `row` - номер строки тайла
 - `format` - формат изображения (jpeg, png)
 
-Пример: `GET /dzi/path/to/image.svs_files/5/10_20.jpeg`
+Пример: `GET /dzi/path/to/image.svs/files/5/10_20.jpeg`
+
+**Примечание:** Формат URL отличается от citology/bidder (`/files` вместо `_files`) для совместимости с фронтендом.
 
 ## Конфигурация
 
 Переменные окружения:
 - `APP_URL` - адрес и порт сервера (по умолчанию: `localhost:50080`)
 - `MEDIA_PATH` - путь к медиа файлам (не используется, файлы берутся из S3)
-- `TILE_SIZE` - размер тайла в пикселях (по умолчанию: `256`)
-- `OVERLAP` - перекрытие тайлов в пикселях (по умолчанию: `1`)
+- `TILE_SIZE` - размер тайла в пикселях (по умолчанию: `510`, соответствует citology/bidder)
+- `OVERLAP` - перекрытие тайлов в пикселях (по умолчанию: `1`, соответствует citology/bidder)
 - `LIMIT_BOUNDS` - ограничивать границы (по умолчанию: `true`)
 - `S3_ENDPOINT` - endpoint S3 хранилища (обязательно)
 - `S3_TOKEN_ACCESS` - access token для S3 (обязательно)

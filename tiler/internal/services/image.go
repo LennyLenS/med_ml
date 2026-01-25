@@ -194,6 +194,9 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 //
 // Формула: levels = ceil(log2(max(width, height) / tileSize)) + 1
 //
+// ВАЖНО: OpenSeadragon может запрашивать дополнительные уровни сверх расчетных,
+// поэтому добавляем небольшой запас (+1 уровень) для совместимости
+//
 // Параметры:
 //   - width, height: размеры изображения в пикселях
 //
@@ -204,12 +207,26 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 //   - 256x256, tileSize=256 -> 1 уровень
 //   - 512x512, tileSize=256 -> 2 уровня
 //   - 100000x80000, tileSize=256 -> 10 уровней
+//   - 197208x88437, tileSize=256 -> 12 уровней (11 расчетных + 1 запас)
 func (s *imageService) calculateMaxLevels(width, height int) int {
 	maxDim := math.Max(float64(width), float64(height))
 	if maxDim <= 0 {
 		return 1
 	}
+	// Базовый расчет уровней по формуле Deep Zoom Image
 	levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
+
+	// OpenSeadragon может запрашивать дополнительные уровни из-за особенностей
+	// расчета координат и округления. Добавляем один дополнительный уровень,
+	// если изображение достаточно большое, чтобы это имело смысл
+	// Это позволяет обрабатывать запросы уровня, который теоретически не нужен,
+	// но может быть запрошен OpenSeadragon при определенных условиях масштабирования
+	if maxDim > float64(s.tileSize*2) {
+		// Добавляем запас только для достаточно больших изображений
+		// чтобы избежать создания ненужных уровней для маленьких изображений
+		levels++
+	}
+
 	if levels < 1 {
 		return 1
 	}
