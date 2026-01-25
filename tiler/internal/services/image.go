@@ -39,6 +39,8 @@ type imageService struct {
 	overlap      int
 	cache        map[string]*cachedImage
 	cacheMux     sync.RWMutex
+	infoCache    map[string]*domain.ImageInfo // Кэш информации об изображениях
+	infoCacheMux sync.RWMutex
 	cacheDir     string
 	maxCacheSize int
 	cacheTTL     time.Duration
@@ -61,13 +63,87 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 		tileSize:     tileSize,
 		overlap:      overlap,
 		cache:        make(map[string]*cachedImage),
+		infoCache:    make(map[string]*domain.ImageInfo),
 		cacheDir:     cacheDir,
 		maxCacheSize: 10,        // Максимум 10 открытых файлов в кэше
 		cacheTTL:     time.Hour, // Время жизни кэша
 	}
 }
 
+// GetImageInfo возвращает информацию об изображении, включая максимальный уровень масштабирования
+//
+// МАКСИМАЛЬНЫЙ УРОВЕНЬ ПРИБЛИЖЕНИЯ для SVS файлов:
+//
+// Максимальный уровень масштабирования зависит от трех факторов:
+//
+// 1. РАЗМЕР ИЗОБРАЖЕНИЯ (width x height)
+//   - Чем больше исходное разрешение слайда, тем больше уровней
+//   - SVS файлы обычно имеют очень высокое разрешение (десятки тысяч пикселей)
+//   - Например: слайд 100000x80000 пикселей даст больше уровней, чем 10000x8000
+//
+// 2. РАЗМЕР ТАЙЛА (tileSize)
+//
+//   - Стандартный размер тайла: 256x256 пикселей
+//
+//   - Чем меньше tileSize, тем больше уровней (но больше тайлов на каждом уровне)
+//
+//   - Чем больше tileSize, тем меньше уровней (но меньше тайлов)
+//
+//     3. ФОРМУЛА ВЫЧИСЛЕНИЯ:
+//     levels = ceil(log2(max(width, height) / tileSize)) + 1
+//
+//     Где:
+//
+//   - max(width, height) - максимальная сторона изображения
+//
+//   - tileSize - размер тайла (обычно 256)
+//
+//   - log2 - логарифм по основанию 2
+//
+//   - ceil - округление вверх
+//
+//   - +1 добавляет уровень 0 (полное разрешение)
+//
+// КАК РАБОТАЮТ УРОВНИ:
+// - Level 0: полное разрешение (100% масштаб)
+// - Level 1: 50% масштаб (изображение уменьшено в 2 раза)
+// - Level 2: 25% масштаб (изображение уменьшено в 4 раза)
+// - Level N: изображение уменьшено в 2^N раз
+// - Максимальный уровень: когда изображение становится меньше или равно размеру тайла
+//
+// ДЛЯ SVS ФАЙЛОВ:
+// - SVS файлы (формат Aperio) уже содержат встроенные пирамидальные уровни
+// - libvips автоматически использует эти уровни при чтении файла (random access)
+// - Это позволяет эффективно читать только нужные тайлы без загрузки всего файла
+// - Максимальный уровень определяется исходным разрешением сканирования слайда
+//
+// ПРИМЕРЫ РАСЧЕТА:
+// - Изображение 256x256, tileSize=256:  levels = ceil(log2(256/256)) + 1 = ceil(0) + 1 = 1 уровень (level 0)
+// - Изображение 512x512, tileSize=256:  levels = ceil(log2(512/256)) + 1 = ceil(1) + 1 = 2 уровня (level 0-1)
+// - Изображение 10000x8000, tileSize=256: levels = ceil(log2(10000/256)) + 1 = ceil(5.29) + 1 = 7 уровней (level 0-6)
+// - Изображение 100000x80000, tileSize=256: levels = ceil(log2(100000/256)) + 1 = ceil(8.61) + 1 = 10 уровней (level 0-9)
+//
+// КАК УЗНАТЬ МАКСИМАЛЬНЫЙ УРОВЕНЬ:
+// 1. Вызовите GetImageInfo() - вернет структуру ImageInfo с полем Levels
+// 2. Максимальный доступный уровень = Levels - 1 (так как нумерация с 0)
+// 3. Например, если Levels = 10, то доступны уровни от 0 до 9
 func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*domain.ImageInfo, error) {
+	// Проверяем кэш информации об изображении
+	s.infoCacheMux.RLock()
+	cachedInfo, exists := s.infoCache[imagePath]
+	s.infoCacheMux.RUnlock()
+
+	if exists && cachedInfo != nil {
+		// Возвращаем кэшированную информацию
+		return &domain.ImageInfo{
+			Width:    cachedInfo.Width,
+			Height:   cachedInfo.Height,
+			Levels:   cachedInfo.Levels,
+			TileSize: cachedInfo.TileSize,
+			Overlap:  cachedInfo.Overlap,
+		}, nil
+	}
+
 	// Используем кэшированное изображение для получения метаданных
 	// libvips читает только заголовок файла, не весь файл
 	img, err := s.getOrLoadImage(ctx, imagePath)
@@ -79,17 +155,65 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 	width := img.Width()
 	height := img.Height()
 
-	// Вычисляем количество уровней (levels)
-	maxDim := math.Max(float64(width), float64(height))
-	levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
+	// Вычисляем количество уровней (levels) по формуле Deep Zoom Image (DZI)
+	// Формула: levels = ceil(log2(max(width, height) / tileSize)) + 1
+	// Каждый уровень масштабирования уменьшает изображение в 2 раза
+	// Максимальный уровень - это когда изображение становится меньше или равно размеру тайла
+	levels := s.calculateMaxLevels(width, height)
 
-	return &domain.ImageInfo{
+	// Для очень маленьких изображений гарантируем минимум 1 уровень
+	if levels < 1 {
+		levels = 1
+	}
+
+	info := &domain.ImageInfo{
 		Width:    width,
 		Height:   height,
 		Levels:   levels,
 		TileSize: s.tileSize,
 		Overlap:  s.overlap,
+	}
+
+	// Сохраняем в кэш
+	s.infoCacheMux.Lock()
+	s.infoCache[imagePath] = info
+	s.infoCacheMux.Unlock()
+
+	// Возвращаем копию
+	return &domain.ImageInfo{
+		Width:    info.Width,
+		Height:   info.Height,
+		Levels:   info.Levels,
+		TileSize: info.TileSize,
+		Overlap:  info.Overlap,
 	}, nil
+}
+
+// calculateMaxLevels вычисляет максимальное количество уровней масштабирования
+// для изображения заданного размера
+//
+// Формула: levels = ceil(log2(max(width, height) / tileSize)) + 1
+//
+// Параметры:
+//   - width, height: размеры изображения в пикселях
+//
+// Возвращает:
+//   - количество уровней (минимум 1)
+//
+// Примеры:
+//   - 256x256, tileSize=256 -> 1 уровень
+//   - 512x512, tileSize=256 -> 2 уровня
+//   - 100000x80000, tileSize=256 -> 10 уровней
+func (s *imageService) calculateMaxLevels(width, height int) int {
+	maxDim := math.Max(float64(width), float64(height))
+	if maxDim <= 0 {
+		return 1
+	}
+	levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
+	if levels < 1 {
+		return 1
+	}
+	return levels
 }
 
 // getOrLoadImage получает изображение из кэша или загружает его
@@ -178,8 +302,10 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	}
 
 	// Проверяем, что уровень валиден
+	// Включаем информацию об изображении в сообщение об ошибке для отладки
 	if level < 0 || level >= info.Levels {
-		return nil, fmt.Errorf("invalid level: %d (max: %d)", level, info.Levels-1)
+		return nil, fmt.Errorf("invalid level: %d (max: %d, image_size: %dx%d, calculated_levels: %d)",
+			level, info.Levels-1, info.Width, info.Height, info.Levels)
 	}
 
 	// Вычисляем размеры изображения на данном уровне
@@ -406,4 +532,46 @@ func encodePNG(img image.Image) ([]byte, error) {
 		return nil, err
 	}
 	return buf.Bytes(), nil
+}
+
+// GetLevelInfo возвращает детальную информацию о конкретном уровне масштабирования
+// Полезно для отладки и понимания структуры пирамиды изображения
+func (s *imageService) GetLevelInfo(ctx context.Context, imagePath string, level int) (map[string]interface{}, error) {
+	info, err := s.GetImageInfo(ctx, imagePath)
+	if err != nil {
+		return nil, err
+	}
+
+	if level < 0 || level >= info.Levels {
+		return nil, fmt.Errorf("invalid level: %d (max: %d)", level, info.Levels-1)
+	}
+
+	// Вычисляем размеры изображения на данном уровне
+	var levelWidth, levelHeight int
+	if level == 0 {
+		levelWidth = info.Width
+		levelHeight = info.Height
+	} else {
+		scale := math.Pow(2, float64(level))
+		levelWidth = int(float64(info.Width) / scale)
+		levelHeight = int(float64(info.Height) / scale)
+	}
+
+	// Вычисляем количество тайлов на данном уровне
+	maxCol := int(math.Max(1, math.Ceil(float64(levelWidth)/float64(s.tileSize))))
+	maxRow := int(math.Max(1, math.Ceil(float64(levelHeight)/float64(s.tileSize))))
+	totalTiles := maxCol * maxRow
+
+	return map[string]interface{}{
+		"level":         level,
+		"width":         levelWidth,
+		"height":        levelHeight,
+		"tiles_cols":    maxCol,
+		"tiles_rows":    maxRow,
+		"total_tiles":   totalTiles,
+		"tile_size":     s.tileSize,
+		"scale_factor":  math.Pow(2, float64(level)),
+		"is_max_level":  level == info.Levels-1,
+		"original_size": fmt.Sprintf("%dx%d", info.Width, info.Height),
+	}, nil
 }
