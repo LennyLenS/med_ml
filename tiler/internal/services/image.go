@@ -171,6 +171,44 @@ func (s *imageService) cleanupCache() {
 }
 
 func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
+	// Сначала получаем информацию об изображении для валидации
+	info, err := s.GetImageInfo(ctx, imagePath)
+	if err != nil {
+		return nil, err
+	}
+
+	// Проверяем, что уровень валиден
+	if level < 0 || level >= info.Levels {
+		return nil, fmt.Errorf("invalid level: %d (max: %d)", level, info.Levels-1)
+	}
+
+	// Вычисляем размеры изображения на данном уровне
+	var levelWidth, levelHeight int
+	if level == 0 {
+		levelWidth = info.Width
+		levelHeight = info.Height
+	} else {
+		scale := math.Pow(2, float64(level))
+		levelWidth = int(float64(info.Width) / scale)
+		levelHeight = int(float64(info.Height) / scale)
+	}
+
+	// Проверяем, что размеры изображения валидны
+	if levelWidth <= 0 || levelHeight <= 0 {
+		return nil, fmt.Errorf("invalid image dimensions at level %d: %dx%d", level, levelWidth, levelHeight)
+	}
+
+	// Вычисляем максимальное количество тайлов на данном уровне
+	// Даже если изображение меньше тайла, должен быть хотя бы один тайл
+	maxCol := int(math.Max(1, math.Ceil(float64(levelWidth)/float64(s.tileSize))))
+	maxRow := int(math.Max(1, math.Ceil(float64(levelHeight)/float64(s.tileSize))))
+
+	// Проверяем границы координат тайла
+	if col < 0 || row < 0 || col >= maxCol || row >= maxRow {
+		return nil, fmt.Errorf("tile coordinates out of bounds: level=%d, col=%d (max=%d), row=%d (max=%d), image_size=%dx%d",
+			level, col, maxCol-1, row, maxRow-1, levelWidth, levelHeight)
+	}
+
 	// Получаем изображение из кэша или загружаем его
 	// libvips будет читать только нужные тайлы из файла благодаря random access
 	vipsImg, err := s.getOrLoadImage(ctx, imagePath)
@@ -192,7 +230,7 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	x := col * s.tileSize
 	y := row * s.tileSize
 
-	// Проверяем границы
+	// Дополнительная проверка границ после масштабирования (на случай округления)
 	if x >= vipsImg.Width() || y >= vipsImg.Height() {
 		return nil, errors.New("tile coordinates out of bounds")
 	}
