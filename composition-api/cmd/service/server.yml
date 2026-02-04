@@ -1603,7 +1603,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: файл узи. **обязательно с .tiff/.png**
+                  description: файл узи. **обязательно с .tiff/.png/.jpeg/.jpg**
                 projection:
                   type: string
                   enum:

@@ -20,11 +20,15 @@ type splitter interface {
 const (
 	Png  = "image/png"
 	Tiff = "image/tiff"
+	Jpeg = "image/jpeg"
+	Jpg  = "image/jpg"
 )
 
 var splitters = map[string]splitter{
 	Png:  pngSplitter{},
 	Tiff: tiffSplitter{},
+	Jpeg: jpegSplitter{},
+	Jpg:  jpegSplitter{}, // image/jpg также обрабатывается jpegSplitter
 }
 
 type service struct{}
