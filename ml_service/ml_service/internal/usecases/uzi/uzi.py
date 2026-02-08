@@ -98,6 +98,18 @@ class uziUseCase:
                     tirads_5=indv[i][j][2],
                 )
 
+                if formation_id_from_model not in nodes_with_segments:
+                    node = pb_event.UziProcessed.Node(
+                        ai=True,
+                        tirads_23=indv[i][j][0],
+                        tirads_4=indv[i][j][1],
+                        tirads_5=indv[i][j][2],
+                    )
+                    nodes_with_segments[formation_id_from_model] = pb_event.UziProcessed.NodeWithSegments(
+                        node=node,
+                        segments=[],
+                    )
+
                 nodes_with_segments[formation_id_from_model].segments.append(segment)
 
         msg_event = pb_event.UziProcessed(
