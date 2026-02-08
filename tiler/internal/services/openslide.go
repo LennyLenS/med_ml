@@ -323,15 +323,50 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	levelW := int(float64(sourceWidth) / levelScale)
 	levelH := int(float64(sourceHeight) / levelScale)
 
-	// Для низких уровней DZI размер области может быть очень большим
-	// Ограничиваем размер области размером тайла на выбранном уровне OpenSlide
-	// Это предотвращает чтение огромных областей для низких уровней
+	// Для низких уровней DZI размер области может быть очень большим из-за деления на очень маленький scaleFactor
+	// В этом случае нужно читать область размером с тайл на выбранном уровне OpenSlide
 	targetTileSize := s.tileSize + 2*s.overlap
-	if levelW > targetTileSize*2 {
-		levelW = targetTileSize * 2
-	}
-	if levelH > targetTileSize*2 {
-		levelH = targetTileSize * 2
+
+	// Если размер области слишком большой (больше чем разумный максимум),
+	// пересчитываем размер и координаты правильно
+	// Для низких уровней DZI мы должны читать область размером примерно с тайл на уровне OpenSlide
+	maxReadSize := targetTileSize * 10 // Максимальный размер области для чтения
+	if levelW > maxReadSize || levelH > maxReadSize {
+		// Вычисляем размер тайла на уровне OpenSlide
+		// Размер тайла на DZI уровне = targetTileSize
+		// Масштаб между DZI уровнем и уровнем OpenSlide = coordScaleFactor / levelScale
+		// Но проще: размер тайла на уровне OpenSlide = targetTileSize * levelScale / coordScaleFactor
+		// Или еще проще: если levelW слишком большой, значит мы должны читать область размером с тайл
+		// Размер тайла на уровне OpenSlide примерно равен targetTileSize, умноженному на отношение масштабов
+
+		// Вычисляем масштаб между DZI уровнем и уровнем OpenSlide
+		// coordScaleFactor - масштаб DZI уровня относительно полного разрешения
+		// levelScale - масштаб уровня OpenSlide относительно полного разрешения
+		// Масштаб между DZI и OpenSlide = coordScaleFactor / levelScale
+		dziToOSScale := coordScaleFactor / levelScale
+
+		// Размер тайла на уровне OpenSlide
+		levelW = int(float64(targetTileSize) / dziToOSScale)
+		levelH = int(float64(targetTileSize) / dziToOSScale)
+
+		// Минимум 1 пиксель
+		if levelW <= 0 {
+			levelW = 1
+		}
+		if levelH <= 0 {
+			levelH = 1
+		}
+
+		// Пересчитываем координаты: центр тайла должен остаться тем же
+		// Центр тайла в полном разрешении
+		centerX := sourceX + sourceWidth/2
+		centerY := sourceY + sourceHeight/2
+		// Центр на уровне OpenSlide
+		levelCenterX := int(float64(centerX) / levelScale)
+		levelCenterY := int(float64(centerY) / levelScale)
+		// Координаты начала с учетом нового размера
+		levelX = levelCenterX - levelW/2
+		levelY = levelCenterY - levelH/2
 	}
 
 	// Проверяем, что координаты не отрицательные
