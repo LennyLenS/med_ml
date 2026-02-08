@@ -1,33 +1,33 @@
 #!/usr/bin/env python3
 """
-Tiler service using Python and OpenSlide
-Uses deepZoom logic for tile coordinate calculation
+Tiler service using Python, OpenSlide and DeepZoomGenerator
+Simple version with disk cache for files and in-memory cache for generators
 """
 import os
 import logging
-import math
 import tempfile
-from pathlib import Path
+import threading
+from io import BytesIO
 from urllib.parse import unquote
 from typing import Optional
 
-from flask import Flask, request, Response, jsonify
+from flask import Flask, Response, jsonify
 from flask_cors import CORS
-import openslide
-from openslide import OpenSlideError
-from PIL import Image
+from openslide import OpenSlide
+from openslide.deepzoom import DeepZoomGenerator
+from cachetools import TTLCache
 
 # Настройка логирования
 logging.basicConfig(
     level=logging.INFO,
-    format='{"level":"%(levelname)s","time":"%(asctime)s","message":"%(message)s","%(name)s":"%(name)s"}',
+    format='{"level":"%(levelname)s","time":"%(asctime)s","message":"%(message)s"}',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Настройка CORS - разрешаем запросы с любого origin
+# Настройка CORS
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Конфигурация из переменных окружения
@@ -38,46 +38,38 @@ S3_ACCESS_TOKEN = os.getenv('S3_TOKEN_ACCESS', '')
 S3_SECRET_TOKEN = os.getenv('S3_TOKEN_SECRET', '')
 S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME', 'cytology')
 CACHE_DIR = os.getenv('CACHE_DIR', os.path.join(tempfile.gettempdir(), 'tiler_cache'))
+PORT = int(os.getenv('PORT', '50055'))
 
 # Создаем директорию кэша
 os.makedirs(CACHE_DIR, exist_ok=True)
+logger.info(f"Cache directory: {CACHE_DIR}")
 
-# Кэш для открытых изображений
-_slide_cache = {}
-_cache_lock = None
-
-try:
-    import threading
-    _cache_lock = threading.Lock()
-except ImportError:
-    pass
+# Кэш для DeepZoomGenerator (в памяти)
+_generator_cache = TTLCache(maxsize=200, ttl=3600)
+_cache_lock = threading.Lock()
 
 
 def get_s3_client():
     """Получить клиент S3"""
     try:
         import boto3
-        # boto3 для MinIO требует полный URL с протоколом
-        # Формат: http://host:port (без пути)
+
+        # Обработка endpoint URL
         endpoint_url = S3_ENDPOINT.strip()
 
-        # Убираем протокол, если он есть
+        # Убираем протокол, если есть
         if endpoint_url.startswith('http://'):
             endpoint_url = endpoint_url[7:]
         elif endpoint_url.startswith('https://'):
             endpoint_url = endpoint_url[8:]
 
-        # Убираем путь, если он есть (оставляем только host:port)
+        # Убираем путь, если есть
         if '/' in endpoint_url:
             endpoint_url = endpoint_url.split('/')[0]
 
         # Добавляем протокол http://
         endpoint_url = 'http://' + endpoint_url
 
-        logger.info(f"Creating S3 client with endpoint: {endpoint_url}")
-
-        # Для MinIO используем HTTP (не HTTPS)
-        # boto3 автоматически определит это из протокола в endpoint_url
         s3_client = boto3.client(
             's3',
             endpoint_url=endpoint_url,
@@ -94,27 +86,28 @@ def get_s3_client():
 
 
 def download_from_s3(s3_path: str, local_path: str) -> bool:
-    """Скачать файл из S3"""
+    """Скачать файл из S3 на диск"""
     s3_client = get_s3_client()
     if not s3_client:
         return False
 
     try:
+        logger.info(f"Downloading {s3_path} from bucket {S3_BUCKET_NAME}")
         s3_client.download_file(S3_BUCKET_NAME, s3_path, local_path)
-        logger.info(f"Downloaded {s3_path} to {local_path}")
+        logger.info(f"Downloaded to {local_path}")
         return True
     except Exception as e:
-        logger.error(f"Failed to download from S3: {e}")
+        logger.error(f"Failed to download from S3: {e}", exc_info=True)
         return False
 
 
 def get_slide_path(s3_path: str) -> Optional[str]:
-    """Получить локальный путь к слайду, скачав из S3 если нужно"""
-    # Создаем безопасное имя файла из пути
+    """Получить локальный путь к слайду, скачав из S3 если нужно (кэш на диске)"""
+    # Создаем безопасное имя файла
     safe_name = s3_path.replace('/', '_').replace('\\', '_')
     local_path = os.path.join(CACHE_DIR, safe_name)
 
-    # Если файл уже есть, возвращаем путь
+    # Если файл уже есть на диске, возвращаем путь
     if os.path.exists(local_path):
         return local_path
 
@@ -125,57 +118,41 @@ def get_slide_path(s3_path: str) -> Optional[str]:
     return None
 
 
-def get_slide(s3_path: str) -> Optional[openslide.OpenSlide]:
-    """Получить OpenSlide объект для изображения"""
-    # Проверяем кэш
-    if _cache_lock:
-        with _cache_lock:
-            if s3_path in _slide_cache:
-                return _slide_cache[s3_path]
+def get_slide_generator(s3_path: str) -> Optional[DeepZoomGenerator]:
+    """Получить DeepZoomGenerator для изображения (кэш в памяти)"""
+    # Проверяем кэш генераторов
+    with _cache_lock:
+        generator = _generator_cache.get(s3_path)
+        if generator is not None:
+            return generator
 
-    # Получаем локальный путь
+    # Получаем локальный путь (кэш на диске)
     local_path = get_slide_path(s3_path)
     if not local_path:
+        logger.error(f"Failed to get local path for {s3_path}")
         return None
 
     try:
-        slide = openslide.OpenSlide(local_path)
+        # Открываем слайд
+        slide = OpenSlide(local_path)
 
-        # Сохраняем в кэш
-        if _cache_lock:
-            with _cache_lock:
-                _slide_cache[s3_path] = slide
+        # Создаем генератор DeepZoom
+        generator = DeepZoomGenerator(
+            slide,
+            tile_size=TILE_SIZE,
+            overlap=OVERLAP,
+            limit_bounds=True
+        )
 
-        return slide
-    except OpenSlideError as e:
-        logger.error(f"Failed to open slide {s3_path}: {e}")
-        return None
+        # Сохраняем в кэш генераторов
+        with _cache_lock:
+            _generator_cache[s3_path] = generator
+
+        logger.info(f"Created DeepZoomGenerator for {s3_path}")
+        return generator
     except Exception as e:
-        logger.error(f"Unexpected error opening slide {s3_path}: {e}")
+        logger.error(f"Failed to create DeepZoomGenerator for {s3_path}: {e}", exc_info=True)
         return None
-
-
-def get_dzi_xml(slide: openslide.OpenSlide) -> str:
-    """Генерировать DZI XML для изображения"""
-    width, height = slide.dimensions
-
-    # Вычисляем количество уровней как в OpenSeadragon
-    # maxLevel = floor(log2(maxDim)) - это гарантирует, что на level 0 будет >= 1px
-    max_dim = max(width, height)
-    if max_dim <= 0:
-        max_level = 0
-    else:
-        max_level = int(math.floor(math.log2(max_dim)))
-
-    xml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<Image xmlns="http://schemas.microsoft.com/deepzoom/2008"
-       TileSize="{TILE_SIZE}"
-       Overlap="{OVERLAP}"
-       Format="jpeg"
-       ServerFormat="Default">
-  <Size Width="{width}" Height="{height}"/>
-</Image>'''
-    return xml
 
 
 @app.route('/dzi/<path:file_path>', methods=['GET'])
@@ -185,11 +162,12 @@ def get_dzi(file_path: str):
         decoded_path = unquote(file_path)
         logger.info(f"GetDZI request: {decoded_path}")
 
-        slide = get_slide(decoded_path)
-        if not slide:
+        generator = get_slide_generator(decoded_path)
+        if not generator:
             return jsonify({"error": "Failed to open image"}), 500
 
-        dzi_xml = get_dzi_xml(slide)
+        # DeepZoomGenerator сам генерирует правильный DZI XML
+        dzi_xml = generator.get_dzi("jpeg")
 
         return Response(
             dzi_xml,
@@ -215,110 +193,35 @@ def get_tile(file_path: str, level: int, tile_coords: str, format: str):
 
         logger.info(f"GetTile request: {decoded_path}, level={level}, col={col}, row={row}, format={format}")
 
-        slide = get_slide(decoded_path)
-        if not slide:
+        generator = get_slide_generator(decoded_path)
+        if not generator:
             return jsonify({"error": "Failed to open image"}), 500
 
-        # Вычисляем количество уровней (как в deepZoom/OpenSeadragon)
-        width, height = slide.dimensions
-        max_dim = max(width, height)
-        if max_dim <= 0:
-            max_level = 0
-        else:
-            max_level = int(math.floor(math.log2(max_dim)))
+        # DeepZoomGenerator сам правильно вычисляет координаты и масштаб
+        try:
+            tile = generator.get_tile(level, (col, row))
+        except ValueError as e:
+            # Тайл не существует (out of bounds)
+            logger.warn(f"Tile not found: level={level}, col={col}, row={row}, error={e}")
+            return jsonify({"error": "Tile not found"}), 404
 
-        # Вычисляем координаты тайла на уровне DZI (как в deepZoom)
-        tile_x = col * TILE_SIZE
-        tile_y = row * TILE_SIZE
+        # Сохраняем в буфер
+        buf = BytesIO()
+        tile.save(buf, format.lower())
 
-        # Вычисляем масштаб уровня (как в deepZoom)
-        # В OpenSeadragon: maxLevel = полное разрешение, level 0 = минимальный
-        # scale = 2^(maxLevel - level) - это масштаб уровня относительно полного разрешения
-        dzi_scale = 2.0 ** (max_level - level)
-
-        # Координаты в полном разрешении (как в deepZoom)
-        source_x = int((tile_x - OVERLAP) * dzi_scale)
-        source_y = int((tile_y - OVERLAP) * dzi_scale)
-        source_width = int((TILE_SIZE + 2 * OVERLAP) * dzi_scale)
-        source_height = int((TILE_SIZE + 2 * OVERLAP) * dzi_scale)
-
-        # Ограничиваем границами изображения
-        source_x = max(0, source_x)
-        source_y = max(0, source_y)
-        source_width = min(source_width, width - source_x)
-        source_height = min(source_height, height - source_y)
-
-        if source_width <= 0 or source_height <= 0:
-            return jsonify({"error": "Tile coordinates out of bounds"}), 404
-
-        # Находим подходящий уровень OpenSlide
-        level_count = slide.level_count
-        best_level = 0
-        best_scale_diff = float('inf')
-
-        # Желаемый масштаб для уровня DZI
-        desired_scale = 1.0 / dzi_scale  # Масштаб уровня OpenSlide относительно полного разрешения
-
-        for i in range(level_count):
-            level_dimensions = slide.level_dimensions[i]
-            level_scale = width / level_dimensions[0]
-            scale_diff = abs(level_scale - desired_scale)
-            if scale_diff < best_scale_diff:
-                best_scale_diff = scale_diff
-                best_level = i
-
-        # Координаты на уровне OpenSlide
-        level_dimensions = slide.level_dimensions[best_level]
-        os_level_scale = width / level_dimensions[0]
-
-        level_x = int(source_x / os_level_scale)
-        level_y = int(source_y / os_level_scale)
-        level_w = int(source_width / os_level_scale)
-        level_h = int(source_height / os_level_scale)
-
-        # Ограничиваем размер области для чтения
-        max_read_size = TILE_SIZE * 10
-        if level_w > max_read_size:
-            level_w = max_read_size
-        if level_h > max_read_size:
-            level_h = max_read_size
-
-        # Читаем область
-        tile_image = slide.read_region((level_x, level_y), best_level, (level_w, level_h))
-
-        # Конвертируем RGBA в RGB
-        if tile_image.mode == 'RGBA':
-            # Создаем белый фон
-            rgb_image = Image.new('RGB', tile_image.size, (255, 255, 255))
-            rgb_image.paste(tile_image, mask=tile_image.split()[3])  # Используем альфа-канал как маску
-            tile_image = rgb_image
-
-        # Масштабируем до нужного размера тайла
-        target_size = (TILE_SIZE + 2 * OVERLAP, TILE_SIZE + 2 * OVERLAP)
-        if tile_image.size != target_size:
-            tile_image = tile_image.resize(target_size, Image.Resampling.LANCZOS)
-
-        # Кодируем в нужный формат
-        import io
-        output = io.BytesIO()
-
-        if format.lower() in ('jpeg', 'jpg'):
-            tile_image.save(output, format='JPEG', quality=85)
-            mimetype = 'image/jpeg'
-        elif format.lower() == 'png':
-            tile_image.save(output, format='PNG')
-            mimetype = 'image/png'
-        else:
-            return jsonify({"error": f"Unsupported format: {format}"}), 400
-
-        output.seek(0)
+        # Определяем MIME type
+        mimetype_map = {
+            'jpeg': 'image/jpeg',
+            'jpg': 'image/jpeg',
+            'png': 'image/png'
+        }
+        mimetype = mimetype_map.get(format.lower(), 'image/jpeg')
 
         return Response(
-            output.getvalue(),
+            buf.getvalue(),
             mimetype=mimetype,
             status=200
         )
-
     except Exception as e:
         logger.error(f"GetTile error: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 500
@@ -331,5 +234,6 @@ def health():
 
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', '50055'))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    logger.info(f"Starting tiler service on port {PORT}")
+    logger.info(f"Tile size: {TILE_SIZE}, Overlap: {OVERLAP}")
+    app.run(host='0.0.0.0', port=PORT, debug=False)
