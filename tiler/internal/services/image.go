@@ -350,12 +350,10 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	maxRow := int(math.Max(1, math.Ceil(float64(levelHeight)/float64(s.tileSize))))
 
 	// Проверяем границы координат тайла
-	// OpenSeadragon может запрашивать тайлы с координатами, которые выходят за границы,
-	// особенно на высоких уровнях масштабирования, где изображение становится очень маленьким.
-	// В таких случаях возвращаем пустой белый тайл, чтобы избежать наложения одинаковых тайлов.
+	// Если запрашивается тайл вне границ изображения, возвращаем ошибку
 	if col < 0 || row < 0 || col >= maxCol || row >= maxRow {
-		// Возвращаем пустой белый тайл для запросов вне границ
-		return s.createEmptyTile(level, col, row, format)
+		return nil, fmt.Errorf("tile coordinates out of bounds: level=%d, col=%d, row=%d (max: col=%d, row=%d, image_size=%dx%d)",
+			level, col, row, maxCol-1, maxRow-1, levelWidth, levelHeight)
 	}
 
 	// Проверяем кэш тайлов на диске
@@ -457,42 +455,6 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 			slog.Debug("failed to cache tile", "path", tileCachePath, "err", err)
 		}
 	}()
-
-	return &domain.Tile{
-		Level:  level,
-		Col:    col,
-		Row:    row,
-		Data:   tileData,
-		Format: format,
-	}, nil
-}
-
-// createEmptyTile создает пустой белый тайл для запросов, которые выходят за границы изображения
-// Это предотвращает наложение одинаковых тайлов в OpenSeadragon
-// Вместо возврата тайла (0,0) для всех запросов, возвращаем пустой белый тайл,
-// который OpenSeadragon правильно отобразит в нужной позиции без наложения
-func (s *imageService) createEmptyTile(level, col, row int, format string) (*domain.Tile, error) {
-	// Создаем пустое белое изображение размером тайла
-	tileSizeWithOverlap := s.tileSize + 2*s.overlap
-
-	// Создаем белое изображение через imaging (более надежный способ)
-	whiteImg := imaging.New(tileSizeWithOverlap, tileSizeWithOverlap, image.White)
-
-	// Кодируем в нужный формат
-	var tileData []byte
-	var encodeErr error
-	switch strings.ToLower(format) {
-	case "jpeg", "jpg":
-		tileData, encodeErr = encodeJPEG(whiteImg)
-	case "png":
-		tileData, encodeErr = encodePNG(whiteImg)
-	default:
-		return nil, fmt.Errorf("unsupported format: %s", format)
-	}
-
-	if encodeErr != nil {
-		return nil, fmt.Errorf("failed to encode empty tile: %w", encodeErr)
-	}
 
 	return &domain.Tile{
 		Level:  level,

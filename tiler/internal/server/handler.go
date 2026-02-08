@@ -177,6 +177,21 @@ func (h *Handler) GetTile(w http.ResponseWriter, r *http.Request) {
 	duration := time.Since(startTime)
 
 	if err != nil {
+		// Проверяем, является ли ошибка ошибкой "out of bounds" (несуществующий тайл)
+		if strings.Contains(err.Error(), "out of bounds") {
+			slog.Warn("GetTile: tile not found (out of bounds)",
+				"decoded_file_path", decodedFilePath,
+				"level", level,
+				"col", col,
+				"row", row,
+				"format", format,
+				"err", err,
+				"duration_ms", duration.Milliseconds(),
+			)
+			http.Error(w, fmt.Sprintf("Tile not found: %v", err), http.StatusNotFound)
+			return
+		}
+
 		slog.Error("GetTile: failed to get tile",
 			"decoded_file_path", decodedFilePath,
 			"level", level,
