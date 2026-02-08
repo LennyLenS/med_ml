@@ -1,21 +1,21 @@
-FROM golang:alpine
+FROM golang:1.24-bookworm
 
 # Устанавливаем зависимости для libvips и OpenSlide
-# vips-dev содержит заголовочные файлы для компиляции
-# vips содержит runtime библиотеку
-# openslide-dev содержит заголовочные файлы для OpenSlide
-# openslide содержит runtime библиотеку OpenSlide
-# gcc, musl-dev нужны для CGO компиляции
-# pkg-config нужен для поиска библиотек через pkg-config
-RUN apk add --no-cache \
+# libvips-dev содержит заголовочные файлы для компиляции
+# libvips-tools содержит утилиты
+# libopenslide0 содержит runtime библиотеку OpenSlide
+# libopenslide-dev содержит заголовочные файлы для OpenSlide
+# gcc, g++, pkg-config нужны для CGO компиляции
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	git \
 	gcc \
-	musl-dev \
-	pkgconfig \
-	vips-dev \
-	vips \
-	openslide-dev \
-	openslide
+	g++ \
+	pkg-config \
+	libvips-dev \
+	libvips-tools \
+	libopenslide0 \
+	libopenslide-dev \
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /service
 
@@ -31,7 +31,7 @@ COPY . .
 # Получаем недостающие зависимости и обновляем go.mod/go.sum
 RUN go mod tidy
 
-# Собираем приложение с CGO (требуется для govips/libvips)
+# Собираем приложение с CGO (требуется для OpenSlide и libvips)
 ENV CGO_ENABLED=1
 RUN go build -o bin/tiler cmd/service/main.go
 
