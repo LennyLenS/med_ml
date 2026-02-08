@@ -82,61 +82,41 @@ func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
 
 // GetImageInfo возвращает информацию об изображении, включая максимальный уровень масштабирования
 //
-// МАКСИМАЛЬНЫЙ УРОВЕНЬ ПРИБЛИЖЕНИЯ для SVS файлов:
+// ФОРМУЛА OPENSEADRAGON DZI:
+// Используется самая длинная сторона изображения (M).
+// Формула: 2^(N+1) ≥ M, где M — длина самой длинной стороны.
+// Для изображения 197208 px:
 //
-// Максимальный уровень масштабирования зависит от трех факторов:
-//
-// 1. РАЗМЕР ИЗОБРАЖЕНИЯ (width x height)
-//   - Чем больше исходное разрешение слайда, тем больше уровней
-//   - SVS файлы обычно имеют очень высокое разрешение (десятки тысяч пикселей)
-//   - Например: слайд 100000x80000 пикселей даст больше уровней, чем 10000x8000
-//
-// 2. РАЗМЕР ТАЙЛА (tileSize)
-//
-//   - Стандартный размер тайла: 256x256 пикселей
-//
-//   - Чем меньше tileSize, тем больше уровней (но больше тайлов на каждом уровне)
-//
-//   - Чем больше tileSize, тем меньше уровней (но меньше тайлов)
-//
-//     3. ФОРМУЛА ВЫЧИСЛЕНИЯ:
-//     levels = ceil(log2(max(width, height) / tileSize)) + 1
-//
-//     Где:
-//
-//   - max(width, height) - максимальная сторона изображения
-//
-//   - tileSize - размер тайла (обычно 256)
-//
-//   - log2 - логарифм по основанию 2
-//
-//   - ceil - округление вверх
-//
-//   - +1 добавляет уровень 0 (полное разрешение)
+//	2^17 = 131072 — мало
+//	2^18 = 262144 — подходит
+//	→ maxLevel = 17 (N = 17)
+//	→ количество уровней = 18 (от 0 до 17)
 //
 // КАК РАБОТАЮТ УРОВНИ:
-// - Level 0: полное разрешение (100% масштаб)
-// - Level 1: 50% масштаб (изображение уменьшено в 2 раза)
-// - Level 2: 25% масштаб (изображение уменьшено в 4 раза)
-// - Level N: изображение уменьшено в 2^N раз
-// - Максимальный уровень: когда изображение становится меньше или равно размеру тайла
+// - Уровень maxLevel (17) — полное разрешение (197208 × 88437 px)
+// - Уровень maxLevel-1 (16) — ½ (около 98604 × 44219 px)
+// - Уровень maxLevel-2 (15) — ¼ и т.д.
+// - Уровень 0 — минимальный масштаб
+// Каждый следующий уровень вдвое меньше предыдущего.
+//
+// ПАРАМЕТРЫ:
+// - TileSize = 510 — каждый тайл 510×510 px
+// - Overlap = 1 — соседние тайлы перекрываются на 1 px по краям
 //
 // ДЛЯ SVS ФАЙЛОВ:
 // - SVS файлы (формат Aperio) уже содержат встроенные пирамидальные уровни
 // - libvips автоматически использует эти уровни при чтении файла (random access)
 // - Это позволяет эффективно читать только нужные тайлы без загрузки всего файла
-// - Максимальный уровень определяется исходным разрешением сканирования слайда
 //
 // ПРИМЕРЫ РАСЧЕТА:
-// - Изображение 256x256, tileSize=256:  levels = ceil(log2(256/256)) + 1 = ceil(0) + 1 = 1 уровень (level 0)
-// - Изображение 512x512, tileSize=256:  levels = ceil(log2(512/256)) + 1 = ceil(1) + 1 = 2 уровня (level 0-1)
-// - Изображение 10000x8000, tileSize=256: levels = ceil(log2(10000/256)) + 1 = ceil(5.29) + 1 = 7 уровней (level 0-6)
-// - Изображение 100000x80000, tileSize=256: levels = ceil(log2(100000/256)) + 1 = ceil(8.61) + 1 = 10 уровней (level 0-9)
+// - Изображение 197208×88437: maxLevel = 17, уровней = 18 (от 0 до 17)
+// - Изображение 100000×80000: maxLevel = 16, уровней = 17 (от 0 до 16)
+// - Изображение 10000×8000: maxLevel = 13, уровней = 14 (от 0 до 13)
 //
 // КАК УЗНАТЬ МАКСИМАЛЬНЫЙ УРОВЕНЬ:
 // 1. Вызовите GetImageInfo() - вернет структуру ImageInfo с полем Levels
 // 2. Максимальный доступный уровень = Levels - 1 (так как нумерация с 0)
-// 3. Например, если Levels = 10, то доступны уровни от 0 до 9
+// 3. Например, если Levels = 18, то доступны уровни от 0 до 17
 func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*domain.ImageInfo, error) {
 	// Проверяем кэш информации об изображении
 	s.infoCacheMux.RLock()
@@ -200,29 +180,54 @@ func (s *imageService) GetImageInfo(ctx context.Context, imagePath string) (*dom
 }
 
 // calculateMaxLevels вычисляет максимальное количество уровней масштабирования
-// для изображения заданного размера
+// для изображения заданного размера согласно спецификации OpenSeadragon DZI
 //
-// Формула: levels = ceil(log2(max(width, height) / tileSize)) + 1
+// Формула OpenSeadragon: 2^(N+1) ≥ M, где M — длина самой длинной стороны
+// Для изображения 197208 px:
+//   2^17 = 131072 — мало
+//   2^18 = 262144 — подходит
+//   → maxLevel = 17 (N = 17)
+//   → количество уровней = 18 (от 0 до 17)
+//
+// Уровень 17 — полное разрешение (197208 × 88437 px)
+// Уровень 16 — ½ (около 98604 × 44219 px)
+// Уровень 15 — ¼ и т.д.
+// Уровень 0 — минимальный масштаб
+//
+// Каждый следующий уровень вдвое меньше предыдущего.
 
 func (s *imageService) calculateMaxLevels(width, height int) int {
 	maxDim := math.Max(float64(width), float64(height))
 	if maxDim <= 0 {
 		return 1
 	}
-	// Базовый расчет уровней по формуле Deep Zoom Image
-	levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
 
-	// OpenSeadragon может запрашивать дополнительные уровни из-за особенностей
-	// расчета координат и округления. Добавляем один дополнительный уровень,
-	// если изображение достаточно большое, чтобы это имело смысл
-	// Это позволяет обрабатывать запросы уровня, который теоретически не нужен,
-	// но может быть запрошен OpenSeadragon при определенных условиях масштабирования
-	if maxDim > float64(s.tileSize*2) {
-		// Добавляем запас только для достаточно больших изображений
-		// чтобы избежать создания ненужных уровней для маленьких изображений
-		levels++
+	// Находим минимальное N такое, что 2^(N+1) ≥ maxDim
+	// Формула: находим минимальное N+1 такое, что 2^(N+1) ≥ maxDim
+	log2MaxDim := math.Log2(maxDim)
+	nPlusOne := math.Ceil(log2MaxDim)
+
+	// Проверяем условие 2^(N+1) ≥ maxDim
+	// Если 2^ceil(log2(maxDim)) < maxDim, то нужно увеличить на 1
+	// Если 2^ceil(log2(maxDim)) == maxDim (точная степень), тоже увеличиваем на 1
+	// (чтобы получить 2^(N+1) ≥ maxDim, а не 2^N == maxDim)
+	powerNPlusOne := math.Pow(2, nPlusOne)
+	if powerNPlusOne < maxDim {
+		// 2^(N+1) < maxDim, нужно использовать 2^(N+2)
+		nPlusOne++
+	} else if powerNPlusOne == maxDim {
+		// 2^(N+1) == maxDim (точная степень), нужно использовать 2^(N+2) ≥ maxDim
+		nPlusOne++
 	}
+	// Иначе 2^(N+1) > maxDim, значит 2^(N+1) ≥ maxDim, используем текущее nPlusOne
 
+	// maxLevel = N, где N+1 = nPlusOne, значит maxLevel = nPlusOne - 1
+	maxLevel := int(nPlusOne) - 1
+
+	// Количество уровней = maxLevel + 1 (от 0 до maxLevel включительно)
+	levels := maxLevel + 1
+
+	// Гарантируем минимум 1 уровень
 	if levels < 1 {
 		return 1
 	}
@@ -330,15 +335,16 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	}
 
 	// Вычисляем размеры изображения на данном уровне
-	var levelWidth, levelHeight int
-	if level == 0 {
-		levelWidth = info.Width
-		levelHeight = info.Height
-	} else {
-		scale := math.Pow(2, float64(level))
-		levelWidth = int(float64(info.Width) / scale)
-		levelHeight = int(float64(info.Height) / scale)
-	}
+	// В OpenSeadragon: maxLevel (например, 17) = полное разрешение
+	//                  maxLevel - 1 (16) = уменьшено в 2 раза
+	//                  maxLevel - 2 (15) = уменьшено в 4 раза
+	//                  ...
+	//                  0 = уменьшено в 2^maxLevel раз
+	// Формула: scaleFactor = 2^(level - maxLevel)
+	maxLevel := info.Levels - 1
+	scaleFactor := math.Pow(2, float64(level-maxLevel))
+	levelWidth := int(float64(info.Width) * scaleFactor)
+	levelHeight := int(float64(info.Height) * scaleFactor)
 
 	// Проверяем, что размеры изображения валидны
 	if levelWidth <= 0 || levelHeight <= 0 {
@@ -389,19 +395,22 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	tileY := row * s.tileSize
 
 	// Вычисляем масштаб для уровня
-	var scaleFactor float64
-	if level == 0 {
-		scaleFactor = 1.0 // Полное разрешение
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
+	// Формула: scaleFactor = 2^(level - maxLevel)
+	maxLevelForTile := info.Levels - 1
+	var tileScaleFactor float64
+	if level == maxLevelForTile {
+		tileScaleFactor = 1.0 // Полное разрешение
 	} else {
-		scaleFactor = math.Pow(2, float64(-level)) // Отрицательная степень для уменьшения
+		tileScaleFactor = math.Pow(2, float64(level-maxLevelForTile))
 	}
 
 	// Вычисляем координаты и размеры области в исходном изображении
 	// С учетом overlap и масштаба
-	sourceX := int(float64(tileX-s.overlap) / scaleFactor)
-	sourceY := int(float64(tileY-s.overlap) / scaleFactor)
-	sourceWidth := int(float64(s.tileSize+2*s.overlap) / scaleFactor)
-	sourceHeight := int(float64(s.tileSize+2*s.overlap) / scaleFactor)
+	sourceX := int(float64(tileX-s.overlap) / tileScaleFactor)
+	sourceY := int(float64(tileY-s.overlap) / tileScaleFactor)
+	sourceWidth := int(float64(s.tileSize+2*s.overlap) / tileScaleFactor)
+	sourceHeight := int(float64(s.tileSize+2*s.overlap) / tileScaleFactor)
 
 	// Ограничиваем координаты границами изображения
 	sourceX = int(math.Max(0, float64(sourceX)))
@@ -429,9 +438,10 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 
 	// Масштабируем только извлеченную область до размера тайла
 	// Это намного эффективнее, чем масштабировать всё изображение
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
 	var tileImg *vips.ImageRef
-	if level == 0 {
-		// Для уровня 0 масштабирование не нужно
+	if level == maxLevelForTile {
+		// Для максимального уровня масштабирование не нужно
 		tileImg, err = regionImg.Copy()
 		if err != nil {
 			return nil, fmt.Errorf("failed to copy region: %w", err)
@@ -501,9 +511,9 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 }
 
 // getTileFromStandardImage - fallback метод для стандартного image.Decode
-func (s *imageService) getTileFromStandardImage(img image.Image, level, col, row int, format string) (*domain.Tile, error) {
+func (s *imageService) getTileFromStandardImage(img image.Image, level, col, row int, format string, maxLevel int) (*domain.Tile, error) {
 	// Масштабируем изображение до нужного уровня
-	scaledImg := s.scaleToLevel(img, level)
+	scaledImg := s.scaleToLevel(img, level, maxLevel)
 
 	// Вычисляем размеры тайла с учетом overlap
 	tileSizeWithOverlap := s.tileSize + 2*s.overlap
@@ -566,16 +576,18 @@ func (s *imageService) getTileFromStandardImage(img image.Image, level, col, row
 	}, nil
 }
 
-func (s *imageService) scaleToLevel(img image.Image, level int) image.Image {
-	if level == 0 {
+func (s *imageService) scaleToLevel(img image.Image, level int, maxLevel int) image.Image {
+	if level == maxLevel {
 		return img
 	}
 
 	// Вычисляем масштаб для уровня
-	scale := math.Pow(2, float64(level))
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
+	// Формула: scaleFactor = 2^(level - maxLevel)
+	scaleFactor := math.Pow(2, float64(level-maxLevel))
 	bounds := img.Bounds()
-	newWidth := int(float64(bounds.Dx()) / scale)
-	newHeight := int(float64(bounds.Dy()) / scale)
+	newWidth := int(float64(bounds.Dx()) * scaleFactor)
+	newHeight := int(float64(bounds.Dy()) * scaleFactor)
 
 	return imaging.Resize(img, newWidth, newHeight, imaging.Lanczos)
 }
@@ -634,15 +646,12 @@ func (s *imageService) GetLevelInfo(ctx context.Context, imagePath string, level
 	}
 
 	// Вычисляем размеры изображения на данном уровне
-	var levelWidth, levelHeight int
-	if level == 0 {
-		levelWidth = info.Width
-		levelHeight = info.Height
-	} else {
-		scale := math.Pow(2, float64(level))
-		levelWidth = int(float64(info.Width) / scale)
-		levelHeight = int(float64(info.Height) / scale)
-	}
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
+	// Формула: scaleFactor = 2^(level - maxLevel)
+	maxLevel := info.Levels - 1
+	scaleFactor := math.Pow(2, float64(level-maxLevel))
+	levelWidth := int(float64(info.Width) * scaleFactor)
+	levelHeight := int(float64(info.Height) * scaleFactor)
 
 	// Вычисляем количество тайлов на данном уровне
 	maxCol := int(math.Max(1, math.Ceil(float64(levelWidth)/float64(s.tileSize))))
@@ -657,8 +666,8 @@ func (s *imageService) GetLevelInfo(ctx context.Context, imagePath string, level
 		"tiles_rows":    maxRow,
 		"total_tiles":   totalTiles,
 		"tile_size":     s.tileSize,
-		"scale_factor":  math.Pow(2, float64(level)),
-		"is_max_level":  level == info.Levels-1,
+		"scale_factor":  scaleFactor,
+		"is_max_level":  level == maxLevel,
 		"original_size": fmt.Sprintf("%dx%d", info.Width, info.Height),
 	}, nil
 }
