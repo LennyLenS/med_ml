@@ -53,9 +53,14 @@ def get_s3_client():
     """Получить клиент S3"""
     try:
         import boto3
+        # Добавляем протокол, если его нет
+        endpoint_url = S3_ENDPOINT
+        if endpoint_url and not endpoint_url.startswith('http://') and not endpoint_url.startswith('https://'):
+            endpoint_url = 'http://' + endpoint_url
+
         s3_client = boto3.client(
             's3',
-            endpoint_url=S3_ENDPOINT,
+            endpoint_url=endpoint_url,
             aws_access_key_id=S3_ACCESS_TOKEN,
             aws_secret_access_key=S3_SECRET_TOKEN
         )

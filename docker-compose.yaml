@@ -183,10 +183,10 @@ services:
   tiler_service:
     container_name: tiler_service
     build:
-      context: ./tiler/
+      context: ./tiler_python/
       dockerfile: Dockerfile
     env_file:
-      - ./tiler/.env-docker
+      - ./tiler_python/.env-docker
     ports:
       - 50080:50055
     depends_on:
