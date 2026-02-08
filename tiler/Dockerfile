@@ -1,4 +1,6 @@
-FROM golang:1.24-bookworm
+# Используем стабильный тег golang:bookworm или golang:1.23-bookworm
+# Если проблемы с сетью, попробуйте: golang:latest или golang:1.23
+FROM golang:bookworm
 
 # Устанавливаем зависимости для libvips и OpenSlide
 # libvips-dev содержит заголовочные файлы для компиляции
