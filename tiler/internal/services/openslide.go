@@ -221,8 +221,9 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 
 	// Вычисляем координаты в исходном изображении (уровень maxLevel = полное разрешение)
 	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
-	// Формула для координат: sourceCoord = tileCoord / scaleFactor, где scaleFactor = 2^(level - maxLevel)
-	// ВАЖНО: overlap НЕ вычитается из координат, он уже учтен в размере области (sourceWidth/Height)
+	// Формула для координат: sourceCoord = (tileCoord - overlap) / scaleFactor
+	// ВАЖНО: overlap ВЫЧИТАЕТСЯ из координат, чтобы тайлы правильно перекрывались
+	// Размер области: (tileSize + 2*overlap) / scaleFactor
 	maxLevelForCoords := info.Levels - 1
 	coordScaleFactor := math.Pow(2, float64(level-maxLevelForCoords))
 	if coordScaleFactor <= 0 {
@@ -230,9 +231,9 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 			level, maxLevelForCoords, coordScaleFactor)
 	}
 
-	// Координаты тайла БЕЗ вычитания overlap (overlap учтен в размере области)
-	sourceX := int(float64(tileX) / coordScaleFactor)
-	sourceY := int(float64(tileY) / coordScaleFactor)
+	// Координаты тайла С вычитанием overlap (для правильного перекрытия тайлов)
+	sourceX := int(float64(tileX-s.overlap) / coordScaleFactor)
+	sourceY := int(float64(tileY-s.overlap) / coordScaleFactor)
 	// Размер области С overlap (overlap добавляется к размеру тайла)
 	sourceWidth := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
 	sourceHeight := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
@@ -457,7 +458,10 @@ func (s *openslideService) findBestOpenSlideLevel(osr *C.openslide_t, dziLevel i
 	levelCount := int(C.openslide_get_level_count(osr))
 
 	// Вычисляем желаемый масштаб для DZI уровня
-	desiredScale := math.Pow(2, float64(dziLevel))
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
+	// Формула: desiredScale = 2^(dziLevel - maxLevel)
+	maxLevel := info.Levels - 1
+	desiredScale := math.Pow(2, float64(dziLevel-maxLevel))
 
 	bestLevel := 0
 	bestDiff := math.MaxFloat64

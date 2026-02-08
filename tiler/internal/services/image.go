@@ -401,10 +401,11 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	}
 
 	// Вычисляем координаты и размеры области в исходном изображении
-	// ВАЖНО: overlap НЕ вычитается из координат, он уже учтен в размере области (sourceWidth/Height)
-	// Координаты тайла БЕЗ вычитания overlap
-	sourceX := int(float64(tileX) / tileScaleFactor)
-	sourceY := int(float64(tileY) / tileScaleFactor)
+	// ВАЖНО: overlap ВЫЧИТАЕТСЯ из координат, чтобы тайлы правильно перекрывались
+	// Размер области: (tileSize + 2*overlap) / scaleFactor
+	// Координаты тайла С вычитанием overlap (для правильного перекрытия тайлов)
+	sourceX := int(float64(tileX-s.overlap) / tileScaleFactor)
+	sourceY := int(float64(tileY-s.overlap) / tileScaleFactor)
 	// Размер области С overlap (overlap добавляется к размеру тайла)
 	sourceWidth := int(float64(s.tileSize+2*s.overlap) / tileScaleFactor)
 	sourceHeight := int(float64(s.tileSize+2*s.overlap) / tileScaleFactor)
