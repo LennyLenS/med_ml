@@ -33,9 +33,9 @@ import (
 )
 
 type openslideImage struct {
-	osr     *C.openslide_t
-	path    string
-	lastUsed time.Time
+	osr       *C.openslide_t
+	path      string
+	lastUsed  time.Time
 	accessMux sync.RWMutex
 }
 
@@ -149,14 +149,17 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	}
 
 	// Вычисляем размеры изображения на данном уровне
-	var levelWidth, levelHeight int
-	if level == 0 {
-		levelWidth = info.Width
-		levelHeight = info.Height
-	} else {
-		scale := math.Pow(2, float64(level))
-		levelWidth = int(float64(info.Width) / scale)
-		levelHeight = int(float64(info.Height) / scale)
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
+	// Формула: scaleFactor = 2^(level - maxLevel)
+	maxLevel := info.Levels - 1
+	scaleFactor := math.Pow(2, float64(level-maxLevel))
+	levelWidth := int(float64(info.Width) * scaleFactor)
+	levelHeight := int(float64(info.Height) * scaleFactor)
+
+	// Проверяем валидность размеров
+	if levelWidth <= 0 || levelHeight <= 0 {
+		return nil, fmt.Errorf("invalid level dimensions: level=%d, width=%d, height=%d (maxLevel=%d, scaleFactor=%.6f)",
+			level, levelWidth, levelHeight, maxLevel, scaleFactor)
 	}
 
 	// Вычисляем максимальное количество тайлов
@@ -202,12 +205,26 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	var levelWidthOS, levelHeightOS C.int64_t
 	C.openslide_get_level_dimensions(osImg.osr, C.int(openSlideLevel), &levelWidthOS, &levelHeightOS)
 
-	// Вычисляем координаты в исходном изображении (уровень 0)
-	scaleFactor := math.Pow(2, float64(level))
-	sourceX := int(float64(tileX-s.overlap) / scaleFactor)
-	sourceY := int(float64(tileY-s.overlap) / scaleFactor)
-	sourceWidth := int(float64(s.tileSize+2*s.overlap) / scaleFactor)
-	sourceHeight := int(float64(s.tileSize+2*s.overlap) / scaleFactor)
+	// Вычисляем координаты в исходном изображении (уровень maxLevel = полное разрешение)
+	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
+	// Формула для координат: sourceCoord = tileCoord / scaleFactor, где scaleFactor = 2^(level - maxLevel)
+	maxLevelForCoords := info.Levels - 1
+	coordScaleFactor := math.Pow(2, float64(level-maxLevelForCoords))
+	if coordScaleFactor <= 0 {
+		return nil, fmt.Errorf("invalid scale factor: level=%d, maxLevel=%d, scaleFactor=%.6f",
+			level, maxLevelForCoords, coordScaleFactor)
+	}
+
+	sourceX := int(float64(tileX-s.overlap) / coordScaleFactor)
+	sourceY := int(float64(tileY-s.overlap) / coordScaleFactor)
+	sourceWidth := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
+	sourceHeight := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
+
+	// Проверяем валидность размеров источника
+	if sourceWidth <= 0 || sourceHeight <= 0 {
+		return nil, fmt.Errorf("invalid source dimensions: sourceWidth=%d, sourceHeight=%d (tileSize=%d, overlap=%d, coordScaleFactor=%.6f)",
+			sourceWidth, sourceHeight, s.tileSize, s.overlap, coordScaleFactor)
+	}
 
 	// Ограничиваем координаты
 	sourceX = int(math.Max(0, float64(sourceX)))
@@ -227,10 +244,24 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	levelW := int(float64(sourceWidth) / levelScale)
 	levelH := int(float64(sourceHeight) / levelScale)
 
+	// Проверяем, что размеры валидны
+	if levelW <= 0 || levelH <= 0 {
+		return nil, fmt.Errorf("invalid region size: levelW=%d, levelH=%d (sourceWidth=%d, sourceHeight=%d, levelScale=%.2f)",
+			levelW, levelH, sourceWidth, sourceHeight, levelScale)
+	}
+
 	// Читаем область из OpenSlide
 	// OpenSlide использует ARGB формат (32 бита на пиксель)
 	// openslide_read_region(osr, dest, x, y, level, w, h)
-	buf := make([]uint32, levelW*levelH)
+	bufSize := levelW * levelH
+	if bufSize <= 0 {
+		return nil, fmt.Errorf("invalid buffer size: levelW=%d * levelH=%d = %d", levelW, levelH, bufSize)
+	}
+
+	buf := make([]uint32, bufSize)
+	if len(buf) == 0 {
+		return nil, fmt.Errorf("failed to allocate buffer: size=%d", bufSize)
+	}
 
 	C.openslide_read_region(osImg.osr, (*C.uint32_t)(unsafe.Pointer(&buf[0])), C.int64_t(levelX), C.int64_t(levelY), C.int(openSlideLevel), C.int64_t(levelW), C.int64_t(levelH))
 
@@ -424,7 +455,23 @@ func (s *openslideService) findBestOpenSlideLevel(osr *C.openslide_t, dziLevel i
 }
 
 func (s *openslideService) argbToImage(argb []uint32, width, height int) image.Image {
+	// Проверяем валидность размеров
+	if width <= 0 || height <= 0 {
+		// Возвращаем пустое изображение минимального размера
+		return image.NewRGBA(image.Rect(0, 0, 1, 1))
+	}
+
+	if len(argb) == 0 {
+		// Возвращаем пустое изображение нужного размера
+		return image.NewRGBA(image.Rect(0, 0, width, height))
+	}
+
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	expectedPixLen := width * height * 4
+	if len(img.Pix) != expectedPixLen {
+		// Если размер не совпадает, создаем новый с правильным размером
+		img = image.NewRGBA(image.Rect(0, 0, width, height))
+	}
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
