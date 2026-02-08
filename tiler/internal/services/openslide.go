@@ -102,18 +102,27 @@ func (s *openslideService) GetImageInfo(ctx context.Context, imagePath string) (
 	if err != nil {
 		return nil, fmt.Errorf("failed to load image for info (path: %s): %w", imagePath, err)
 	}
-	defer s.closeImage(osImg)
 
 	// Защищаем доступ к osr мьютексом (OpenSlide не thread-safe)
 	osImg.accessMux.RLock()
+
+	// Проверяем, что osr не был закрыт
+	if osImg.osr == nil {
+		osImg.accessMux.RUnlock()
+		return nil, fmt.Errorf("image handle was closed")
+	}
+
+	// Сохраняем указатель локально для безопасности
+	osr := osImg.osr
+
 	defer osImg.accessMux.RUnlock()
 
 	// Получаем размеры уровня 0 (полное разрешение)
 	var width, height C.int64_t
-	C.openslide_get_level0_dimensions(osImg.osr, &width, &height)
+	C.openslide_get_level0_dimensions(osr, &width, &height)
 
 	// Получаем количество уровней
-	levelCount := int(C.openslide_get_level_count(osImg.osr))
+	levelCount := int(C.openslide_get_level_count(osr))
 
 	// Вычисляем количество уровней для DZI согласно OpenSeadragon
 	// OpenSeadragon генерирует уровни до размера 1x1
@@ -216,13 +225,25 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	if err != nil {
 		return nil, fmt.Errorf("failed to load image: %w", err)
 	}
-	if osImg == nil || osImg.osr == nil {
-		return nil, fmt.Errorf("invalid image handle: osImg is nil or osr is nil")
+	if osImg == nil {
+		return nil, fmt.Errorf("invalid image handle: osImg is nil")
 	}
-	defer s.closeImage(osImg)
+
+	// Обновляем время последнего использования
+	osImg.lastUsed = time.Now()
 
 	// Защищаем доступ к osr мьютексом (OpenSlide не thread-safe)
 	osImg.accessMux.RLock()
+
+	// Проверяем, что osr не был закрыт (после получения блокировки)
+	if osImg.osr == nil {
+		osImg.accessMux.RUnlock()
+		return nil, fmt.Errorf("image handle was closed")
+	}
+
+	// Сохраняем указатель локально для безопасности
+	osr := osImg.osr
+
 	defer osImg.accessMux.RUnlock()
 
 	// Вычисляем координаты тайла
@@ -231,20 +252,20 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 
 	// Определяем, какой уровень OpenSlide использовать
 	// OpenSlide использует встроенные уровни, которые могут не совпадать с DZI уровнями
-	openSlideLevel := s.findBestOpenSlideLevel(osImg.osr, level, info)
+	openSlideLevel := s.findBestOpenSlideLevel(osr, level, info)
 
 	// Проверяем валидность уровня OpenSlide
-	levelCount := int(C.openslide_get_level_count(osImg.osr))
+	levelCount := int(C.openslide_get_level_count(osr))
 	if openSlideLevel < 0 || openSlideLevel >= levelCount {
 		return nil, fmt.Errorf("invalid OpenSlide level: %d (max: %d, dziLevel: %d)", openSlideLevel, levelCount-1, level)
 	}
 
 	// Получаем размеры выбранного уровня OpenSlide
 	var levelWidthOS, levelHeightOS C.int64_t
-	C.openslide_get_level_dimensions(osImg.osr, C.int(openSlideLevel), &levelWidthOS, &levelHeightOS)
+	C.openslide_get_level_dimensions(osr, C.int(openSlideLevel), &levelWidthOS, &levelHeightOS)
 
 	// Проверяем ошибки OpenSlide после получения размеров
-	if errStr := C.openslide_get_error(osImg.osr); errStr != nil {
+	if errStr := C.openslide_get_error(osr); errStr != nil {
 		return nil, fmt.Errorf("openslide error after get_level_dimensions: %s", C.GoString(errStr))
 	}
 
@@ -281,7 +302,7 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 
 	// Вычисляем масштаб между уровнем 0 и выбранным уровнем OpenSlide
 	var level0Width, level0Height C.int64_t
-	C.openslide_get_level0_dimensions(osImg.osr, &level0Width, &level0Height)
+	C.openslide_get_level0_dimensions(osr, &level0Width, &level0Height)
 
 	// Проверяем на деление на ноль
 	if levelWidthOS <= 0 || levelHeightOS <= 0 {
@@ -335,15 +356,26 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 		return nil, fmt.Errorf("invalid buffer size: levelW=%d * levelH=%d = %d", levelW, levelH, bufSize)
 	}
 
+	// Проверяем максимальный размер буфера (защита от переполнения памяти)
+	const maxBufferSize = 100 * 1024 * 1024 // 100MB (примерно 10000x10000 пикселей)
+	if bufSize > maxBufferSize {
+		return nil, fmt.Errorf("buffer size too large: %d (max: %d, levelW=%d, levelH=%d)", bufSize, maxBufferSize, levelW, levelH)
+	}
+
 	buf := make([]uint32, bufSize)
 	if len(buf) == 0 {
 		return nil, fmt.Errorf("failed to allocate buffer: size=%d", bufSize)
 	}
 
-	C.openslide_read_region(osImg.osr, (*C.uint32_t)(unsafe.Pointer(&buf[0])), C.int64_t(levelX), C.int64_t(levelY), C.int(openSlideLevel), C.int64_t(levelW), C.int64_t(levelH))
+	// Проверяем, что osr все еще валиден перед вызовом CGO
+	if osr == nil {
+		return nil, fmt.Errorf("osr became nil before read_region")
+	}
+
+	C.openslide_read_region(osr, (*C.uint32_t)(unsafe.Pointer(&buf[0])), C.int64_t(levelX), C.int64_t(levelY), C.int(openSlideLevel), C.int64_t(levelW), C.int64_t(levelH))
 
 	// Проверяем ошибки OpenSlide
-	if errStr := C.openslide_get_error(osImg.osr); errStr != nil {
+	if errStr := C.openslide_get_error(osr); errStr != nil {
 		return nil, fmt.Errorf("openslide error after read_region: %s", C.GoString(errStr))
 	}
 
@@ -499,8 +531,12 @@ func (s *openslideService) closeImage(osImg *openslideImage) {
 
 func (s *openslideService) cleanupCache() {
 	now := time.Now()
+	s.cacheMux.Lock()
+	defer s.cacheMux.Unlock()
+
 	for path, cached := range s.cache {
 		if now.Sub(cached.lastUsed) > s.cacheTTL {
+			// Получаем эксклюзивную блокировку перед закрытием
 			cached.accessMux.Lock()
 			if cached.osr != nil {
 				C.openslide_close(cached.osr)
