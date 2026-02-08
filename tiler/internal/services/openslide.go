@@ -222,6 +222,7 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	// Вычисляем координаты в исходном изображении (уровень maxLevel = полное разрешение)
 	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
 	// Формула для координат: sourceCoord = tileCoord / scaleFactor, где scaleFactor = 2^(level - maxLevel)
+	// ВАЖНО: overlap НЕ вычитается из координат, он уже учтен в размере области (sourceWidth/Height)
 	maxLevelForCoords := info.Levels - 1
 	coordScaleFactor := math.Pow(2, float64(level-maxLevelForCoords))
 	if coordScaleFactor <= 0 {
@@ -229,8 +230,10 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 			level, maxLevelForCoords, coordScaleFactor)
 	}
 
-	sourceX := int(float64(tileX-s.overlap) / coordScaleFactor)
-	sourceY := int(float64(tileY-s.overlap) / coordScaleFactor)
+	// Координаты тайла БЕЗ вычитания overlap (overlap учтен в размере области)
+	sourceX := int(float64(tileX) / coordScaleFactor)
+	sourceY := int(float64(tileY) / coordScaleFactor)
+	// Размер области С overlap (overlap добавляется к размеру тайла)
 	sourceWidth := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
 	sourceHeight := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
 
