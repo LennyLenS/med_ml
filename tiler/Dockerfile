@@ -1,15 +1,21 @@
 FROM golang:alpine
 
-# Устанавливаем зависимости для libvips (поддерживает SVS и compression value 7)
+# Устанавливаем зависимости для libvips и OpenSlide
 # vips-dev содержит заголовочные файлы для компиляции
 # vips содержит runtime библиотеку
+# openslide-dev содержит заголовочные файлы для OpenSlide
+# openslide содержит runtime библиотеку OpenSlide
 # gcc, musl-dev нужны для CGO компиляции
+# pkg-config нужен для поиска библиотек через pkg-config
 RUN apk add --no-cache \
 	git \
 	gcc \
 	musl-dev \
+	pkgconfig \
 	vips-dev \
-	vips
+	vips \
+	openslide-dev \
+	openslide
 
 WORKDIR /service
 

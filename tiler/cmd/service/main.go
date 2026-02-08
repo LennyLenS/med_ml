@@ -62,7 +62,21 @@ func run() (exitCode int) {
 
 	// Создаем сервисы
 	s3Service := services.NewS3Client(s3Client, bucketName)
-	imageService := services.NewImageService(s3Service, cfg.App.TileSize, cfg.App.Overlap)
+
+	// ВРЕМЕННО: Используем только OpenSlide для тестирования
+	// Закомментирован libvips для проверки работоспособности OpenSlide
+	var imageService services.ImageService
+	openSlideService := services.NewOpenSlideService(s3Service, cfg.App.TileSize, cfg.App.Overlap)
+	if openSlideService != nil {
+		slog.Info("using OpenSlide for image processing")
+		imageService = openSlideService
+	} else {
+		slog.Error("OpenSlide not available and libvips is disabled for testing")
+		return failExitCode
+		// Закомментировано для тестирования OpenSlide:
+		// slog.Info("using libvips for image processing")
+		// imageService = services.NewImageService(s3Service, cfg.App.TileSize, cfg.App.Overlap)
+	}
 
 	// Создаем HTTP сервер
 	httpHandler := server.NewServer(imageService)

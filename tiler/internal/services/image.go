@@ -55,8 +55,9 @@ type S3Client interface {
 }
 
 func NewImageService(s3Client S3Client, tileSize, overlap int) ImageService {
+	// ВРЕМЕННО ЗАКОММЕНТИРОВАНО для тестирования OpenSlide
 	// Инициализируем libvips (требуется только один раз)
-	vips.Startup(nil)
+	// vips.Startup(nil)
 
 	// Создаем временную директорию для кэша файлов
 	cacheDir := filepath.Join(os.TempDir(), "tiler_cache")
@@ -371,6 +372,10 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 		}, nil
 	}
 
+	// ОПТИМИЗАЦИЯ: Извлекаем область из исходного файла ДО масштабирования
+	// Это позволяет libvips использовать random access для tiled TIFF/SVS
+	// и читать только нужные тайлы, а не загружать весь файл в память
+
 	// Получаем изображение из кэша или загружаем его
 	// libvips будет читать только нужные тайлы из файла благодаря random access
 	baseImg, err := s.getOrLoadImage(ctx, imagePath)
@@ -379,55 +384,85 @@ func (s *imageService) GetTile(ctx context.Context, imagePath string, level, col
 	}
 	defer baseImg.Close()
 
-	// Масштабируем изображение до нужного уровня
-	// Для SVS файлов libvips автоматически использует встроенные пирамидальные уровни
-	// при чтении файла, но для других форматов нужно масштабировать вручную
-	var vipsImg *vips.ImageRef
-	if level > 0 {
-		scale := math.Pow(2, float64(level))
-		scaleFactor := 1.0 / scale
-		// Создаем копию для масштабирования, чтобы не модифицировать кэшированное изображение
-		scaledImg, err := baseImg.Copy()
-		if err != nil {
-			return nil, fmt.Errorf("failed to copy image for scaling: %w", err)
-		}
-		defer scaledImg.Close()
+	// Вычисляем координаты тайла на целевом уровне
+	tileX := col * s.tileSize
+	tileY := row * s.tileSize
 
-		if err := scaledImg.Resize(scaleFactor, vips.KernelLanczos3); err != nil {
-			return nil, fmt.Errorf("failed to resize image: %w", err)
-		}
-		vipsImg = scaledImg
+	// Вычисляем масштаб для уровня
+	var scaleFactor float64
+	if level == 0 {
+		scaleFactor = 1.0 // Полное разрешение
 	} else {
-		// Для уровня 0 используем исходное изображение
-		vipsImg = baseImg
+		scaleFactor = math.Pow(2, float64(-level)) // Отрицательная степень для уменьшения
 	}
 
-	// Вычисляем координаты тайла
-	x := col * s.tileSize
-	y := row * s.tileSize
+	// Вычисляем координаты и размеры области в исходном изображении
+	// С учетом overlap и масштаба
+	sourceX := int(float64(tileX-s.overlap) / scaleFactor)
+	sourceY := int(float64(tileY-s.overlap) / scaleFactor)
+	sourceWidth := int(float64(s.tileSize+2*s.overlap) / scaleFactor)
+	sourceHeight := int(float64(s.tileSize+2*s.overlap) / scaleFactor)
 
-	// Дополнительная проверка границ после масштабирования (на случай округления)
-	if x >= vipsImg.Width() || y >= vipsImg.Height() {
+	// Ограничиваем координаты границами изображения
+	sourceX = int(math.Max(0, float64(sourceX)))
+	sourceY = int(math.Max(0, float64(sourceY)))
+	sourceWidth = int(math.Min(float64(baseImg.Width()-sourceX), float64(sourceWidth)))
+	sourceHeight = int(math.Min(float64(baseImg.Height()-sourceY), float64(sourceHeight)))
+
+	// Проверяем, что область валидна
+	if sourceX >= baseImg.Width() || sourceY >= baseImg.Height() || sourceWidth <= 0 || sourceHeight <= 0 {
 		return nil, errors.New("tile coordinates out of bounds")
 	}
 
-	// Обрезаем тайл с учетом overlap
-	cropX := int(math.Max(0, float64(x-s.overlap)))
-	cropY := int(math.Max(0, float64(y-s.overlap)))
-	cropWidth := int(math.Min(float64(vipsImg.Width()-cropX), float64(s.tileSize+2*s.overlap)))
-	cropHeight := int(math.Min(float64(vipsImg.Height()-cropY), float64(s.tileSize+2*s.overlap)))
-
-	// Извлекаем тайл
+	// Извлекаем область из исходного изображения ПЕРЕД масштабированием
+	// Для tiled TIFF/SVS libvips использует random access и читает только нужные тайлы
 	// ExtractArea модифицирует исходное изображение, поэтому нужно создать копию
-	tileImg, err := vipsImg.Copy()
+	regionImg, err := baseImg.Copy()
 	if err != nil {
 		return nil, fmt.Errorf("failed to copy image: %w", err)
 	}
-	defer tileImg.Close()
+	defer regionImg.Close()
 
-	if err := tileImg.ExtractArea(cropX, cropY, cropWidth, cropHeight); err != nil {
-		return nil, fmt.Errorf("failed to extract tile: %w", err)
+	if err := regionImg.ExtractArea(sourceX, sourceY, sourceWidth, sourceHeight); err != nil {
+		return nil, fmt.Errorf("failed to extract region: %w", err)
 	}
+
+	// Масштабируем только извлеченную область до размера тайла
+	// Это намного эффективнее, чем масштабировать всё изображение
+	var tileImg *vips.ImageRef
+	if level == 0 {
+		// Для уровня 0 масштабирование не нужно
+		tileImg, err = regionImg.Copy()
+		if err != nil {
+			return nil, fmt.Errorf("failed to copy region: %w", err)
+		}
+	} else {
+		// Масштабируем только извлеченную область
+		targetWidth := s.tileSize + 2*s.overlap
+		targetHeight := s.tileSize + 2*s.overlap
+
+		// Вычисляем масштаб для области
+		regionScaleX := float64(targetWidth) / float64(sourceWidth)
+		regionScaleY := float64(targetHeight) / float64(sourceHeight)
+		regionScale := math.Min(regionScaleX, regionScaleY)
+
+		// Используем более быстрый алгоритм для больших уменьшений
+		var kernel vips.Kernel
+		if regionScale < 0.25 {
+			kernel = vips.KernelLinear // Быстрее для больших уменьшений
+		} else {
+			kernel = vips.KernelLanczos3 // Качественнее для небольших уменьшений
+		}
+
+		if err := regionImg.Resize(regionScale, kernel); err != nil {
+			return nil, fmt.Errorf("failed to resize region: %w", err)
+		}
+		tileImg, err = regionImg.Copy()
+		if err != nil {
+			return nil, fmt.Errorf("failed to copy scaled region: %w", err)
+		}
+	}
+	defer tileImg.Close()
 
 	// Кодируем тайл в нужный формат
 	var tileData []byte
