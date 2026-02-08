@@ -104,6 +104,10 @@ func (s *openslideService) GetImageInfo(ctx context.Context, imagePath string) (
 	}
 	defer s.closeImage(osImg)
 
+	// Защищаем доступ к osr мьютексом (OpenSlide не thread-safe)
+	osImg.accessMux.RLock()
+	defer osImg.accessMux.RUnlock()
+
 	// Получаем размеры уровня 0 (полное разрешение)
 	var width, height C.int64_t
 	C.openslide_get_level0_dimensions(osImg.osr, &width, &height)
@@ -152,9 +156,16 @@ func (s *openslideService) GetImageInfo(ctx context.Context, imagePath string) (
 }
 
 func (s *openslideService) GetTile(ctx context.Context, imagePath string, level, col, row int, format string) (*domain.Tile, error) {
+	// Защита от паники
+	defer func() {
+		if r := recover(); r != nil {
+			slog.Error("GetTile: panic recovered", "err", r, "imagePath", imagePath, "level", level, "col", col, "row", row)
+		}
+	}()
+
 	info, err := s.GetImageInfo(ctx, imagePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get image info: %w", err)
 	}
 
 	// Проверяем валидность уровня
@@ -203,9 +214,16 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	// Загружаем изображение
 	osImg, err := s.getOrLoadImage(ctx, imagePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to load image: %w", err)
+	}
+	if osImg == nil || osImg.osr == nil {
+		return nil, fmt.Errorf("invalid image handle: osImg is nil or osr is nil")
 	}
 	defer s.closeImage(osImg)
+
+	// Защищаем доступ к osr мьютексом (OpenSlide не thread-safe)
+	osImg.accessMux.RLock()
+	defer osImg.accessMux.RUnlock()
 
 	// Вычисляем координаты тайла
 	tileX := col * s.tileSize
@@ -495,7 +513,16 @@ func (s *openslideService) cleanupCache() {
 }
 
 func (s *openslideService) findBestOpenSlideLevel(osr *C.openslide_t, dziLevel int, info *domain.ImageInfo) int {
+	if osr == nil {
+		slog.Error("findBestOpenSlideLevel: osr is nil")
+		return 0
+	}
+
 	levelCount := int(C.openslide_get_level_count(osr))
+	if levelCount <= 0 {
+		slog.Error("findBestOpenSlideLevel: invalid level count", "count", levelCount)
+		return 0
+	}
 
 	// Вычисляем желаемый масштаб для DZI уровня
 	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
@@ -511,10 +538,27 @@ func (s *openslideService) findBestOpenSlideLevel(osr *C.openslide_t, dziLevel i
 		var levelWidth, levelHeight C.int64_t
 		C.openslide_get_level_dimensions(osr, C.int(i), &levelWidth, &levelHeight)
 
+		// Проверяем ошибки OpenSlide
+		if errStr := C.openslide_get_error(osr); errStr != nil {
+			slog.Warn("findBestOpenSlideLevel: openslide error", "level", i, "error", C.GoString(errStr))
+			continue
+		}
+
 		var level0Width, level0Height C.int64_t
 		C.openslide_get_level0_dimensions(osr, &level0Width, &level0Height)
 
+		// Проверяем на деление на ноль
+		if levelWidth <= 0 || levelHeight <= 0 {
+			slog.Warn("findBestOpenSlideLevel: invalid level dimensions", "level", i, "width", levelWidth, "height", levelHeight)
+			continue
+		}
+
 		levelScale := float64(level0Width) / float64(levelWidth)
+		if levelScale <= 0 {
+			slog.Warn("findBestOpenSlideLevel: invalid level scale", "level", i, "scale", levelScale)
+			continue
+		}
+
 		diff := math.Abs(levelScale - desiredScale)
 
 		if diff < bestDiff {
