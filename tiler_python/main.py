@@ -12,6 +12,7 @@ from urllib.parse import unquote
 from typing import Optional
 
 from flask import Flask, request, Response, jsonify
+from flask_cors import CORS
 import openslide
 from openslide import OpenSlideError
 from PIL import Image
@@ -25,6 +26,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+
+# Настройка CORS - разрешаем запросы с любого origin
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Конфигурация из переменных окружения
 TILE_SIZE = int(os.getenv('TILE_SIZE', '510'))
