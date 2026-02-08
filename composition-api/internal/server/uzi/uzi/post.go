@@ -29,11 +29,17 @@ func (h *handler) UziPost(ctx context.Context, req *api.UziPostReq) (api.UziPost
 	}
 
 	contentType := req.File.Header.Get("Content-Type")
-	if contentType != "image/tiff" {
+	allowedContentTypes := map[string]bool{
+		"image/tiff": true,
+		"image/png":  true,
+		"image/jpeg": true,
+		"image/jpg":  true,
+	}
+	if !allowedContentTypes[contentType] {
 		return &api.UziPostBadRequest{
 			StatusCode: http.StatusBadRequest,
 			Response: api.Error{
-				Message: fmt.Sprintf("Неверный формат файла, ожидается: image/tiff, получено: %s", contentType),
+				Message: fmt.Sprintf("Неверный формат файла, ожидается: image/tiff, image/png, image/jpeg или image/jpg, получено: %s", contentType),
 			},
 		}, nil
 	}

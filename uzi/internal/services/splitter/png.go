@@ -7,5 +7,9 @@ import (
 type pngSplitter struct{}
 
 func (pngSplitter) splitToPng(f domain.File) ([]domain.File, error) {
-	return []domain.File{f}, nil
+	// PNG файлы уже в нужном формате, просто возвращаем как есть
+	// Убеждаемся, что формат установлен правильно
+	result := f
+	result.Format = Png
+	return []domain.File{result}, nil
 }
