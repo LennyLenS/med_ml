@@ -190,10 +190,13 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	levelWidth := int(float64(info.Width) * scaleFactor)
 	levelHeight := int(float64(info.Height) * scaleFactor)
 
-	// Проверяем валидность размеров
-	if levelWidth <= 0 || levelHeight <= 0 {
-		return nil, fmt.Errorf("invalid level dimensions: level=%d, width=%d, height=%d (maxLevel=%d, scaleFactor=%.6f)",
-			level, levelWidth, levelHeight, maxLevel, scaleFactor)
+	// OpenSeadragon требует минимум 1x1 пиксель для любого уровня
+	// Если из-за округления получился 0, устанавливаем 1
+	if levelWidth <= 0 {
+		levelWidth = 1
+	}
+	if levelHeight <= 0 {
+		levelHeight = 1
 	}
 
 	// Вычисляем максимальное количество тайлов
@@ -269,11 +272,24 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 		return nil, fmt.Errorf("openslide error after get_level_dimensions: %s", C.GoString(errStr))
 	}
 
+	// Вычисляем масштаб между уровнем 0 и выбранным уровнем OpenSlide
+	var level0Width, level0Height C.int64_t
+	C.openslide_get_level0_dimensions(osr, &level0Width, &level0Height)
+
+	// Проверяем на деление на ноль
+	if levelWidthOS <= 0 || levelHeightOS <= 0 {
+		return nil, fmt.Errorf("invalid OpenSlide level dimensions: levelWidth=%d, levelHeight=%d", levelWidthOS, levelHeightOS)
+	}
+
+	levelScale := float64(level0Width) / float64(levelWidthOS)
+	if levelScale <= 0 {
+		return nil, fmt.Errorf("invalid level scale: level0Width=%d, levelWidthOS=%d, scale=%.6f", level0Width, levelWidthOS, levelScale)
+	}
+
 	// Вычисляем координаты в исходном изображении (уровень maxLevel = полное разрешение)
 	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
 	// Формула для координат: sourceCoord = (tileCoord - overlap) / scaleFactor
 	// ВАЖНО: overlap ВЫЧИТАЕТСЯ из координат, чтобы тайлы правильно перекрывались
-	// Размер области: (tileSize + 2*overlap) / scaleFactor
 	maxLevelForCoords := info.Levels - 1
 	coordScaleFactor := math.Pow(2, float64(level-maxLevelForCoords))
 	if coordScaleFactor <= 0 {
@@ -300,25 +316,23 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	sourceWidth = int(math.Min(float64(info.Width-sourceX), float64(sourceWidth)))
 	sourceHeight = int(math.Min(float64(info.Height-sourceY), float64(sourceHeight)))
 
-	// Вычисляем масштаб между уровнем 0 и выбранным уровнем OpenSlide
-	var level0Width, level0Height C.int64_t
-	C.openslide_get_level0_dimensions(osr, &level0Width, &level0Height)
-
-	// Проверяем на деление на ноль
-	if levelWidthOS <= 0 || levelHeightOS <= 0 {
-		return nil, fmt.Errorf("invalid OpenSlide level dimensions: levelWidth=%d, levelHeight=%d", levelWidthOS, levelHeightOS)
-	}
-
-	levelScale := float64(level0Width) / float64(levelWidthOS)
-	if levelScale <= 0 {
-		return nil, fmt.Errorf("invalid level scale: level0Width=%d, levelWidthOS=%d, scale=%.6f", level0Width, levelWidthOS, levelScale)
-	}
-
 	// Координаты на выбранном уровне OpenSlide
+	// Масштабируем координаты из полного разрешения на выбранный уровень OpenSlide
 	levelX := int(float64(sourceX) / levelScale)
 	levelY := int(float64(sourceY) / levelScale)
 	levelW := int(float64(sourceWidth) / levelScale)
 	levelH := int(float64(sourceHeight) / levelScale)
+
+	// Для низких уровней DZI размер области может быть очень большим
+	// Ограничиваем размер области размером тайла на выбранном уровне OpenSlide
+	// Это предотвращает чтение огромных областей для низких уровней
+	targetTileSize := s.tileSize + 2*s.overlap
+	if levelW > targetTileSize*2 {
+		levelW = targetTileSize * 2
+	}
+	if levelH > targetTileSize*2 {
+		levelH = targetTileSize * 2
+	}
 
 	// Проверяем, что координаты не отрицательные
 	if levelX < 0 {
