@@ -53,11 +53,27 @@ def get_s3_client():
     """Получить клиент S3"""
     try:
         import boto3
-        # Добавляем протокол, если его нет
-        endpoint_url = S3_ENDPOINT
-        if endpoint_url and not endpoint_url.startswith('http://') and not endpoint_url.startswith('https://'):
-            endpoint_url = 'http://' + endpoint_url
+        # boto3 для MinIO требует полный URL с протоколом
+        # Формат: http://host:port (без пути)
+        endpoint_url = S3_ENDPOINT.strip()
 
+        # Убираем протокол, если он есть
+        if endpoint_url.startswith('http://'):
+            endpoint_url = endpoint_url[7:]
+        elif endpoint_url.startswith('https://'):
+            endpoint_url = endpoint_url[8:]
+
+        # Убираем путь, если он есть (оставляем только host:port)
+        if '/' in endpoint_url:
+            endpoint_url = endpoint_url.split('/')[0]
+
+        # Добавляем протокол http://
+        endpoint_url = 'http://' + endpoint_url
+
+        logger.info(f"Creating S3 client with endpoint: {endpoint_url}")
+
+        # Для MinIO используем HTTP (не HTTPS)
+        # boto3 автоматически определит это из протокола в endpoint_url
         s3_client = boto3.client(
             's3',
             endpoint_url=endpoint_url,
@@ -69,7 +85,7 @@ def get_s3_client():
         logger.error("boto3 not installed")
         return None
     except Exception as e:
-        logger.error(f"Failed to create S3 client: {e}")
+        logger.error(f"Failed to create S3 client: {e}", exc_info=True)
         return None
 
 
