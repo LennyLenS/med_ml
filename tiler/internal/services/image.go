@@ -202,29 +202,24 @@ func (s *imageService) calculateMaxLevels(width, height int) int {
 		return 1
 	}
 
-	// Находим минимальное N такое, что 2^(N+1) ≥ maxDim
-	// Формула: находим минимальное N+1 такое, что 2^(N+1) ≥ maxDim
+	// OpenSeadragon генерирует уровни до размера 1x1
+	// Формула: находим maxLevel такой, что maxDim / 2^maxLevel >= 1
+	// Т.е. 2^maxLevel <= maxDim, значит maxLevel = floor(log2(maxDim))
+	// Это гарантирует, что на level 0 изображение будет >= 1px
 	log2MaxDim := math.Log2(maxDim)
-	nPlusOne := math.Ceil(log2MaxDim)
+	maxLevel := int(math.Floor(log2MaxDim))
 
-	// Проверяем условие 2^(N+1) ≥ maxDim
-	// Если 2^ceil(log2(maxDim)) < maxDim, то нужно увеличить на 1
-	// Если 2^ceil(log2(maxDim)) == maxDim (точная степень), тоже увеличиваем на 1
-	// (чтобы получить 2^(N+1) ≥ maxDim, а не 2^N == maxDim)
-	powerNPlusOne := math.Pow(2, nPlusOne)
-	if powerNPlusOne < maxDim {
-		// 2^(N+1) < maxDim, нужно использовать 2^(N+2)
-		nPlusOne++
-	} else if powerNPlusOne == maxDim {
-		// 2^(N+1) == maxDim (точная степень), нужно использовать 2^(N+2) ≥ maxDim
-		nPlusOne++
+	// Проверяем, что на level 0 изображение >= 1px
+	// Если нет, увеличиваем maxLevel на 1
+	powerMaxLevel := math.Pow(2, float64(maxLevel))
+	if powerMaxLevel > maxDim {
+		// 2^maxLevel > maxDim, значит нужно уменьшить maxLevel
+		maxLevel--
 	}
-	// Иначе 2^(N+1) > maxDim, значит 2^(N+1) ≥ maxDim, используем текущее nPlusOne
-
-	// maxLevel = N, где N+1 = nPlusOne, значит maxLevel = nPlusOne - 1
-	maxLevel := int(nPlusOne) - 1
 
 	// Количество уровней = maxLevel + 1 (от 0 до maxLevel включительно)
+	// Level maxLevel = полное разрешение
+	// Level 0 = минимальный масштаб (>= 1px)
 	levels := maxLevel + 1
 
 	// Гарантируем минимум 1 уровень

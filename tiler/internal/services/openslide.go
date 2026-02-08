@@ -100,7 +100,7 @@ func (s *openslideService) GetImageInfo(ctx context.Context, imagePath string) (
 	// Загружаем изображение для получения информации
 	osImg, err := s.getOrLoadImage(ctx, imagePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to load image for info (path: %s): %w", imagePath, err)
 	}
 	defer s.closeImage(osImg)
 
@@ -111,12 +111,26 @@ func (s *openslideService) GetImageInfo(ctx context.Context, imagePath string) (
 	// Получаем количество уровней
 	levelCount := int(C.openslide_get_level_count(osImg.osr))
 
-	// Вычисляем количество уровней для DZI
-	// Формула: levels = ceil(log2(max(width, height) / tileSize)) + 1
+	// Вычисляем количество уровней для DZI согласно OpenSeadragon
+	// OpenSeadragon генерирует уровни до размера 1x1
+	// Формула: находим maxLevel такой, что maxDim / 2^maxLevel >= 1
+	// Т.е. 2^maxLevel <= maxDim, значит maxLevel = floor(log2(maxDim))
 	maxDim := math.Max(float64(width), float64(height))
-	levels := int(math.Ceil(math.Log2(maxDim/float64(s.tileSize)))) + 1
+	log2MaxDim := math.Log2(maxDim)
+	maxLevel := int(math.Floor(log2MaxDim))
+
+	// Проверяем, что на level 0 изображение >= 1px
+	powerMaxLevel := math.Pow(2, float64(maxLevel))
+	if powerMaxLevel > maxDim {
+		// 2^maxLevel > maxDim, значит нужно уменьшить maxLevel
+		maxLevel--
+	}
+
+	// Количество уровней = maxLevel + 1 (от 0 до maxLevel включительно)
+	levels := maxLevel + 1
 
 	// Используем максимум из встроенных уровней OpenSlide и вычисленных для DZI
+	// Но не меньше, чем нужно для достижения 1x1
 	if levelCount > levels {
 		levels = levelCount
 	}
@@ -317,7 +331,7 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 func (s *openslideService) GetDZI(ctx context.Context, imagePath string) (*domain.DZI, error) {
 	info, err := s.GetImageInfo(ctx, imagePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get image info for DZI (path: %s): %w", imagePath, err)
 	}
 
 	xml := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
@@ -352,9 +366,20 @@ func (s *openslideService) getOrLoadImage(ctx context.Context, imagePath string)
 	localPath := filepath.Join(s.cacheDir, strings.ReplaceAll(imagePath, "/", "_"))
 
 	if _, err := os.Stat(localPath); os.IsNotExist(err) {
+		// Создаем директорию для кэша, если её нет
+		if err := os.MkdirAll(s.cacheDir, 0755); err != nil {
+			return nil, fmt.Errorf("failed to create cache directory: %w", err)
+		}
+
 		stream, err := s.s3Client.GetObjectStream(ctx, "", imagePath)
 		if err != nil {
-			return nil, fmt.Errorf("failed to get image stream from S3: %w", err)
+			// Проверяем, является ли ошибка "key does not exist"
+			if strings.Contains(err.Error(), "does not exist") ||
+				strings.Contains(err.Error(), "NoSuchKey") ||
+				strings.Contains(err.Error(), "not found") {
+				return nil, fmt.Errorf("image not found in S3: %s (path: %s)", imagePath, imagePath)
+			}
+			return nil, fmt.Errorf("failed to get image stream from S3 (path: %s): %w", imagePath, err)
 		}
 		defer stream.Close()
 
@@ -366,7 +391,7 @@ func (s *openslideService) getOrLoadImage(ctx context.Context, imagePath string)
 
 		if _, err := io.Copy(outFile, stream); err != nil {
 			os.Remove(localPath)
-			return nil, fmt.Errorf("failed to save image to cache: %w", err)
+			return nil, fmt.Errorf("failed to save image to cache (localPath: %s): %w", localPath, err)
 		}
 	}
 
