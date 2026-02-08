@@ -215,9 +215,20 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	// OpenSlide использует встроенные уровни, которые могут не совпадать с DZI уровнями
 	openSlideLevel := s.findBestOpenSlideLevel(osImg.osr, level, info)
 
+	// Проверяем валидность уровня OpenSlide
+	levelCount := int(C.openslide_get_level_count(osImg.osr))
+	if openSlideLevel < 0 || openSlideLevel >= levelCount {
+		return nil, fmt.Errorf("invalid OpenSlide level: %d (max: %d, dziLevel: %d)", openSlideLevel, levelCount-1, level)
+	}
+
 	// Получаем размеры выбранного уровня OpenSlide
 	var levelWidthOS, levelHeightOS C.int64_t
 	C.openslide_get_level_dimensions(osImg.osr, C.int(openSlideLevel), &levelWidthOS, &levelHeightOS)
+
+	// Проверяем ошибки OpenSlide после получения размеров
+	if errStr := C.openslide_get_error(osImg.osr); errStr != nil {
+		return nil, fmt.Errorf("openslide error after get_level_dimensions: %s", C.GoString(errStr))
+	}
 
 	// Вычисляем координаты в исходном изображении (уровень maxLevel = полное разрешение)
 	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
@@ -254,7 +265,15 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	var level0Width, level0Height C.int64_t
 	C.openslide_get_level0_dimensions(osImg.osr, &level0Width, &level0Height)
 
+	// Проверяем на деление на ноль
+	if levelWidthOS <= 0 || levelHeightOS <= 0 {
+		return nil, fmt.Errorf("invalid OpenSlide level dimensions: levelWidth=%d, levelHeight=%d", levelWidthOS, levelHeightOS)
+	}
+
 	levelScale := float64(level0Width) / float64(levelWidthOS)
+	if levelScale <= 0 {
+		return nil, fmt.Errorf("invalid level scale: level0Width=%d, levelWidthOS=%d, scale=%.6f", level0Width, levelWidthOS, levelScale)
+	}
 
 	// Координаты на выбранном уровне OpenSlide
 	levelX := int(float64(sourceX) / levelScale)
@@ -262,10 +281,32 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	levelW := int(float64(sourceWidth) / levelScale)
 	levelH := int(float64(sourceHeight) / levelScale)
 
+	// Проверяем, что координаты не отрицательные
+	if levelX < 0 {
+		levelX = 0
+	}
+	if levelY < 0 {
+		levelY = 0
+	}
+
 	// Проверяем, что размеры валидны
 	if levelW <= 0 || levelH <= 0 {
-		return nil, fmt.Errorf("invalid region size: levelW=%d, levelH=%d (sourceWidth=%d, sourceHeight=%d, levelScale=%.2f)",
-			levelW, levelH, sourceWidth, sourceHeight, levelScale)
+		return nil, fmt.Errorf("invalid region size: levelW=%d, levelH=%d (sourceWidth=%d, sourceHeight=%d, levelScale=%.6f, levelX=%d, levelY=%d)",
+			levelW, levelH, sourceWidth, sourceHeight, levelScale, levelX, levelY)
+	}
+
+	// Проверяем, что координаты не выходят за границы уровня OpenSlide
+	if int64(levelX)+int64(levelW) > int64(levelWidthOS) {
+		levelW = int(levelWidthOS) - levelX
+		if levelW <= 0 {
+			return nil, fmt.Errorf("region X coordinate out of bounds: levelX=%d, levelW=%d, levelWidthOS=%d", levelX, levelW, levelWidthOS)
+		}
+	}
+	if int64(levelY)+int64(levelH) > int64(levelHeightOS) {
+		levelH = int(levelHeightOS) - levelY
+		if levelH <= 0 {
+			return nil, fmt.Errorf("region Y coordinate out of bounds: levelY=%d, levelH=%d, levelHeightOS=%d", levelY, levelH, levelHeightOS)
+		}
 	}
 
 	// Читаем область из OpenSlide
@@ -284,9 +325,8 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	C.openslide_read_region(osImg.osr, (*C.uint32_t)(unsafe.Pointer(&buf[0])), C.int64_t(levelX), C.int64_t(levelY), C.int(openSlideLevel), C.int64_t(levelW), C.int64_t(levelH))
 
 	// Проверяем ошибки OpenSlide
-	errStr := C.openslide_get_error(osImg.osr)
-	if errStr != nil {
-		return nil, fmt.Errorf("openslide error: %s", C.GoString(errStr))
+	if errStr := C.openslide_get_error(osImg.osr); errStr != nil {
+		return nil, fmt.Errorf("openslide error after read_region: %s", C.GoString(errStr))
 	}
 
 	// Конвертируем ARGB в image.Image
