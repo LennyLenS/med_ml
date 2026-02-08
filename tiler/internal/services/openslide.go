@@ -249,7 +249,8 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 
 	defer osImg.accessMux.RUnlock()
 
-	// Вычисляем координаты тайла
+	// Вычисляем координаты тайла на уровне DZI
+	// В OpenSeadragon координаты тайла вычисляются как col * tileSize, row * tileSize
 	tileX := col * s.tileSize
 	tileY := row * s.tileSize
 
@@ -286,10 +287,9 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 		return nil, fmt.Errorf("invalid level scale: level0Width=%d, levelWidthOS=%d, scale=%.6f", level0Width, levelWidthOS, levelScale)
 	}
 
-	// Вычисляем координаты в исходном изображении (уровень maxLevel = полное разрешение)
+	// Вычисляем масштаб DZI уровня относительно полного разрешения
 	// В OpenSeadragon: maxLevel = полное разрешение, 0 = минимальный масштаб
-	// Формула для координат: sourceCoord = (tileCoord - overlap) / scaleFactor
-	// ВАЖНО: overlap ВЫЧИТАЕТСЯ из координат, чтобы тайлы правильно перекрывались
+	// Формула: scaleFactor = 2^(level - maxLevel)
 	maxLevelForCoords := info.Levels - 1
 	coordScaleFactor := math.Pow(2, float64(level-maxLevelForCoords))
 	if coordScaleFactor <= 0 {
@@ -297,10 +297,13 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 			level, maxLevelForCoords, coordScaleFactor)
 	}
 
-	// Координаты тайла С вычитанием overlap (для правильного перекрытия тайлов)
+	// Вычисляем координаты тайла в полном разрешении
+	// Координаты тайла на уровне DZI: (tileX, tileY)
+	// Координаты в полном разрешении: (tileX / coordScaleFactor, tileY / coordScaleFactor)
+	// ВАЖНО: overlap ВЫЧИТАЕТСЯ из координат начала, чтобы тайлы правильно перекрывались
 	sourceX := int(float64(tileX-s.overlap) / coordScaleFactor)
 	sourceY := int(float64(tileY-s.overlap) / coordScaleFactor)
-	// Размер области С overlap (overlap добавляется к размеру тайла)
+	// Размер области С overlap (overlap добавляется к размеру тайла для перекрытия)
 	sourceWidth := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
 	sourceHeight := int(float64(s.tileSize+2*s.overlap) / coordScaleFactor)
 
@@ -324,63 +327,39 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	levelH := int(float64(sourceHeight) / levelScale)
 
 	// Для низких уровней DZI размер области может быть очень большим из-за деления на очень маленький scaleFactor
-	// В этом случае нужно читать область размером с тайл на выбранном уровне OpenSlide
+	// В этом случае нужно ограничить размер области, но сохранить правильные координаты начала тайла
 	targetTileSize := s.tileSize + 2*s.overlap
-
-	// Если размер области слишком большой (больше чем разумный максимум),
-	// пересчитываем размер и координаты правильно
-	// Для низких уровней DZI мы должны читать область размером примерно с тайл на уровне OpenSlide
 	maxReadSize := targetTileSize * 10 // Максимальный размер области для чтения
-	if levelW > maxReadSize || levelH > maxReadSize {
-		// Для очень низких уровней DZI правильный подход:
-		// 1. Размер тайла на DZI уровне = targetTileSize пикселей
-		// 2. Масштаб DZI уровня относительно полного разрешения = coordScaleFactor
-		// 3. Масштаб уровня OpenSlide относительно полного разрешения = levelScale
-		// 4. Размер тайла на уровне OpenSlide = targetTileSize * (levelScale / coordScaleFactor)
-		//    Это потому что: если на DZI уровне тайл имеет размер targetTileSize,
-		//    то в полном разрешении он имеет размер targetTileSize / coordScaleFactor,
-		//    а на уровне OpenSlide он имеет размер (targetTileSize / coordScaleFactor) * levelScale
 
-		// Вычисляем размер тайла на уровне OpenSlide
-		// levelScale / coordScaleFactor - это отношение масштабов
-		scaleRatio := levelScale / coordScaleFactor
+	// Если размер области слишком большой, ограничиваем его, но сохраняем координаты начала
+	// Это важно для правильного позиционирования тайлов
+	// ВАЖНО: мы НЕ меняем levelX и levelY, чтобы сохранить правильное позиционирование тайлов
+	if levelW > maxReadSize {
+		levelW = maxReadSize
+	}
+	if levelH > maxReadSize {
+		levelH = maxReadSize
+	}
 
-		// Если scaleRatio слишком большой, значит мы на очень низком уровне DZI
-		// и выбранный уровень OpenSlide не подходит. В этом случае просто ограничиваем размер.
-		if scaleRatio > 1000 {
-			// Для очень низких уровней DZI читаем область размером примерно с тайл
-			// Используем максимальный размер области для чтения
-			levelW = maxReadSize
-			levelH = maxReadSize
-		} else {
-			levelW = int(float64(targetTileSize) * scaleRatio)
-			levelH = int(float64(targetTileSize) * scaleRatio)
-
-			// Минимум 1 пиксель, максимум разумный размер
-			if levelW <= 0 {
-				levelW = 1
-			}
-			if levelH <= 0 {
-				levelH = 1
-			}
-			if levelW > maxReadSize {
-				levelW = maxReadSize
-			}
-			if levelH > maxReadSize {
-				levelH = maxReadSize
-			}
+	// Убеждаемся, что координаты не выходят за границы уровня OpenSlide
+	// Это нужно сделать ДО проверки границ ниже, чтобы не потерять координаты начала тайла
+	if levelX < 0 {
+		levelX = 0
+	}
+	if levelY < 0 {
+		levelY = 0
+	}
+	if int64(levelX)+int64(levelW) > int64(levelWidthOS) {
+		levelW = int(levelWidthOS) - levelX
+		if levelW <= 0 {
+			levelW = 1
 		}
-
-		// Пересчитываем координаты: центр тайла должен остаться тем же
-		// Центр тайла в полном разрешении
-		centerX := sourceX + sourceWidth/2
-		centerY := sourceY + sourceHeight/2
-		// Центр на уровне OpenSlide
-		levelCenterX := int(float64(centerX) / levelScale)
-		levelCenterY := int(float64(centerY) / levelScale)
-		// Координаты начала с учетом нового размера
-		levelX = levelCenterX - levelW/2
-		levelY = levelCenterY - levelH/2
+	}
+	if int64(levelY)+int64(levelH) > int64(levelHeightOS) {
+		levelH = int(levelHeightOS) - levelY
+		if levelH <= 0 {
+			levelH = 1
+		}
 	}
 
 	// Проверяем, что координаты не отрицательные
