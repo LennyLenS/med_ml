@@ -1,9 +1,13 @@
 FROM python:3.11-slim
 
-# Устанавливаем системные зависимости для OpenSlide
+# Устанавливаем системные зависимости для OpenSlide и компиляции
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libopenslide0 \
     libopenslide-dev \
+    gcc \
+    g++ \
+    pkg-config \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /service
