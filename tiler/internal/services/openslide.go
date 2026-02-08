@@ -332,29 +332,43 @@ func (s *openslideService) GetTile(ctx context.Context, imagePath string, level,
 	// Для низких уровней DZI мы должны читать область размером примерно с тайл на уровне OpenSlide
 	maxReadSize := targetTileSize * 10 // Максимальный размер области для чтения
 	if levelW > maxReadSize || levelH > maxReadSize {
+		// Для очень низких уровней DZI правильный подход:
+		// 1. Размер тайла на DZI уровне = targetTileSize пикселей
+		// 2. Масштаб DZI уровня относительно полного разрешения = coordScaleFactor
+		// 3. Масштаб уровня OpenSlide относительно полного разрешения = levelScale
+		// 4. Размер тайла на уровне OpenSlide = targetTileSize * (levelScale / coordScaleFactor)
+		//    Это потому что: если на DZI уровне тайл имеет размер targetTileSize,
+		//    то в полном разрешении он имеет размер targetTileSize / coordScaleFactor,
+		//    а на уровне OpenSlide он имеет размер (targetTileSize / coordScaleFactor) * levelScale
+
 		// Вычисляем размер тайла на уровне OpenSlide
-		// Размер тайла на DZI уровне = targetTileSize
-		// Масштаб между DZI уровнем и уровнем OpenSlide = coordScaleFactor / levelScale
-		// Но проще: размер тайла на уровне OpenSlide = targetTileSize * levelScale / coordScaleFactor
-		// Или еще проще: если levelW слишком большой, значит мы должны читать область размером с тайл
-		// Размер тайла на уровне OpenSlide примерно равен targetTileSize, умноженному на отношение масштабов
+		// levelScale / coordScaleFactor - это отношение масштабов
+		scaleRatio := levelScale / coordScaleFactor
 
-		// Вычисляем масштаб между DZI уровнем и уровнем OpenSlide
-		// coordScaleFactor - масштаб DZI уровня относительно полного разрешения
-		// levelScale - масштаб уровня OpenSlide относительно полного разрешения
-		// Масштаб между DZI и OpenSlide = coordScaleFactor / levelScale
-		dziToOSScale := coordScaleFactor / levelScale
+		// Если scaleRatio слишком большой, значит мы на очень низком уровне DZI
+		// и выбранный уровень OpenSlide не подходит. В этом случае просто ограничиваем размер.
+		if scaleRatio > 1000 {
+			// Для очень низких уровней DZI читаем область размером примерно с тайл
+			// Используем максимальный размер области для чтения
+			levelW = maxReadSize
+			levelH = maxReadSize
+		} else {
+			levelW = int(float64(targetTileSize) * scaleRatio)
+			levelH = int(float64(targetTileSize) * scaleRatio)
 
-		// Размер тайла на уровне OpenSlide
-		levelW = int(float64(targetTileSize) / dziToOSScale)
-		levelH = int(float64(targetTileSize) / dziToOSScale)
-
-		// Минимум 1 пиксель
-		if levelW <= 0 {
-			levelW = 1
-		}
-		if levelH <= 0 {
-			levelH = 1
+			// Минимум 1 пиксель, максимум разумный размер
+			if levelW <= 0 {
+				levelW = 1
+			}
+			if levelH <= 0 {
+				levelH = 1
+			}
+			if levelW > maxReadSize {
+				levelW = maxReadSize
+			}
+			if levelH > maxReadSize {
+				levelH = maxReadSize
+			}
 		}
 
 		// Пересчитываем координаты: центр тайла должен остаться тем же
