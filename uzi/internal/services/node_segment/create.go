@@ -44,12 +44,16 @@ func (s *service) createNodesWithSegments(
 	nodeQuery := s.dao.NewNodeQuery(ctx)
 	segmentQuery := s.dao.NewSegmentQuery(ctx)
 
-	if err := nodeQuery.InsertNodes(nodeEntity.Node{}.SliceFromDomain(nodes)...); err != nil {
-		return nil, fmt.Errorf("insert nodes: %w", err)
+	if len(nodes) > 0 {
+		if err := nodeQuery.InsertNodes(nodeEntity.Node{}.SliceFromDomain(nodes)...); err != nil {
+			return nil, fmt.Errorf("insert nodes: %w", err)
+		}
 	}
 
-	if err := segmentQuery.InsertSegments(segmentEntity.Segment{}.SliceFromDomain(segments)...); err != nil {
-		return nil, fmt.Errorf("insert segments: %w", err)
+	if len(segments) > 0 {
+		if err := segmentQuery.InsertSegments(segmentEntity.Segment{}.SliceFromDomain(segments)...); err != nil {
+			return nil, fmt.Errorf("insert segments: %w", err)
+		}
 	}
 
 	if opt.newUziStatus != nil {
