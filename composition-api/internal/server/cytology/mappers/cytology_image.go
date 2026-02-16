@@ -13,14 +13,14 @@ type CytologyImage struct{}
 
 // Удалены неиспользуемые методы Domain, SliceDomain, CreateArg - заменены на новые методы для работы с обновленными типами API
 
-func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreateCreateReq) cytologySrv.CreateCytologyImageArg {
+func (CytologyImage) CreateArgFromCytologyCreateCreateReq(req *api.CytologyCreateCreateReq, doctorID, patientID uuid.UUID) cytologySrv.CreateCytologyImageArg {
 	arg := cytologySrv.CreateCytologyImageArg{
 		DiagnosticNumber: req.DiagnosticNumber,
-		// ExternalID, DoctorID, PatientID должны быть получены из контекста или другого источника
-		// Пока используем пустые UUID, но это нужно будет исправить
+		DoctorID:         doctorID,
+		PatientID:        patientID,
+		// ExternalID может использоваться для группировки исследований
+		// Пока оставляем пустым, можно использовать PatientID как ExternalID
 		ExternalID: uuid.Nil,
-		DoctorID:   uuid.Nil,
-		PatientID:  uuid.Nil,
 	}
 
 	// Обработка файла изображения
@@ -92,19 +92,37 @@ func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage, patient med_
 
 	// Маппим данные о карточке пациента
 	apiPatientCard := api.PatientCard{
+		ID: api.OptInt{
+			Set: false,
+		},
 		Patient: api.OptInt{
-			// TODO: Преобразовать UUID в int (нужен lookup или другой способ)
+			// Patient и MedWorker в API - это int, но в domain.Card у нас только UUID
+			// Оставляем пустым, так как нет способа преобразовать UUID в int без lookup
 			Set: false,
 		},
 		MedWorker: api.OptInt{
-			// TODO: Преобразовать UUID в int (нужен lookup или другой способ)
+			// Patient и MedWorker в API - это int, но в domain.Card у нас только UUID
+			// Оставляем пустым, так как нет способа преобразовать UUID в int без lookup
 			Set: false,
 		},
 		Diagnosis: api.OptString{
 			Value: "",
 			Set:   false,
 		},
+		AcceptanceDatetime: api.OptDateTime{
+			Set: false,
+		},
 	}
+
+	// Заполняем ID карточки, если он есть
+	if patientCard.ID != nil {
+		apiPatientCard.ID = api.OptInt{
+			Value: *patientCard.ID,
+			Set:   true,
+		}
+	}
+
+	// Заполняем диагноз, если он есть
 	if patientCard.Diagnosis != nil {
 		apiPatientCard.Diagnosis = api.OptString{
 			Value: *patientCard.Diagnosis,

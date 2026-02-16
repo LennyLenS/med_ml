@@ -28,7 +28,36 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 		}(),
 	)
 
-	arg := mappers.CytologyImage{}.CreateArgFromCytologyCreateCreateReq(req)
+	// Получаем карточку пациента для извлечения patient_id и doctor_id
+	// patient_id и doctor_id должны браться из карточки
+	if !req.PatientCard.Set {
+		return &api.CytologyCreateCreateBadRequest{
+			StatusCode: http.StatusBadRequest,
+			Response: api.Error{
+				Message: "Необходимо указать карточку пациента (patient_card)",
+			},
+		}, nil
+	}
+
+	// Получаем карточку по ID
+	card, err := h.services.CardService.GetCardByID(ctx, req.PatientCard.Value)
+	if err != nil {
+		if errors.Is(err, domain.ErrNotFound) {
+			return &api.CytologyCreateCreateBadRequest{
+				StatusCode: http.StatusBadRequest,
+				Response: api.Error{
+					Message: "Карточка пациента не найдена",
+				},
+			}, nil
+		}
+		return nil, err
+	}
+
+	// Извлекаем patient_id и doctor_id из карточки
+	patientID := card.PatientID
+	doctorID := card.DoctorID
+
+	arg := mappers.CytologyImage{}.CreateArgFromCytologyCreateCreateReq(req, doctorID, patientID)
 
 	startTime := time.Now()
 	id, err := h.services.CytologyService.CreateCytologyImage(ctx, arg)

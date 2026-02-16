@@ -8035,7 +8035,7 @@ type UziPostInternalServerError ErrorStatusCode
 func (*UziPostInternalServerError) uziPostRes() {}
 
 type UziPostReq struct {
-	// Файл узи. **обязательно с .tiff/.png**.
+	// Файл узи. **обязательно с .tiff/.png/.jpeg/.jpg**.
 	File ht.MultipartFile `json:"file"`
 	// Проекция узи.
 	Projection UziPostReqProjection `json:"projection"`
