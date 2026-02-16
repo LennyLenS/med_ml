@@ -11,11 +11,9 @@ import (
 	"composition-api/internal/domain"
 
 	"github.com/AlekSi/pointer"
-	"github.com/google/uuid"
 
 	api "composition-api/internal/generated/http/api"
 	mappers "composition-api/internal/server/cytology/mappers"
-	"composition-api/internal/server/security"
 )
 
 func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCreateCreateReq) (api.CytologyCreateCreateRes, error) {
@@ -30,17 +28,6 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 		}(),
 	)
 
-	// Получаем токен для извлечения UUID врача
-	token, err := security.ParseToken(ctx)
-	if err != nil {
-		return &api.CytologyCreateCreateInternalServerError{
-			StatusCode: http.StatusUnauthorized,
-			Response: api.Error{
-				Message: "Ошибка аутентификации",
-			},
-		}, nil
-	}
-
 	// Получаем карточку пациента для извлечения patient_id и doctor_id
 	// patient_id и doctor_id должны браться из карточки
 	if !req.PatientCard.Set {
@@ -52,45 +39,23 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 		}, nil
 	}
 
-	// PatientCard - это ID карточки (int)
-	// Для получения карточки нужны doctorID и patientID, но у нас есть только ID карточки
-	// Используем doctorID из токена и ищем карточку среди пациентов врача
-	doctorID := token.Id
-	var patientID uuid.UUID
-
-	// Получаем список пациентов врача
-	patients, err := h.services.PatientService.GetPatientsByDoctorID(ctx, doctorID, nil)
+	// Получаем карточку по ID
+	card, err := h.services.CardService.GetCardByID(ctx, req.PatientCard.Value)
 	if err != nil {
-		return &api.CytologyCreateCreateBadRequest{
-			StatusCode: http.StatusBadRequest,
-			Response: api.Error{
-				Message: "Не удалось получить список пациентов",
-			},
-		}, nil
-	}
-
-	// Ищем карточку для каждого пациента
-	found := false
-	for _, patient := range patients {
-		card, err := h.services.CardService.GetCard(ctx, doctorID, patient.Id)
-		if err == nil && card.ID != nil && *card.ID == req.PatientCard.Value {
-			// Нашли нужную карточку, извлекаем patient_id и doctor_id
-			patientID = card.PatientID
-			doctorID = card.DoctorID
-			found = true
-			break
+		if errors.Is(err, domain.ErrNotFound) {
+			return &api.CytologyCreateCreateBadRequest{
+				StatusCode: http.StatusBadRequest,
+				Response: api.Error{
+					Message: "Карточка пациента не найдена",
+				},
+			}, nil
 		}
+		return nil, err
 	}
 
-	// Если не удалось найти карточку, возвращаем ошибку
-	if !found || patientID == uuid.Nil {
-		return &api.CytologyCreateCreateBadRequest{
-			StatusCode: http.StatusBadRequest,
-			Response: api.Error{
-				Message: "Карточка пациента не найдена",
-			},
-		}, nil
-	}
+	// Извлекаем patient_id и doctor_id из карточки
+	patientID := card.PatientID
+	doctorID := card.DoctorID
 
 	arg := mappers.CytologyImage{}.CreateArgFromCytologyCreateCreateReq(req, doctorID, patientID)
 
