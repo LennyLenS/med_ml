@@ -20,6 +20,8 @@ type Repository interface {
 
 	GetCardByPK(doctorID uuid.UUID, patientID uuid.UUID) (centity.Card, error)
 
+	GetCardByID(id int) (centity.Card, error)
+
 	UpdateCard(card centity.Card) error
 }
 

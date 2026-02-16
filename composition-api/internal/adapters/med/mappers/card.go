@@ -15,11 +15,10 @@ func (m Card) Domain(pb *pb.Card) domain.Card {
 		PatientID: uuid.MustParse(pb.PatientId),
 		Diagnosis: pb.Diagnosis,
 	}
-	// TODO: После регенерации protobuf раскомментировать:
-	// if pb.Id != nil {
-	// 	id := int(*pb.Id)
-	// 	card.ID = &id
-	// }
+	if pb.Id != nil {
+		id := int(*pb.Id)
+		card.ID = &id
+	}
 	return card
 }
 

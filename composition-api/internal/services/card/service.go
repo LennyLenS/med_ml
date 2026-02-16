@@ -14,6 +14,8 @@ type Service interface {
 
 	GetCard(ctx context.Context, doctorID, patientID uuid.UUID) (domain.Card, error)
 
+	GetCardByID(ctx context.Context, id int) (domain.Card, error)
+
 	UpdateCard(ctx context.Context, card domain.Card) (domain.Card, error)
 }
 
