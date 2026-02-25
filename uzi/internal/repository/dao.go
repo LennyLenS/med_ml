@@ -18,6 +18,7 @@ import (
 type DAO interface {
 	daolib.DAO
 	NewFileRepo() FileRepo
+	GetS3Bucket() string
 	NewDeviceQuery(ctx context.Context) device.Repository
 	NewUziQuery(ctx context.Context) uzi.Repository
 	NewImageQuery(ctx context.Context) image.Repository
@@ -47,6 +48,10 @@ func (d *dao) NewFileRepo() FileRepo {
 		s3:     d.s3,
 		bucket: d.s3bucket,
 	}
+}
+
+func (d *dao) GetS3Bucket() string {
+	return d.s3bucket
 }
 
 // POSTNIGRES

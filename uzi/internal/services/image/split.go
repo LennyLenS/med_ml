@@ -80,9 +80,20 @@ func (s *service) SplitUzi(ctx context.Context, id uuid.UUID) error {
 		imageIds = append(imageIds, image.Id)
 	}
 
+	bucket := s.dao.GetS3Bucket()
+	uziS3Path := fmt.Sprintf("s3://%s/%s/%s", bucket, id.String(), id.String())
+
+	pagesS3Paths := make([]string, 0, len(images))
+	for _, image := range images {
+		pageS3Path := fmt.Sprintf("s3://%s/%s/%s/%s", bucket, id.String(), image.Id.String(), image.Id.String())
+		pagesS3Paths = append(pagesS3Paths, pageS3Path)
+	}
+
 	if err := s.dbus.SendUziSplitted(ctx, &uzisplittedpb.UziSplitted{
-		UziId:   id.String(),
-		PagesId: uuid.UUIDs(imageIds).Strings(),
+		UziId:       id.String(),
+		PagesId:     uuid.UUIDs(imageIds).Strings(),
+		UziS3Path:   uziS3Path,
+		PagesS3Path: pagesS3Paths,
 	}); err != nil {
 		return fmt.Errorf("send to uzisplitted topic: %w", err)
 	}
