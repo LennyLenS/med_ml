@@ -30,25 +30,26 @@ __Для локального запуска можете использоват
 
 ![weights_tree](./docs/assets/weights_tree.png)
 
-1) docker compose --profile deps up -d
-2) создать бакет в минио + access + secret key
+1) docker network create shared-network
+2) docker compose --profile deps up -d
+3) создать бакет в минио + access + secret key
     + зайти на localhost:9000
     + minioadmin:minioadmin
     + слева вкладке access keys
     + справа сверху `create access key` - вбиваем в него
         - access_key: `NZjt6KmuHQRU7IitYUiW`
         - secret_key: `ql9DoBMKyqMxQm8j5LQuKwnn68KFsGqn5jGbL7uL`
-3) вкладка object browser, создаем бакет `uzi`
-4) создаем топики для redpanda (потом автоматизируем, сейчас я в __`тильте`__)
+4) вкладка object browser, создаем бакет `uzi`
+5) создаем топики для redpanda (потом автоматизируем, сейчас я в __`тильте`__)
     + localhost:8081    
     + вкладка topics
     + создаем 3 топика:
         - uziupload
         - uzisplitted
         - uziprocessed
-5) docker compose --profile app up -d
+6) docker compose --profile app up -d
 
-6) __ОПЦИОНАЛЬНО__ (Для тех, кто занимается узи): каждое узи должно быть привязанно к uzi_device, нужно добавить это в бд шоб работало
+7) __ОПЦИОНАЛЬНО__ (Для тех, кто занимается узи): каждое узи должно быть привязанно к uzi_device, нужно добавить это в бд шоб работало
     * pgAdmin/DataGrip/Расширение vscode для баз данных, заходите в uzidb, таблица `device` добавляете что угодно, этот id потом юзаете при post /uzi/uzis, этот device_id
 
     Например, `INSERT INTO device VALUES (1, 1)`
