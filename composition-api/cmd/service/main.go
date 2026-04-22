@@ -183,7 +183,8 @@ func run() (exitCode int) {
 
 	r := chi.NewRouter()
 
-	r.Handle("/metrics", metricsHandler)
+	// Явный GET: некоторые версии/proxy комбинации лучше работают, чем Handle со всеми методами.
+	r.Get("/metrics", metricsHandler.ServeHTTP)
 	r.Mount("/api/v1/", http.StripPrefix("/api/v1", server))
 	r.Mount("/docs/", http.StripPrefix("/docs", swaggerui.Handler(spec)))
 
