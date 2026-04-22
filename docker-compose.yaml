@@ -4,6 +4,7 @@ volumes:
   redpanda-0:
   minio-s3:
   postgres:
+  loki-data:
 
 services:
   postgres:
@@ -263,6 +264,30 @@ services:
     profiles:
       - observability
 
+  loki:
+    image: grafana/loki:2.9.8
+    container_name: loki
+    volumes:
+      - loki-data:/loki
+      - ./observability/loki/loki.yml:/etc/loki/local-config.yaml:ro
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    profiles:
+      - observability
+
+  promtail:
+    image: grafana/promtail:2.9.8
+    container_name: promtail
+    volumes:
+      - ./observability/promtail/promtail.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    profiles:
+      - observability
+
   grafana:
     image: grafana/grafana:11.5.2
     container_name: grafana
@@ -277,5 +302,6 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+      - loki
     profiles:
       - observability
