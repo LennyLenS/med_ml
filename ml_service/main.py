@@ -1,4 +1,5 @@
 from concurrent import futures
+import threading
 
 import grpc
 from minio import Minio
@@ -10,6 +11,7 @@ import ml_service.internal.ml_model.classification_efficientnet as cla
 import ml_service.internal.ml_model.segmentation as seg
 import ml_service.internal.s3.s3 as mys3
 import ml_service.internal.usecases.uzi.uzi as usecaseuzi
+import ml_service.internal.usecases.cytology.cytology as usecasecytology
 from ml_service.config.default import get_settings
 
 
@@ -30,12 +32,16 @@ def run_server():
     segmdl = seg.SegmentationModel(model_type=settings.segmentation_model_type)
     claml = cla.EfficientNetModel(model_type=settings.classification_model_type)
 
-    usecase = usecaseuzi.uziUseCase(segmdl, claml, s3)
+    usecase_uzi = usecaseuzi.uziUseCase(segmdl, claml, s3)
+    usecase_cytology = usecasecytology.cytologyUseCase(s3)
 
-    controller = ctrl.MlController(usecase)
-    kafka = kafkaevents.EventsYo(usecase)
+    controller = ctrl.MlController(usecase_uzi)
+    kafka = kafkaevents.EventsYo(usecase_uzi, usecase_cytology)
+
+    # Запускаем Kafka consumer в отдельном потоке
+    kafka_thread = threading.Thread(target=kafka.run, daemon=True)
+    kafka_thread.start()
     print("Kafka started...")
-    kafka.run()
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pb_grpc.add_MLAPIServicer_to_server(controller, server)

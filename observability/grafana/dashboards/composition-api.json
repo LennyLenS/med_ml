@@ -1,0 +1,296 @@
+{
+  "annotations": {"list": []},
+  "description": "Переменная «route»: все paths из OpenAPI (custom). Повтор строки (Repeat row): три графика идут одной группой под заголовком маршрута. Обновить список: med_ml/observability/scripts/openapi_paths_comma.sh",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+      "id": 50,
+      "title": "Обзор",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [
+            {"options": {"0": {"color": "red", "text": "DOWN"}}, "type": "value"},
+            {"options": {"1": {"color": "green", "text": "UP"}}, "type": "value"}
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 1},
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "up{job=\"composition_api\"}",
+          "legendFormat": "scrape",
+          "refId": "A"
+        }
+      ],
+      "title": "Цель Prometheus",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Суммарный RPS по всем ручкам.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": false,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 18, "x": 6, "y": 1},
+      "id": 2,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}},
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(ogen_server_request_count_total[$__rate_interval]))",
+          "legendFormat": "total RPS",
+          "refId": "A"
+        }
+      ],
+      "title": "Общий RPS",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Классы кодов ответа. Нули через absent(), если за всё время не было таких ответов.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": false,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "stacking": {"group": "A", "mode": "normal"},
+            "lineWidth": 1,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "reqps"
+        },
+        "overrides": [
+          {"matcher": {"id": "byName", "options": "2xx"}, "properties": [{"id": "color", "value": {"fixedColor": "green", "mode": "fixed"}}]},
+          {"matcher": {"id": "byName", "options": "4xx"}, "properties": [{"id": "color", "value": {"fixedColor": "orange", "mode": "fixed"}}]},
+          {"matcher": {"id": "byName", "options": "5xx"}, "properties": [{"id": "color", "value": {"fixedColor": "red", "mode": "fixed"}}]}
+        ]
+      },
+      "gridPos": {"h": 9, "w": 24, "x": 0, "y": 9},
+      "id": 3,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true}},
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"2..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_response_status_code=~\"2..\"}))",
+          "legendFormat": "2xx",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"4..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_response_status_code=~\"4..\"}))",
+          "legendFormat": "4xx",
+          "refId": "B"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"5..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_response_status_code=~\"5..\"}))",
+          "legendFormat": "5xx",
+          "refId": "C"
+        }
+      ],
+      "title": "Общий трафик по кодам ответа (2xx / 4xx / 5xx)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 18},
+      "id": 51,
+      "repeat": "route",
+      "title": "$route",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Полный список ручек — custom-переменная из server.yml. Без запросов: 0 по absent().",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": false,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 19},
+      "id": 11,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}},
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "(sum by (http_request_method) (rate(ogen_server_request_count_total{http_route=\"$route\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\"})))",
+          "legendFormat": "{{http_request_method}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Запросов / сек",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "p50/p95; без данных по ручке — линия на нуле.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": false,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 19},
+      "id": 12,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}},
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "(histogram_quantile(0.50, sum by (le) (rate(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"}[$__rate_interval]))) or (0 * absent(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"})))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "(histogram_quantile(0.95, sum by (le) (rate(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"}[$__rate_interval]))) or (0 * absent(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"})))",
+          "legendFormat": "p95",
+          "refId": "B"
+        }
+      ],
+      "title": "Время ответа (мс)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Стэк классов кодов для ручки.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisBorderShow": false,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "stacking": {"group": "A", "mode": "normal"},
+            "lineWidth": 1,
+            "showPoints": "never",
+            "spanNulls": true
+          },
+          "unit": "reqps"
+        },
+        "overrides": [
+          {"matcher": {"id": "byName", "options": "2xx"}, "properties": [{"id": "color", "value": {"fixedColor": "green", "mode": "fixed"}}]},
+          {"matcher": {"id": "byName", "options": "4xx"}, "properties": [{"id": "color", "value": {"fixedColor": "orange", "mode": "fixed"}}]},
+          {"matcher": {"id": "byName", "options": "5xx"}, "properties": [{"id": "color", "value": {"fixedColor": "red", "mode": "fixed"}}]}
+        ]
+      },
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 19},
+      "id": 13,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true}},
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "(sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"2..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"2..\"})))",
+          "legendFormat": "2xx",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "(sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"4..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"4..\"})))",
+          "legendFormat": "4xx",
+          "refId": "B"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "expr": "(sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"5..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"5..\"})))",
+          "legendFormat": "5xx",
+          "refId": "C"
+        }
+      ],
+      "title": "Коды ответа (2xx / 4xx / 5xx)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["med_ml", "composition-api"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": true,
+        "label": "Ручка (все из OpenAPI)",
+        "multi": true,
+        "name": "route",
+        "options": [],
+        "query": "/login,/refresh,/reg/doctor,/reg/patient,/med/doctor/{id},/med/patient,/med/patient/{id},/med/doctor/{id}/patients,/med/card,/med/card/{doctor_id}/{patient_id},/uzi,/uzi/{id},/uzis/external/{id},/uzis/author/{id},/uzi/{id}/echographics,/uzi/device,/uzi/devices,/uzi/{id}/images,/uzi/image/{id}/nodes-segments,/uzi/{id}/nodes-segments,/uzi/{id}/nodes,/uzi/nodes/{id},/uzi/nodes/{id}/segments,/uzi/segment,/uzi/segment/{id},/download/{uzi_id}/{image_id},/download/cytology/{cytology_id}/{original_image_id},/tiler/dzi/{file_path},/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format},/tariff_plans/{id},/tariff_plans,/subscriptions/purchase,/subscriptions/check-active,/subscriptions/get-active,/payment_providers,/yookassa/webhooks,/cytology/create,/cytology/{id},/cytology/{id}/segments,/cytology/{id}/update,/cytology/copy,/cytology/history/{id},/cytology/segment/group/create/{cytology_img_id},/cytology/segment/update/{id}",
+        "skipUrlSync": false,
+        "sort": 5,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {"from": "now-1h", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "MED ML — composition-api (HTTP)",
+  "uid": "med-ml-composition-api",
+  "version": 4
+}

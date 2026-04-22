@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	_ "embed"
 	"fmt"
 	"io"
@@ -30,6 +31,7 @@ import (
 	"composition-api/internal/adapters"
 	"composition-api/internal/config"
 	api "composition-api/internal/generated/http/api"
+	"composition-api/internal/observability"
 	"composition-api/internal/repository"
 	"composition-api/internal/server"
 	"composition-api/internal/server/security"
@@ -56,6 +58,17 @@ func run() (exitCode int) {
 		slog.Error("init config", slog.Any("err", err))
 		return failExitCode
 	}
+
+	metricsHandler, shutdownMetrics, err := observability.SetupPrometheusMetrics()
+	if err != nil {
+		slog.Error("init prometheus metrics", slog.Any("err", err))
+		return failExitCode
+	}
+	defer func() {
+		if err := shutdownMetrics(context.Background()); err != nil {
+			slog.Error("shutdown metrics", slog.Any("err", err))
+		}
+	}()
 
 	// adapters
 	uziConn, err := grpc.NewClient(
@@ -170,6 +183,8 @@ func run() (exitCode int) {
 
 	r := chi.NewRouter()
 
+	// Явный GET: некоторые версии/proxy комбинации лучше работают, чем Handle со всеми методами.
+	r.Get("/metrics", metricsHandler.ServeHTTP)
 	r.Mount("/api/v1/", http.StripPrefix("/api/v1", server))
 	r.Mount("/docs/", http.StripPrefix("/docs", swaggerui.Handler(spec)))
 

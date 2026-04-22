@@ -5,6 +5,7 @@ import (
 
 	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/services/original_image"
+	cytologysplittedpb "cytology/internal/generated/dbus/produce/cytologysplitted"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -51,6 +52,18 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 	id, err := h.services.OriginalImage.CreateOriginalImage(ctx, arg)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+	}
+
+	// Отправляем сообщение в Kafka для обработки
+	if h.services.Producer != nil {
+		msg := &cytologysplittedpb.CytologySplitted{
+			CytologyId:      cytologyID.String(),
+			OriginalImageId: id.String(),
+		}
+		if err := h.services.Producer.SendCytologySplitted(ctx, msg); err != nil {
+			// Логируем ошибку, но не прерываем выполнение
+			// TODO: добавить логирование
+		}
 	}
 
 	return &pb.CreateOriginalImageOut{Id: id.String()}, nil
