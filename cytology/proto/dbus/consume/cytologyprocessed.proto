@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+option go_package = "internal/generated/dbus/consume/cytologyprocessed";
+
+message CytologyProcessed {
+    string cytology_id = 100;
+    string original_image_id = 200;
+    FeatureCollection geojson_features = 300;
+}
+
+message FeatureCollection {
+    repeated Feature features = 100;
+}
+
+message Feature {
+    Geometry geometry = 100;
+    Properties properties = 200;
+}
+
+message Geometry {
+    oneof geometry_type {
+        Point point = 100;
+        Polygon polygon = 200;
+    }
+}
+
+message Point {
+    double x = 100;
+    double y = 200;
+}
+
+message Polygon {
+    repeated Ring rings = 100;
+}
+
+message Ring {
+    repeated Point points = 100;
+}
+
+message Properties {
+    Classification classification = 100;
+    bool is_locked = 200;
+}
+
+message Classification {
+    string name = 100;
+    Color color = 200;
+}
+
+message Color {
+    int32 r = 100;
+    int32 g = 200;
+    int32 b = 300;
+}
