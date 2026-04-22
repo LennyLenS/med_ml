@@ -1,6 +1,6 @@
 {
   "annotations": {"list": []},
-  "description": "Список маршрутов в переменной «route» совпадает с paths в composition-api/cmd/service/server.yml. Обновить строку: med_ml/observability/scripts/openapi_paths_comma.sh",
+  "description": "Переменная «route»: все paths из OpenAPI (custom). Повтор строки (Repeat row): три графика идут одной группой под заголовком маршрута. Обновить список: med_ml/observability/scripts/openapi_paths_comma.sh",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -140,7 +140,8 @@
       "collapsed": false,
       "gridPos": {"h": 1, "w": 24, "x": 0, "y": 18},
       "id": 51,
-      "title": "По каждой ручке из OpenAPI (повтор по переменной «route»)",
+      "repeat": "route",
+      "title": "$route",
       "type": "row"
     },
     {
@@ -163,9 +164,6 @@
       },
       "gridPos": {"h": 8, "w": 8, "x": 0, "y": 19},
       "id": 11,
-      "repeat": "route",
-      "repeatDirection": "h",
-      "maxPerRow": 3,
       "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}},
       "pluginVersion": "11.5.2",
       "targets": [
@@ -176,7 +174,7 @@
           "refId": "A"
         }
       ],
-      "title": "$route — запросов / сек",
+      "title": "Запросов / сек",
       "type": "timeseries"
     },
     {
@@ -199,9 +197,6 @@
       },
       "gridPos": {"h": 8, "w": 8, "x": 8, "y": 19},
       "id": 12,
-      "repeat": "route",
-      "repeatDirection": "h",
-      "maxPerRow": 3,
       "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}},
       "pluginVersion": "11.5.2",
       "targets": [
@@ -218,7 +213,7 @@
           "refId": "B"
         }
       ],
-      "title": "$route — время ответа (мс)",
+      "title": "Время ответа (мс)",
       "type": "timeseries"
     },
     {
@@ -246,9 +241,6 @@
       },
       "gridPos": {"h": 8, "w": 8, "x": 16, "y": 19},
       "id": 13,
-      "repeat": "route",
-      "repeatDirection": "h",
-      "maxPerRow": 3,
       "options": {"legend": {"displayMode": "table", "placement": "bottom", "showLegend": true}},
       "pluginVersion": "11.5.2",
       "targets": [
@@ -271,7 +263,7 @@
           "refId": "C"
         }
       ],
-      "title": "$route — коды ответа (2xx / 4xx / 5xx)",
+      "title": "Коды ответа (2xx / 4xx / 5xx)",
       "type": "timeseries"
     }
   ],
@@ -300,5 +292,5 @@
   "timezone": "browser",
   "title": "MED ML — composition-api (HTTP)",
   "uid": "med-ml-composition-api",
-  "version": 3
+  "version": 4
 }
