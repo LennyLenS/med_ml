@@ -1,5 +1,6 @@
 {
   "annotations": {"list": []},
+  "description": "Список маршрутов в переменной «route» совпадает с paths в composition-api/cmd/service/server.yml. Обновить строку: med_ml/observability/scripts/openapi_paths_comma.sh",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -87,7 +88,7 @@
     },
     {
       "datasource": {"type": "prometheus", "uid": "prometheus"},
-      "description": "Группировка по классу кода ответа (лейбл http_response_status_code должен быть на счётчике запросов). Если пусто — см. имена лейблов в Prometheus.",
+      "description": "Классы кодов ответа. Нули через absent(), если за всё время не было таких ответов.",
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "palette-classic"},
@@ -115,19 +116,19 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"2..\"}[$__rate_interval]))",
+          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"2..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_response_status_code=~\"2..\"}))",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"4..\"}[$__rate_interval]))",
+          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"4..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_response_status_code=~\"4..\"}))",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"5..\"}[$__rate_interval]))",
+          "expr": "sum(rate(ogen_server_request_count_total{http_response_status_code=~\"5..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_response_status_code=~\"5..\"}))",
           "legendFormat": "5xx",
           "refId": "C"
         }
@@ -139,12 +140,12 @@
       "collapsed": false,
       "gridPos": {"h": 1, "w": 24, "x": 0, "y": 18},
       "id": 51,
-      "title": "По каждой выбранной ручке (переменная «Ручка» сверху)",
+      "title": "По каждой ручке из OpenAPI (повтор по переменной «route»)",
       "type": "row"
     },
     {
       "datasource": {"type": "prometheus", "uid": "prometheus"},
-      "description": "Запросов в секунду только для выбранного маршрута (переменная route).",
+      "description": "Полный список ручек — custom-переменная из server.yml. Без запросов: 0 по absent().",
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "palette-classic"},
@@ -170,7 +171,7 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum by (http_request_method) (rate(ogen_server_request_count_total{http_route=\"$route\"}[$__rate_interval]))",
+          "expr": "(sum by (http_request_method) (rate(ogen_server_request_count_total{http_route=\"$route\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\"})))",
           "legendFormat": "{{http_request_method}}",
           "refId": "A"
         }
@@ -180,7 +181,7 @@
     },
     {
       "datasource": {"type": "prometheus", "uid": "prometheus"},
-      "description": "Латентность по ручке (p50 / p95). При «No data» проверьте имя histogram *_bucket в Prometheus.",
+      "description": "p50/p95; без данных по ручке — линия на нуле.",
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "palette-classic"},
@@ -206,13 +207,13 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"}[$__rate_interval])))",
+          "expr": "(histogram_quantile(0.50, sum by (le) (rate(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"}[$__rate_interval]))) or (0 * absent(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"})))",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"}[$__rate_interval])))",
+          "expr": "(histogram_quantile(0.95, sum by (le) (rate(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"}[$__rate_interval]))) or (0 * absent(ogen_server_duration_milliseconds_bucket{http_route=\"$route\"})))",
           "legendFormat": "p95",
           "refId": "B"
         }
@@ -222,6 +223,7 @@
     },
     {
       "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Стэк классов кодов для ручки.",
       "fieldConfig": {
         "defaults": {
           "color": {"mode": "palette-classic"},
@@ -252,19 +254,19 @@
       "targets": [
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"2..\"}[$__rate_interval]))",
+          "expr": "(sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"2..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"2..\"})))",
           "legendFormat": "2xx",
           "refId": "A"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"4..\"}[$__rate_interval]))",
+          "expr": "(sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"4..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"4..\"})))",
           "legendFormat": "4xx",
           "refId": "B"
         },
         {
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "expr": "sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"5..\"}[$__rate_interval]))",
+          "expr": "(sum(rate(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"5..\"}[$__rate_interval])) or (0 * absent(ogen_server_request_count_total{http_route=\"$route\", http_response_status_code=~\"5..\"})))",
           "legendFormat": "5xx",
           "refId": "C"
         }
@@ -280,22 +282,16 @@
     "list": [
       {
         "current": {},
-        "datasource": {"type": "prometheus", "uid": "prometheus"},
-        "definition": "label_values(ogen_server_request_count_total, http_route)",
         "hide": 0,
         "includeAll": true,
-        "label": "Ручка (http_route)",
+        "label": "Ручка (все из OpenAPI)",
         "multi": true,
         "name": "route",
         "options": [],
-        "query": {
-          "query": "label_values(ogen_server_request_count_total, http_route)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
+        "query": "/login,/refresh,/reg/doctor,/reg/patient,/med/doctor/{id},/med/patient,/med/patient/{id},/med/doctor/{id}/patients,/med/card,/med/card/{doctor_id}/{patient_id},/uzi,/uzi/{id},/uzis/external/{id},/uzis/author/{id},/uzi/{id}/echographics,/uzi/device,/uzi/devices,/uzi/{id}/images,/uzi/image/{id}/nodes-segments,/uzi/{id}/nodes-segments,/uzi/{id}/nodes,/uzi/nodes/{id},/uzi/nodes/{id}/segments,/uzi/segment,/uzi/segment/{id},/download/{uzi_id}/{image_id},/download/cytology/{cytology_id}/{original_image_id},/tiler/dzi/{file_path},/tiler/dzi/{file_path}/files/{level}/{col}_{row}.{format},/tariff_plans/{id},/tariff_plans,/subscriptions/purchase,/subscriptions/check-active,/subscriptions/get-active,/payment_providers,/yookassa/webhooks,/cytology/create,/cytology/{id},/cytology/{id}/segments,/cytology/{id}/update,/cytology/copy,/cytology/history/{id},/cytology/segment/group/create/{cytology_img_id},/cytology/segment/update/{id}",
+        "skipUrlSync": false,
+        "sort": 5,
+        "type": "custom"
       }
     ]
   },
@@ -304,5 +300,5 @@
   "timezone": "browser",
   "title": "MED ML — composition-api (HTTP)",
   "uid": "med-ml-composition-api",
-  "version": 2
+  "version": 3
 }
