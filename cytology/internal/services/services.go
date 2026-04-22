@@ -1,7 +1,7 @@
 package services
 
 import (
-	"cytology/internal/dbus"
+	dbus "cytology/internal/dbus/producers"
 	"cytology/internal/repository"
 	"cytology/internal/services/cytology_image"
 	"cytology/internal/services/original_image"

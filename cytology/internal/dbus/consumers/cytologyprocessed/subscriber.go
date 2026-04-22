@@ -94,8 +94,7 @@ func (h *subscriber) Consume(ctx context.Context, message *pb.CytologyProcessed)
 		return fmt.Errorf("cytology id is not uuid: %s", message.CytologyId)
 	}
 
-	originalImageID, err := uuid.Parse(message.OriginalImageId)
-	if err != nil {
+	if _, err := uuid.Parse(message.OriginalImageId); err != nil {
 		return fmt.Errorf("original image id is not uuid: %s", message.OriginalImageId)
 	}
 
