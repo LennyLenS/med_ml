@@ -9,3 +9,5 @@ datasources:
     isDefault: false
     jsonData:
       maxLines: 1000
+      # Explore: корректная работа с volume API Loki (при volume_enabled в loki.yml)
+      timeout: 60

@@ -15,10 +15,8 @@ scrape_configs:
       - host: unix:///var/run/docker.sock
         refresh_interval: 5s
     relabel_configs:
-      # Совпадает с `name:` в корневом docker-compose (иначе измените или удалите этот блок keep).
-      - source_labels: ["__meta_docker_container_label_com_docker_compose_project"]
-        regex: yir
-        action: keep
+      # Не фильтруем по имени compose-проекта: у Docker имя часто ≠ `name:` из файла (папка, флаг -p).
+      # Чтобы ограничить только своим стеком — верните action: keep с regex вашего com.docker.compose.project.
       - source_labels: ["__meta_docker_container_label_com_docker_compose_service"]
         regex: "^loki|promtail|prometheus|grafana$"
         action: drop
