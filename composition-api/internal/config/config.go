@@ -17,6 +17,9 @@ type Config struct {
 
 type App struct {
 	Url string `env:"APP_URL" env-default:"localhost:8080"`
+	// CORS_ALLOWED_ORIGINS — список origin через запятую (например http://localhost:3000,http://127.0.0.1:49118).
+	// Пустое значение: разрешить любой origin (*), удобно при сервисах на одном хосте с разными портами.
+	CorsAllowedOrigins string `env:"CORS_ALLOWED_ORIGINS" env-default:""`
 }
 
 type Adapters struct {

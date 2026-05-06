@@ -23,6 +23,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/rs/cors"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -45,6 +46,20 @@ const (
 	successExitCode = 0
 	failExitCode    = 1
 )
+
+func splitCommaTrim(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := strings.Split(s, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		if t := strings.TrimSpace(p); t != "" {
+			out = append(out, t)
+		}
+	}
+	return out
+}
 
 func main() {
 	os.Exit(run())
@@ -272,9 +287,28 @@ func run() (exitCode int) {
 	})))
 
 	// Настройка HTTP сервера с увеличенными таймаутами для больших файлов
+	corsOrigins := splitCommaTrim(cfg.App.CorsAllowedOrigins)
+	if len(corsOrigins) == 0 {
+		corsOrigins = []string{"*"}
+	}
+	c := cors.New(cors.Options{
+		AllowedOrigins: corsOrigins,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodHead,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+		},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: len(corsOrigins) > 0 && corsOrigins[0] != "*",
+	})
+
 	srv := &http.Server{
 		Addr:           cfg.App.Url,
-		Handler:        r,
+		Handler:        c.Handler(r),
 		ReadTimeout:    30 * time.Minute,  // 30 минут на чтение запроса
 		WriteTimeout:   30 * time.Minute,  // 30 минут на запись ответа
 		IdleTimeout:    120 * time.Second, // 2 минуты для idle соединений
