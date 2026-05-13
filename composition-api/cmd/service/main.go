@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	_ "embed"
 	"fmt"
 	"io"
@@ -22,6 +23,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/rs/cors"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -30,6 +32,7 @@ import (
 	"composition-api/internal/adapters"
 	"composition-api/internal/config"
 	api "composition-api/internal/generated/http/api"
+	"composition-api/internal/observability"
 	"composition-api/internal/repository"
 	"composition-api/internal/server"
 	"composition-api/internal/server/security"
@@ -44,6 +47,20 @@ const (
 	failExitCode    = 1
 )
 
+func splitCommaTrim(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := strings.Split(s, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		if t := strings.TrimSpace(p); t != "" {
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
 func main() {
 	os.Exit(run())
 }
@@ -56,6 +73,17 @@ func run() (exitCode int) {
 		slog.Error("init config", slog.Any("err", err))
 		return failExitCode
 	}
+
+	metricsHandler, shutdownMetrics, err := observability.SetupPrometheusMetrics()
+	if err != nil {
+		slog.Error("init prometheus metrics", slog.Any("err", err))
+		return failExitCode
+	}
+	defer func() {
+		if err := shutdownMetrics(context.Background()); err != nil {
+			slog.Error("shutdown metrics", slog.Any("err", err))
+		}
+	}()
 
 	// adapters
 	uziConn, err := grpc.NewClient(
@@ -170,6 +198,8 @@ func run() (exitCode int) {
 
 	r := chi.NewRouter()
 
+	// Явный GET: некоторые версии/proxy комбинации лучше работают, чем Handle со всеми методами.
+	r.Get("/metrics", metricsHandler.ServeHTTP)
 	r.Mount("/api/v1/", http.StripPrefix("/api/v1", server))
 	r.Mount("/docs/", http.StripPrefix("/docs", swaggerui.Handler(spec)))
 
@@ -257,9 +287,28 @@ func run() (exitCode int) {
 	})))
 
 	// Настройка HTTP сервера с увеличенными таймаутами для больших файлов
+	corsOrigins := splitCommaTrim(cfg.App.CorsAllowedOrigins)
+	if len(corsOrigins) == 0 {
+		corsOrigins = []string{"*"}
+	}
+	c := cors.New(cors.Options{
+		AllowedOrigins: corsOrigins,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodHead,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+		},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: len(corsOrigins) > 0 && corsOrigins[0] != "*",
+	})
+
 	srv := &http.Server{
 		Addr:           cfg.App.Url,
-		Handler:        r,
+		Handler:        c.Handler(r),
 		ReadTimeout:    30 * time.Minute,  // 30 минут на чтение запроса
 		WriteTimeout:   30 * time.Minute,  // 30 минут на запись ответа
 		IdleTimeout:    120 * time.Second, // 2 минуты для idle соединений

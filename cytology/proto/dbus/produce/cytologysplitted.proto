@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "internal/generated/dbus/produce/cytologysplitted";
+
+message CytologySplitted {
+  string cytology_id = 100;
+  string original_image_id = 200;
+}

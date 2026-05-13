@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # HTTP API (ogen): метрики ogen.server.*
+  - job_name: composition_api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["composition_api:50055"]

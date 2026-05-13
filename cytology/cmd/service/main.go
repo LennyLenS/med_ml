@@ -7,7 +7,9 @@ import (
 	"net"
 	"os"
 
+	dbuslib "github.com/WantBeASleep/med_ml_lib/dbus"
 	grpclib "github.com/WantBeASleep/med_ml_lib/grpc"
+	observerdbuslib "github.com/WantBeASleep/med_ml_lib/observer/dbus"
 	observergrpclib "github.com/WantBeASleep/med_ml_lib/observer/grpc"
 	loglib "github.com/WantBeASleep/med_ml_lib/observer/log"
 
@@ -23,6 +25,12 @@ import (
 
 	grpchandler "cytology/internal/server"
 
+	cytologyprocessedsubscriber "cytology/internal/dbus/consumers/cytologyprocessed"
+	dbusproducers "cytology/internal/dbus/producers"
+	cytologyprocessed "cytology/internal/generated/dbus/consume/cytologyprocessed"
+	cytologysplittedpb "cytology/internal/generated/dbus/produce/cytologysplitted"
+
+	"github.com/IBM/sarama"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -88,10 +96,29 @@ func run() (exitCode int) {
 		return failExitCode
 	}
 
+	// Инициализация Kafka producer
+	producer, err := sarama.NewSyncProducer(cfg.Broker.Addrs, nil)
+	if err != nil {
+		slog.Error("init sarama producer", "err", err)
+		return failExitCode
+	}
+
+	producerCytologySplitted := dbuslib.NewProducer[*cytologysplittedpb.CytologySplitted](
+		producer,
+		"cytologysplitted",
+		dbuslib.WithProducerMiddlewares[*cytologysplittedpb.CytologySplitted](
+			observerdbuslib.CrossEventProduce,
+			observerdbuslib.LogEventProduce,
+		),
+	)
+
+	dbusAdapter := dbusproducers.New(producerCytologySplitted)
+
 	dao := repository.NewRepository(db, client, bucketName)
 
 	services := services.New(
 		dao,
+		dbusAdapter,
 	)
 
 	handler := grpchandler.New(services)
@@ -121,6 +148,20 @@ func run() (exitCode int) {
 	)
 	pb.RegisterCytologySrvServer(server, handler)
 
+	// dbus consumer
+	cytologyprocessedSubscriber := cytologyprocessedsubscriber.New(services)
+
+	cytologyprocessedHandler := dbuslib.NewGroupSubscriber(
+		"cytologyprocessed",
+		cfg.Broker.Addrs,
+		"cytologyprocessed",
+		cytologyprocessedSubscriber,
+		dbuslib.WithSubscriberMiddlewares[*cytologyprocessed.CytologyProcessed](
+			observerdbuslib.CrossEventConsume,
+			observerdbuslib.LogEventConsume,
+		),
+	)
+
 	lis, err := net.Listen("tcp", cfg.App.Url)
 	if err != nil {
 		slog.Error("take port", "err", err)
@@ -135,6 +176,11 @@ func run() (exitCode int) {
 			panic("serve grpc")
 		}
 		close <- struct{}{}
+	}()
+	go func() {
+		if err := cytologyprocessedHandler.Start(context.Background()); err != nil {
+			slog.Error("start cytologyprocessed handler", "err", err)
+		}
 	}()
 
 	<-close

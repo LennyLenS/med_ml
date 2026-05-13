@@ -6,8 +6,9 @@ settings = get_settings()
 
 
 class EventsYo:
-    def __init__(self, uzi):
+    def __init__(self, uzi, cytology=None):
         self.uzi = uzi
+        self.cytology = cytology
 
     def run(self):
         consumer_config = {
@@ -19,19 +20,37 @@ class EventsYo:
         }
 
         consumer = Consumer(consumer_config)
-        consumer.subscribe(["uzisplitted"])
+        topics = ["uzisplitted"]
+        if self.cytology:
+            topics.append("cytologysplitted")
+        consumer.subscribe(topics)
+
         while True:
             msg = consumer.poll(timeout=1.0)
-            # continue
             if msg is None:
                 continue  # Если сообщения нет, то пропускаем итерацию
 
-            uzi_splitted_event = pb.UziSplitted()
-            uzi_splitted_event.ParseFromString(msg.value())
+            topic = msg.topic()
 
-            print("UZI ID: ", uzi_splitted_event.uzi_id)
+            if topic == "uzisplitted":
+                uzi_splitted_event = pb.UziSplitted()
+                uzi_splitted_event.ParseFromString(msg.value())
 
-            self.uzi.segmentClassificateSave(
-                uzi_splitted_event.uzi_id, uzi_splitted_event.pages_id
-            )
+                print("UZI ID: ", uzi_splitted_event.uzi_id)
+
+                self.uzi.segmentClassificateSave(
+                    uzi_splitted_event.uzi_id, uzi_splitted_event.pages_id
+                )
+            elif topic == "cytologysplitted" and self.cytology:
+                cytology_splitted_event = pb.CytologySplitted()
+                cytology_splitted_event.ParseFromString(msg.value())
+
+                print("CYTOLOGY ID: ", cytology_splitted_event.cytology_id)
+                print("ORIGINAL IMAGE ID: ", cytology_splitted_event.original_image_id)
+
+                self.cytology.processCytologyImage(
+                    cytology_splitted_event.cytology_id,
+                    cytology_splitted_event.original_image_id
+                )
+
             consumer.commit(msg)

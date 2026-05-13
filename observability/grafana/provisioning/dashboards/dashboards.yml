@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: MED ML dashboards
+    folder: MED ML
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards

@@ -1,6 +1,7 @@
 package services
 
 import (
+	dbus "cytology/internal/dbus/producers"
 	"cytology/internal/repository"
 	"cytology/internal/services/cytology_image"
 	"cytology/internal/services/original_image"
@@ -13,10 +14,12 @@ type Services struct {
 	OriginalImage      original_image.Service
 	SegmentationGroup  segmentation_group.Service
 	Segmentation       segmentation.Service
+	Producer           dbus.Producer
 }
 
 func New(
 	dao repository.DAO,
+	producer dbus.Producer,
 ) *Services {
 	cytologyImage := cytology_image.New(dao)
 	originalImage := original_image.New(dao)
@@ -28,5 +31,6 @@ func New(
 		OriginalImage:     originalImage,
 		SegmentationGroup: segmentationGroup,
 		Segmentation:      segmentation,
+		Producer:          producer,
 	}
 }
