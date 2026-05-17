@@ -47,3 +47,11 @@ tasks:
   migration-down:
     cmds:
       - go tool goose -dir db/migrations down
+
+  test:
+    cmds:
+      - go test ./internal/... -count=1
+
+  e2e:
+    cmds:
+      - go test -v -count=1 ./tests/e2e/... -tags=e2e

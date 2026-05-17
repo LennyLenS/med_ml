@@ -122,6 +122,27 @@ func (q *repo) GetCytologyImagesByDoctorIdAndPatientId(doctorID, patientID uuid.
 	return images, nil
 }
 
+func (q *repo) GetCytologyImageIdsByDoctorIdAndPatientId(doctorID, patientID uuid.UUID) ([]uuid.UUID, error) {
+	query := q.QueryBuilder().
+		Select(columnID).
+		From(table).
+		Where(sq.Eq{
+			columnDoctorID:  doctorID,
+			columnPatientID: patientID,
+		})
+
+	var ids []uuid.UUID
+	if err := q.Runner().Selectx(q.Context(), &ids, query); err != nil {
+		return nil, err
+	}
+
+	if len(ids) == 0 {
+		return nil, daoEntity.ErrNotFound
+	}
+
+	return ids, nil
+}
+
 func (q *repo) CheckExist(id uuid.UUID) (bool, error) {
 	query := q.QueryBuilder().
 		Select(columnID).

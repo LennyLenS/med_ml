@@ -88,3 +88,30 @@ func (h *handler) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, i
 
 	return &pb.GetCytologyImagesByDoctorIdAndPatientIdOut{CytologyImages: pbImages}, nil
 }
+
+func (h *handler) GetCytologyImageIdsByDoctorIdAndPatientId(ctx context.Context, in *pb.GetCytologyImageIdsByDoctorIdAndPatientIdIn) (*pb.GetCytologyImageIdsByDoctorIdAndPatientIdOut, error) {
+	doctorID, err := uuid.Parse(in.DoctorId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "doctor_id is not a valid uuid: %s", err.Error())
+	}
+
+	patientID, err := uuid.Parse(in.PatientId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "patient_id is not a valid uuid: %s", err.Error())
+	}
+
+	ids, err := h.services.CytologyImage.GetCytologyImageIdsByDoctorIdAndPatientId(ctx, doctorID, patientID)
+	if err != nil {
+		if errors.Is(err, domain.ErrNotFound) {
+			return &pb.GetCytologyImageIdsByDoctorIdAndPatientIdOut{Ids: []string{}}, nil
+		}
+		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+	}
+
+	pbIDs := make([]string, 0, len(ids))
+	for _, id := range ids {
+		pbIDs = append(pbIDs, id.String())
+	}
+
+	return &pb.GetCytologyImageIdsByDoctorIdAndPatientIdOut{Ids: pbIDs}, nil
+}

@@ -47,3 +47,15 @@ func (s *service) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, d
 
 	return cytologyImageEntity.CytologyImage{}.SliceToDomain(images), nil
 }
+
+func (s *service) GetCytologyImageIdsByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]uuid.UUID, error) {
+	ids, err := s.dao.NewCytologyImageQuery(ctx).GetCytologyImageIdsByDoctorIdAndPatientId(doctorID, patientID)
+	if err != nil {
+		if errors.Is(err, entity.ErrNotFound) {
+			return nil, domain.ErrNotFound
+		}
+		return nil, fmt.Errorf("get cytology image ids: %w", err)
+	}
+
+	return ids, nil
+}
