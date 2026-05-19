@@ -236,6 +236,8 @@ services:
   nginx:
     image: nginx:alpine
     container_name: nginx
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - type: bind
         source: ./nginx.conf
