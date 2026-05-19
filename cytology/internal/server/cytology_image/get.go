@@ -89,6 +89,25 @@ func (h *handler) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, i
 	return &pb.GetCytologyImagesByDoctorIdAndPatientIdOut{CytologyImages: pbImages}, nil
 }
 
+func (h *handler) GetCytologyImagesByPatientId(ctx context.Context, in *pb.GetCytologyImagesByPatientIdIn) (*pb.GetCytologyImagesByPatientIdOut, error) {
+	patientID, err := uuid.Parse(in.PatientId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "patient_id is not a valid uuid: %s", err.Error())
+	}
+
+	images, err := h.services.CytologyImage.GetCytologyImagesByPatientId(ctx, patientID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
+	}
+
+	pbImages := make([]*pb.CytologyImage, 0, len(images))
+	for _, img := range images {
+		pbImages = append(pbImages, mappers.CytologyImageToProto(img))
+	}
+
+	return &pb.GetCytologyImagesByPatientIdOut{CytologyImages: pbImages}, nil
+}
+
 func (h *handler) GetCytologyImageIdsByDoctorIdAndPatientId(ctx context.Context, in *pb.GetCytologyImageIdsByDoctorIdAndPatientIdIn) (*pb.GetCytologyImageIdsByDoctorIdAndPatientIdOut, error) {
 	doctorID, err := uuid.Parse(in.DoctorId)
 	if err != nil {

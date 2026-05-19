@@ -77,6 +77,10 @@ func (s *service) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, d
 	return s.adapters.Cytology.GetCytologyImagesByDoctorIdAndPatientId(ctx, doctorID, patientID)
 }
 
+func (s *service) GetCytologyImagesByPatientId(ctx context.Context, patientID uuid.UUID) ([]domain.CytologyImage, error) {
+	return s.adapters.Cytology.GetCytologyImagesByPatientId(ctx, patientID)
+}
+
 func (s *service) UpdateCytologyImage(ctx context.Context, arg UpdateCytologyImageArg) (domain.CytologyImage, error) {
 	return s.adapters.Cytology.UpdateCytologyImage(ctx, cytology.UpdateCytologyImageIn{
 		Id:                arg.Id,

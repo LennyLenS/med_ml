@@ -43,6 +43,17 @@ func (UnimplementedHandler) CytologyHistoryRead(ctx context.Context, params Cyto
 	return r, ht.ErrNotImplemented
 }
 
+// CytologyPatientShotsRead implements CytologyPatientShotsRead operation.
+//
+// Для врача возвращаются только снимки, созданные этим
+// врачом. Для пациента — все снимки. Роль определяется
+// из JWT-токена.
+//
+// GET /cytology/patient/{patient_id}/shots
+func (UnimplementedHandler) CytologyPatientShotsRead(ctx context.Context, params CytologyPatientShotsReadParams) (r CytologyPatientShotsReadRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // CytologyRead implements CytologyRead operation.
 //
 // Информация об одной группе снимков.

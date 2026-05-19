@@ -14,6 +14,7 @@ type CytologyImageHandler interface {
 	GetCytologyImageById(ctx context.Context, req *pb.GetCytologyImageByIdIn) (*pb.GetCytologyImageByIdOut, error)
 	GetCytologyImagesByExternalId(ctx context.Context, req *pb.GetCytologyImagesByExternalIdIn) (*pb.GetCytologyImagesByExternalIdOut, error)
 	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, req *pb.GetCytologyImagesByDoctorIdAndPatientIdIn) (*pb.GetCytologyImagesByDoctorIdAndPatientIdOut, error)
+	GetCytologyImagesByPatientId(ctx context.Context, req *pb.GetCytologyImagesByPatientIdIn) (*pb.GetCytologyImagesByPatientIdOut, error)
 	GetCytologyImageIdsByDoctorIdAndPatientId(ctx context.Context, req *pb.GetCytologyImageIdsByDoctorIdAndPatientIdIn) (*pb.GetCytologyImageIdsByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(ctx context.Context, req *pb.UpdateCytologyImageIn) (*pb.UpdateCytologyImageOut, error)
 	DeleteCytologyImage(ctx context.Context, req *pb.DeleteCytologyImageIn) (*emptypb.Empty, error)

@@ -48,6 +48,20 @@ func (s *service) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, d
 	return cytologyImageEntity.CytologyImage{}.SliceToDomain(images), nil
 }
 
+func (s *service) GetCytologyImagesByPatientId(ctx context.Context, patientID uuid.UUID) ([]domain.CytologyImage, error) {
+	images, err := s.dao.NewCytologyImageQuery(ctx).GetCytologyImagesByPatientId(patientID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]domain.CytologyImage, 0, len(images))
+	for _, img := range images {
+		result = append(result, img.ToDomain())
+	}
+
+	return result, nil
+}
+
 func (s *service) GetCytologyImageIdsByDoctorIdAndPatientId(ctx context.Context, doctorID, patientID uuid.UUID) ([]uuid.UUID, error) {
 	ids, err := s.dao.NewCytologyImageQuery(ctx).GetCytologyImageIdsByDoctorIdAndPatientId(doctorID, patientID)
 	if err != nil {

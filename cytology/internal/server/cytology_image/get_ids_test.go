@@ -38,6 +38,10 @@ func (m *mockCytologyImageService) GetCytologyImagesByDoctorIdAndPatientId(conte
 	panic("not implemented")
 }
 
+func (m *mockCytologyImageService) GetCytologyImagesByPatientId(context.Context, uuid.UUID) ([]domain.CytologyImage, error) {
+	panic("not implemented")
+}
+
 func (m *mockCytologyImageService) GetCytologyImageIdsByDoctorIdAndPatientId(context.Context, uuid.UUID, uuid.UUID) ([]uuid.UUID, error) {
 	return m.ids, m.err
 }

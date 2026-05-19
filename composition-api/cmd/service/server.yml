@@ -830,6 +830,145 @@ components:
         thyroglobulin: 20
         create_at: "2024-01-01T00:00:00Z"
 
+    cytologyShotPatient:
+      type: object
+      description: пациент в ответе списка снимков цитологии
+      required:
+        - id
+        - first_name
+        - last_name
+        - fathers_name
+        - birth_date
+        - personal_policy
+        - email
+        - is_active
+      properties:
+        id:
+          type: string
+          format: uuid
+        first_name:
+          type: string
+        last_name:
+          type: string
+        fathers_name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        personal_policy:
+          type: string
+        email:
+          type: string
+        is_active:
+          type: boolean
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        first_name: "Иван"
+        last_name: "Иванов"
+        fathers_name: "Иванович"
+        birth_date: "2026-05-06"
+        personal_policy: "1234123412341234"
+        email: "iii@medml.med"
+        is_active: true
+
+    cytologyShotPatientCard:
+      type: object
+      properties:
+        acceptance_datetime:
+          type: string
+          format: date-time
+        diagnosis:
+          type: string
+
+    cytologyShotDetails:
+      type: object
+      properties:
+        ai_info:
+          type: array
+          items: {}
+        probs:
+          type: array
+          items:
+            type: number
+
+    cytologyPatientShot:
+      type: object
+      required:
+        - id
+        - patient_card
+        - is_last
+        - diagnos_date
+        - details
+        - diagnostic_number
+      properties:
+        id:
+          type: string
+          format: uuid
+        patient_card:
+          $ref: '#/components/schemas/cytologyShotPatientCard'
+        is_last:
+          type: boolean
+        diagnos_date:
+          type: string
+          format: date-time
+        details:
+          $ref: '#/components/schemas/cytologyShotDetails'
+        diagnostic_marking:
+          type: string
+          enum:
+            - П11
+            - Л23
+        diagnostic_number:
+          type: integer
+        material_type:
+          type: string
+          enum:
+            - GS
+            - BP
+            - TP
+            - PTP
+            - LNP
+        calcitonin:
+          type: integer
+        calcitonin_in_flush:
+          type: integer
+        thyroglobulin:
+          type: integer
+        prev:
+          type: string
+          format: uuid
+          nullable: true
+        parent_prev:
+          type: string
+          format: uuid
+          nullable: true
+        original_image:
+          type: string
+          format: uuid
+          nullable: true
+      example:
+        id: "550e8400-e29b-41d4-a716-446655440001"
+        patient_card:
+          acceptance_datetime: "2026-05-06T23:08:03.827479Z"
+          diagnosis: ""
+        is_last: true
+        diagnos_date: "2026-05-17T19:51:14.436969Z"
+        details:
+          ai_info: []
+          probs:
+            - 0.1
+            - 0.5
+            - 0.4
+        diagnostic_marking: "П11"
+        diagnostic_number: 1
+        material_type: "TP"
+        calcitonin: 1
+        calcitonin_in_flush: 1
+        thyroglobulin: 1
+        prev: null
+        parent_prev: "550e8400-e29b-41d4-a716-446655440000"
+        original_image: "550e8400-e29b-41d4-a716-446655440002"
+
     originalImage:
       type: object
       description: оригинальное изображение
@@ -2946,6 +3085,88 @@ paths:
           $ref: "#/components/responses/error"
         '422':
           description: Ошибка валидации данных
+          $ref: "#/components/responses/error"
+        '500':
+          description: Внутренняя ошибка сервера
+          $ref: "#/components/responses/error"
+        default:
+          $ref: "#/components/responses/error"
+
+  /cytology/patient/{patient_id}/shots:
+    get:
+      operationId: CytologyPatientShotsRead
+      summary: получить снимки цитологии пациента
+      description: >
+        Для врача возвращаются только снимки, созданные этим врачом.
+        Для пациента — все снимки. Роль определяется из JWT-токена.
+      tags:
+        - cytology
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          description: id пациента
+          schema:
+            type: string
+            format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: снимки цитологии пациента
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - patient
+                  - shots
+                properties:
+                  patient:
+                    $ref: '#/components/schemas/cytologyShotPatient'
+                  shots:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/cytologyPatientShot'
+              examples:
+                example1:
+                  summary: Снимки цитологии пациента
+                  value:
+                    patient:
+                      id: "123e4567-e89b-12d3-a456-426614174000"
+                      first_name: "Иван"
+                      last_name: "Иванов"
+                      fathers_name: "Иванович"
+                      birth_date: "2026-05-06"
+                      personal_policy: "1234123412341234"
+                      email: "iii@medml.med"
+                      is_active: true
+                    shots:
+                      - id: "550e8400-e29b-41d4-a716-446655440001"
+                        patient_card:
+                          acceptance_datetime: "2026-05-06T23:08:03.827479Z"
+                          diagnosis: ""
+                        is_last: true
+                        diagnos_date: "2026-05-17T19:51:14.436969Z"
+                        details:
+                          ai_info: []
+                          probs:
+                            - 0.1
+                            - 0.5
+                            - 0.4
+                        diagnostic_marking: "П11"
+                        diagnostic_number: 1
+                        material_type: "TP"
+                        calcitonin: 1
+                        calcitonin_in_flush: 1
+                        thyroglobulin: 1
+                        prev: null
+                        parent_prev: "550e8400-e29b-41d4-a716-446655440000"
+                        original_image: "550e8400-e29b-41d4-a716-446655440002"
+        '403':
+          description: доступ запрещён
+          $ref: "#/components/responses/error"
+        '404':
+          description: пациент не найден
           $ref: "#/components/responses/error"
         '500':
           description: Внутренняя ошибка сервера

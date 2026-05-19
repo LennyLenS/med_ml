@@ -138,6 +138,17 @@ func (a *adapter) GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, d
 	return mappers.CytologyImage{}.SliceDomain(res.CytologyImages), nil
 }
 
+func (a *adapter) GetCytologyImagesByPatientId(ctx context.Context, patientID uuid.UUID) ([]domain.CytologyImage, error) {
+	res, err := a.client.GetCytologyImagesByPatientId(ctx, &pb.GetCytologyImagesByPatientIdIn{
+		PatientId: patientID.String(),
+	})
+	if err != nil {
+		return nil, adapter_errors.HandleGRPCError(err)
+	}
+
+	return mappers.CytologyImage{}.SliceDomain(res.CytologyImages), nil
+}
+
 func (a *adapter) UpdateCytologyImage(ctx context.Context, in UpdateCytologyImageIn) (domain.CytologyImage, error) {
 	req := &pb.UpdateCytologyImageIn{
 		Id: in.Id.String(),

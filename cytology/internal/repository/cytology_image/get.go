@@ -122,6 +122,40 @@ func (q *repo) GetCytologyImagesByDoctorIdAndPatientId(doctorID, patientID uuid.
 	return images, nil
 }
 
+func (q *repo) GetCytologyImagesByPatientId(patientID uuid.UUID) ([]entity.CytologyImage, error) {
+	query := q.QueryBuilder().
+		Select(
+			columnID,
+			columnExternalID,
+			columnDoctorID,
+			columnPatientID,
+			columnDiagnosticNumber,
+			columnDiagnosticMarking,
+			columnMaterialType,
+			columnDiagnosDate,
+			columnIsLast,
+			columnCalcitonin,
+			columnCalcitoninInFlush,
+			columnThyroglobulin,
+			columnDetails,
+			columnPrevID,
+			columnParentPrevID,
+			columnCreateAt,
+		).
+		From(table).
+		Where(sq.Eq{
+			columnPatientID: patientID,
+		}).
+		OrderBy(columnCreateAt + " ASC")
+
+	var images []entity.CytologyImage
+	if err := q.Runner().Selectx(q.Context(), &images, query); err != nil {
+		return nil, err
+	}
+
+	return images, nil
+}
+
 func (q *repo) GetCytologyImageIdsByDoctorIdAndPatientId(doctorID, patientID uuid.UUID) ([]uuid.UUID, error) {
 	query := q.QueryBuilder().
 		Select(columnID).

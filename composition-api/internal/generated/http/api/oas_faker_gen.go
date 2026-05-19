@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/go-faster/jx"
 	"github.com/google/uuid"
 )
 
@@ -291,6 +292,111 @@ func (s *CytologyHistoryReadOKResultsItemDiagnosticMarking) SetFake() {
 // SetFake set fake values.
 func (s *CytologyHistoryReadOKResultsItemMaterialType) SetFake() {
 	*s = CytologyHistoryReadOKResultsItemMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyPatientShot) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.PatientCard.SetFake()
+		}
+	}
+	{
+		{
+			s.IsLast = true
+		}
+	}
+	{
+		{
+			s.DiagnosDate = time.Now()
+		}
+	}
+	{
+		{
+			s.Details.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticMarking.SetFake()
+		}
+	}
+	{
+		{
+			s.DiagnosticNumber = int(0)
+		}
+	}
+	{
+		{
+			s.MaterialType.SetFake()
+		}
+	}
+	{
+		{
+			s.Calcitonin.SetFake()
+		}
+	}
+	{
+		{
+			s.CalcitoninInFlush.SetFake()
+		}
+	}
+	{
+		{
+			s.Thyroglobulin.SetFake()
+		}
+	}
+	{
+		{
+			s.Prev.SetFake()
+		}
+	}
+	{
+		{
+			s.ParentPrev.SetFake()
+		}
+	}
+	{
+		{
+			s.OriginalImage.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyPatientShotDiagnosticMarking) SetFake() {
+	*s = CytologyPatientShotDiagnosticMarking11
+}
+
+// SetFake set fake values.
+func (s *CytologyPatientShotMaterialType) SetFake() {
+	*s = CytologyPatientShotMaterialTypeGS
+}
+
+// SetFake set fake values.
+func (s *CytologyPatientShotsReadOK) SetFake() {
+	{
+		{
+			s.Patient.SetFake()
+		}
+	}
+	{
+		{
+			s.Shots = nil
+			for i := 0; i < 0; i++ {
+				var elem CytologyPatientShot
+				{
+					elem.SetFake()
+				}
+				s.Shots = append(s.Shots, elem)
+			}
+		}
+	}
 }
 
 // SetFake set fake values.
@@ -850,6 +956,92 @@ func (s *CytologySegmentsListOKResultsItemGroupType) SetFake() {
 // SetFake set fake values.
 func (s *CytologySegmentsListOKResultsItemSegType) SetFake() {
 	*s = CytologySegmentsListOKResultsItemSegTypeNIL
+}
+
+// SetFake set fake values.
+func (s *CytologyShotDetails) SetFake() {
+	{
+		{
+			s.AiInfo = nil
+			for i := 0; i < 0; i++ {
+				var elem jx.Raw
+				{
+					elem = []byte("null")
+				}
+				s.AiInfo = append(s.AiInfo, elem)
+			}
+		}
+	}
+	{
+		{
+			s.Probs = nil
+			for i := 0; i < 0; i++ {
+				var elem float64
+				{
+					elem = float64(0)
+				}
+				s.Probs = append(s.Probs, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyShotPatient) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.FirstName = "string"
+		}
+	}
+	{
+		{
+			s.LastName = "string"
+		}
+	}
+	{
+		{
+			s.FathersName = "string"
+		}
+	}
+	{
+		{
+			s.BirthDate = time.Now()
+		}
+	}
+	{
+		{
+			s.PersonalPolicy = "string"
+		}
+	}
+	{
+		{
+			s.Email = "string"
+		}
+	}
+	{
+		{
+			s.IsActive = true
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologyShotPatientCard) SetFake() {
+	{
+		{
+			s.AcceptanceDatetime.SetFake()
+		}
+	}
+	{
+		{
+			s.Diagnosis.SetFake()
+		}
+	}
 }
 
 // SetFake set fake values.
@@ -1671,6 +1863,24 @@ func (s *OptCytologyHistoryReadOKResultsItemMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *OptCytologyPatientShotDiagnosticMarking) SetFake() {
+	var elem CytologyPatientShotDiagnosticMarking
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyPatientShotMaterialType) SetFake() {
+	var elem CytologyPatientShotMaterialType
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
 func (s *OptCytologyReadOKInfoImageGroupDiagnosticMarking) SetFake() {
 	var elem CytologyReadOKInfoImageGroupDiagnosticMarking
 	{
@@ -1816,6 +2026,12 @@ func (s *OptInt) SetFake() {
 
 // SetFake set fake values.
 func (s *OptNilNodeValidation) SetFake() {
+	s.Null = true
+	s.Set = true
+}
+
+// SetFake set fake values.
+func (s *OptNilUUID) SetFake() {
 	s.Null = true
 	s.Set = true
 }

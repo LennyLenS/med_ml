@@ -24,6 +24,7 @@ const (
 	CytologySrv_GetCytologyImageById_FullMethodName                      = "/CytologySrv/GetCytologyImageById"
 	CytologySrv_GetCytologyImagesByExternalId_FullMethodName             = "/CytologySrv/GetCytologyImagesByExternalId"
 	CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName   = "/CytologySrv/GetCytologyImagesByDoctorIdAndPatientId"
+	CytologySrv_GetCytologyImagesByPatientId_FullMethodName              = "/CytologySrv/GetCytologyImagesByPatientId"
 	CytologySrv_GetCytologyImageIdsByDoctorIdAndPatientId_FullMethodName = "/CytologySrv/GetCytologyImageIdsByDoctorIdAndPatientId"
 	CytologySrv_UpdateCytologyImage_FullMethodName                       = "/CytologySrv/UpdateCytologyImage"
 	CytologySrv_DeleteCytologyImage_FullMethodName                       = "/CytologySrv/DeleteCytologyImage"
@@ -53,6 +54,7 @@ type CytologySrvClient interface {
 	GetCytologyImageById(ctx context.Context, in *GetCytologyImageByIdIn, opts ...grpc.CallOption) (*GetCytologyImageByIdOut, error)
 	GetCytologyImagesByExternalId(ctx context.Context, in *GetCytologyImagesByExternalIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByExternalIdOut, error)
 	GetCytologyImagesByDoctorIdAndPatientId(ctx context.Context, in *GetCytologyImagesByDoctorIdAndPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error)
+	GetCytologyImagesByPatientId(ctx context.Context, in *GetCytologyImagesByPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByPatientIdOut, error)
 	GetCytologyImageIdsByDoctorIdAndPatientId(ctx context.Context, in *GetCytologyImageIdsByDoctorIdAndPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImageIdsByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(ctx context.Context, in *UpdateCytologyImageIn, opts ...grpc.CallOption) (*UpdateCytologyImageOut, error)
 	DeleteCytologyImage(ctx context.Context, in *DeleteCytologyImageIn, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -118,6 +120,16 @@ func (c *cytologySrvClient) GetCytologyImagesByDoctorIdAndPatientId(ctx context.
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCytologyImagesByDoctorIdAndPatientIdOut)
 	err := c.cc.Invoke(ctx, CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cytologySrvClient) GetCytologyImagesByPatientId(ctx context.Context, in *GetCytologyImagesByPatientIdIn, opts ...grpc.CallOption) (*GetCytologyImagesByPatientIdOut, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCytologyImagesByPatientIdOut)
+	err := c.cc.Invoke(ctx, CytologySrv_GetCytologyImagesByPatientId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -313,6 +325,7 @@ type CytologySrvServer interface {
 	GetCytologyImageById(context.Context, *GetCytologyImageByIdIn) (*GetCytologyImageByIdOut, error)
 	GetCytologyImagesByExternalId(context.Context, *GetCytologyImagesByExternalIdIn) (*GetCytologyImagesByExternalIdOut, error)
 	GetCytologyImagesByDoctorIdAndPatientId(context.Context, *GetCytologyImagesByDoctorIdAndPatientIdIn) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error)
+	GetCytologyImagesByPatientId(context.Context, *GetCytologyImagesByPatientIdIn) (*GetCytologyImagesByPatientIdOut, error)
 	GetCytologyImageIdsByDoctorIdAndPatientId(context.Context, *GetCytologyImageIdsByDoctorIdAndPatientIdIn) (*GetCytologyImageIdsByDoctorIdAndPatientIdOut, error)
 	UpdateCytologyImage(context.Context, *UpdateCytologyImageIn) (*UpdateCytologyImageOut, error)
 	DeleteCytologyImage(context.Context, *DeleteCytologyImageIn) (*emptypb.Empty, error)
@@ -355,6 +368,9 @@ func (UnimplementedCytologySrvServer) GetCytologyImagesByExternalId(context.Cont
 }
 func (UnimplementedCytologySrvServer) GetCytologyImagesByDoctorIdAndPatientId(context.Context, *GetCytologyImagesByDoctorIdAndPatientIdIn) (*GetCytologyImagesByDoctorIdAndPatientIdOut, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCytologyImagesByDoctorIdAndPatientId not implemented")
+}
+func (UnimplementedCytologySrvServer) GetCytologyImagesByPatientId(context.Context, *GetCytologyImagesByPatientIdIn) (*GetCytologyImagesByPatientIdOut, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetCytologyImagesByPatientId not implemented")
 }
 func (UnimplementedCytologySrvServer) GetCytologyImageIdsByDoctorIdAndPatientId(context.Context, *GetCytologyImageIdsByDoctorIdAndPatientIdIn) (*GetCytologyImageIdsByDoctorIdAndPatientIdOut, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetCytologyImageIdsByDoctorIdAndPatientId not implemented")
@@ -499,6 +515,24 @@ func _CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_Handler(srv interface{
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CytologySrvServer).GetCytologyImagesByDoctorIdAndPatientId(ctx, req.(*GetCytologyImagesByDoctorIdAndPatientIdIn))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CytologySrv_GetCytologyImagesByPatientId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCytologyImagesByPatientIdIn)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CytologySrvServer).GetCytologyImagesByPatientId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CytologySrv_GetCytologyImagesByPatientId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CytologySrvServer).GetCytologyImagesByPatientId(ctx, req.(*GetCytologyImagesByPatientIdIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -849,6 +883,10 @@ var CytologySrv_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCytologyImagesByDoctorIdAndPatientId",
 			Handler:    _CytologySrv_GetCytologyImagesByDoctorIdAndPatientId_Handler,
+		},
+		{
+			MethodName: "GetCytologyImagesByPatientId",
+			Handler:    _CytologySrv_GetCytologyImagesByPatientId_Handler,
 		},
 		{
 			MethodName: "GetCytologyImageIdsByDoctorIdAndPatientId",
