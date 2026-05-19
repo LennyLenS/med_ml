@@ -29,6 +29,14 @@ type Handler interface {
 	//
 	// GET /cytology/history/{id}
 	CytologyHistoryRead(ctx context.Context, params CytologyHistoryReadParams) (CytologyHistoryReadRes, error)
+	// CytologyPatientShotsRead implements CytologyPatientShotsRead operation.
+	//
+	// Для врача возвращаются только снимки, созданные этим
+	// врачом. Для пациента — все снимки. Роль определяется
+	// из JWT-токена.
+	//
+	// GET /cytology/patient/{patient_id}/shots
+	CytologyPatientShotsRead(ctx context.Context, params CytologyPatientShotsReadParams) (CytologyPatientShotsReadRes, error)
 	// CytologyRead implements CytologyRead operation.
 	//
 	// Информация об одной группе снимков.

@@ -16,3 +16,7 @@ func ParseToken(ctx context.Context) (Token, error) {
 
 	return token, nil
 }
+
+func WithToken(ctx context.Context, token Token) context.Context {
+	return context.WithValue(ctx, tokenKey, token)
+}

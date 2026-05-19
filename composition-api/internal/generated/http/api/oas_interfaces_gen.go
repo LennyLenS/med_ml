@@ -13,6 +13,10 @@ type CytologyHistoryReadRes interface {
 	cytologyHistoryReadRes()
 }
 
+type CytologyPatientShotsReadRes interface {
+	cytologyPatientShotsReadRes()
+}
+
 type CytologyReadRes interface {
 	cytologyReadRes()
 }

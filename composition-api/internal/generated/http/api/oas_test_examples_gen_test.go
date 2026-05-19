@@ -301,6 +301,112 @@ func TestCytologyHistoryReadOKResultsItemMaterialType_EncodeDecode(t *testing.T)
 	var typ2 CytologyHistoryReadOKResultsItemMaterialType
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
+func TestCytologyPatientShot_EncodeDecode(t *testing.T) {
+	var typ CytologyPatientShot
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPatientShot
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyPatientShot_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"calcitonin\":1,\"calcitonin_in_flush\":1,\"details\":{\"ai_info\":[],\"probs\":[0.1,0.5,0.4]},\"diagnos_date\":\"2026-05-17T19:51:14.436969Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":1,\"id\":\"550e8400-e29b-41d4-a716-446655440001\",\"is_last\":true,\"material_type\":\"TP\",\"original_image\":\"550e8400-e29b-41d4-a716-446655440002\",\"parent_prev\":\"550e8400-e29b-41d4-a716-446655440000\",\"patient_card\":{\"acceptance_datetime\":\"2026-05-06T23:08:03.827479Z\",\"diagnosis\":\"\"},\"prev\":null,\"thyroglobulin\":1}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyPatientShot
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyPatientShot
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyPatientShotDiagnosticMarking_EncodeDecode(t *testing.T) {
+	var typ CytologyPatientShotDiagnosticMarking
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPatientShotDiagnosticMarking
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyPatientShotMaterialType_EncodeDecode(t *testing.T) {
+	var typ CytologyPatientShotMaterialType
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPatientShotMaterialType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyPatientShotsReadOK_EncodeDecode(t *testing.T) {
+	var typ CytologyPatientShotsReadOK
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyPatientShotsReadOK
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyPatientShotsReadOK_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"patient\":{\"birth_date\":\"2026-05-06\",\"email\":\"iii@medml.med\",\"fathers_name\":\"Иванович\",\"first_name\":\"Иван\",\"id\":\"123e4567-e89b-12d3-a456-426614174000\",\"is_active\":true,\"last_name\":\"Иванов\",\"personal_policy\":\"1234123412341234\"},\"shots\":[{\"calcitonin\":1,\"calcitonin_in_flush\":1,\"details\":{\"ai_info\":[],\"probs\":[0.1,0.5,0.4]},\"diagnos_date\":\"2026-05-17T19:51:14.436969Z\",\"diagnostic_marking\":\"П11\",\"diagnostic_number\":1,\"id\":\"550e8400-e29b-41d4-a716-446655440001\",\"is_last\":true,\"material_type\":\"TP\",\"original_image\":\"550e8400-e29b-41d4-a716-446655440002\",\"parent_prev\":\"550e8400-e29b-41d4-a716-446655440000\",\"patient_card\":{\"acceptance_datetime\":\"2026-05-06T23:08:03.827479Z\",\"diagnosis\":\"\"},\"prev\":null,\"thyroglobulin\":1}]}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyPatientShotsReadOK
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyPatientShotsReadOK
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
 func TestCytologyReadOK_EncodeDecode(t *testing.T) {
 	var typ CytologyReadOK
 	typ.SetFake()
@@ -671,6 +777,71 @@ func TestCytologySegmentsListOKResultsItemSegType_EncodeDecode(t *testing.T) {
 	require.True(t, std.Valid(data), "Encoded: %s", data)
 
 	var typ2 CytologySegmentsListOKResultsItemSegType
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyShotDetails_EncodeDecode(t *testing.T) {
+	var typ CytologyShotDetails
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyShotDetails
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologyShotPatient_EncodeDecode(t *testing.T) {
+	var typ CytologyShotPatient
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyShotPatient
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+
+func TestCytologyShotPatient_Examples(t *testing.T) {
+
+	for i, tc := range []struct {
+		Input string
+	}{
+		{Input: "{\"birth_date\":\"2026-05-06\",\"email\":\"iii@medml.med\",\"fathers_name\":\"Иванович\",\"first_name\":\"Иван\",\"id\":\"123e4567-e89b-12d3-a456-426614174000\",\"is_active\":true,\"last_name\":\"Иванов\",\"personal_policy\":\"1234123412341234\"}"},
+	} {
+		tc := tc
+		t.Run(fmt.Sprintf("Test%d", i+1), func(t *testing.T) {
+			var typ CytologyShotPatient
+
+			if err := typ.Decode(jx.DecodeStr(tc.Input)); err != nil {
+				if validateErr, ok := errors.Into[*validate.Error](err); ok {
+					t.Skipf("Validation error: %v", validateErr)
+					return
+				}
+				require.NoErrorf(t, err, "Input: %s", tc.Input)
+			}
+
+			e := jx.Encoder{}
+			typ.Encode(&e)
+			require.True(t, std.Valid(e.Bytes()), "Encoded: %s", e.Bytes())
+
+			var typ2 CytologyShotPatient
+			require.NoError(t, typ2.Decode(jx.DecodeBytes(e.Bytes())))
+		})
+	}
+}
+func TestCytologyShotPatientCard_EncodeDecode(t *testing.T) {
+	var typ CytologyShotPatientCard
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologyShotPatientCard
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
 func TestCytologyUpdatePartialUpdateOK_EncodeDecode(t *testing.T) {

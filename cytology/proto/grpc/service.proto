@@ -10,6 +10,8 @@ service CytologySrv {
   rpc GetCytologyImageById(GetCytologyImageByIdIn) returns (GetCytologyImageByIdOut);
   rpc GetCytologyImagesByExternalId(GetCytologyImagesByExternalIdIn) returns (GetCytologyImagesByExternalIdOut);
   rpc GetCytologyImagesByDoctorIdAndPatientId(GetCytologyImagesByDoctorIdAndPatientIdIn) returns (GetCytologyImagesByDoctorIdAndPatientIdOut);
+  rpc GetCytologyImagesByPatientId(GetCytologyImagesByPatientIdIn) returns (GetCytologyImagesByPatientIdOut);
+  rpc GetCytologyImageIdsByDoctorIdAndPatientId(GetCytologyImageIdsByDoctorIdAndPatientIdIn) returns (GetCytologyImageIdsByDoctorIdAndPatientIdOut);
   rpc UpdateCytologyImage(UpdateCytologyImageIn) returns (UpdateCytologyImageOut);
   rpc DeleteCytologyImage(DeleteCytologyImageIn) returns (google.protobuf.Empty);
   rpc CopyCytologyImage(CopyCytologyImageIn) returns (CopyCytologyImageOut);
@@ -116,6 +118,23 @@ message GetCytologyImagesByDoctorIdAndPatientIdIn {
 
 message GetCytologyImagesByDoctorIdAndPatientIdOut {
   repeated CytologyImage cytology_images = 100;
+}
+
+message GetCytologyImagesByPatientIdIn {
+  string patient_id = 100;
+}
+
+message GetCytologyImagesByPatientIdOut {
+  repeated CytologyImage cytology_images = 100;
+}
+
+message GetCytologyImageIdsByDoctorIdAndPatientIdIn {
+  string doctor_id = 100;
+  string patient_id = 200;
+}
+
+message GetCytologyImageIdsByDoctorIdAndPatientIdOut {
+  repeated string ids = 100;
 }
 
 message UpdateCytologyImageIn {

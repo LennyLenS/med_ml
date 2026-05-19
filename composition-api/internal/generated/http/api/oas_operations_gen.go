@@ -9,6 +9,7 @@ const (
 	CytologyCopyCreateOperation                           OperationName = "CytologyCopyCreate"
 	CytologyCreateCreateOperation                         OperationName = "CytologyCreateCreate"
 	CytologyHistoryReadOperation                          OperationName = "CytologyHistoryRead"
+	CytologyPatientShotsReadOperation                     OperationName = "CytologyPatientShotsRead"
 	CytologyReadOperation                                 OperationName = "CytologyRead"
 	CytologySegmentGroupCreateCreateOperation             OperationName = "CytologySegmentGroupCreateCreate"
 	CytologySegmentUpdateDeleteOperation                  OperationName = "CytologySegmentUpdateDelete"

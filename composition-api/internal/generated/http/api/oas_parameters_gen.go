@@ -245,6 +245,72 @@ func decodeCytologyHistoryReadParams(args [1]string, argsEscaped bool, r *http.R
 	return params, nil
 }
 
+// CytologyPatientShotsReadParams is parameters of CytologyPatientShotsRead operation.
+type CytologyPatientShotsReadParams struct {
+	// Id пациента.
+	PatientID uuid.UUID
+}
+
+func unpackCytologyPatientShotsReadParams(packed middleware.Parameters) (params CytologyPatientShotsReadParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "patient_id",
+			In:   "path",
+		}
+		params.PatientID = packed[key].(uuid.UUID)
+	}
+	return params
+}
+
+func decodeCytologyPatientShotsReadParams(args [1]string, argsEscaped bool, r *http.Request) (params CytologyPatientShotsReadParams, _ error) {
+	// Decode path: patient_id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "patient_id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUUID(val)
+				if err != nil {
+					return err
+				}
+
+				params.PatientID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "patient_id",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // CytologyReadParams is parameters of CytologyRead operation.
 type CytologyReadParams struct {
 	// Id цитологического исследования.

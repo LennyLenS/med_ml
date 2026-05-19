@@ -15,6 +15,7 @@ type CytologyImageHandler interface {
 	CytologyUpdatePartialUpdate(ctx context.Context, req *api.CytologyUpdatePartialUpdateReq, params api.CytologyUpdatePartialUpdateParams) (api.CytologyUpdatePartialUpdateRes, error)
 	CytologyCopyCreate(ctx context.Context, req *api.CytologyCopyCreateReq) (api.CytologyCopyCreateRes, error)
 	CytologyHistoryRead(ctx context.Context, params api.CytologyHistoryReadParams) (api.CytologyHistoryReadRes, error)
+	CytologyPatientShotsRead(ctx context.Context, params api.CytologyPatientShotsReadParams) (api.CytologyPatientShotsReadRes, error)
 }
 
 type handler struct {
