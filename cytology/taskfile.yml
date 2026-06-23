@@ -8,6 +8,15 @@ tasks:
       - GOBIN=$(pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
       - GOBIN=$(pwd)/bin go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
+  test-tools:
+    cmds:
+      - mkdir -p bin reports
+      - GOBIN=$(pwd)/bin go install gotest.tools/gotestsum@latest
+      - GOBIN=$(pwd)/bin go install github.com/DarkDrim/go-test-report@latest
+    status:
+      - test -x bin/gotestsum
+      - test -x bin/go-test-report
+
   codegen:
     vars:
       proto_files:
@@ -52,6 +61,76 @@ tasks:
     cmds:
       - go test ./internal/... -count=1
 
+  test:report:
+    deps: [test-tools]
+    cmds:
+      - mkdir -p reports
+      - |
+        set +e
+        go test ./internal/... -count=1 -json > reports/unit.json
+        EXIT=$?
+        set -e
+        bin/go-test-report \
+          -i reports/unit.json \
+          -o reports/unit-report.html \
+          -t "Cytology — unit-тесты"
+        go test ./internal/... -count=1 -coverprofile=reports/coverage.out
+        go tool cover -html=reports/coverage.out -o reports/coverage.html
+        task report:png SOURCE=unit-report.html TARGET=unit-report.png
+        echo ""
+        echo "Готово:"
+        echo "  reports/unit-report.html  — красивый отчёт (браузер / PDF / скриншот)"
+        echo "  reports/unit-report.png   — картинка для Word (если установлен Chrome/Chromium)"
+        echo "  reports/coverage.html     — покрытие кода"
+        exit $EXIT
+
+  report:png:
+    internal: true
+    vars:
+      SOURCE: '{{.SOURCE | default "e2e-report.html"}}'
+      TARGET: '{{.TARGET | default "e2e-report.png"}}'
+    cmds:
+      - |
+        HTML="reports/{{.SOURCE}}"
+        PNG="reports/{{.TARGET}}"
+        if [ ! -f "$HTML" ]; then
+          echo "skip png: $HTML not found"
+          exit 0
+        fi
+        URL="file://$(cd reports && pwd)/{{.SOURCE}}"
+        if command -v google-chrome >/dev/null 2>&1; then
+          google-chrome --headless --disable-gpu --window-size=1400,900 --screenshot="$PNG" "$URL"
+        elif command -v chromium-browser >/dev/null 2>&1; then
+          chromium-browser --headless --disable-gpu --window-size=1400,900 --screenshot="$PNG" "$URL"
+        elif command -v chromium >/dev/null 2>&1; then
+          chromium --headless --disable-gpu --window-size=1400,900 --screenshot="$PNG" "$URL"
+        else
+          echo "Chrome/Chromium не найден — PNG не создан."
+          echo "Открой reports/{{.SOURCE}} в браузере и сделай скриншот (Win+Shift+S)."
+          exit 0
+        fi
+        echo "PNG: $PNG"
+
   e2e:
     cmds:
       - go test -v -count=1 ./tests/e2e/... -tags=e2e
+
+  e2e:report:
+    deps: [test-tools]
+    cmds:
+      - mkdir -p reports
+      - |
+        set +e
+        go test -tags=e2e -count=1 -json ./tests/e2e/... > reports/e2e.json
+        EXIT=$?
+        set -e
+        bin/go-test-report \
+          -i reports/e2e.json \
+          -o reports/e2e-report.html \
+          -t "Cytology — e2e (${APP_URL:-APP_URL не задан})"
+        task report:png SOURCE=e2e-report.html TARGET=e2e-report.png
+        echo ""
+        echo "Готово:"
+        echo "  reports/e2e-report.html  — красивый отчёт (браузер / PDF / скриншот)"
+        echo "  reports/e2e-report.png   — картинка для Word (если установлен Chrome/Chromium)"
+        exit $EXIT
