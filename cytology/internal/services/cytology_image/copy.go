@@ -8,7 +8,7 @@ import (
 
 	"cytology/internal/domain"
 	cytologyImageEntity "cytology/internal/repository/cytology_image/entity"
-	"cytology/internal/repository/entity"
+	repoentity "cytology/internal/repository/entity"
 	segmentationEntity "cytology/internal/repository/segmentation/entity"
 	segmentationGroupEntity "cytology/internal/repository/segmentation_group/entity"
 
@@ -66,7 +66,7 @@ func (s *service) CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.C
 	}
 
 	if err := s.dao.NewCytologyImageQuery(ctx).InsertCytologyImage(cytologyImageEntity.CytologyImage{}.FromDomain(newImg)); err != nil {
-		var valErr *entity.DBValidationError
+		var valErr *repoentity.DBValidationError
 		if errors.As(err, &valErr) {
 			return domain.CytologyImage{}, domain.ErrUnprocessableEntity
 		}
@@ -88,7 +88,7 @@ func (s *service) CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.C
 func (s *service) copySegments(ctx context.Context, oldCytologyID, newCytologyID uuid.UUID) error {
 	// Получаем все группы сегментов для старого исследования
 	oldGroups, err := s.dao.NewSegmentationGroupQuery(ctx).GetSegmentationGroupsByCytologyID(oldCytologyID)
-	if err != nil && !errors.Is(err, domain.ErrNotFound) {
+	if err != nil && !errors.Is(err, repoentity.ErrNotFound) {
 		return fmt.Errorf("get segmentation groups: %w", err)
 	}
 
@@ -112,7 +112,7 @@ func (s *service) copySegments(ctx context.Context, oldCytologyID, newCytologyID
 
 		// Получаем сегменты для старой группы
 		oldSegments, err := s.dao.NewSegmentationQuery(ctx).GetSegmentsByGroupID(oldGroupDomain.Id)
-		if err != nil && !errors.Is(err, domain.ErrNotFound) {
+		if err != nil && !errors.Is(err, repoentity.ErrNotFound) {
 			return fmt.Errorf("get segments: %w", err)
 		}
 
