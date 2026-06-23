@@ -33,16 +33,19 @@ func (s *service) CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.C
 		return domain.CytologyImage{}, domain.ErrBadRequest
 	}
 
-	// Устанавливаем is_last=false для старого
-	oldImg.IsLast = false
-	if err := s.dao.NewCytologyImageQuery(ctx).UpdateCytologyImage(cytologyImageEntity.CytologyImage{}.FromDomain(oldImg)); err != nil {
-		return domain.CytologyImage{}, fmt.Errorf("update old cytology image: %w", err)
-	}
-
 	// Определяем parent_prev_id
 	parentPrevID := oldImg.ParentPrevID
 	if parentPrevID == nil {
 		parentPrevID = &id
+	}
+
+	// Устанавливаем is_last=false для старого и привязываем к цепочке истории
+	oldImg.IsLast = false
+	if oldImg.ParentPrevID == nil {
+		oldImg.ParentPrevID = parentPrevID
+	}
+	if err := s.dao.NewCytologyImageQuery(ctx).UpdateCytologyImage(cytologyImageEntity.CytologyImage{}.FromDomain(oldImg)); err != nil {
+		return domain.CytologyImage{}, fmt.Errorf("update old cytology image: %w", err)
 	}
 
 	// Создаем новую копию

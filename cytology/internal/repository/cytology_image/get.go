@@ -216,8 +216,9 @@ func (q *repo) GetCytologyImagesByParentPrevID(parentPrevID uuid.UUID) ([]entity
 			columnCreateAt,
 		).
 		From(table).
-		Where(sq.Eq{
-			columnParentPrevID: parentPrevID,
+		Where(sq.Or{
+			sq.Eq{columnParentPrevID: parentPrevID},
+			sq.Eq{columnID: parentPrevID},
 		}).
 		OrderBy(columnCreateAt + " ASC")
 
