@@ -8,64 +8,12 @@ import (
 
 	"cytology/internal/domain"
 	pb "cytology/internal/generated/grpc/service"
-	"cytology/internal/server/cytology_image"
-	cytologyimageservice "cytology/internal/services/cytology_image"
-	"cytology/internal/services"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-type mockCytologyImageByPatientService struct {
-	images []domain.CytologyImage
-	err    error
-}
-
-func (m *mockCytologyImageByPatientService) CreateCytologyImage(context.Context, cytologyimageservice.CreateCytologyImageArg) (uuid.UUID, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) GetCytologyImageByID(context.Context, uuid.UUID) (domain.CytologyImage, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) GetCytologyImagesByExternalID(context.Context, uuid.UUID) ([]domain.CytologyImage, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) GetCytologyImagesByDoctorIdAndPatientId(context.Context, uuid.UUID, uuid.UUID) ([]domain.CytologyImage, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) GetCytologyImagesByPatientId(context.Context, uuid.UUID) ([]domain.CytologyImage, error) {
-	return m.images, m.err
-}
-
-func (m *mockCytologyImageByPatientService) GetCytologyImageIdsByDoctorIdAndPatientId(context.Context, uuid.UUID, uuid.UUID) ([]uuid.UUID, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) UpdateCytologyImage(context.Context, cytologyimageservice.UpdateCytologyImageArg) (domain.CytologyImage, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) DeleteCytologyImage(context.Context, uuid.UUID) error {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) CopyCytologyImage(context.Context, uuid.UUID) (domain.CytologyImage, error) {
-	panic("not implemented")
-}
-
-func (m *mockCytologyImageByPatientService) GetCytologyImageHistory(context.Context, uuid.UUID) ([]domain.CytologyImage, error) {
-	panic("not implemented")
-}
-
-func newHandlerByPatient(svc cytologyimageservice.Service) cytology_image.CytologyImageHandler {
-	return cytology_image.New(&services.Services{CytologyImage: svc})
-}
 
 func TestGetCytologyImagesByPatientId_InvalidPatientID(t *testing.T) {
 	h := newHandler(&mockCytologyImageService{})
@@ -79,7 +27,7 @@ func TestGetCytologyImagesByPatientId_InvalidPatientID(t *testing.T) {
 }
 
 func TestGetCytologyImagesByPatientId_Empty(t *testing.T) {
-	h := newHandlerByPatient(&mockCytologyImageByPatientService{images: nil})
+	h := newHandler(&mockCytologyImageService{images: nil})
 
 	resp, err := h.GetCytologyImagesByPatientId(context.Background(), &pb.GetCytologyImagesByPatientIdIn{
 		PatientId: uuid.New().String(),
@@ -105,7 +53,7 @@ func TestGetCytologyImagesByPatientId_Success(t *testing.T) {
 		},
 	}
 
-	h := newHandlerByPatient(&mockCytologyImageByPatientService{images: images})
+	h := newHandler(&mockCytologyImageService{images: images})
 
 	resp, err := h.GetCytologyImagesByPatientId(context.Background(), &pb.GetCytologyImagesByPatientIdIn{
 		PatientId: patientID.String(),
@@ -117,7 +65,7 @@ func TestGetCytologyImagesByPatientId_Success(t *testing.T) {
 }
 
 func TestGetCytologyImagesByPatientId_InternalError(t *testing.T) {
-	h := newHandlerByPatient(&mockCytologyImageByPatientService{err: errors.New("db error")})
+	h := newHandler(&mockCytologyImageService{imagesErr: errors.New("db error")})
 
 	_, err := h.GetCytologyImagesByPatientId(context.Background(), &pb.GetCytologyImagesByPatientIdIn{
 		PatientId: uuid.New().String(),
