@@ -58,8 +58,9 @@ tasks:
       - go tool goose -dir db/migrations down
 
   test:
+    deps: [test-tools]
     cmds:
-      - go test ./internal/... -count=1
+      - bin/gotestsum --format testname --format-hide-empty-pkg -- ./internal/... -count=1
 
   test:report:
     deps: [test-tools]
@@ -67,53 +68,100 @@ tasks:
       - mkdir -p reports
       - |
         set +e
-        go test ./internal/... -count=1 -json > reports/unit.json
-        EXIT=$?
+        bin/gotestsum --format testname --format-hide-empty-pkg \
+          --jsonfile reports/unit.json \
+          --raw-command -- go test -count=1 -json ./internal/...
+        echo $? > reports/.test-exit
         set -e
+      - |
         bin/go-test-report \
           -i reports/unit.json \
           -o reports/unit-report.html \
           -t "Cytology — unit-тесты"
-        go test ./internal/... -count=1 -coverprofile=reports/coverage.out
-        go tool cover -html=reports/coverage.out -o reports/coverage.html
-        task report:png SOURCE=unit-report.html TARGET=unit-report.png
+      - go test ./internal/... -count=1 -coverprofile=reports/coverage.out
+      - go tool cover -html=reports/coverage.out -o reports/coverage.html
+      - task: report:export
+        vars:
+          SOURCE: unit-report.html
+          TARGET: unit-report.pdf
+          FORMAT: pdf
+      - task: report:export
+        vars:
+          SOURCE: unit-report.html
+          TARGET: unit-report.png
+          FORMAT: png
+      - |
         echo ""
         echo "Готово:"
-        echo "  reports/unit-report.html  — красивый отчёт (браузер / PDF / скриншот)"
-        echo "  reports/unit-report.png   — картинка для Word (если установлен Chrome/Chromium)"
+        echo "  reports/unit-report.html  — интерактивный отчёт"
+        echo "  reports/unit-report.pdf   — PDF для вставки в отчёт"
+        echo "  reports/unit-report.png   — картинка (если PDF недоступен)"
         echo "  reports/coverage.html     — покрытие кода"
-        exit $EXIT
+      - exit $(cat reports/.test-exit)
 
-  report:png:
+  report:export:
     internal: true
     vars:
       SOURCE: '{{.SOURCE | default "e2e-report.html"}}'
-      TARGET: '{{.TARGET | default "e2e-report.png"}}'
+      TARGET: '{{.TARGET | default "e2e-report.pdf"}}'
+      FORMAT: '{{.FORMAT | default "pdf"}}'
     cmds:
       - |
         HTML="reports/{{.SOURCE}}"
-        PNG="reports/{{.TARGET}}"
+        OUT="reports/{{.TARGET}}"
+        FORMAT="{{.FORMAT}}"
         if [ ! -f "$HTML" ]; then
-          echo "skip png: $HTML not found"
+          echo "skip $FORMAT: $HTML not found"
           exit 0
         fi
         URL="file://$(cd reports && pwd)/{{.SOURCE}}"
-        if command -v google-chrome >/dev/null 2>&1; then
-          google-chrome --headless --disable-gpu --window-size=1400,900 --screenshot="$PNG" "$URL"
-        elif command -v chromium-browser >/dev/null 2>&1; then
-          chromium-browser --headless --disable-gpu --window-size=1400,900 --screenshot="$PNG" "$URL"
-        elif command -v chromium >/dev/null 2>&1; then
-          chromium --headless --disable-gpu --window-size=1400,900 --screenshot="$PNG" "$URL"
-        else
-          echo "Chrome/Chromium не найден — PNG не создан."
-          echo "Открой reports/{{.SOURCE}} в браузере и сделай скриншот (Win+Shift+S)."
+        CHROME=""
+        for c in google-chrome chromium-browser chromium \
+          "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" \
+          "/mnt/c/Program Files (x86)/Google/Chrome/Application/chrome.exe"; do
+          if command -v "$c" >/dev/null 2>&1; then
+            CHROME="$c"
+            break
+          fi
+          if [ -x "$c" ]; then
+            CHROME="$c"
+            break
+          fi
+        done
+        if [ -z "$CHROME" ]; then
+          if [ "$FORMAT" = "pdf" ]; then
+            echo "Chrome/Chromium не найден — PDF не создан."
+            echo "Открой reports/{{.SOURCE}} → Печать → Сохранить как PDF."
+          else
+            echo "Chrome/Chromium не найден — PNG не создан."
+            echo "Открой reports/{{.SOURCE}} и сделай скриншот (Win+Shift+S)."
+          fi
           exit 0
         fi
-        echo "PNG: $PNG"
+        if [ "$FORMAT" = "pdf" ]; then
+          "$CHROME" --headless=new --disable-gpu --no-pdf-header-footer \
+            --print-to-pdf="$OUT" "$URL"
+          echo "PDF: $OUT"
+        else
+          "$CHROME" --headless=new --disable-gpu --window-size=1400,900 \
+            --screenshot="$OUT" "$URL"
+          echo "PNG: $OUT"
+        fi
+
+  test:pdf:
+    deps: [test-tools]
+    cmds:
+      - task: test:report
+
+  e2e:pdf:
+    deps: [test-tools]
+    cmds:
+      - task: e2e:report
 
   e2e:
+    deps: [test-tools]
     cmds:
-      - go test -v -count=1 ./tests/e2e/... -tags=e2e
+      - bin/gotestsum --format testname --format-hide-empty-pkg -- -tags=e2e -count=1 ./tests/e2e/...
 
   e2e:report:
     deps: [test-tools]
@@ -121,16 +169,30 @@ tasks:
       - mkdir -p reports
       - |
         set +e
-        go test -tags=e2e -count=1 -json ./tests/e2e/... > reports/e2e.json
-        EXIT=$?
+        bin/gotestsum --format testname --format-hide-empty-pkg \
+          --jsonfile reports/e2e.json \
+          --raw-command -- go test -tags=e2e -count=1 -json ./tests/e2e/...
+        echo $? > reports/.test-exit
         set -e
+      - |
         bin/go-test-report \
           -i reports/e2e.json \
           -o reports/e2e-report.html \
           -t "Cytology — e2e (${APP_URL:-APP_URL не задан})"
-        task report:png SOURCE=e2e-report.html TARGET=e2e-report.png
+      - task: report:export
+        vars:
+          SOURCE: e2e-report.html
+          TARGET: e2e-report.pdf
+          FORMAT: pdf
+      - task: report:export
+        vars:
+          SOURCE: e2e-report.html
+          TARGET: e2e-report.png
+          FORMAT: png
+      - |
         echo ""
         echo "Готово:"
-        echo "  reports/e2e-report.html  — красивый отчёт (браузер / PDF / скриншот)"
-        echo "  reports/e2e-report.png   — картинка для Word (если установлен Chrome/Chromium)"
-        exit $EXIT
+        echo "  reports/e2e-report.html  — интерактивный отчёт"
+        echo "  reports/e2e-report.pdf   — PDF для вставки в отчёт"
+        echo "  reports/e2e-report.png   — картинка (если PDF недоступен)"
+      - exit $(cat reports/.test-exit)
