@@ -449,33 +449,19 @@ components:
           type: string
           format: uuid
           description: id врача
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: UUID карты пациента
         diagnosis:
           type: string
           description: диагноз
       example:
         patient_id: "123e4567-e89b-12d3-a456-426614174000"
         doctor_id: "123e4567-e89b-12d3-a456-426614174000"
+        uuid: "123e4567-e89b-12d3-a456-426614174000"
         diagnosis: "опухоль"
-
-    patientCard:
-      type: object
-      description: карта пациента
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        acceptance_datetime:
-          type: string
-          format: date-time
-          readOnly: true
-        diagnosis:
-          type: string
-        patient:
-          type: integer
-          x-nullable: true
-        med_worker:
-          type: integer
-          x-nullable: true
 
     simpleUuid:
       type: object
@@ -871,15 +857,6 @@ components:
         email: "iii@medml.med"
         is_active: true
 
-    cytologyShotPatientCard:
-      type: object
-      properties:
-        acceptance_datetime:
-          type: string
-          format: date-time
-        diagnosis:
-          type: string
-
     cytologyShotDetails:
       type: object
       properties:
@@ -895,7 +872,6 @@ components:
       type: object
       required:
         - id
-        - patient_card
         - is_last
         - diagnos_date
         - details
@@ -905,7 +881,10 @@ components:
           type: string
           format: uuid
         patient_card:
-          $ref: '#/components/schemas/cytologyShotPatientCard'
+          type: string
+          format: uuid
+          readOnly: true
+          x-nullable: true
         is_last:
           type: boolean
         diagnos_date:
@@ -948,9 +927,7 @@ components:
           nullable: true
       example:
         id: "550e8400-e29b-41d4-a716-446655440001"
-        patient_card:
-          acceptance_datetime: "2026-05-06T23:08:03.827479Z"
-          diagnosis: ""
+        patient_card: "123e4567-e89b-12d3-a456-426614174000"
         is_last: true
         diagnos_date: "2026-05-17T19:51:14.436969Z"
         details:
@@ -3004,7 +2981,9 @@ paths:
                   readOnly: true
                   x-nullable: true
                 patient_card:
-                  type: integer
+                  type: string
+                  format: uuid
+                  description: UUID карточки пациента
                   x-nullable: true
                 details:
                   type: string
@@ -3078,7 +3057,8 @@ paths:
                     readOnly: true
                     x-nullable: true
                   patient_card:
-                    type: integer
+                    type: string
+                    format: uuid
                     x-nullable: true
         '400':
           description: Неверный формат запроса
@@ -3142,9 +3122,7 @@ paths:
                       is_active: true
                     shots:
                       - id: "550e8400-e29b-41d4-a716-446655440001"
-                        patient_card:
-                          acceptance_datetime: "2026-05-06T23:08:03.827479Z"
-                          diagnosis: ""
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         is_last: true
                         diagnos_date: "2026-05-17T19:51:14.436969Z"
                         details:
@@ -3223,13 +3201,15 @@ paths:
                     type: object
                     required:
                       - patient
-                      - patient_card
                       - image_group
                     properties:
                       patient:
                         $ref: '#/components/schemas/patient'
                       patient_card:
-                        $ref: '#/components/schemas/patientCard'
+                        type: string
+                        format: uuid
+                        readOnly: true
+                        x-nullable: true
                       image_group:
                         type: object
                         required:
@@ -3473,23 +3453,15 @@ paths:
             schema:
               type: object
               required:
-                - patient_card
                 - diagnostic_number
               properties:
                 id:
                   type: integer
                   readOnly: true
                 patient_card:
-                  type: object
-                  properties:
-                    patient:
-                      type: integer
-                    acceptance_datetime:
-                      type: string
-                      format: date-time
-                      readOnly: true
-                    diagnosis:
-                      type: string
+                  type: string
+                  format: uuid
+                  x-nullable: true
                 details:
                   type: object
                   required:
@@ -3534,7 +3506,8 @@ paths:
                       format: uuid
                       x-nullable: true
                     patient_card:
-                      type: integer
+                      type: string
+                      format: uuid
                       x-nullable: true
                     original_image:
                       type: integer
@@ -3584,14 +3557,15 @@ paths:
               schema:
                 type: object
                 required:
-                  - patient_card
                   - diagnostic_number
                 properties:
                   id:
                     type: integer
                     readOnly: true
                   patient_card:
-                    type: object
+                    type: string
+                    format: uuid
+                    x-nullable: true
                   details:
                     type: object
                   is_last:
@@ -3655,23 +3629,15 @@ paths:
             schema:
               type: object
               required:
-                - patient_card
                 - diagnostic_number
               properties:
                 id:
                   type: integer
                   readOnly: true
                 patient_card:
-                  type: object
-                  properties:
-                    patient:
-                      type: integer
-                    acceptance_datetime:
-                      type: string
-                      format: date-time
-                      readOnly: true
-                    diagnosis:
-                      type: string
+                  type: string
+                  format: uuid
+                  x-nullable: true
                 details:
                   type: object
                 is_last:
@@ -3719,14 +3685,15 @@ paths:
               schema:
                 type: object
                 required:
-                  - patient_card
                   - diagnostic_number
                 properties:
                   id:
                     type: integer
                     readOnly: true
                   patient_card:
-                    type: object
+                    type: string
+                    format: uuid
+                    x-nullable: true
                   details:
                     type: object
                   is_last:
@@ -3800,11 +3767,11 @@ paths:
                   format: uuid
                   description: UUID существующего цитологического исследования для копирования
               example:
-                id: 123
+                id: "123e4567-e89b-12d3-a456-426614174000"
             examples:
               example1:
                 summary: Копирование исследования по ID
-                description: Пример запроса для копирования исследования с ID 123
+                description: Пример запроса для копирования исследования по UUID
                 value:
                   id: "123e4567-e89b-12d3-a456-426614174000"
       responses:
@@ -3947,7 +3914,8 @@ paths:
                           format: uuid
                           x-nullable: true
                         patient_card:
-                          type: integer
+                          type: string
+                          format: uuid
                           x-nullable: true
                         original_image:
                           type: integer
@@ -3971,7 +3939,7 @@ paths:
                         thyroglobulin: 10
                         prev: null
                         parent_prev: null
-                        patient_card: 100
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         original_image: 200
                         details:
                           note: "Первичное исследование"
@@ -3986,7 +3954,7 @@ paths:
                         thyroglobulin: 8
                         prev: "123e4567-e89b-12d3-a456-426614174000"
                         parent_prev: null
-                        patient_card: 100
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         original_image: 199
                         details:
                           note: "Повторное исследование"
@@ -4001,7 +3969,7 @@ paths:
                         thyroglobulin: 9
                         prev: "123e4567-e89b-12d3-a456-426614174001"
                         parent_prev: null
-                        patient_card: 100
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         original_image: 198
                         details: null
         '404':

@@ -16,6 +16,7 @@ service MedSrv {
   rpc createCard(CreateCardIn) returns (CreateCardOut);
   rpc getCard(GetCardIn) returns (GetCardOut);
   rpc getCardByID(GetCardByIDIn) returns (GetCardOut);
+  rpc getCardByUUID(GetCardByUUIDIn) returns (GetCardOut);
   rpc updateCard(UpdateCardIn) returns (UpdateCardOut);
 }
 
@@ -76,6 +77,7 @@ message UpdatePatientOut { Patient patient = 100; }
 
 message Card {
   optional int32 id = 50; // ID карты (автоинкремент)
+  string uuid = 60; // UUID карты
   string doctor_id = 100;
   string patient_id = 200;
   optional string diagnosis = 300;
@@ -92,6 +94,10 @@ message GetCardIn {
 
 message GetCardByIDIn {
   int32 id = 100; // ID карточки
+}
+
+message GetCardByUUIDIn {
+  string uuid = 100; // UUID карточки
 }
 
 message GetCardOut { Card card = 100; }

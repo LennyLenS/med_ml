@@ -51,6 +51,16 @@ func (a *adapter) GetCardByID(ctx context.Context, id int) (domain.Card, error) 
 	return mappers.Card{}.Domain(res.Card), nil
 }
 
+func (a *adapter) GetCardByUUID(ctx context.Context, uuid uuid.UUID) (domain.Card, error) {
+	res, err := a.client.GetCardByUUID(ctx, &pb.GetCardByUUIDIn{
+		Uuid: uuid.String(),
+	})
+	if err != nil {
+		return domain.Card{}, adapter_errors.HandleGRPCError(err)
+	}
+	return mappers.Card{}.Domain(res.Card), nil
+}
+
 func (a *adapter) UpdateCard(ctx context.Context, card domain.Card) (domain.Card, error) {
 	res, err := a.client.UpdateCard(ctx, &pb.UpdateCardIn{
 		Card: &pb.Card{

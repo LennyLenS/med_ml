@@ -81,7 +81,7 @@ func (CytologyImage) ToCytologyPatientShot(
 ) api.CytologyPatientShot {
 	shot := api.CytologyPatientShot{
 		ID:               img.Id,
-		PatientCard:      toCytologyShotPatientCard(patientCard),
+		PatientCard:      toCytologyPatientCardUUID(patientCard),
 		IsLast:           img.IsLast,
 		DiagnosDate:      img.DiagnosDate,
 		Details:          parseCytologyShotDetails(img.Details),
@@ -144,15 +144,13 @@ func (CytologyImage) ToCytologyPatientShot(
 	return shot
 }
 
-func toCytologyShotPatientCard(card med_domain.Card) api.CytologyShotPatientCard {
-	result := api.CytologyShotPatientCard{}
-
-	if card.Diagnosis != nil {
-		result.Diagnosis = api.OptString{
-			Value: *card.Diagnosis,
-			Set:   true,
-		}
+func toCytologyPatientCardUUID(card med_domain.Card) api.OptUUID {
+	if card.UUID == uuid.Nil {
+		return api.OptUUID{}
 	}
 
-	return result
+	return api.OptUUID{
+		Value: card.UUID,
+		Set:   true,
+	}
 }

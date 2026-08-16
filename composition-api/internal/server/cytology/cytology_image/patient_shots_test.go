@@ -158,6 +158,10 @@ func (m *mockCardService) GetCardByID(context.Context, int) (med_domain.Card, er
 	panic("not implemented")
 }
 
+func (m *mockCardService) GetCardByUUID(context.Context, uuid.UUID) (med_domain.Card, error) {
+	return m.card, m.err
+}
+
 func (m *mockCardService) UpdateCard(context.Context, med_domain.Card) (med_domain.Card, error) {
 	panic("not implemented")
 }

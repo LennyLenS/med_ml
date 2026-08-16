@@ -5,12 +5,13 @@ import (
 	"errors"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/google/uuid"
 
 	"med/internal/repository/card/entity"
 	daoEntity "med/internal/repository/entity"
 )
 
-func (r *repo) GetCardByID(id int) (entity.Card, error) {
+func (r *repo) GetCardByUUID(uuid uuid.UUID) (entity.Card, error) {
 	query := r.QueryBuilder().
 		Select(
 			columnID,
@@ -21,7 +22,7 @@ func (r *repo) GetCardByID(id int) (entity.Card, error) {
 		).
 		From(table).
 		Where(sq.Eq{
-			columnID: id,
+			columnUUID: uuid,
 		})
 
 	var card entity.Card

@@ -28,8 +28,7 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 		}(),
 	)
 
-	// Получаем карточку пациента для извлечения patient_id и doctor_id
-	// patient_id и doctor_id должны браться из карточки
+	// patient_card приходит с фронта как UUID карточки.
 	if !req.PatientCard.Set {
 		return &api.CytologyCreateCreateBadRequest{
 			StatusCode: http.StatusBadRequest,
@@ -39,8 +38,9 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 		}, nil
 	}
 
-	// Получаем карточку по ID
-	card, err := h.services.CardService.GetCardByID(ctx, req.PatientCard.Value)
+	cardUUID := req.PatientCard.Value
+
+	card, err := h.services.CardService.GetCardByUUID(ctx, cardUUID)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
 			return &api.CytologyCreateCreateBadRequest{

@@ -40,6 +40,8 @@ type Card struct {
 	PatientID uuid.UUID `json:"patient_id"`
 	// Id врача.
 	DoctorID uuid.UUID `json:"doctor_id"`
+	// UUID карты пациента.
+	UUID OptUUID `json:"uuid"`
 	// Диагноз.
 	Diagnosis OptString `json:"diagnosis"`
 }
@@ -52,6 +54,11 @@ func (s *Card) GetPatientID() uuid.UUID {
 // GetDoctorID returns the value of DoctorID.
 func (s *Card) GetDoctorID() uuid.UUID {
 	return s.DoctorID
+}
+
+// GetUUID returns the value of UUID.
+func (s *Card) GetUUID() OptUUID {
+	return s.UUID
 }
 
 // GetDiagnosis returns the value of Diagnosis.
@@ -67,6 +74,11 @@ func (s *Card) SetPatientID(val uuid.UUID) {
 // SetDoctorID sets the value of DoctorID.
 func (s *Card) SetDoctorID(val uuid.UUID) {
 	s.DoctorID = val
+}
+
+// SetUUID sets the value of UUID.
+func (s *Card) SetUUID(val OptUUID) {
+	s.UUID = val
 }
 
 // SetDiagnosis sets the value of Diagnosis.
@@ -197,7 +209,7 @@ type CytologyCreateCreateCreated struct {
 	Thyroglobulin     OptInt                                          `json:"thyroglobulin"`
 	Prev              OptUUID                                         `json:"prev"`
 	ParentPrev        OptUUID                                         `json:"parent_prev"`
-	PatientCard       OptInt                                          `json:"patient_card"`
+	PatientCard       OptUUID                                         `json:"patient_card"`
 }
 
 // GetID returns the value of ID.
@@ -266,7 +278,7 @@ func (s *CytologyCreateCreateCreated) GetParentPrev() OptUUID {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyCreateCreateCreated) GetPatientCard() OptInt {
+func (s *CytologyCreateCreateCreated) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -336,7 +348,7 @@ func (s *CytologyCreateCreateCreated) SetParentPrev(val OptUUID) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyCreateCreateCreated) SetPatientCard(val OptInt) {
+func (s *CytologyCreateCreateCreated) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -464,7 +476,8 @@ type CytologyCreateCreateReq struct {
 	Thyroglobulin     OptInt                                      `json:"thyroglobulin"`
 	Prev              OptUUID                                     `json:"prev"`
 	ParentPrev        OptUUID                                     `json:"parent_prev"`
-	PatientCard       OptInt                                      `json:"patient_card"`
+	// UUID карточки пациента.
+	PatientCard OptUUID `json:"patient_card"`
 	// Детали диагностики в формате JSON.
 	Details OptString `json:"details"`
 	// Является ли данная версия измениний последней?.
@@ -518,7 +531,7 @@ func (s *CytologyCreateCreateReq) GetParentPrev() OptUUID {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyCreateCreateReq) GetPatientCard() OptInt {
+func (s *CytologyCreateCreateReq) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -583,7 +596,7 @@ func (s *CytologyCreateCreateReq) SetParentPrev(val OptUUID) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyCreateCreateReq) SetPatientCard(val OptInt) {
+func (s *CytologyCreateCreateReq) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -780,7 +793,7 @@ type CytologyHistoryReadOKResultsItem struct {
 	Thyroglobulin     OptInt                                               `json:"thyroglobulin"`
 	Prev              OptUUID                                              `json:"prev"`
 	ParentPrev        OptUUID                                              `json:"parent_prev"`
-	PatientCard       OptInt                                               `json:"patient_card"`
+	PatientCard       OptUUID                                              `json:"patient_card"`
 	OriginalImage     OptInt                                               `json:"original_image"`
 }
 
@@ -845,7 +858,7 @@ func (s *CytologyHistoryReadOKResultsItem) GetParentPrev() OptUUID {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyHistoryReadOKResultsItem) GetPatientCard() OptInt {
+func (s *CytologyHistoryReadOKResultsItem) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -915,7 +928,7 @@ func (s *CytologyHistoryReadOKResultsItem) SetParentPrev(val OptUUID) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyHistoryReadOKResultsItem) SetPatientCard(val OptInt) {
+func (s *CytologyHistoryReadOKResultsItem) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -1032,7 +1045,7 @@ func (s *CytologyHistoryReadOKResultsItemMaterialType) UnmarshalText(data []byte
 // Ref: #/components/schemas/cytologyPatientShot
 type CytologyPatientShot struct {
 	ID                uuid.UUID                               `json:"id"`
-	PatientCard       CytologyShotPatientCard                 `json:"patient_card"`
+	PatientCard       OptUUID                                 `json:"patient_card"`
 	IsLast            bool                                    `json:"is_last"`
 	DiagnosDate       time.Time                               `json:"diagnos_date"`
 	Details           CytologyShotDetails                     `json:"details"`
@@ -1053,7 +1066,7 @@ func (s *CytologyPatientShot) GetID() uuid.UUID {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyPatientShot) GetPatientCard() CytologyShotPatientCard {
+func (s *CytologyPatientShot) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -1123,7 +1136,7 @@ func (s *CytologyPatientShot) SetID(val uuid.UUID) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyPatientShot) SetPatientCard(val CytologyShotPatientCard) {
+func (s *CytologyPatientShot) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -1366,7 +1379,7 @@ func (*CytologyReadOK) cytologyReadRes() {}
 
 type CytologyReadOKInfo struct {
 	Patient     Patient                      `json:"patient"`
-	PatientCard PatientCard                  `json:"patient_card"`
+	PatientCard OptUUID                      `json:"patient_card"`
 	ImageGroup  CytologyReadOKInfoImageGroup `json:"image_group"`
 }
 
@@ -1376,7 +1389,7 @@ func (s *CytologyReadOKInfo) GetPatient() Patient {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyReadOKInfo) GetPatientCard() PatientCard {
+func (s *CytologyReadOKInfo) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -1391,7 +1404,7 @@ func (s *CytologyReadOKInfo) SetPatient(val Patient) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyReadOKInfo) SetPatientCard(val PatientCard) {
+func (s *CytologyReadOKInfo) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -3023,32 +3036,6 @@ func (s *CytologyShotPatient) SetIsActive(val bool) {
 	s.IsActive = val
 }
 
-// Ref: #/components/schemas/cytologyShotPatientCard
-type CytologyShotPatientCard struct {
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *CytologyShotPatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *CytologyShotPatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *CytologyShotPatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *CytologyShotPatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
-}
-
 type CytologyUpdatePartialUpdateBadRequest ErrorStatusCode
 
 func (*CytologyUpdatePartialUpdateBadRequest) cytologyUpdatePartialUpdateRes() {}
@@ -3062,20 +3049,20 @@ type CytologyUpdatePartialUpdateNotFound ErrorStatusCode
 func (*CytologyUpdatePartialUpdateNotFound) cytologyUpdatePartialUpdateRes() {}
 
 type CytologyUpdatePartialUpdateOK struct {
-	ID                OptInt                                   `json:"id"`
-	PatientCard       CytologyUpdatePartialUpdateOKPatientCard `json:"patient_card"`
-	Details           *CytologyUpdatePartialUpdateOKDetails    `json:"details"`
-	IsLast            OptBool                                  `json:"is_last"`
-	DiagnosDate       OptDateTime                              `json:"diagnos_date"`
-	DiagnosticMarking OptString                                `json:"diagnostic_marking"`
-	DiagnosticNumber  int                                      `json:"diagnostic_number"`
-	MaterialType      OptString                                `json:"material_type"`
-	Calcitonin        OptInt                                   `json:"calcitonin"`
-	CalcitoninInFlush OptInt                                   `json:"calcitonin_in_flush"`
-	Thyroglobulin     OptInt                                   `json:"thyroglobulin"`
-	Prev              OptUUID                                  `json:"prev"`
-	ParentPrev        OptUUID                                  `json:"parent_prev"`
-	OriginalImage     OptInt                                   `json:"original_image"`
+	ID                OptInt                                `json:"id"`
+	PatientCard       OptUUID                               `json:"patient_card"`
+	Details           *CytologyUpdatePartialUpdateOKDetails `json:"details"`
+	IsLast            OptBool                               `json:"is_last"`
+	DiagnosDate       OptDateTime                           `json:"diagnos_date"`
+	DiagnosticMarking OptString                             `json:"diagnostic_marking"`
+	DiagnosticNumber  int                                   `json:"diagnostic_number"`
+	MaterialType      OptString                             `json:"material_type"`
+	Calcitonin        OptInt                                `json:"calcitonin"`
+	CalcitoninInFlush OptInt                                `json:"calcitonin_in_flush"`
+	Thyroglobulin     OptInt                                `json:"thyroglobulin"`
+	Prev              OptUUID                               `json:"prev"`
+	ParentPrev        OptUUID                               `json:"parent_prev"`
+	OriginalImage     OptInt                                `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -3084,7 +3071,7 @@ func (s *CytologyUpdatePartialUpdateOK) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateOK) GetPatientCard() CytologyUpdatePartialUpdateOKPatientCard {
+func (s *CytologyUpdatePartialUpdateOK) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -3154,7 +3141,7 @@ func (s *CytologyUpdatePartialUpdateOK) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateOK) SetPatientCard(val CytologyUpdatePartialUpdateOKPatientCard) {
+func (s *CytologyUpdatePartialUpdateOK) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -3222,11 +3209,9 @@ func (*CytologyUpdatePartialUpdateOK) cytologyUpdatePartialUpdateRes() {}
 
 type CytologyUpdatePartialUpdateOKDetails struct{}
 
-type CytologyUpdatePartialUpdateOKPatientCard struct{}
-
 type CytologyUpdatePartialUpdateReq struct {
 	ID                OptInt                                             `json:"id"`
-	PatientCard       CytologyUpdatePartialUpdateReqPatientCard          `json:"patient_card"`
+	PatientCard       OptUUID                                            `json:"patient_card"`
 	Details           *CytologyUpdatePartialUpdateReqDetails             `json:"details"`
 	IsLast            OptBool                                            `json:"is_last"`
 	DiagnosDate       OptDateTime                                        `json:"diagnos_date"`
@@ -3247,7 +3232,7 @@ func (s *CytologyUpdatePartialUpdateReq) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateReq) GetPatientCard() CytologyUpdatePartialUpdateReqPatientCard {
+func (s *CytologyUpdatePartialUpdateReq) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -3317,7 +3302,7 @@ func (s *CytologyUpdatePartialUpdateReq) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateReq) SetPatientCard(val CytologyUpdatePartialUpdateReqPatientCard) {
+func (s *CytologyUpdatePartialUpdateReq) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -3486,42 +3471,6 @@ func (s *CytologyUpdatePartialUpdateReqMaterialType) UnmarshalText(data []byte) 
 	}
 }
 
-type CytologyUpdatePartialUpdateReqPatientCard struct {
-	Patient            OptInt      `json:"patient"`
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-}
-
-// GetPatient returns the value of Patient.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) GetPatient() OptInt {
-	return s.Patient
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// SetPatient sets the value of Patient.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetPatient(val OptInt) {
-	s.Patient = val
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
-}
-
 type CytologyUpdatePartialUpdateUnprocessableEntity ErrorStatusCode
 
 func (*CytologyUpdatePartialUpdateUnprocessableEntity) cytologyUpdatePartialUpdateRes() {}
@@ -3539,20 +3488,20 @@ type CytologyUpdateUpdateNotFound ErrorStatusCode
 func (*CytologyUpdateUpdateNotFound) cytologyUpdateUpdateRes() {}
 
 type CytologyUpdateUpdateOK struct {
-	ID                OptInt                            `json:"id"`
-	PatientCard       CytologyUpdateUpdateOKPatientCard `json:"patient_card"`
-	Details           *CytologyUpdateUpdateOKDetails    `json:"details"`
-	IsLast            OptBool                           `json:"is_last"`
-	DiagnosDate       OptDateTime                       `json:"diagnos_date"`
-	DiagnosticMarking OptString                         `json:"diagnostic_marking"`
-	DiagnosticNumber  int                               `json:"diagnostic_number"`
-	MaterialType      OptString                         `json:"material_type"`
-	Calcitonin        OptInt                            `json:"calcitonin"`
-	CalcitoninInFlush OptInt                            `json:"calcitonin_in_flush"`
-	Thyroglobulin     OptInt                            `json:"thyroglobulin"`
-	Prev              OptUUID                           `json:"prev"`
-	ParentPrev        OptUUID                           `json:"parent_prev"`
-	OriginalImage     OptInt                            `json:"original_image"`
+	ID                OptInt                         `json:"id"`
+	PatientCard       OptUUID                        `json:"patient_card"`
+	Details           *CytologyUpdateUpdateOKDetails `json:"details"`
+	IsLast            OptBool                        `json:"is_last"`
+	DiagnosDate       OptDateTime                    `json:"diagnos_date"`
+	DiagnosticMarking OptString                      `json:"diagnostic_marking"`
+	DiagnosticNumber  int                            `json:"diagnostic_number"`
+	MaterialType      OptString                      `json:"material_type"`
+	Calcitonin        OptInt                         `json:"calcitonin"`
+	CalcitoninInFlush OptInt                         `json:"calcitonin_in_flush"`
+	Thyroglobulin     OptInt                         `json:"thyroglobulin"`
+	Prev              OptUUID                        `json:"prev"`
+	ParentPrev        OptUUID                        `json:"parent_prev"`
+	OriginalImage     OptInt                         `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -3561,7 +3510,7 @@ func (s *CytologyUpdateUpdateOK) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdateUpdateOK) GetPatientCard() CytologyUpdateUpdateOKPatientCard {
+func (s *CytologyUpdateUpdateOK) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -3631,7 +3580,7 @@ func (s *CytologyUpdateUpdateOK) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdateUpdateOK) SetPatientCard(val CytologyUpdateUpdateOKPatientCard) {
+func (s *CytologyUpdateUpdateOK) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -3699,11 +3648,9 @@ func (*CytologyUpdateUpdateOK) cytologyUpdateUpdateRes() {}
 
 type CytologyUpdateUpdateOKDetails struct{}
 
-type CytologyUpdateUpdateOKPatientCard struct{}
-
 type CytologyUpdateUpdateReq struct {
 	ID                OptInt                                      `json:"id"`
-	PatientCard       CytologyUpdateUpdateReqPatientCard          `json:"patient_card"`
+	PatientCard       OptUUID                                     `json:"patient_card"`
 	Details           OptCytologyUpdateUpdateReqDetails           `json:"details"`
 	IsLast            OptBool                                     `json:"is_last"`
 	DiagnosDate       OptDateTime                                 `json:"diagnos_date"`
@@ -3724,7 +3671,7 @@ func (s *CytologyUpdateUpdateReq) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdateUpdateReq) GetPatientCard() CytologyUpdateUpdateReqPatientCard {
+func (s *CytologyUpdateUpdateReq) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -3794,7 +3741,7 @@ func (s *CytologyUpdateUpdateReq) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdateUpdateReq) SetPatientCard(val CytologyUpdateUpdateReqPatientCard) {
+func (s *CytologyUpdateUpdateReq) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -3870,7 +3817,7 @@ type CytologyUpdateUpdateReqDetails struct {
 	Thyroglobulin     OptInt                                             `json:"thyroglobulin"`
 	Prev              OptUUID                                            `json:"prev"`
 	ParentPrev        OptUUID                                            `json:"parent_prev"`
-	PatientCard       OptInt                                             `json:"patient_card"`
+	PatientCard       OptUUID                                            `json:"patient_card"`
 	OriginalImage     OptInt                                             `json:"original_image"`
 }
 
@@ -3930,7 +3877,7 @@ func (s *CytologyUpdateUpdateReqDetails) GetParentPrev() OptUUID {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdateUpdateReqDetails) GetPatientCard() OptInt {
+func (s *CytologyUpdateUpdateReqDetails) GetPatientCard() OptUUID {
 	return s.PatientCard
 }
 
@@ -3995,7 +3942,7 @@ func (s *CytologyUpdateUpdateReqDetails) SetParentPrev(val OptUUID) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdateUpdateReqDetails) SetPatientCard(val OptInt) {
+func (s *CytologyUpdateUpdateReqDetails) SetPatientCard(val OptUUID) {
 	s.PatientCard = val
 }
 
@@ -4208,42 +4155,6 @@ func (s *CytologyUpdateUpdateReqMaterialType) UnmarshalText(data []byte) error {
 	default:
 		return errors.Errorf("invalid value: %q", data)
 	}
-}
-
-type CytologyUpdateUpdateReqPatientCard struct {
-	Patient            OptInt      `json:"patient"`
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-}
-
-// GetPatient returns the value of Patient.
-func (s *CytologyUpdateUpdateReqPatientCard) GetPatient() OptInt {
-	return s.Patient
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *CytologyUpdateUpdateReqPatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *CytologyUpdateUpdateReqPatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// SetPatient sets the value of Patient.
-func (s *CytologyUpdateUpdateReqPatientCard) SetPatient(val OptInt) {
-	s.Patient = val
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *CytologyUpdateUpdateReqPatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *CytologyUpdateUpdateReqPatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
 }
 
 type CytologyUpdateUpdateUnprocessableEntity ErrorStatusCode
@@ -7129,66 +7040,6 @@ func (s *Patient) SetLastUziDate(val OptDate) {
 
 func (*Patient) medPatientIDGetRes()   {}
 func (*Patient) medPatientIDPatchRes() {}
-
-// Карта пациента.
-// Ref: #/components/schemas/patientCard
-type PatientCard struct {
-	ID                 OptInt      `json:"id"`
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-	Patient            OptInt      `json:"patient"`
-	MedWorker          OptInt      `json:"med_worker"`
-}
-
-// GetID returns the value of ID.
-func (s *PatientCard) GetID() OptInt {
-	return s.ID
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *PatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *PatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// GetPatient returns the value of Patient.
-func (s *PatientCard) GetPatient() OptInt {
-	return s.Patient
-}
-
-// GetMedWorker returns the value of MedWorker.
-func (s *PatientCard) GetMedWorker() OptInt {
-	return s.MedWorker
-}
-
-// SetID sets the value of ID.
-func (s *PatientCard) SetID(val OptInt) {
-	s.ID = val
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *PatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *PatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
-}
-
-// SetPatient sets the value of Patient.
-func (s *PatientCard) SetPatient(val OptInt) {
-	s.Patient = val
-}
-
-// SetMedWorker sets the value of MedWorker.
-func (s *PatientCard) SetMedWorker(val OptInt) {
-	s.MedWorker = val
-}
 
 // Платежный провайдер.
 // Ref: #/components/schemas/PaymentProvider
