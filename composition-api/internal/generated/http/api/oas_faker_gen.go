@@ -24,6 +24,11 @@ func (s *Card) SetFake() {
 	}
 	{
 		{
+			s.UUID.SetFake()
+		}
+	}
+	{
+		{
 			s.Diagnosis.SetFake()
 		}
 	}
@@ -1031,20 +1036,6 @@ func (s *CytologyShotPatient) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyShotPatientCard) SetFake() {
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *CytologyUpdatePartialUpdateOK) SetFake() {
 	{
 		{
@@ -1120,10 +1111,6 @@ func (s *CytologyUpdatePartialUpdateOK) SetFake() {
 
 // SetFake set fake values.
 func (s *CytologyUpdatePartialUpdateOKDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyUpdatePartialUpdateOKPatientCard) SetFake() {
 }
 
 // SetFake set fake values.
@@ -1215,25 +1202,6 @@ func (s *CytologyUpdatePartialUpdateReqMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetFake() {
-	{
-		{
-			s.Patient.SetFake()
-		}
-	}
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *CytologyUpdateUpdateOK) SetFake() {
 	{
 		{
@@ -1309,10 +1277,6 @@ func (s *CytologyUpdateUpdateOK) SetFake() {
 
 // SetFake set fake values.
 func (s *CytologyUpdateUpdateOKDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyUpdateUpdateOKPatientCard) SetFake() {
 }
 
 // SetFake set fake values.
@@ -1476,25 +1440,6 @@ func (s *CytologyUpdateUpdateReqDiagnosticMarking) SetFake() {
 // SetFake set fake values.
 func (s *CytologyUpdateUpdateReqMaterialType) SetFake() {
 	*s = CytologyUpdateUpdateReqMaterialTypeGS
-}
-
-// SetFake set fake values.
-func (s *CytologyUpdateUpdateReqPatientCard) SetFake() {
-	{
-		{
-			s.Patient.SetFake()
-		}
-	}
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
 }
 
 // SetFake set fake values.
@@ -2154,35 +2099,6 @@ func (s *Patient) SetFake() {
 	{
 		{
 			s.LastUziDate.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *PatientCard) SetFake() {
-	{
-		{
-			s.ID.SetFake()
-		}
-	}
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-	{
-		{
-			s.Patient.SetFake()
-		}
-	}
-	{
-		{
-			s.MedWorker.SetFake()
 		}
 	}
 }

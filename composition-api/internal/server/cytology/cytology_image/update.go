@@ -50,6 +50,7 @@ func (h *handler) CytologyUpdateUpdate(ctx context.Context, req *api.CytologyUpd
 	}
 
 	result := mappers.CytologyImage{}.ToCytologyUpdateUpdateOK(img, req)
+	result.PatientCard = h.patientCardUUID(ctx, img.DoctorID, img.PatientID)
 	return pointer.To(result), nil
 }
 
@@ -89,5 +90,22 @@ func (h *handler) CytologyUpdatePartialUpdate(ctx context.Context, req *api.Cyto
 	}
 
 	result := mappers.CytologyImage{}.ToCytologyUpdatePartialUpdateOK(img, req)
+	result.PatientCard = h.patientCardUUID(ctx, img.DoctorID, img.PatientID)
 	return pointer.To(result), nil
+}
+
+func (h *handler) patientCardUUID(ctx context.Context, doctorID, patientID uuid.UUID) api.OptUUID {
+	if doctorID == uuid.Nil || patientID == uuid.Nil {
+		return api.OptUUID{}
+	}
+
+	card, err := h.services.CardService.GetCard(ctx, doctorID, patientID)
+	if err != nil || card.UUID == uuid.Nil {
+		return api.OptUUID{}
+	}
+
+	return api.OptUUID{
+		Value: card.UUID,
+		Set:   true,
+	}
 }

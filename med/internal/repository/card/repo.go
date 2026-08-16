@@ -10,17 +10,20 @@ import (
 const (
 	table           = "card"
 	columnID        = "id"
+	columnUUID      = "uuid"
 	columnDoctorID  = "doctor_id"
 	columnPatientID = "patient_id"
 	columnDiagnosis = "diagnosis"
 )
 
 type Repository interface {
-	InsertCard(card centity.Card) (int, error)
+	InsertCard(card centity.Card) (int, uuid.UUID, error)
 
 	GetCardByPK(doctorID uuid.UUID, patientID uuid.UUID) (centity.Card, error)
 
 	GetCardByID(id int) (centity.Card, error)
+
+	GetCardByUUID(uuid uuid.UUID) (centity.Card, error)
 
 	UpdateCard(card centity.Card) error
 }

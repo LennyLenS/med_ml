@@ -90,42 +90,11 @@ func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage, patient med_
 		}
 	}
 
-	// Маппим данные о карточке пациента
-	apiPatientCard := api.PatientCard{
-		ID: api.OptInt{
-			Set: false,
-		},
-		Patient: api.OptInt{
-			// Patient и MedWorker в API - это int, но в domain.Card у нас только UUID
-			// Оставляем пустым, так как нет способа преобразовать UUID в int без lookup
-			Set: false,
-		},
-		MedWorker: api.OptInt{
-			// Patient и MedWorker в API - это int, но в domain.Card у нас только UUID
-			// Оставляем пустым, так как нет способа преобразовать UUID в int без lookup
-			Set: false,
-		},
-		Diagnosis: api.OptString{
-			Value: "",
-			Set:   false,
-		},
-		AcceptanceDatetime: api.OptDateTime{
-			Set: false,
-		},
-	}
-
-	// Заполняем ID карточки, если он есть
-	if patientCard.ID != nil {
-		apiPatientCard.ID = api.OptInt{
-			Value: *patientCard.ID,
-			Set:   true,
-		}
-	}
-
-	// Заполняем диагноз, если он есть
-	if patientCard.Diagnosis != nil {
-		apiPatientCard.Diagnosis = api.OptString{
-			Value: *patientCard.Diagnosis,
+	// Маппим данные о карточке пациента (UUID карточки)
+	var apiPatientCard api.OptUUID
+	if patientCard.UUID != uuid.Nil {
+		apiPatientCard = api.OptUUID{
+			Value: patientCard.UUID,
 			Set:   true,
 		}
 	}
@@ -392,7 +361,6 @@ func (CytologyImage) UpdateArgFromCytologyUpdatePartialUpdateReq(id uuid.UUID, r
 
 func (CytologyImage) ToCytologyUpdateUpdateOK(img domain.CytologyImage, req *api.CytologyUpdateUpdateReq) api.CytologyUpdateUpdateOK {
 	result := api.CytologyUpdateUpdateOK{
-		PatientCard: api.CytologyUpdateUpdateOKPatientCard{},
 		IsLast: api.OptBool{
 			Value: img.IsLast,
 			Set:   true,
@@ -462,7 +430,6 @@ func (CytologyImage) ToCytologyUpdateUpdateOK(img domain.CytologyImage, req *api
 
 func (CytologyImage) ToCytologyUpdatePartialUpdateOK(img domain.CytologyImage, req *api.CytologyUpdatePartialUpdateReq) api.CytologyUpdatePartialUpdateOK {
 	result := api.CytologyUpdatePartialUpdateOK{
-		PatientCard: api.CytologyUpdatePartialUpdateOKPatientCard{},
 		IsLast: api.OptBool{
 			Value: img.IsLast,
 			Set:   true,

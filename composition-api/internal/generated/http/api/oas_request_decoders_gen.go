@@ -505,14 +505,14 @@ func (s *Server) decodeCytologyCreateCreateRequest(r *http.Request) (
 			}
 			if err := q.HasParam(cfg); err == nil {
 				if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-					var requestDotPatientCardVal int
+					var requestDotPatientCardVal uuid.UUID
 					if err := func() error {
 						val, err := d.DecodeValue()
 						if err != nil {
 							return err
 						}
 
-						c, err := conv.ToInt(val)
+						c, err := conv.ToUUID(val)
 						if err != nil {
 							return err
 						}

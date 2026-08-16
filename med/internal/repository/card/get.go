@@ -15,6 +15,7 @@ func (r *repo) GetCardByPK(doctorID uuid.UUID, patientID uuid.UUID) (entity.Card
 	query := r.QueryBuilder().
 		Select(
 			columnID,
+			columnUUID,
 			columnDoctorID,
 			columnPatientID,
 			columnDiagnosis,
