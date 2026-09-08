@@ -57,6 +57,8 @@ func TestGetSegmentationById_Success(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, int32(7), resp.Segmentation.Id)
 	require.Len(t, resp.Segmentation.Points, 1)
+	require.Equal(t, int32(5), resp.Segmentation.Points[0].X)
+	require.Equal(t, int32(6), resp.Segmentation.Points[0].Y)
 }
 
 func TestGetSegmentationById_InternalError(t *testing.T) {
