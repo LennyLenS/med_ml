@@ -126,7 +126,7 @@ func (h *handler) CytologyCreateCreate(ctx context.Context, req *api.CytologyCre
 	}
 
 	if req.Details.Set {
-		result.Details = &api.CytologyCreateCreateCreatedDetails{}
+		result.Details = api.NewOptCytologyCreateCreateCreatedDetails(&api.CytologyCreateCreateCreatedDetails{})
 	}
 	if req.DiagnosticMarking.Set {
 		result.DiagnosticMarking = api.OptCytologyCreateCreateCreatedDiagnosticMarking{

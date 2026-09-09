@@ -94,17 +94,17 @@ func (h *handler) CytologyUpdatePartialUpdate(ctx context.Context, req *api.Cyto
 	return pointer.To(result), nil
 }
 
-func (h *handler) patientCardUUID(ctx context.Context, doctorID, patientID uuid.UUID) api.OptUUID {
+func (h *handler) patientCardUUID(ctx context.Context, doctorID, patientID uuid.UUID) api.OptNilUUID {
 	if doctorID == uuid.Nil || patientID == uuid.Nil {
-		return api.OptUUID{}
+		return api.OptNilUUID{}
 	}
 
 	card, err := h.services.CardService.GetCard(ctx, doctorID, patientID)
 	if err != nil || card.UUID == uuid.Nil {
-		return api.OptUUID{}
+		return api.OptNilUUID{}
 	}
 
-	return api.OptUUID{
+	return api.OptNilUUID{
 		Value: card.UUID,
 		Set:   true,
 	}

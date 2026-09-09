@@ -91,9 +91,9 @@ func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage, patient med_
 	}
 
 	// Маппим данные о карточке пациента (UUID карточки)
-	var apiPatientCard api.OptUUID
+	var apiPatientCard api.OptNilUUID
 	if patientCard.UUID != uuid.Nil {
-		apiPatientCard = api.OptUUID{
+		apiPatientCard = api.OptNilUUID{
 			Value: patientCard.UUID,
 			Set:   true,
 		}
@@ -150,13 +150,13 @@ func (CytologyImage) ToCytologyReadOKInfo(img domain.CytologyImage, patient med_
 
 	// Маппинг prev и parent_prev
 	if img.PrevID != nil {
-		imageGroup.Prev = api.OptUUID{
+		imageGroup.Prev = api.OptNilUUID{
 			Value: *img.PrevID,
 			Set:   true,
 		}
 	}
 	if img.ParentPrevID != nil {
-		imageGroup.ParentPrev = api.OptUUID{
+		imageGroup.ParentPrev = api.OptNilUUID{
 			Value: *img.ParentPrevID,
 			Set:   true,
 		}
@@ -220,18 +220,18 @@ func (CytologyImage) ToCytologyImageModelList(imgs []domain.CytologyImage) []api
 		}
 
 		if img.Details != nil {
-			item.Details = &api.CytologyHistoryReadOKResultsItemDetails{}
+			item.Details = api.NewOptCytologyHistoryReadOKResultsItemDetails(&api.CytologyHistoryReadOKResultsItemDetails{})
 		}
 
 		// Маппинг prev и parent_prev
 		if img.PrevID != nil {
-			item.Prev = api.OptUUID{
+			item.Prev = api.OptNilUUID{
 				Value: *img.PrevID,
 				Set:   true,
 			}
 		}
 		if img.ParentPrevID != nil {
-			item.ParentPrev = api.OptUUID{
+			item.ParentPrev = api.OptNilUUID{
 				Value: *img.ParentPrevID,
 				Set:   true,
 			}
@@ -413,13 +413,13 @@ func (CytologyImage) ToCytologyUpdateUpdateOK(img domain.CytologyImage, req *api
 
 	// Маппинг prev и parent_prev
 	if img.PrevID != nil {
-		result.Prev = api.OptUUID{
+		result.Prev = api.OptNilUUID{
 			Value: *img.PrevID,
 			Set:   true,
 		}
 	}
 	if img.ParentPrevID != nil {
-		result.ParentPrev = api.OptUUID{
+		result.ParentPrev = api.OptNilUUID{
 			Value: *img.ParentPrevID,
 			Set:   true,
 		}
@@ -482,13 +482,13 @@ func (CytologyImage) ToCytologyUpdatePartialUpdateOK(img domain.CytologyImage, r
 
 	// Маппинг prev и parent_prev
 	if img.PrevID != nil {
-		result.Prev = api.OptUUID{
+		result.Prev = api.OptNilUUID{
 			Value: *img.PrevID,
 			Set:   true,
 		}
 	}
 	if img.ParentPrevID != nil {
-		result.ParentPrev = api.OptUUID{
+		result.ParentPrev = api.OptNilUUID{
 			Value: *img.ParentPrevID,
 			Set:   true,
 		}

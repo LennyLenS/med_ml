@@ -8,16 +8,19 @@ import (
 	"composition-api/internal/adapters/auth"
 	"composition-api/internal/adapters/billing"
 	"composition-api/internal/adapters/cytology"
+	"composition-api/internal/adapters/exam"
 	"composition-api/internal/adapters/med"
 	"composition-api/internal/adapters/tiler"
 	"composition-api/internal/adapters/uzi"
 	authPB "composition-api/internal/generated/grpc/clients/auth"
 	cytologyPB "composition-api/internal/generated/grpc/clients/cytology"
+	examPB "composition-api/internal/generated/grpc/clients/exam"
 	medPB "composition-api/internal/generated/grpc/clients/med"
 	uziPB "composition-api/internal/generated/grpc/clients/uzi"
 )
 
 type Adapters struct {
+	Exam     exam.Adapter
 	Uzi      uzi.Adapter
 	Auth     auth.Adapter
 	Med      med.Adapter
@@ -27,6 +30,7 @@ type Adapters struct {
 }
 
 func NewAdapters(
+	examConn *grpc.ClientConn,
 	uziConn *grpc.ClientConn,
 	authConn *grpc.ClientConn,
 	medConn *grpc.ClientConn,
@@ -34,6 +38,9 @@ func NewAdapters(
 	cytologyConn *grpc.ClientConn,
 	tilerURL string,
 ) *Adapters {
+	examClient := examPB.NewExamSrvClient(examConn)
+	examAdapter := exam.NewAdapter(examClient)
+
 	uziClient := uziPB.NewUziSrvClient(uziConn)
 	uziAdapter := uzi.NewAdapter(uziClient)
 
@@ -52,6 +59,7 @@ func NewAdapters(
 	tilerClient := tiler.NewClient(tilerURL)
 
 	return &Adapters{
+		Exam:     examAdapter,
 		Uzi:      uziAdapter,
 		Auth:     authAdapter,
 		Med:      medAdapter,

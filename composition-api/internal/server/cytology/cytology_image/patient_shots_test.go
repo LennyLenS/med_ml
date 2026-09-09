@@ -205,11 +205,11 @@ func TestCytologyPatientShotsRead_Doctor_ReturnsOnlyOwnShots(t *testing.T) {
 		},
 		&mockPatientService{
 			patient: med_domain.Patient{
-				Id:       patientID,
-				FullName: "Иванов Иван Иванович",
-				Email:    "iii@medml.med",
-				Policy:   "1234123412341234",
-				Active:   true,
+				Id:        patientID,
+				FullName:  "Иванов Иван Иванович",
+				Email:     "iii@medml.med",
+				Policy:    "1234123412341234",
+				Active:    true,
 				BirthDate: time.Date(2026, 5, 6, 0, 0, 0, 0, time.UTC),
 			},
 		},
@@ -249,9 +249,9 @@ func TestCytologyPatientShotsRead_Patient_ReturnsAllShots(t *testing.T) {
 		},
 		&mockPatientService{
 			patient: med_domain.Patient{
-				Id:       patientID,
-				FullName: "Иванов Иван Иванович",
-				Active:   true,
+				Id:        patientID,
+				FullName:  "Иванов Иван Иванович",
+				Active:    true,
 				BirthDate: time.Date(2026, 5, 6, 0, 0, 0, 0, time.UTC),
 			},
 		},

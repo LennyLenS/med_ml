@@ -144,12 +144,12 @@ func (CytologyImage) ToCytologyPatientShot(
 	return shot
 }
 
-func toCytologyPatientCardUUID(card med_domain.Card) api.OptUUID {
+func toCytologyPatientCardUUID(card med_domain.Card) api.OptNilUUID {
 	if card.UUID == uuid.Nil {
-		return api.OptUUID{}
+		return api.OptNilUUID{}
 	}
 
-	return api.OptUUID{
+	return api.OptNilUUID{
 		Value: card.UUID,
 		Set:   true,
 	}

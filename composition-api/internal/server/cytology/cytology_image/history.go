@@ -34,8 +34,8 @@ func (h *handler) CytologyHistoryRead(ctx context.Context, params api.CytologyHi
 	// TODO: Реализовать правильную пагинацию с limit и offset
 	result := api.CytologyHistoryReadOK{
 		Count:    len(results),
-		Next:     api.OptURI{Set: false},
-		Previous: api.OptURI{Set: false},
+		Next:     api.OptNilURI{Set: false},
+		Previous: api.OptNilURI{Set: false},
 		Results:  results,
 	}
 
