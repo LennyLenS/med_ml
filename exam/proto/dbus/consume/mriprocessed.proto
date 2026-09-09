@@ -26,5 +26,4 @@ message MriProcessed {
 
     string mri_id = 100;
     repeated NodeWithSegments nodes_with_segments = 200;
-}+
-
+}

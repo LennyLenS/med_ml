@@ -1,4 +1,5 @@
 from confluent_kafka import Consumer
+from google.protobuf.message import DecodeError
 import ml_service.internal.events.kafka_pb2 as pb
 from ml_service.config.default import get_settings
 
@@ -27,13 +28,25 @@ class EventsYo:
             # continue
             if msg is None:
                 continue  # Если сообщения нет, то пропускаем итерацию
+            if msg.error() is not None:
+                print("Kafka consumer error:", msg.error())
+                continue
 
             # Определяем обработчик в зависимости от топика
             print("topic:", msg.topic())
-            if msg.topic() == "mrisplitted":
-                self._process_mri_message(msg)
-            elif msg.topic() == "ktprepared":
-                self._process_kt_message(msg)
+            try:
+                if msg.topic() == "mrisplitted":
+                    self._process_mri_message(msg)
+                elif msg.topic() == "ktprepared":
+                    self._process_kt_message(msg)
+            except DecodeError as error:
+                print(
+                    "Invalid protobuf message:",
+                    "topic=", msg.topic(),
+                    "partition=", msg.partition(),
+                    "offset=", msg.offset(),
+                    "error=", error,
+                )
 
             consumer.commit(msg)
 

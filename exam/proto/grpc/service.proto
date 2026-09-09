@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package exam;
+
 option go_package = "internal/generated/grpc/service";
 
 import "google/protobuf/empty.proto";
@@ -335,5 +337,4 @@ message GetNodesWithSegmentsByImageIdOut {
 
 message DeleteNodeIn { string id = 100; }
 
-message DeleteSegmentIn { string id = 100; }+
-
+message DeleteSegmentIn { string id = 100; }

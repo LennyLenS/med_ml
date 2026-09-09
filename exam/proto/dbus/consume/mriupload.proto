@@ -4,5 +4,4 @@ option go_package = "internal/generated/dbus/consume/mriupload";
 
 message MriUpload {
   string mri_id = 100;
-}+
-
+}

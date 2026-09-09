@@ -4,5 +4,4 @@ option go_package = "internal/generated/dbus/produce/ktprepared";
 
 message KtPrepared {
   string kt_id = 100;
-}+
-
+}

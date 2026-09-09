@@ -27,5 +27,4 @@ COMMENT ON COLUMN kt.predicted_classes IS 'Предсказанные класс
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE IF EXISTS kt CASCADE;
--- +goose StatementEnd+
-
+-- +goose StatementEnd
