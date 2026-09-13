@@ -2,10 +2,12 @@ package original_image
 
 import (
 	"context"
+	"fmt"
 
+	"cytology/internal/domain"
+	cytologyanalysisrequestedpb "cytology/internal/generated/dbus/produce/cytologyanalysisrequested"
 	pb "cytology/internal/generated/grpc/service"
 	"cytology/internal/services/original_image"
-	cytologysplittedpb "cytology/internal/generated/dbus/produce/cytologysplitted"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -54,15 +56,50 @@ func (h *handler) CreateOriginalImage(ctx context.Context, in *pb.CreateOriginal
 		return nil, status.Errorf(codes.Internal, "Что то пошло не так: %s", err.Error())
 	}
 
-	// Отправляем сообщение в Kafka для обработки
 	if h.services.Producer != nil {
-		msg := &cytologysplittedpb.CytologySplitted{
-			CytologyId:      cytologyID.String(),
-			OriginalImageId: id.String(),
+		originalImage, err := h.services.OriginalImage.GetOriginalImageByID(ctx, id)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "get original image: %s", err.Error())
 		}
-		if err := h.services.Producer.SendCytologySplitted(ctx, msg); err != nil {
-			// Логируем ошибку, но не прерываем выполнение
-			// TODO: добавить логирование
+		cytologyImage, err := h.services.CytologyImage.GetCytologyImageByID(ctx, cytologyID)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "get cytology image: %s", err.Error())
+		}
+
+		analysisID, err := h.services.CytologyAnalysis.Create(ctx, cytologyID, id)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "create cytology analysis: %s", err.Error())
+		}
+
+		materialTypes := map[domain.MaterialType]cytologyanalysisrequestedpb.MaterialType{
+			domain.MaterialTypeGS:  cytologyanalysisrequestedpb.MaterialType_MATERIAL_TYPE_GS,
+			domain.MaterialTypeBP:  cytologyanalysisrequestedpb.MaterialType_MATERIAL_TYPE_BP,
+			domain.MaterialTypeTP:  cytologyanalysisrequestedpb.MaterialType_MATERIAL_TYPE_TP,
+			domain.MaterialTypePTP: cytologyanalysisrequestedpb.MaterialType_MATERIAL_TYPE_PTP,
+			domain.MaterialTypeLNP: cytologyanalysisrequestedpb.MaterialType_MATERIAL_TYPE_LNP,
+		}
+		materialType := cytologyanalysisrequestedpb.MaterialType_MATERIAL_TYPE_UNSPECIFIED
+		if cytologyImage.MaterialType != nil {
+			materialType = materialTypes[*cytologyImage.MaterialType]
+		}
+
+		msg := &cytologyanalysisrequestedpb.AnalysisRequested{
+			AnalysisId:       analysisID.String(),
+			InputArtifactUri: fmt.Sprintf("s3://cytology/%s", originalImage.ImagePath),
+			MaterialType:     materialType,
+		}
+		if cytologyImage.MaterialType != nil && *cytologyImage.MaterialType == domain.MaterialTypeLNP {
+			if cytologyImage.CalcitoninInFlush != nil {
+				value := int32(*cytologyImage.CalcitoninInFlush)
+				msg.CalcitoninInFlush = &value
+			}
+			if cytologyImage.Thyroglobulin != nil {
+				value := int32(*cytologyImage.Thyroglobulin)
+				msg.ThyroglobulinInFlush = &value
+			}
+		}
+		if err := h.services.Producer.SendCytologyAnalysisRequested(ctx, msg); err != nil {
+			return nil, status.Errorf(codes.Internal, "send cytology analysis requested: %s", err.Error())
 		}
 	}
 

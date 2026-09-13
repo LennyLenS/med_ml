@@ -61,6 +61,22 @@ type DownloadUziIDImageIDGetRes interface {
 	downloadUziIDImageIDGetRes()
 }
 
+type KtIDDeleteRes interface {
+	ktIDDeleteRes()
+}
+
+type KtIDGetRes interface {
+	ktIDGetRes()
+}
+
+type KtIDPatchRes interface {
+	ktIDPatchRes()
+}
+
+type KtPostRes interface {
+	ktPostRes()
+}
+
 type LoginPostRes interface {
 	loginPostRes()
 }
@@ -95,6 +111,86 @@ type MedPatientIDPatchRes interface {
 
 type MedPatientPostRes interface {
 	medPatientPostRes()
+}
+
+type MriDevicePostRes interface {
+	mriDevicePostRes()
+}
+
+type MriDevicesGetRes interface {
+	mriDevicesGetRes()
+}
+
+type MriIDDeleteRes interface {
+	mriIDDeleteRes()
+}
+
+type MriIDEchographicsGetRes interface {
+	mriIDEchographicsGetRes()
+}
+
+type MriIDEchographicsPatchRes interface {
+	mriIDEchographicsPatchRes()
+}
+
+type MriIDGetRes interface {
+	mriIDGetRes()
+}
+
+type MriIDImagesGetRes interface {
+	mriIDImagesGetRes()
+}
+
+type MriIDNodesGetRes interface {
+	mriIDNodesGetRes()
+}
+
+type MriIDNodesSegmentsPostRes interface {
+	mriIDNodesSegmentsPostRes()
+}
+
+type MriIDPatchRes interface {
+	mriIDPatchRes()
+}
+
+type MriImageIDNodesSegmentsGetRes interface {
+	mriImageIDNodesSegmentsGetRes()
+}
+
+type MriNodesIDDeleteRes interface {
+	mriNodesIDDeleteRes()
+}
+
+type MriNodesIDPatchRes interface {
+	mriNodesIDPatchRes()
+}
+
+type MriNodesIDSegmentsGetRes interface {
+	mriNodesIDSegmentsGetRes()
+}
+
+type MriPostRes interface {
+	mriPostRes()
+}
+
+type MriSegmentIDDeleteRes interface {
+	mriSegmentIDDeleteRes()
+}
+
+type MriSegmentIDPatchRes interface {
+	mriSegmentIDPatchRes()
+}
+
+type MriSegmentPostRes interface {
+	mriSegmentPostRes()
+}
+
+type MrisAuthorIDGetRes interface {
+	mrisAuthorIDGetRes()
+}
+
+type MrisExternalIDGetRes interface {
+	mrisExternalIDGetRes()
 }
 
 type PaymentProvidersGetRes interface {

@@ -86,7 +86,8 @@ func TestGetSegmentationGroupsByCytologyId_Success(t *testing.T) {
 				CytologyID: cytologyID,
 				SegType:    domain.SegTypeNIR,
 				GroupType:  domain.GroupTypeCE,
-				IsAI:       false,
+				IsAI:       true,
+				Details:    []byte(`{"classification":{"name":"Клетка Гюртле"}}`),
 				CreateAt:   time.Now().UTC(),
 			},
 		},
@@ -100,6 +101,8 @@ func TestGetSegmentationGroupsByCytologyId_Success(t *testing.T) {
 	require.Len(t, resp.SegmentationGroups, 1)
 	require.Equal(t, int32(1), resp.SegmentationGroups[0].Id)
 	require.Equal(t, pb.SegType_SEG_TYPE_NIR, resp.SegmentationGroups[0].SegType)
+	require.True(t, resp.SegmentationGroups[0].IsAi)
+	require.JSONEq(t, `{"classification":{"name":"Клетка Гюртле"}}`, resp.SegmentationGroups[0].GetDetails())
 }
 
 func TestUpdateSegmentationGroup_Success(t *testing.T) {

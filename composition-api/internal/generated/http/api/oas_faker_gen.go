@@ -3,6 +3,7 @@
 package api
 
 import (
+	"fmt"
 	"net/url"
 	"time"
 
@@ -24,6 +25,11 @@ func (s *Card) SetFake() {
 	}
 	{
 		{
+			s.UUID.SetFake()
+		}
+	}
+	{
+		{
 			s.Diagnosis.SetFake()
 		}
 	}
@@ -34,7 +40,7 @@ func (s *Contor) SetFake() {
 	var unwrapped []ContorItem
 	{
 		unwrapped = nil
-		for i := 0; i < 0; i++ {
+		for i := 0; i < 1; i++ {
 			var elem ContorItem
 			{
 				elem.SetFake()
@@ -110,8 +116,8 @@ func (s *CytologyCreateCreateCreated) SetFake() {
 		}
 	}
 	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
+		{
+			s.Details.SetFake()
 		}
 	}
 	{
@@ -224,8 +230,8 @@ func (s *CytologyHistoryReadOKResultsItem) SetFake() {
 		}
 	}
 	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
+		{
+			s.Details.SetFake()
 		}
 	}
 	{
@@ -450,8 +456,8 @@ func (s *CytologyReadOKInfoImageGroup) SetFake() {
 		}
 	}
 	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
+		{
+			s.Details.SetFake()
 		}
 	}
 	{
@@ -883,8 +889,8 @@ func (s *CytologySegmentsListOKResultsItem) SetFake() {
 		}
 	}
 	{
-		{ // Keep pointer nil to prevent infinite recursion.
-			s.Details = nil
+		{
+			s.Details.SetFake()
 		}
 	}
 	{
@@ -1031,20 +1037,6 @@ func (s *CytologyShotPatient) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyShotPatientCard) SetFake() {
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *CytologyUpdatePartialUpdateOK) SetFake() {
 	{
 		{
@@ -1120,10 +1112,6 @@ func (s *CytologyUpdatePartialUpdateOK) SetFake() {
 
 // SetFake set fake values.
 func (s *CytologyUpdatePartialUpdateOKDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyUpdatePartialUpdateOKPatientCard) SetFake() {
 }
 
 // SetFake set fake values.
@@ -1215,25 +1203,6 @@ func (s *CytologyUpdatePartialUpdateReqMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetFake() {
-	{
-		{
-			s.Patient.SetFake()
-		}
-	}
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *CytologyUpdateUpdateOK) SetFake() {
 	{
 		{
@@ -1309,10 +1278,6 @@ func (s *CytologyUpdateUpdateOK) SetFake() {
 
 // SetFake set fake values.
 func (s *CytologyUpdateUpdateOKDetails) SetFake() {
-}
-
-// SetFake set fake values.
-func (s *CytologyUpdateUpdateOKPatientCard) SetFake() {
 }
 
 // SetFake set fake values.
@@ -1479,25 +1444,6 @@ func (s *CytologyUpdateUpdateReqMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *CytologyUpdateUpdateReqPatientCard) SetFake() {
-	{
-		{
-			s.Patient.SetFake()
-		}
-	}
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
 func (s *Device) SetFake() {
 	{
 		{
@@ -1649,6 +1595,261 @@ func (s *Error) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *ExamContor) SetFake() {
+	var unwrapped []ExamContorItem
+	{
+		unwrapped = nil
+		for i := 0; i < 1; i++ {
+			var elem ExamContorItem
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = ExamContor(unwrapped)
+}
+
+// SetFake set fake values.
+func (s *ExamContorItem) SetFake() {
+	{
+		{
+			s.X = int(0)
+		}
+	}
+	{
+		{
+			s.Y = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *ExamDevice) SetFake() {
+	{
+		{
+			s.ID = int(0)
+		}
+	}
+	{
+		{
+			s.Name = "string"
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *ExamEchographics) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Contors.SetFake()
+		}
+	}
+	{
+		{
+			s.LeftLobeLength.SetFake()
+		}
+	}
+	{
+		{
+			s.LeftLobeWidth.SetFake()
+		}
+	}
+	{
+		{
+			s.LeftLobeThick.SetFake()
+		}
+	}
+	{
+		{
+			s.LeftLobeVolum.SetFake()
+		}
+	}
+	{
+		{
+			s.RightLobeLength.SetFake()
+		}
+	}
+	{
+		{
+			s.RightLobeWidth.SetFake()
+		}
+	}
+	{
+		{
+			s.RightLobeThick.SetFake()
+		}
+	}
+	{
+		{
+			s.RightLobeVolum.SetFake()
+		}
+	}
+	{
+		{
+			s.GlandVolum.SetFake()
+		}
+	}
+	{
+		{
+			s.Isthmus.SetFake()
+		}
+	}
+	{
+		{
+			s.Struct.SetFake()
+		}
+	}
+	{
+		{
+			s.Echogenicity.SetFake()
+		}
+	}
+	{
+		{
+			s.RegionalLymph.SetFake()
+		}
+	}
+	{
+		{
+			s.Vascularization.SetFake()
+		}
+	}
+	{
+		{
+			s.Location.SetFake()
+		}
+	}
+	{
+		{
+			s.Additional.SetFake()
+		}
+	}
+	{
+		{
+			s.Conclusion.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *ExamImage) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.MriID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Page = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *ExamNode) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Ai = true
+		}
+	}
+	{
+		{
+			s.MriID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Validation.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp012 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp3 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp4 = float64(0)
+		}
+	}
+	{
+		{
+			s.Description.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *ExamNodeValidation) SetFake() {
+	*s = ExamNodeValidationInvalid
+}
+
+// SetFake set fake values.
+func (s *ExamSegment) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.ImageID = uuid.New()
+		}
+	}
+	{
+		{
+			s.NodeID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Contor.SetFake()
+		}
+	}
+	{
+		{
+			s.Ai = true
+		}
+	}
+	{
+		{
+			s.Knosp012 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp3 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp4 = float64(0)
+		}
+	}
+}
+
+// SetFake set fake values.
 func (s *Image) SetFake() {
 	{
 		{
@@ -1664,6 +1865,45 @@ func (s *Image) SetFake() {
 		{
 			s.Page = int(0)
 		}
+	}
+}
+
+// SetFake set fake values.
+func (s *Kt) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.CreateAt = time.Now()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *KtIDPatchReq) SetFake() {
+	{
+		{
+			s.Checked.SetFake()
+		}
+	}
+	{
+		{
+			s.ClassProbabilities.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *KtIDPatchReqClassProbabilities) SetFake() {
+	var (
+		elem float64
+		m    map[string]float64 = s.init()
+	)
+	for i := 0; i < 0; i++ {
+		m[fmt.Sprintf("fake%d", i)] = elem
 	}
 }
 
@@ -1769,6 +2009,403 @@ func (s *MedPatientPostReq) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *Mri) SetFake() {
+	{
+		{
+			s.ID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Projection.SetFake()
+		}
+	}
+	{
+		{
+			s.Checked = true
+		}
+	}
+	{
+		{
+			s.ExternalID = uuid.New()
+		}
+	}
+	{
+		{
+			s.AuthorID = uuid.New()
+		}
+	}
+	{
+		{
+			s.DeviceID = int(0)
+		}
+	}
+	{
+		{
+			s.Status.SetFake()
+		}
+	}
+	{
+		{
+			s.CreateAt = time.Now()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriDevicePostOK) SetFake() {
+	{
+		{
+			s.ID = int(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriDevicePostReq) SetFake() {
+	{
+		{
+			s.Name = "string"
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriDevicesGetOKApplicationJSON) SetFake() {
+	var unwrapped []ExamDevice
+	{
+		unwrapped = nil
+		for i := 0; i < 0; i++ {
+			var elem ExamDevice
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = MriDevicesGetOKApplicationJSON(unwrapped)
+}
+
+// SetFake set fake values.
+func (s *MriIDImagesGetOKApplicationJSON) SetFake() {
+	var unwrapped []ExamImage
+	{
+		unwrapped = nil
+		for i := 0; i < 0; i++ {
+			var elem ExamImage
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = MriIDImagesGetOKApplicationJSON(unwrapped)
+}
+
+// SetFake set fake values.
+func (s *MriIDNodesGetOKApplicationJSON) SetFake() {
+	var unwrapped []ExamNode
+	{
+		unwrapped = nil
+		for i := 0; i < 0; i++ {
+			var elem ExamNode
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = MriIDNodesGetOKApplicationJSON(unwrapped)
+}
+
+// SetFake set fake values.
+func (s *MriIDNodesSegmentsPostOK) SetFake() {
+	{
+		{
+			s.NodeID = uuid.New()
+		}
+	}
+	{
+		{
+			s.SegmentIds = nil
+			for i := 0; i < 0; i++ {
+				var elem uuid.UUID
+				{
+					elem = uuid.New()
+				}
+				s.SegmentIds = append(s.SegmentIds, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriIDNodesSegmentsPostReq) SetFake() {
+	{
+		{
+			s.Node.SetFake()
+		}
+	}
+	{
+		{
+			s.Segments = nil
+			for i := 0; i < 0; i++ {
+				var elem MriIDNodesSegmentsPostReqSegmentsItem
+				{
+					elem.SetFake()
+				}
+				s.Segments = append(s.Segments, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriIDNodesSegmentsPostReqNode) SetFake() {
+	{
+		{
+			s.Knosp012 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp3 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp4 = float64(0)
+		}
+	}
+	{
+		{
+			s.Description.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) SetFake() {
+	{
+		{
+			s.ImageID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Contor.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp012 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp3 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp4 = float64(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriIDPatchReq) SetFake() {
+	{
+		{
+			s.Projection.SetFake()
+		}
+	}
+	{
+		{
+			s.Checked.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriIDPatchReqProjection) SetFake() {
+	*s = MriIDPatchReqProjectionCross
+}
+
+// SetFake set fake values.
+func (s *MriImageIDNodesSegmentsGetOK) SetFake() {
+	{
+		{
+			s.Nodes = nil
+			for i := 0; i < 0; i++ {
+				var elem ExamNode
+				{
+					elem.SetFake()
+				}
+				s.Nodes = append(s.Nodes, elem)
+			}
+		}
+	}
+	{
+		{
+			s.Segments = nil
+			for i := 0; i < 0; i++ {
+				var elem ExamSegment
+				{
+					elem.SetFake()
+				}
+				s.Segments = append(s.Segments, elem)
+			}
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriNodesIDPatchReq) SetFake() {
+	{
+		{
+			s.Validation.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp012.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp3.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp4.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriNodesIDPatchReqValidation) SetFake() {
+	*s = MriNodesIDPatchReqValidationInvalid
+}
+
+// SetFake set fake values.
+func (s *MriNodesIDSegmentsGetOKApplicationJSON) SetFake() {
+	var unwrapped []ExamSegment
+	{
+		unwrapped = nil
+		for i := 0; i < 0; i++ {
+			var elem ExamSegment
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = MriNodesIDSegmentsGetOKApplicationJSON(unwrapped)
+}
+
+// SetFake set fake values.
+func (s *MriProjection) SetFake() {
+	*s = MriProjectionCross
+}
+
+// SetFake set fake values.
+func (s *MriSegmentIDPatchReq) SetFake() {
+	{
+		{
+			s.Contor.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp012.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp3.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp4.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriSegmentPostReq) SetFake() {
+	{
+		{
+			s.ImageID = uuid.New()
+		}
+	}
+	{
+		{
+			s.NodeID = uuid.New()
+		}
+	}
+	{
+		{
+			s.Contor.SetFake()
+		}
+	}
+	{
+		{
+			s.Knosp012 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp3 = float64(0)
+		}
+	}
+	{
+		{
+			s.Knosp4 = float64(0)
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *MriStatus) SetFake() {
+	*s = MriStatusNew
+}
+
+// SetFake set fake values.
+func (s *MrisAuthorIDGetOKApplicationJSON) SetFake() {
+	var unwrapped []Mri
+	{
+		unwrapped = nil
+		for i := 0; i < 0; i++ {
+			var elem Mri
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = MrisAuthorIDGetOKApplicationJSON(unwrapped)
+}
+
+// SetFake set fake values.
+func (s *MrisExternalIDGetOKApplicationJSON) SetFake() {
+	var unwrapped []Mri
+	{
+		unwrapped = nil
+		for i := 0; i < 0; i++ {
+			var elem Mri
+			{
+				elem.SetFake()
+			}
+			unwrapped = append(unwrapped, elem)
+		}
+	}
+	*s = MrisExternalIDGetOKApplicationJSON(unwrapped)
+}
+
+// SetFake set fake values.
 func (s *Node) SetFake() {
 	{
 		{
@@ -1827,6 +2464,15 @@ func (s *OptBool) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *OptCytologyCreateCreateCreatedDetails) SetFake() {
+	var elem *CytologyCreateCreateCreatedDetails
+	{ // Keep pointer nil to prevent infinite recursion.
+		elem = nil
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
 func (s *OptCytologyCreateCreateCreatedDiagnosticMarking) SetFake() {
 	var elem CytologyCreateCreateCreatedDiagnosticMarking
 	{
@@ -1840,6 +2486,15 @@ func (s *OptCytologyCreateCreateCreatedMaterialType) SetFake() {
 	var elem CytologyCreateCreateCreatedMaterialType
 	{
 		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologyHistoryReadOKResultsItemDetails) SetFake() {
+	var elem *CytologyHistoryReadOKResultsItemDetails
+	{ // Keep pointer nil to prevent infinite recursion.
+		elem = nil
 	}
 	s.SetTo(elem)
 }
@@ -1881,6 +2536,15 @@ func (s *OptCytologyPatientShotMaterialType) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *OptCytologyReadOKInfoImageGroupDetails) SetFake() {
+	var elem *CytologyReadOKInfoImageGroupDetails
+	{ // Keep pointer nil to prevent infinite recursion.
+		elem = nil
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
 func (s *OptCytologyReadOKInfoImageGroupDiagnosticMarking) SetFake() {
 	var elem CytologyReadOKInfoImageGroupDiagnosticMarking
 	{
@@ -1903,6 +2567,15 @@ func (s *OptCytologySegmentGroupCreateCreateCreatedData) SetFake() {
 	var elem CytologySegmentGroupCreateCreateCreatedData
 	{
 		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologySegmentsListOKResultsItemDetails) SetFake() {
+	var elem *CytologySegmentsListOKResultsItemDetails
+	{ // Keep pointer nil to prevent infinite recursion.
+		elem = nil
 	}
 	s.SetTo(elem)
 }
@@ -2025,7 +2698,49 @@ func (s *OptInt) SetFake() {
 }
 
 // SetFake set fake values.
+func (s *OptKtIDPatchReqClassProbabilities) SetFake() {
+	var elem KtIDPatchReqClassProbabilities
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptMriIDPatchReqProjection) SetFake() {
+	var elem MriIDPatchReqProjection
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptNilExamNodeValidation) SetFake() {
+	s.Null = true
+	s.Set = true
+}
+
+// SetFake set fake values.
+func (s *OptNilInt) SetFake() {
+	s.Null = true
+	s.Set = true
+}
+
+// SetFake set fake values.
+func (s *OptNilMriNodesIDPatchReqValidation) SetFake() {
+	s.Null = true
+	s.Set = true
+}
+
+// SetFake set fake values.
 func (s *OptNilNodeValidation) SetFake() {
+	s.Null = true
+	s.Set = true
+}
+
+// SetFake set fake values.
+func (s *OptNilURI) SetFake() {
 	s.Null = true
 	s.Set = true
 }
@@ -2154,35 +2869,6 @@ func (s *Patient) SetFake() {
 	{
 		{
 			s.LastUziDate.SetFake()
-		}
-	}
-}
-
-// SetFake set fake values.
-func (s *PatientCard) SetFake() {
-	{
-		{
-			s.ID.SetFake()
-		}
-	}
-	{
-		{
-			s.AcceptanceDatetime.SetFake()
-		}
-	}
-	{
-		{
-			s.Diagnosis.SetFake()
-		}
-	}
-	{
-		{
-			s.Patient.SetFake()
-		}
-	}
-	{
-		{
-			s.MedWorker.SetFake()
 		}
 	}
 }

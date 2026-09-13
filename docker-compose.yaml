@@ -9,7 +9,7 @@ volumes:
 services:
   postgres:
     container_name: postgres
-    image: postgres:alpine
+    image: postgres:16-alpine
     env_file:
       - .env.example
     volumes:
@@ -22,7 +22,7 @@ services:
       - deps
       - app
     environment:
-      POSTGRES_MULTIPLE_DATABASES: authdb,meddb,uzidb,billingdb,cytologydb
+      POSTGRES_MULTIPLE_DATABASES: authdb,meddb,uzidb,billingdb,cytologydb,examdb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
 
@@ -126,6 +126,19 @@ services:
     env_file:
       - ./ml_service/.env-docker
 
+  ml_exam_service:
+    container_name: ml_exam_service
+    build:
+      context: ./ml_exam_service/
+      dockerfile: Dockerfile
+    depends_on:
+      - redpanda-0
+      - minio
+    profiles:
+      - app
+    env_file:
+      - ./ml_exam_service/.env-docker
+
   auth_service:
     container_name: auth_service
     build:
@@ -159,6 +172,22 @@ services:
       - ./uzi/.env-docker
     ports:
       - 50060:50055
+    profiles:
+      - app
+
+  exam_service:
+    container_name: exam_service
+    build:
+      context: ./exam/
+      dockerfile: Dockerfile
+    env_file:
+      - ./exam/.env-docker
+    ports:
+      - 50065:50055
+    depends_on:
+      - postgres
+      - minio
+      - redpanda-0
     profiles:
       - app
 
@@ -208,6 +237,8 @@ services:
       redpanda-0:
         condition: service_started
       uzi_service:
+        condition: service_started
+      exam_service:
         condition: service_started
       med_service:
         condition: service_started

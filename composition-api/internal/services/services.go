@@ -9,7 +9,14 @@ import (
 	"composition-api/internal/services/device"
 	"composition-api/internal/services/doctor"
 	"composition-api/internal/services/download"
+	examDevice "composition-api/internal/services/exam/device"
+	examImage "composition-api/internal/services/exam/image"
+	examNode "composition-api/internal/services/exam/node"
+	examNodeSegment "composition-api/internal/services/exam/node_segment"
+	examSegment "composition-api/internal/services/exam/segment"
 	"composition-api/internal/services/image"
+	"composition-api/internal/services/kt"
+	"composition-api/internal/services/mri"
 	"composition-api/internal/services/node"
 	"composition-api/internal/services/node_segment"
 	"composition-api/internal/services/patient"
@@ -25,6 +32,13 @@ import (
 )
 
 type Services struct {
+	MriService             mri.Service
+	KTService              kt.Service
+	ExamDeviceService      examDevice.Service
+	ExamImageService       examImage.Service
+	ExamNodeService        examNode.Service
+	ExamSegmentService     examSegment.Service
+	ExamNodeSegmentService examNodeSegment.Service
 	DeviceService          device.Service
 	UziService             uzi.Service
 	ImageService           image.Service
@@ -49,9 +63,17 @@ func New(
 	adapters *adapters.Adapters,
 	producers producers.Producer,
 	dao repository.DAO,
+	examDAO repository.DAO,
 ) *Services {
 	deviceService := device.New(adapters)
 	uziService := uzi.New(adapters, dao, producers)
+	mriService := mri.New(adapters, examDAO, producers)
+	ktService := kt.New(adapters, examDAO, producers)
+	examDeviceService := examDevice.New(adapters)
+	examImageService := examImage.New(adapters)
+	examNodeService := examNode.New(adapters)
+	examSegmentService := examSegment.New(adapters)
+	examNodeSegmentService := examNodeSegment.New(adapters)
 	imageService := image.New(adapters)
 	nodeService := node.New(adapters)
 	segmentService := segment.New(adapters)
@@ -70,6 +92,13 @@ func New(
 	tilerService := tiler.New(adapters.Tiler)
 
 	return &Services{
+		MriService:             mriService,
+		KTService:              ktService,
+		ExamDeviceService:      examDeviceService,
+		ExamImageService:       examImageService,
+		ExamNodeService:        examNodeService,
+		ExamSegmentService:     examSegmentService,
+		ExamNodeSegmentService: examNodeSegmentService,
 		DeviceService:          deviceService,
 		UziService:             uziService,
 		ImageService:           imageService,

@@ -81,9 +81,9 @@ func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGrou
 			// Пытаемся распарсить JSON из строки
 			var detailsObj map[string]interface{}
 			if err := json.Unmarshal([]byte(*group.Details), &detailsObj); err == nil {
-				item.Details = &api.CytologySegmentsListOKResultsItemDetails{}
+				item.Details = api.NewOptCytologySegmentsListOKResultsItemDetails(&api.CytologySegmentsListOKResultsItemDetails{})
 			} else {
-				item.Details = &api.CytologySegmentsListOKResultsItemDetails{}
+				item.Details = api.NewOptCytologySegmentsListOKResultsItemDetails(&api.CytologySegmentsListOKResultsItemDetails{})
 			}
 		}
 

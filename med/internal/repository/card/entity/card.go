@@ -10,6 +10,7 @@ import (
 
 type Card struct {
 	ID        sql.NullInt32  `db:"id"`
+	UUID      uuid.UUID      `db:"uuid"`
 	DoctorID  uuid.UUID      `db:"doctor_id"`
 	PatientID uuid.UUID      `db:"patient_id"`
 	Diagnosis sql.NullString `db:"diagnosis"`
@@ -17,6 +18,7 @@ type Card struct {
 
 func (Card) FromDomain(p domain.Card) Card {
 	card := Card{
+		UUID:      p.UUID,
 		DoctorID:  p.DoctorID,
 		PatientID: p.PatientID,
 	}
@@ -34,6 +36,7 @@ func (Card) FromDomain(p domain.Card) Card {
 
 func (p Card) ToDomain() domain.Card {
 	card := domain.Card{
+		UUID:      p.UUID,
 		DoctorID:  p.DoctorID,
 		PatientID: p.PatientID,
 	}

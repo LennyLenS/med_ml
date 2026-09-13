@@ -1,0 +1,340 @@
+syntax = "proto3";
+
+package exam;
+
+option go_package = "internal/generated/grpc/service";
+
+import "google/protobuf/empty.proto";
+
+service ExamSrv {
+  // DEVICE
+  rpc createDevice(createDeviceIn) returns (createDeviceOut);
+  rpc getDeviceList(google.protobuf.Empty) returns (GetDeviceListOut);
+
+  // MRI
+  rpc createMri(CreateMriIn) returns (CreateMriOut);
+  rpc getMriById(GetMriByIdIn) returns (GetMriByIdOut);
+  rpc getMrisByExternalId(GetMrisByExternalIdIn) returns (GetMrisByExternalIdOut);
+  rpc getMrisByAuthor(GetMrisByAuthorIn) returns (GetMrisByAuthorOut);
+  rpc getEchographicByMriId(GetEchographicByMriIdIn) returns (GetEchographicByMriIdOut);
+  rpc updateMri(UpdateMriIn) returns (UpdateMriOut);
+  rpc updateEchographic(UpdateEchographicIn) returns (UpdateEchographicOut);
+  rpc deleteMri(DeleteMriIn) returns (google.protobuf.Empty);
+
+  // KT
+  rpc createKt(CreateKtIn) returns (CreateKtOut);
+  rpc getKtById(GetKtByIdIn) returns (GetKtByIdOut);
+  rpc getKtsByAuthor(GetKtsByAuthorIn) returns (GetKtsByAuthorOut);
+  rpc updateKt(UpdateKtIn) returns (UpdateKtOut);
+  rpc deleteKt(DeleteKtIn) returns (google.protobuf.Empty);
+
+  // IMAGE
+  rpc getImagesByMriId(GetImagesByMriIdIn) returns (GetImagesByMriIdOut);
+  
+  // NODE
+  rpc getNodesByMriId(GetNodesByMriIdIn) returns (GetNodesByMriIdOut);
+  rpc updateNode(UpdateNodeIn) returns (UpdateNodeOut);
+
+  // SEGMENT
+  rpc createSegment(CreateSegmentIn) returns (CreateSegmentOut);
+  rpc getSegmentsByNodeId(GetSegmentsByNodeIdIn) returns (GetSegmentsByNodeIdOut);
+  rpc updateSegment(UpdateSegmentIn) returns (UpdateSegmentOut);
+
+  // доменные области слишком сильно пересекаются, вынесено в одну надобласть
+  // NODE-SEGMENT
+  rpc createNodeWithSegments(CreateNodeWithSegmentsIn) returns (CreateNodeWithSegmentsOut);
+  rpc getNodesWithSegmentsByImageId(GetNodesWithSegmentsByImageIdIn)
+      returns (GetNodesWithSegmentsByImageIdOut);
+  rpc deleteNode(DeleteNodeIn) returns (google.protobuf.Empty);
+  rpc deleteSegment(DeleteSegmentIn) returns (google.protobuf.Empty);
+}
+
+
+// DEVICE
+
+message Device {
+  int64 id = 100;
+  string name = 200;
+}
+
+message createDeviceIn {
+  string name = 100;
+}
+
+message createDeviceOut {
+  int64 id = 100;
+}
+
+message GetDeviceListOut { repeated Device devices = 100; }
+
+// MRI
+
+enum ExamStatus {
+  EXAM_STATUS_NEW = 0;
+  EXAM_STATUS_PENDING = 1;
+  EXAM_STATUS_COMPLETED = 2;
+}
+
+enum NodeValidation {
+  NODE_VALIDATION_NULL = 0;
+  NODE_VALIDATION_VALID = 1;
+  NODE_VALIDATION_INVALID = 2;
+}
+
+enum MriProjection {
+  MRI_PROJECTION_LONG = 0;
+  MRI_PROJECTION_CROSS = 1;
+}
+
+message Mri {
+  string id = 100;
+  MriProjection projection = 200;
+  bool checked = 300;
+  string external_id = 400;
+  string author = 500;
+  int64 device_id = 600;
+  ExamStatus status = 700;
+  optional string description = 800;
+  string create_at = 1000;
+}
+
+message Echographic {
+  string id = 100;
+  optional string contors = 200;
+  optional double left_lobe_length = 300;
+  optional double left_lobe_width = 400;
+  optional double left_lobe_thick = 500;
+  optional double left_lobe_volum = 600;
+  optional double right_lobe_length = 700;
+  optional double right_lobe_width = 800;
+  optional double right_lobe_thick = 900;
+  optional double right_lobe_volum = 1000;
+  optional double gland_volum = 1100;
+  optional double isthmus = 1200;
+  optional string struct = 1300;
+  optional string echogenicity = 1400;
+  optional string regional_lymph = 1500;
+  optional string vascularization = 1600;
+  optional string location = 1700;
+  optional string additional = 1800;
+  optional string conclusion = 1900;
+}
+
+message CreateMriIn {
+  MriProjection projection = 100;
+  string external_id = 200;
+  string author = 300;
+  int64 device_id = 400;
+  optional string description = 500;
+}
+
+message CreateMriOut { string id = 100; }
+
+message GetMriByIdIn { string id = 100; }
+
+message GetMriByIdOut { Mri mri = 100; }
+
+message GetMrisByExternalIdIn {
+  string external_id = 100;
+}
+
+message GetMrisByExternalIdOut {
+  repeated Mri mris = 100;
+}
+
+message GetMrisByAuthorIn {
+  string author = 100;
+}
+
+message GetMrisByAuthorOut {
+  repeated Mri mris = 100;
+}
+
+message GetEchographicByMriIdIn { string mri_id = 100; }
+
+message GetEchographicByMriIdOut { Echographic echographic = 100; }
+
+message UpdateMriIn {
+  string id = 100;
+  optional MriProjection projection = 200;
+  optional bool checked = 300;
+}
+
+message UpdateMriOut { Mri mri = 100; }
+
+message UpdateEchographicIn { Echographic echographic = 100; }
+
+message UpdateEchographicOut { Echographic echographic = 100; }
+
+message DeleteMriIn { string id = 100; }
+
+// KT
+message ClassProbabilities {
+  map<string, double> class_probabilities = 1;
+}
+
+message Kt {
+  string id = 1;
+  bool checked = 2;
+  string author = 3;
+  int64 device_id = 4;
+  ExamStatus status = 5;
+  optional string description = 6;
+  string create_at = 7;
+  optional ClassProbabilities class_probabilities = 8;
+}
+
+message CreateKtIn {
+  string author = 1;
+  int64 device_id = 2;
+  optional string description = 3;
+}
+
+message CreateKtOut {
+  string id = 1;
+}
+
+message GetKtByIdIn {
+  string id = 1;
+}
+
+message GetKtByIdOut {
+  Kt kt = 1;
+}
+
+message GetKtsByAuthorIn {
+  string author = 1;
+}
+
+message GetKtsByAuthorOut {
+  repeated Kt kts = 1;
+}
+
+message UpdateKtIn {
+  string id = 1;
+  optional bool checked = 2;
+  optional ClassProbabilities class_probabilities = 3;
+}
+
+message UpdateKtOut { Kt kt = 1; }
+
+message DeleteKtIn { string id = 1; }
+
+
+// IMAGE
+
+message Image {
+  string id = 100;
+  string mri_id = 200;
+  int64 page = 300;
+};
+
+message GetImagesByMriIdIn { string mri_id = 100; }
+
+message GetImagesByMriIdOut { repeated Image images = 100; }
+
+// NODE
+
+message Node {
+  string id = 100;
+  bool ai = 200;
+  optional NodeValidation validation = 300;
+  string mri_id = 400;
+  double knosp_012 = 500;
+  double knosp_3 = 600;
+  double knosp_4 = 700;
+  optional string description = 800;
+}
+
+message GetNodesByMriIdIn{ string mri_id = 100; };
+
+message GetNodesByMriIdOut{
+  repeated Node nodes = 100;
+};
+
+message UpdateNodeIn {
+  string id = 100;
+  optional NodeValidation validation = 200;
+  optional double knosp_012 = 300;
+  optional double knosp_3 = 400;
+  optional double knosp_4 = 500;
+}
+
+message UpdateNodeOut { Node node = 100; }
+
+// SEGMENT
+
+message Segment {
+  string id = 100;
+  string image_id = 200;
+  string node_id = 300;
+  bytes contor = 400;
+  bool ai = 500;
+  double knosp_012 = 600;
+  double knosp_3 = 700;
+  double knosp_4 = 800;
+}
+
+message CreateSegmentIn {
+  string image_id = 100;
+  string node_id = 200;
+  bytes contor = 300;
+  double knosp_012 = 400;
+  double knosp_3 = 500;
+  double knosp_4 = 600;
+}
+
+message CreateSegmentOut { string id = 100; }
+
+message GetSegmentsByNodeIdIn { string node_id = 100; }
+
+message GetSegmentsByNodeIdOut { repeated Segment segments = 100; }
+
+message UpdateSegmentIn {
+  string id = 100;
+  optional bytes contor = 200;
+  optional double knosp_012 = 300;
+  optional double knosp_3 = 400;
+  optional double knosp_4 = 500;
+}
+
+message UpdateSegmentOut { Segment segment = 100; }
+
+// IMAGE-SEGMENT-NODE
+
+message CreateNodeWithSegmentsIn {
+  message Node {
+    double knosp_012 = 200;
+    double knosp_3 = 300;
+    double knosp_4 = 400;
+    optional string description = 500;
+  }
+  message Segment {
+    string image_id = 100;
+    bytes contor = 200;
+    double knosp_012 = 300;
+    double knosp_3 = 400;
+    double knosp_4 = 500;
+  }
+
+  string mri_id = 100;
+  Node node = 200;
+  repeated Segment segments = 300;
+}
+
+message CreateNodeWithSegmentsOut { 
+  string node_id = 100;
+  repeated string segment_ids = 200;
+}
+
+
+message GetNodesWithSegmentsByImageIdIn { string id = 100; }
+
+message GetNodesWithSegmentsByImageIdOut {
+  repeated Node nodes = 100;
+  repeated Segment segments = 200;
+}
+
+message DeleteNodeIn { string id = 100; }
+
+message DeleteSegmentIn { string id = 100; }

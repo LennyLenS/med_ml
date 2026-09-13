@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "internal/generated/dbus/produce/mrisplitted";
+
+message MriSplitted {
+  string mri_id = 100;
+  repeated string pages_id = 200;
+}
