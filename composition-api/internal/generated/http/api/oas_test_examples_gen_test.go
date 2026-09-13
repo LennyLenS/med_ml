@@ -754,6 +754,30 @@ func TestCytologySegmentsListOKResultsItemDetails_EncodeDecode(t *testing.T) {
 	var typ2 CytologySegmentsListOKResultsItemDetails
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
+func TestCytologySegmentsListOKResultsItemDetailsClassification_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentsListOKResultsItemDetailsClassification
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentsListOKResultsItemDetailsClassification
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestCytologySegmentsListOKResultsItemDetailsClassificationColor_EncodeDecode(t *testing.T) {
+	var typ CytologySegmentsListOKResultsItemDetailsClassificationColor
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 CytologySegmentsListOKResultsItemDetailsClassificationColor
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
 func TestCytologySegmentsListOKResultsItemGroupType_EncodeDecode(t *testing.T) {
 	var typ CytologySegmentsListOKResultsItemGroupType
 	typ.SetFake()

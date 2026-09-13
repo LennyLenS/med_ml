@@ -89,7 +89,7 @@ func TestConsume_ProjectsLatestResultForReadHandlers(t *testing.T) {
 					{X: 30.1, Y: 40.9},
 				}}}}}},
 				Properties: &pb.Properties{Classification: &pb.Classification{
-					Name:  "Скопление папиллярное",
+					Name:  "Клетка ЩЖ с псевдовключением",
 					Color: &pb.Color{R: 1, G: 2, B: 3},
 				}},
 			}},
@@ -106,14 +106,14 @@ func TestConsume_ProjectsLatestResultForReadHandlers(t *testing.T) {
 	require.Equal(t, []int{10}, services.deletedGroupIDs)
 	require.Len(t, services.createdGroups, 1)
 	require.Equal(t, cytologyID, services.createdGroups[0].CytologyID)
-	require.Equal(t, domain.SegTypeCPS, services.createdGroups[0].SegType)
-	require.Equal(t, domain.GroupTypeCL, services.createdGroups[0].GroupType)
+	require.Equal(t, domain.SegTypeNIL, services.createdGroups[0].SegType)
+	require.Equal(t, domain.GroupTypeCE, services.createdGroups[0].GroupType)
 	require.True(t, services.createdGroups[0].IsAI)
-	require.JSONEq(t, `{"classification":{"name":"Скопление папиллярное","color":{"r":1,"g":2,"b":3}}}`, string(services.createdGroups[0].Details))
+	require.JSONEq(t, `{"classification":{"name":"Клетка ЩЖ с псевдовключением","color":{"r":1,"g":2,"b":3}}}`, string(services.createdGroups[0].Details))
 	require.Len(t, services.createdSegments, 1)
 	require.Equal(t, 101, services.createdSegments[0].SegmentationGroupID)
 	require.Equal(t, []domain.SegmentationPoint{{X: 10, Y: 20}, {X: 30, Y: 40}}, services.createdSegments[0].Points)
 	require.Equal(t, analysisID, services.completedID)
-	require.JSONEq(t, `{"features":[{"geometry":{"polygon":{"rings":[{"points":[{"x":10.4,"y":20.6},{"x":30.1,"y":40.9}]}]}},"properties":{"classification":{"name":"Скопление папиллярное","color":{"r":1,"g":2,"b":3}}}}],"conclusion":{"category":5,"shortLabel":"V","commentRu":"Проверено моделью","counts":{"clusterTotal":"1"}}}`, string(services.completedResult))
+	require.JSONEq(t, `{"features":[{"geometry":{"polygon":{"rings":[{"points":[{"x":10.4,"y":20.6},{"x":30.1,"y":40.9}]}]}},"properties":{"classification":{"name":"Клетка ЩЖ с псевдовключением","color":{"r":1,"g":2,"b":3}}}}],"conclusion":{"category":5,"shortLabel":"V","commentRu":"Проверено моделью","counts":{"clusterTotal":"1"}}}`, string(services.completedResult))
 	require.True(t, services.transactionCommit)
 }

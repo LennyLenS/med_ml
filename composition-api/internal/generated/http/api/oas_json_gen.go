@@ -5450,9 +5450,17 @@ func (s *CytologySegmentsListOKResultsItemDetails) Encode(e *jx.Encoder) {
 
 // encodeFields encodes fields.
 func (s *CytologySegmentsListOKResultsItemDetails) encodeFields(e *jx.Encoder) {
+	{
+		if s.Classification.Set {
+			e.FieldStart("classification")
+			s.Classification.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfCytologySegmentsListOKResultsItemDetails = [0]string{}
+var jsonFieldsNameOfCytologySegmentsListOKResultsItemDetails = [1]string{
+	0: "classification",
+}
 
 // Decode decodes CytologySegmentsListOKResultsItemDetails from json.
 func (s *CytologySegmentsListOKResultsItemDetails) Decode(d *jx.Decoder) error {
@@ -5462,9 +5470,20 @@ func (s *CytologySegmentsListOKResultsItemDetails) Decode(d *jx.Decoder) error {
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
+		case "classification":
+			if err := func() error {
+				s.Classification.Reset()
+				if err := s.Classification.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"classification\"")
+			}
 		default:
 			return d.Skip()
 		}
+		return nil
 	}); err != nil {
 		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItemDetails")
 	}
@@ -5481,6 +5500,183 @@ func (s *CytologySegmentsListOKResultsItemDetails) MarshalJSON() ([]byte, error)
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *CytologySegmentsListOKResultsItemDetails) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) encodeFields(e *jx.Encoder) {
+	{
+		if s.Name.Set {
+			e.FieldStart("name")
+			s.Name.Encode(e)
+		}
+	}
+	{
+		if s.Color.Set {
+			e.FieldStart("color")
+			s.Color.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentsListOKResultsItemDetailsClassification = [2]string{
+	0: "name",
+	1: "color",
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemDetailsClassification from json.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemDetailsClassification to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "name":
+			if err := func() error {
+				s.Name.Reset()
+				if err := s.Name.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "color":
+			if err := func() error {
+				s.Color.Reset()
+				if err := s.Color.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"color\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItemDetailsClassification")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) encodeFields(e *jx.Encoder) {
+	{
+		if s.R.Set {
+			e.FieldStart("r")
+			s.R.Encode(e)
+		}
+	}
+	{
+		if s.G.Set {
+			e.FieldStart("g")
+			s.G.Encode(e)
+		}
+	}
+	{
+		if s.B.Set {
+			e.FieldStart("b")
+			s.B.Encode(e)
+		}
+	}
+}
+
+var jsonFieldsNameOfCytologySegmentsListOKResultsItemDetailsClassificationColor = [3]string{
+	0: "r",
+	1: "g",
+	2: "b",
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemDetailsClassificationColor from json.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode CytologySegmentsListOKResultsItemDetailsClassificationColor to nil")
+	}
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "r":
+			if err := func() error {
+				s.R.Reset()
+				if err := s.R.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"r\"")
+			}
+		case "g":
+			if err := func() error {
+				s.G.Reset()
+				if err := s.G.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"g\"")
+			}
+		case "b":
+			if err := func() error {
+				s.B.Reset()
+				if err := s.B.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"b\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode CytologySegmentsListOKResultsItemDetailsClassificationColor")
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -13662,21 +13858,20 @@ func (s *OptCytologySegmentGroupCreateCreateCreatedData) UnmarshalJSON(data []by
 	return s.Decode(d)
 }
 
-// Encode encodes *CytologySegmentsListOKResultsItemDetails as json.
-func (o OptCytologySegmentsListOKResultsItemDetails) Encode(e *jx.Encoder) {
+// Encode encodes CytologySegmentsListOKResultsItemDetailsClassification as json.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) Encode(e *jx.Encoder) {
 	if !o.Set {
 		return
 	}
 	o.Value.Encode(e)
 }
 
-// Decode decodes *CytologySegmentsListOKResultsItemDetails from json.
-func (o *OptCytologySegmentsListOKResultsItemDetails) Decode(d *jx.Decoder) error {
+// Decode decodes CytologySegmentsListOKResultsItemDetailsClassification from json.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassification) Decode(d *jx.Decoder) error {
 	if o == nil {
-		return errors.New("invalid: unable to decode OptCytologySegmentsListOKResultsItemDetails to nil")
+		return errors.New("invalid: unable to decode OptCytologySegmentsListOKResultsItemDetailsClassification to nil")
 	}
 	o.Set = true
-	o.Value = new(CytologySegmentsListOKResultsItemDetails)
 	if err := o.Value.Decode(d); err != nil {
 		return err
 	}
@@ -13684,14 +13879,47 @@ func (o *OptCytologySegmentsListOKResultsItemDetails) Decode(d *jx.Decoder) erro
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s OptCytologySegmentsListOKResultsItemDetails) MarshalJSON() ([]byte, error) {
+func (s OptCytologySegmentsListOKResultsItemDetailsClassification) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptCytologySegmentsListOKResultsItemDetails) UnmarshalJSON(data []byte) error {
+func (s *OptCytologySegmentsListOKResultsItemDetailsClassification) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologySegmentsListOKResultsItemDetailsClassificationColor as json.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemDetailsClassificationColor from json.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptCytologySegmentsListOKResultsItemDetailsClassificationColor to nil")
+	}
+	o.Set = true
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptCytologySegmentsListOKResultsItemDetailsClassificationColor) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -14196,6 +14424,55 @@ func (s OptMriIDPatchReqProjection) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *OptMriIDPatchReqProjection) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes CytologySegmentsListOKResultsItemDetails as json.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) Encode(e *jx.Encoder) {
+	if !o.Set {
+		return
+	}
+	if o.Null {
+		e.Null()
+		return
+	}
+	o.Value.Encode(e)
+}
+
+// Decode decodes CytologySegmentsListOKResultsItemDetails from json.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) Decode(d *jx.Decoder) error {
+	if o == nil {
+		return errors.New("invalid: unable to decode OptNilCytologySegmentsListOKResultsItemDetails to nil")
+	}
+	if d.Next() == jx.Null {
+		if err := d.Null(); err != nil {
+			return err
+		}
+
+		var v CytologySegmentsListOKResultsItemDetails
+		o.Value = v
+		o.Set = true
+		o.Null = true
+		return nil
+	}
+	o.Set = true
+	o.Null = false
+	if err := o.Value.Decode(d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s OptNilCytologySegmentsListOKResultsItemDetails) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *OptNilCytologySegmentsListOKResultsItemDetails) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

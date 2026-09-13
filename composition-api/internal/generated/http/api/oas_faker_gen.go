@@ -952,6 +952,44 @@ func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) SetFake() {
 
 // SetFake set fake values.
 func (s *CytologySegmentsListOKResultsItemDetails) SetFake() {
+	{
+		{
+			s.Classification.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) SetFake() {
+	{
+		{
+			s.Name.SetFake()
+		}
+	}
+	{
+		{
+			s.Color.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetFake() {
+	{
+		{
+			s.R.SetFake()
+		}
+	}
+	{
+		{
+			s.G.SetFake()
+		}
+	}
+	{
+		{
+			s.B.SetFake()
+		}
+	}
 }
 
 // SetFake set fake values.
@@ -2572,10 +2610,19 @@ func (s *OptCytologySegmentGroupCreateCreateCreatedData) SetFake() {
 }
 
 // SetFake set fake values.
-func (s *OptCytologySegmentsListOKResultsItemDetails) SetFake() {
-	var elem *CytologySegmentsListOKResultsItemDetails
-	{ // Keep pointer nil to prevent infinite recursion.
-		elem = nil
+func (s *OptCytologySegmentsListOKResultsItemDetailsClassification) SetFake() {
+	var elem CytologySegmentsListOKResultsItemDetailsClassification
+	{
+		elem.SetFake()
+	}
+	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) SetFake() {
+	var elem CytologySegmentsListOKResultsItemDetailsClassificationColor
+	{
+		elem.SetFake()
 	}
 	s.SetTo(elem)
 }
@@ -2713,6 +2760,12 @@ func (s *OptMriIDPatchReqProjection) SetFake() {
 		elem.SetFake()
 	}
 	s.SetTo(elem)
+}
+
+// SetFake set fake values.
+func (s *OptNilCytologySegmentsListOKResultsItemDetails) SetFake() {
+	s.Null = true
+	s.Set = true
 }
 
 // SetFake set fake values.

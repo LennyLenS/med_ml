@@ -19,44 +19,6 @@ import (
 	"cytology/internal/services/segmentation_group"
 )
 
-var classNameToSegType = map[string]domain.SegType{
-	"Нормальная клетка":            domain.SegTypeNIL,
-	"Клетка Гюртле":                domain.SegTypeNIR,
-	"Макрофаг":                     domain.SegTypeNIM,
-	"Скопление упорядоченное":      domain.SegTypeCNO,
-	"Скопление неупорядоченное":    domain.SegTypeCGE,
-	"Скопление микрофолликулярное": domain.SegTypeC2N,
-	"Скопление папиллярное":        domain.SegTypeCPS,
-	"Скопление фолликулярное":      domain.SegTypeCFC,
-	"Скопление лимфоидное":         domain.SegTypeCLY,
-	"Метастаз отсутствует":         domain.SegTypeSOS,
-	"Метастаз сомнительный":        domain.SegTypeSDS,
-	"Метастаз вероятный":           domain.SegTypeSMS,
-	"Метастаз определенный":        domain.SegTypeSTS,
-	"Метастаз папиллярный":         domain.SegTypeSPS,
-	"Метастаз отсутствует (нет)":   domain.SegTypeSNM,
-	"Метастаз тиреоидный":          domain.SegTypeSTM,
-}
-
-var segTypeToGroupType = map[domain.SegType]domain.GroupType{
-	domain.SegTypeNIL: domain.GroupTypeCE,
-	domain.SegTypeNIR: domain.GroupTypeCE,
-	domain.SegTypeNIM: domain.GroupTypeCE,
-	domain.SegTypeCNO: domain.GroupTypeCL,
-	domain.SegTypeCGE: domain.GroupTypeCL,
-	domain.SegTypeC2N: domain.GroupTypeCL,
-	domain.SegTypeCPS: domain.GroupTypeCL,
-	domain.SegTypeCFC: domain.GroupTypeCL,
-	domain.SegTypeCLY: domain.GroupTypeCL,
-	domain.SegTypeSOS: domain.GroupTypeME,
-	domain.SegTypeSDS: domain.GroupTypeME,
-	domain.SegTypeSMS: domain.GroupTypeME,
-	domain.SegTypeSTS: domain.GroupTypeME,
-	domain.SegTypeSPS: domain.GroupTypeME,
-	domain.SegTypeSNM: domain.GroupTypeME,
-	domain.SegTypeSTM: domain.GroupTypeME,
-}
-
 type subscriber struct {
 	services analysisServices
 }
@@ -173,10 +135,6 @@ func (h *subscriber) createFeature(ctx context.Context, cytologyID uuid.UUID, fe
 		return nil
 	}
 	classification := feature.GetProperties().GetClassification()
-	segType, found := classNameToSegType[classification.GetName()]
-	if !found {
-		return nil
-	}
 
 	details, err := json.Marshal(map[string]any{"classification": classification})
 	if err != nil {
@@ -184,8 +142,8 @@ func (h *subscriber) createFeature(ctx context.Context, cytologyID uuid.UUID, fe
 	}
 	groupID, err := h.services.CreateSegmentationGroup(ctx, segmentation_group.CreateSegmentationGroupArg{
 		CytologyID: cytologyID,
-		SegType:    segType,
-		GroupType:  segTypeToGroupType[segType],
+		SegType:    domain.SegTypeNIL,
+		GroupType:  domain.GroupTypeCE,
 		IsAI:       true,
 		Details:    details,
 	})

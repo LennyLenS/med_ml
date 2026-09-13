@@ -3777,6 +3777,21 @@ paths:
                         details:
                           type: object
                           nullable: true
+                          properties:
+                            classification:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                color:
+                                  type: object
+                                  properties:
+                                    r:
+                                      type: integer
+                                    g:
+                                      type: integer
+                                    b:
+                                      type: integer
                         is_ai:
                           type: boolean
         '404':

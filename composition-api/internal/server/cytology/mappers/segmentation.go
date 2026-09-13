@@ -78,12 +78,9 @@ func (SegmentationGroup) ToSegmentationDataList(groups []domain.SegmentationGrou
 
 		// Маппим details из группы, если они есть
 		if group.Details != nil {
-			// Пытаемся распарсить JSON из строки
-			var detailsObj map[string]interface{}
-			if err := json.Unmarshal([]byte(*group.Details), &detailsObj); err == nil {
-				item.Details = api.NewOptCytologySegmentsListOKResultsItemDetails(&api.CytologySegmentsListOKResultsItemDetails{})
-			} else {
-				item.Details = api.NewOptCytologySegmentsListOKResultsItemDetails(&api.CytologySegmentsListOKResultsItemDetails{})
+			var details api.CytologySegmentsListOKResultsItemDetails
+			if err := json.Unmarshal([]byte(*group.Details), &details); err == nil {
+				item.Details = api.NewOptNilCytologySegmentsListOKResultsItemDetails(details)
 			}
 		}
 

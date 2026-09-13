@@ -2438,12 +2438,12 @@ func (s *CytologySegmentsListOK) SetResults(val []CytologySegmentsListOKResultsI
 func (*CytologySegmentsListOK) cytologySegmentsListRes() {}
 
 type CytologySegmentsListOKResultsItem struct {
-	ID        OptInt                                        `json:"id"`
-	Data      []CytologySegmentsListOKResultsItemDataItem   `json:"data"`
-	GroupType OptCytologySegmentsListOKResultsItemGroupType `json:"group_type"`
-	SegType   OptCytologySegmentsListOKResultsItemSegType   `json:"seg_type"`
-	Details   OptCytologySegmentsListOKResultsItemDetails   `json:"details"`
-	IsAi      OptBool                                       `json:"is_ai"`
+	ID        OptInt                                         `json:"id"`
+	Data      []CytologySegmentsListOKResultsItemDataItem    `json:"data"`
+	GroupType OptCytologySegmentsListOKResultsItemGroupType  `json:"group_type"`
+	SegType   OptCytologySegmentsListOKResultsItemSegType    `json:"seg_type"`
+	Details   OptNilCytologySegmentsListOKResultsItemDetails `json:"details"`
+	IsAi      OptBool                                        `json:"is_ai"`
 }
 
 // GetID returns the value of ID.
@@ -2467,7 +2467,7 @@ func (s *CytologySegmentsListOKResultsItem) GetSegType() OptCytologySegmentsList
 }
 
 // GetDetails returns the value of Details.
-func (s *CytologySegmentsListOKResultsItem) GetDetails() OptCytologySegmentsListOKResultsItemDetails {
+func (s *CytologySegmentsListOKResultsItem) GetDetails() OptNilCytologySegmentsListOKResultsItemDetails {
 	return s.Details
 }
 
@@ -2497,7 +2497,7 @@ func (s *CytologySegmentsListOKResultsItem) SetSegType(val OptCytologySegmentsLi
 }
 
 // SetDetails sets the value of Details.
-func (s *CytologySegmentsListOKResultsItem) SetDetails(val OptCytologySegmentsListOKResultsItemDetails) {
+func (s *CytologySegmentsListOKResultsItem) SetDetails(val OptNilCytologySegmentsListOKResultsItemDetails) {
 	s.Details = val
 }
 
@@ -2589,7 +2589,80 @@ func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) SetY(val int) {
 	s.Y = val
 }
 
-type CytologySegmentsListOKResultsItemDetails struct{}
+type CytologySegmentsListOKResultsItemDetails struct {
+	Classification OptCytologySegmentsListOKResultsItemDetailsClassification `json:"classification"`
+}
+
+// GetClassification returns the value of Classification.
+func (s *CytologySegmentsListOKResultsItemDetails) GetClassification() OptCytologySegmentsListOKResultsItemDetailsClassification {
+	return s.Classification
+}
+
+// SetClassification sets the value of Classification.
+func (s *CytologySegmentsListOKResultsItemDetails) SetClassification(val OptCytologySegmentsListOKResultsItemDetailsClassification) {
+	s.Classification = val
+}
+
+type CytologySegmentsListOKResultsItemDetailsClassification struct {
+	Name  OptString                                                      `json:"name"`
+	Color OptCytologySegmentsListOKResultsItemDetailsClassificationColor `json:"color"`
+}
+
+// GetName returns the value of Name.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) GetName() OptString {
+	return s.Name
+}
+
+// GetColor returns the value of Color.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) GetColor() OptCytologySegmentsListOKResultsItemDetailsClassificationColor {
+	return s.Color
+}
+
+// SetName sets the value of Name.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetColor sets the value of Color.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) SetColor(val OptCytologySegmentsListOKResultsItemDetailsClassificationColor) {
+	s.Color = val
+}
+
+type CytologySegmentsListOKResultsItemDetailsClassificationColor struct {
+	R OptInt `json:"r"`
+	G OptInt `json:"g"`
+	B OptInt `json:"b"`
+}
+
+// GetR returns the value of R.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) GetR() OptInt {
+	return s.R
+}
+
+// GetG returns the value of G.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) GetG() OptInt {
+	return s.G
+}
+
+// GetB returns the value of B.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) GetB() OptInt {
+	return s.B
+}
+
+// SetR sets the value of R.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetR(val OptInt) {
+	s.R = val
+}
+
+// SetG sets the value of G.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetG(val OptInt) {
+	s.G = val
+}
+
+// SetB sets the value of B.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetB(val OptInt) {
+	s.B = val
+}
 
 type CytologySegmentsListOKResultsItemGroupType string
 
@@ -7382,38 +7455,38 @@ func (o OptCytologySegmentsListGroupType) Or(d CytologySegmentsListGroupType) Cy
 	return d
 }
 
-// NewOptCytologySegmentsListOKResultsItemDetails returns new OptCytologySegmentsListOKResultsItemDetails with value set to v.
-func NewOptCytologySegmentsListOKResultsItemDetails(v *CytologySegmentsListOKResultsItemDetails) OptCytologySegmentsListOKResultsItemDetails {
-	return OptCytologySegmentsListOKResultsItemDetails{
+// NewOptCytologySegmentsListOKResultsItemDetailsClassification returns new OptCytologySegmentsListOKResultsItemDetailsClassification with value set to v.
+func NewOptCytologySegmentsListOKResultsItemDetailsClassification(v CytologySegmentsListOKResultsItemDetailsClassification) OptCytologySegmentsListOKResultsItemDetailsClassification {
+	return OptCytologySegmentsListOKResultsItemDetailsClassification{
 		Value: v,
 		Set:   true,
 	}
 }
 
-// OptCytologySegmentsListOKResultsItemDetails is optional *CytologySegmentsListOKResultsItemDetails.
-type OptCytologySegmentsListOKResultsItemDetails struct {
-	Value *CytologySegmentsListOKResultsItemDetails
+// OptCytologySegmentsListOKResultsItemDetailsClassification is optional CytologySegmentsListOKResultsItemDetailsClassification.
+type OptCytologySegmentsListOKResultsItemDetailsClassification struct {
+	Value CytologySegmentsListOKResultsItemDetailsClassification
 	Set   bool
 }
 
-// IsSet returns true if OptCytologySegmentsListOKResultsItemDetails was set.
-func (o OptCytologySegmentsListOKResultsItemDetails) IsSet() bool { return o.Set }
+// IsSet returns true if OptCytologySegmentsListOKResultsItemDetailsClassification was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) IsSet() bool { return o.Set }
 
 // Reset unsets value.
-func (o *OptCytologySegmentsListOKResultsItemDetails) Reset() {
-	var v *CytologySegmentsListOKResultsItemDetails
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassification) Reset() {
+	var v CytologySegmentsListOKResultsItemDetailsClassification
 	o.Value = v
 	o.Set = false
 }
 
 // SetTo sets value to v.
-func (o *OptCytologySegmentsListOKResultsItemDetails) SetTo(v *CytologySegmentsListOKResultsItemDetails) {
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassification) SetTo(v CytologySegmentsListOKResultsItemDetailsClassification) {
 	o.Set = true
 	o.Value = v
 }
 
 // Get returns value and boolean that denotes whether value was set.
-func (o OptCytologySegmentsListOKResultsItemDetails) Get() (v *CytologySegmentsListOKResultsItemDetails, ok bool) {
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) Get() (v CytologySegmentsListOKResultsItemDetailsClassification, ok bool) {
 	if !o.Set {
 		return v, false
 	}
@@ -7421,7 +7494,53 @@ func (o OptCytologySegmentsListOKResultsItemDetails) Get() (v *CytologySegmentsL
 }
 
 // Or returns value if set, or given parameter if does not.
-func (o OptCytologySegmentsListOKResultsItemDetails) Or(d *CytologySegmentsListOKResultsItemDetails) *CytologySegmentsListOKResultsItemDetails {
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) Or(d CytologySegmentsListOKResultsItemDetailsClassification) CytologySegmentsListOKResultsItemDetailsClassification {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptCytologySegmentsListOKResultsItemDetailsClassificationColor returns new OptCytologySegmentsListOKResultsItemDetailsClassificationColor with value set to v.
+func NewOptCytologySegmentsListOKResultsItemDetailsClassificationColor(v CytologySegmentsListOKResultsItemDetailsClassificationColor) OptCytologySegmentsListOKResultsItemDetailsClassificationColor {
+	return OptCytologySegmentsListOKResultsItemDetailsClassificationColor{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCytologySegmentsListOKResultsItemDetailsClassificationColor is optional CytologySegmentsListOKResultsItemDetailsClassificationColor.
+type OptCytologySegmentsListOKResultsItemDetailsClassificationColor struct {
+	Value CytologySegmentsListOKResultsItemDetailsClassificationColor
+	Set   bool
+}
+
+// IsSet returns true if OptCytologySegmentsListOKResultsItemDetailsClassificationColor was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Reset() {
+	var v CytologySegmentsListOKResultsItemDetailsClassificationColor
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) SetTo(v CytologySegmentsListOKResultsItemDetailsClassificationColor) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Get() (v CytologySegmentsListOKResultsItemDetailsClassificationColor, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Or(d CytologySegmentsListOKResultsItemDetailsClassificationColor) CytologySegmentsListOKResultsItemDetailsClassificationColor {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -8204,6 +8323,69 @@ func (o OptMultipartFile) Get() (v ht.MultipartFile, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptMultipartFile) Or(d ht.MultipartFile) ht.MultipartFile {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilCytologySegmentsListOKResultsItemDetails returns new OptNilCytologySegmentsListOKResultsItemDetails with value set to v.
+func NewOptNilCytologySegmentsListOKResultsItemDetails(v CytologySegmentsListOKResultsItemDetails) OptNilCytologySegmentsListOKResultsItemDetails {
+	return OptNilCytologySegmentsListOKResultsItemDetails{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilCytologySegmentsListOKResultsItemDetails is optional nullable CytologySegmentsListOKResultsItemDetails.
+type OptNilCytologySegmentsListOKResultsItemDetails struct {
+	Value CytologySegmentsListOKResultsItemDetails
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilCytologySegmentsListOKResultsItemDetails was set.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) Reset() {
+	var v CytologySegmentsListOKResultsItemDetails
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) SetTo(v CytologySegmentsListOKResultsItemDetails) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v CytologySegmentsListOKResultsItemDetails
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) Get() (v CytologySegmentsListOKResultsItemDetails, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) Or(d CytologySegmentsListOKResultsItemDetails) CytologySegmentsListOKResultsItemDetails {
 	if v, ok := o.Get(); ok {
 		return v
 	}
