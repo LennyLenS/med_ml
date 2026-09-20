@@ -5,12 +5,17 @@ package med_ml.cytology.analysis_succeeded.v1;
 option go_package = "internal/generated/dbus/consume/cytologyanalysissucceeded";
 
 message AnalysisSucceeded {
+  // UUID из AnalysisRequested.
   string analysis_id = 100;
+
   Result result = 200;
 }
 
 message Result {
+  // Найденные клетки и скопления.
   repeated Feature features = 100;
+
+  // Автоматическая оценка по правилам Bethesda/LNP.
   Conclusion conclusion = 200;
 }
 
@@ -32,6 +37,8 @@ message Point {
 }
 
 message Polygon {
+  // Первое кольцо — внешний контур.
+  // Последующие кольца, если появятся, — внутренние контуры.
   repeated Ring rings = 100;
 }
 
@@ -39,8 +46,31 @@ message Ring {
   repeated Point points = 100;
 }
 
+enum SegType {
+  SEG_TYPE_UNSPECIFIED = 0;
+  NIL = 1;
+  CNO = 2;
+  CGE = 3;
+  C2N = 4;
+  CPS = 5;
+  CFC = 6;
+  CLY = 7;
+  PFC = 8;
+  NIR = 9;
+  SOS = 10;
+  SDS = 11;
+  SMS = 12;
+  STS = 13;
+  SPS = 14;
+  SCL = 15;
+  NIM = 16;
+}
+
 message Properties {
   Classification classification = 100;
+
+  // Код типа сегмента.
+  SegType seg_type = 200;
 }
 
 message Classification {
@@ -72,6 +102,8 @@ message Counts {
   repeated ClassCount by_class = 300;
   int64 unclassified_clusters = 400;
   repeated ClassCount unknown_labels = 500;
+
+  // Присутствуют только в результате исследования LNP.
   optional int64 parafollicular_cells = 600;
   optional int64 oncocytes = 700;
 }

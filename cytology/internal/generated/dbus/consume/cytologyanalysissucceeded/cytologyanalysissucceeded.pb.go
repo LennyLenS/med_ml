@@ -21,10 +21,102 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type SegType int32
+
+const (
+	SegType_SEG_TYPE_UNSPECIFIED SegType = 0
+	SegType_NIL                  SegType = 1
+	SegType_CNO                  SegType = 2
+	SegType_CGE                  SegType = 3
+	SegType_C2N                  SegType = 4
+	SegType_CPS                  SegType = 5
+	SegType_CFC                  SegType = 6
+	SegType_CLY                  SegType = 7
+	SegType_PFC                  SegType = 8
+	SegType_NIR                  SegType = 9
+	SegType_SOS                  SegType = 10
+	SegType_SDS                  SegType = 11
+	SegType_SMS                  SegType = 12
+	SegType_STS                  SegType = 13
+	SegType_SPS                  SegType = 14
+	SegType_SCL                  SegType = 15
+	SegType_NIM                  SegType = 16
+)
+
+// Enum value maps for SegType.
+var (
+	SegType_name = map[int32]string{
+		0:  "SEG_TYPE_UNSPECIFIED",
+		1:  "NIL",
+		2:  "CNO",
+		3:  "CGE",
+		4:  "C2N",
+		5:  "CPS",
+		6:  "CFC",
+		7:  "CLY",
+		8:  "PFC",
+		9:  "NIR",
+		10: "SOS",
+		11: "SDS",
+		12: "SMS",
+		13: "STS",
+		14: "SPS",
+		15: "SCL",
+		16: "NIM",
+	}
+	SegType_value = map[string]int32{
+		"SEG_TYPE_UNSPECIFIED": 0,
+		"NIL":                  1,
+		"CNO":                  2,
+		"CGE":                  3,
+		"C2N":                  4,
+		"CPS":                  5,
+		"CFC":                  6,
+		"CLY":                  7,
+		"PFC":                  8,
+		"NIR":                  9,
+		"SOS":                  10,
+		"SDS":                  11,
+		"SMS":                  12,
+		"STS":                  13,
+		"SPS":                  14,
+		"SCL":                  15,
+		"NIM":                  16,
+	}
+)
+
+func (x SegType) Enum() *SegType {
+	p := new(SegType)
+	*p = x
+	return p
+}
+
+func (x SegType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SegType) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_dbus_consume_cytologyanalysissucceeded_proto_enumTypes[0].Descriptor()
+}
+
+func (SegType) Type() protoreflect.EnumType {
+	return &file_proto_dbus_consume_cytologyanalysissucceeded_proto_enumTypes[0]
+}
+
+func (x SegType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SegType.Descriptor instead.
+func (SegType) EnumDescriptor() ([]byte, []int) {
+	return file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDescGZIP(), []int{0}
+}
+
 type AnalysisSucceeded struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	AnalysisId    string                 `protobuf:"bytes,100,opt,name=analysis_id,json=analysisId,proto3" json:"analysis_id,omitempty"`
-	Result        *Result                `protobuf:"bytes,200,opt,name=result,proto3" json:"result,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UUID из AnalysisRequested.
+	AnalysisId    string  `protobuf:"bytes,100,opt,name=analysis_id,json=analysisId,proto3" json:"analysis_id,omitempty"`
+	Result        *Result `protobuf:"bytes,200,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -74,9 +166,11 @@ func (x *AnalysisSucceeded) GetResult() *Result {
 }
 
 type Result struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Features      []*Feature             `protobuf:"bytes,100,rep,name=features,proto3" json:"features,omitempty"`
-	Conclusion    *Conclusion            `protobuf:"bytes,200,opt,name=conclusion,proto3" json:"conclusion,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Найденные клетки и скопления.
+	Features []*Feature `protobuf:"bytes,100,rep,name=features,proto3" json:"features,omitempty"`
+	// Автоматическая оценка по правилам Bethesda/LNP.
+	Conclusion    *Conclusion `protobuf:"bytes,200,opt,name=conclusion,proto3" json:"conclusion,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -312,8 +406,10 @@ func (x *Point) GetY() float64 {
 }
 
 type Polygon struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Rings         []*Ring                `protobuf:"bytes,100,rep,name=rings,proto3" json:"rings,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Первое кольцо — внешний контур.
+	// Последующие кольца, если появятся, — внутренние контуры.
+	Rings         []*Ring `protobuf:"bytes,100,rep,name=rings,proto3" json:"rings,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -402,8 +498,10 @@ func (x *Ring) GetPoints() []*Point {
 type Properties struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Classification *Classification        `protobuf:"bytes,100,opt,name=classification,proto3" json:"classification,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Код типа сегмента.
+	SegType       SegType `protobuf:"varint,200,opt,name=seg_type,json=segType,proto3,enum=med_ml.cytology.analysis_succeeded.v1.SegType" json:"seg_type,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Properties) Reset() {
@@ -441,6 +539,13 @@ func (x *Properties) GetClassification() *Classification {
 		return x.Classification
 	}
 	return nil
+}
+
+func (x *Properties) GetSegType() SegType {
+	if x != nil {
+		return x.SegType
+	}
+	return SegType_SEG_TYPE_UNSPECIFIED
 }
 
 type Classification struct {
@@ -670,10 +775,11 @@ type Counts struct {
 	ByClass                []*ClassCount          `protobuf:"bytes,300,rep,name=by_class,json=byClass,proto3" json:"by_class,omitempty"`
 	UnclassifiedClusters   int64                  `protobuf:"varint,400,opt,name=unclassified_clusters,json=unclassifiedClusters,proto3" json:"unclassified_clusters,omitempty"`
 	UnknownLabels          []*ClassCount          `protobuf:"bytes,500,rep,name=unknown_labels,json=unknownLabels,proto3" json:"unknown_labels,omitempty"`
-	ParafollicularCells    *int64                 `protobuf:"varint,600,opt,name=parafollicular_cells,json=parafollicularCells,proto3,oneof" json:"parafollicular_cells,omitempty"`
-	Oncocytes              *int64                 `protobuf:"varint,700,opt,name=oncocytes,proto3,oneof" json:"oncocytes,omitempty"`
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
+	// Присутствуют только в результате исследования LNP.
+	ParafollicularCells *int64 `protobuf:"varint,600,opt,name=parafollicular_cells,json=parafollicularCells,proto3,oneof" json:"parafollicular_cells,omitempty"`
+	Oncocytes           *int64 `protobuf:"varint,700,opt,name=oncocytes,proto3,oneof" json:"oncocytes,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *Counts) Reset() {
@@ -836,10 +942,11 @@ const file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDesc = "" +
 	"\aPolygon\x12A\n" +
 	"\x05rings\x18d \x03(\v2+.med_ml.cytology.analysis_succeeded.v1.RingR\x05rings\"L\n" +
 	"\x04Ring\x12D\n" +
-	"\x06points\x18d \x03(\v2,.med_ml.cytology.analysis_succeeded.v1.PointR\x06points\"k\n" +
+	"\x06points\x18d \x03(\v2,.med_ml.cytology.analysis_succeeded.v1.PointR\x06points\"\xb7\x01\n" +
 	"\n" +
 	"Properties\x12]\n" +
-	"\x0eclassification\x18d \x01(\v25.med_ml.cytology.analysis_succeeded.v1.ClassificationR\x0eclassification\"i\n" +
+	"\x0eclassification\x18d \x01(\v25.med_ml.cytology.analysis_succeeded.v1.ClassificationR\x0eclassification\x12J\n" +
+	"\bseg_type\x18\xc8\x01 \x01(\x0e2..med_ml.cytology.analysis_succeeded.v1.SegTypeR\asegType\"i\n" +
 	"\x0eClassification\x12\x12\n" +
 	"\x04name\x18d \x01(\tR\x04name\x12C\n" +
 	"\x05color\x18\xc8\x01 \x01(\v2,.med_ml.cytology.analysis_succeeded.v1.ColorR\x05color\"3\n" +
@@ -877,7 +984,26 @@ const file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDesc = "" +
 	"\n" +
 	"ClassCount\x12\x12\n" +
 	"\x04name\x18d \x01(\tR\x04name\x12\x15\n" +
-	"\x05count\x18\xc8\x01 \x01(\x03R\x05countB;Z9internal/generated/dbus/consume/cytologyanalysissucceededb\x06proto3"
+	"\x05count\x18\xc8\x01 \x01(\x03R\x05count*\xb3\x01\n" +
+	"\aSegType\x12\x18\n" +
+	"\x14SEG_TYPE_UNSPECIFIED\x10\x00\x12\a\n" +
+	"\x03NIL\x10\x01\x12\a\n" +
+	"\x03CNO\x10\x02\x12\a\n" +
+	"\x03CGE\x10\x03\x12\a\n" +
+	"\x03C2N\x10\x04\x12\a\n" +
+	"\x03CPS\x10\x05\x12\a\n" +
+	"\x03CFC\x10\x06\x12\a\n" +
+	"\x03CLY\x10\a\x12\a\n" +
+	"\x03PFC\x10\b\x12\a\n" +
+	"\x03NIR\x10\t\x12\a\n" +
+	"\x03SOS\x10\n" +
+	"\x12\a\n" +
+	"\x03SDS\x10\v\x12\a\n" +
+	"\x03SMS\x10\f\x12\a\n" +
+	"\x03STS\x10\r\x12\a\n" +
+	"\x03SPS\x10\x0e\x12\a\n" +
+	"\x03SCL\x10\x0f\x12\a\n" +
+	"\x03NIM\x10\x10B;Z9internal/generated/dbus/consume/cytologyanalysissucceededb\x06proto3"
 
 var (
 	file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDescOnce sync.Once
@@ -891,42 +1017,45 @@ func file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDescGZIP() []byt
 	return file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDescData
 }
 
+var file_proto_dbus_consume_cytologyanalysissucceeded_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_proto_dbus_consume_cytologyanalysissucceeded_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_proto_dbus_consume_cytologyanalysissucceeded_proto_goTypes = []any{
-	(*AnalysisSucceeded)(nil), // 0: med_ml.cytology.analysis_succeeded.v1.AnalysisSucceeded
-	(*Result)(nil),            // 1: med_ml.cytology.analysis_succeeded.v1.Result
-	(*Feature)(nil),           // 2: med_ml.cytology.analysis_succeeded.v1.Feature
-	(*Geometry)(nil),          // 3: med_ml.cytology.analysis_succeeded.v1.Geometry
-	(*Point)(nil),             // 4: med_ml.cytology.analysis_succeeded.v1.Point
-	(*Polygon)(nil),           // 5: med_ml.cytology.analysis_succeeded.v1.Polygon
-	(*Ring)(nil),              // 6: med_ml.cytology.analysis_succeeded.v1.Ring
-	(*Properties)(nil),        // 7: med_ml.cytology.analysis_succeeded.v1.Properties
-	(*Classification)(nil),    // 8: med_ml.cytology.analysis_succeeded.v1.Classification
-	(*Color)(nil),             // 9: med_ml.cytology.analysis_succeeded.v1.Color
-	(*Conclusion)(nil),        // 10: med_ml.cytology.analysis_succeeded.v1.Conclusion
-	(*Counts)(nil),            // 11: med_ml.cytology.analysis_succeeded.v1.Counts
-	(*ClassCount)(nil),        // 12: med_ml.cytology.analysis_succeeded.v1.ClassCount
+	(SegType)(0),              // 0: med_ml.cytology.analysis_succeeded.v1.SegType
+	(*AnalysisSucceeded)(nil), // 1: med_ml.cytology.analysis_succeeded.v1.AnalysisSucceeded
+	(*Result)(nil),            // 2: med_ml.cytology.analysis_succeeded.v1.Result
+	(*Feature)(nil),           // 3: med_ml.cytology.analysis_succeeded.v1.Feature
+	(*Geometry)(nil),          // 4: med_ml.cytology.analysis_succeeded.v1.Geometry
+	(*Point)(nil),             // 5: med_ml.cytology.analysis_succeeded.v1.Point
+	(*Polygon)(nil),           // 6: med_ml.cytology.analysis_succeeded.v1.Polygon
+	(*Ring)(nil),              // 7: med_ml.cytology.analysis_succeeded.v1.Ring
+	(*Properties)(nil),        // 8: med_ml.cytology.analysis_succeeded.v1.Properties
+	(*Classification)(nil),    // 9: med_ml.cytology.analysis_succeeded.v1.Classification
+	(*Color)(nil),             // 10: med_ml.cytology.analysis_succeeded.v1.Color
+	(*Conclusion)(nil),        // 11: med_ml.cytology.analysis_succeeded.v1.Conclusion
+	(*Counts)(nil),            // 12: med_ml.cytology.analysis_succeeded.v1.Counts
+	(*ClassCount)(nil),        // 13: med_ml.cytology.analysis_succeeded.v1.ClassCount
 }
 var file_proto_dbus_consume_cytologyanalysissucceeded_proto_depIdxs = []int32{
-	1,  // 0: med_ml.cytology.analysis_succeeded.v1.AnalysisSucceeded.result:type_name -> med_ml.cytology.analysis_succeeded.v1.Result
-	2,  // 1: med_ml.cytology.analysis_succeeded.v1.Result.features:type_name -> med_ml.cytology.analysis_succeeded.v1.Feature
-	10, // 2: med_ml.cytology.analysis_succeeded.v1.Result.conclusion:type_name -> med_ml.cytology.analysis_succeeded.v1.Conclusion
-	3,  // 3: med_ml.cytology.analysis_succeeded.v1.Feature.geometry:type_name -> med_ml.cytology.analysis_succeeded.v1.Geometry
-	7,  // 4: med_ml.cytology.analysis_succeeded.v1.Feature.properties:type_name -> med_ml.cytology.analysis_succeeded.v1.Properties
-	4,  // 5: med_ml.cytology.analysis_succeeded.v1.Geometry.point:type_name -> med_ml.cytology.analysis_succeeded.v1.Point
-	5,  // 6: med_ml.cytology.analysis_succeeded.v1.Geometry.polygon:type_name -> med_ml.cytology.analysis_succeeded.v1.Polygon
-	6,  // 7: med_ml.cytology.analysis_succeeded.v1.Polygon.rings:type_name -> med_ml.cytology.analysis_succeeded.v1.Ring
-	4,  // 8: med_ml.cytology.analysis_succeeded.v1.Ring.points:type_name -> med_ml.cytology.analysis_succeeded.v1.Point
-	8,  // 9: med_ml.cytology.analysis_succeeded.v1.Properties.classification:type_name -> med_ml.cytology.analysis_succeeded.v1.Classification
-	9,  // 10: med_ml.cytology.analysis_succeeded.v1.Classification.color:type_name -> med_ml.cytology.analysis_succeeded.v1.Color
-	11, // 11: med_ml.cytology.analysis_succeeded.v1.Conclusion.counts:type_name -> med_ml.cytology.analysis_succeeded.v1.Counts
-	12, // 12: med_ml.cytology.analysis_succeeded.v1.Counts.by_class:type_name -> med_ml.cytology.analysis_succeeded.v1.ClassCount
-	12, // 13: med_ml.cytology.analysis_succeeded.v1.Counts.unknown_labels:type_name -> med_ml.cytology.analysis_succeeded.v1.ClassCount
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	2,  // 0: med_ml.cytology.analysis_succeeded.v1.AnalysisSucceeded.result:type_name -> med_ml.cytology.analysis_succeeded.v1.Result
+	3,  // 1: med_ml.cytology.analysis_succeeded.v1.Result.features:type_name -> med_ml.cytology.analysis_succeeded.v1.Feature
+	11, // 2: med_ml.cytology.analysis_succeeded.v1.Result.conclusion:type_name -> med_ml.cytology.analysis_succeeded.v1.Conclusion
+	4,  // 3: med_ml.cytology.analysis_succeeded.v1.Feature.geometry:type_name -> med_ml.cytology.analysis_succeeded.v1.Geometry
+	8,  // 4: med_ml.cytology.analysis_succeeded.v1.Feature.properties:type_name -> med_ml.cytology.analysis_succeeded.v1.Properties
+	5,  // 5: med_ml.cytology.analysis_succeeded.v1.Geometry.point:type_name -> med_ml.cytology.analysis_succeeded.v1.Point
+	6,  // 6: med_ml.cytology.analysis_succeeded.v1.Geometry.polygon:type_name -> med_ml.cytology.analysis_succeeded.v1.Polygon
+	7,  // 7: med_ml.cytology.analysis_succeeded.v1.Polygon.rings:type_name -> med_ml.cytology.analysis_succeeded.v1.Ring
+	5,  // 8: med_ml.cytology.analysis_succeeded.v1.Ring.points:type_name -> med_ml.cytology.analysis_succeeded.v1.Point
+	9,  // 9: med_ml.cytology.analysis_succeeded.v1.Properties.classification:type_name -> med_ml.cytology.analysis_succeeded.v1.Classification
+	0,  // 10: med_ml.cytology.analysis_succeeded.v1.Properties.seg_type:type_name -> med_ml.cytology.analysis_succeeded.v1.SegType
+	10, // 11: med_ml.cytology.analysis_succeeded.v1.Classification.color:type_name -> med_ml.cytology.analysis_succeeded.v1.Color
+	12, // 12: med_ml.cytology.analysis_succeeded.v1.Conclusion.counts:type_name -> med_ml.cytology.analysis_succeeded.v1.Counts
+	13, // 13: med_ml.cytology.analysis_succeeded.v1.Counts.by_class:type_name -> med_ml.cytology.analysis_succeeded.v1.ClassCount
+	13, // 14: med_ml.cytology.analysis_succeeded.v1.Counts.unknown_labels:type_name -> med_ml.cytology.analysis_succeeded.v1.ClassCount
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_proto_dbus_consume_cytologyanalysissucceeded_proto_init() }
@@ -945,13 +1074,14 @@ func file_proto_dbus_consume_cytologyanalysissucceeded_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDesc), len(file_proto_dbus_consume_cytologyanalysissucceeded_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_proto_dbus_consume_cytologyanalysissucceeded_proto_goTypes,
 		DependencyIndexes: file_proto_dbus_consume_cytologyanalysissucceeded_proto_depIdxs,
+		EnumInfos:         file_proto_dbus_consume_cytologyanalysissucceeded_proto_enumTypes,
 		MessageInfos:      file_proto_dbus_consume_cytologyanalysissucceeded_proto_msgTypes,
 	}.Build()
 	File_proto_dbus_consume_cytologyanalysissucceeded_proto = out.File
