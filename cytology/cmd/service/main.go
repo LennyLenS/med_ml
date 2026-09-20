@@ -25,10 +25,10 @@ import (
 
 	grpchandler "cytology/internal/server"
 
-	cytologyprocessedsubscriber "cytology/internal/dbus/consumers/cytologyprocessed"
+	cytologyanalysissucceededsubscriber "cytology/internal/dbus/consumers/cytologyanalysissucceeded"
 	dbusproducers "cytology/internal/dbus/producers"
-	cytologyprocessed "cytology/internal/generated/dbus/consume/cytologyprocessed"
-	cytologysplittedpb "cytology/internal/generated/dbus/produce/cytologysplitted"
+	cytologyanalysissucceeded "cytology/internal/generated/dbus/consume/cytologyanalysissucceeded"
+	cytologyanalysisrequestedpb "cytology/internal/generated/dbus/produce/cytologyanalysisrequested"
 
 	"github.com/IBM/sarama"
 	"time"
@@ -103,16 +103,16 @@ func run() (exitCode int) {
 		return failExitCode
 	}
 
-	producerCytologySplitted := dbuslib.NewProducer[*cytologysplittedpb.CytologySplitted](
+	producerCytologyAnalysisRequested := dbuslib.NewProducer[*cytologyanalysisrequestedpb.AnalysisRequested](
 		producer,
-		"cytologysplitted",
-		dbuslib.WithProducerMiddlewares[*cytologysplittedpb.CytologySplitted](
+		"cytologyanalysisrequested",
+		dbuslib.WithProducerMiddlewares[*cytologyanalysisrequestedpb.AnalysisRequested](
 			observerdbuslib.CrossEventProduce,
 			observerdbuslib.LogEventProduce,
 		),
 	)
 
-	dbusAdapter := dbusproducers.New(producerCytologySplitted)
+	dbusAdapter := dbusproducers.New(producerCytologyAnalysisRequested)
 
 	dao := repository.NewRepository(db, client, bucketName)
 
@@ -149,14 +149,14 @@ func run() (exitCode int) {
 	pb.RegisterCytologySrvServer(server, handler)
 
 	// dbus consumer
-	cytologyprocessedSubscriber := cytologyprocessedsubscriber.New(services)
+	cytologyAnalysisSucceededSubscriber := cytologyanalysissucceededsubscriber.New(services)
 
-	cytologyprocessedHandler := dbuslib.NewGroupSubscriber(
-		"cytologyprocessed",
+	cytologyAnalysisSucceededHandler := dbuslib.NewGroupSubscriber(
+		"cytologyanalysissucceeded",
 		cfg.Broker.Addrs,
-		"cytologyprocessed",
-		cytologyprocessedSubscriber,
-		dbuslib.WithSubscriberMiddlewares[*cytologyprocessed.CytologyProcessed](
+		"cytologyanalysissucceeded",
+		cytologyAnalysisSucceededSubscriber,
+		dbuslib.WithSubscriberMiddlewares[*cytologyanalysissucceeded.AnalysisSucceeded](
 			observerdbuslib.CrossEventConsume,
 			observerdbuslib.LogEventConsume,
 		),
@@ -178,8 +178,8 @@ func run() (exitCode int) {
 		close <- struct{}{}
 	}()
 	go func() {
-		if err := cytologyprocessedHandler.Start(context.Background()); err != nil {
-			slog.Error("start cytologyprocessed handler", "err", err)
+		if err := cytologyAnalysisSucceededHandler.Start(context.Background()); err != nil {
+			slog.Error("start cytologyanalysissucceeded handler", "err", err)
 		}
 	}()
 

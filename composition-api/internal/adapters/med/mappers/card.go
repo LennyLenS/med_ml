@@ -19,6 +19,9 @@ func (m Card) Domain(pb *pb.Card) domain.Card {
 		id := int(*pb.Id)
 		card.ID = &id
 	}
+	if pb.Uuid != "" {
+		card.UUID = uuid.MustParse(pb.Uuid)
+	}
 	return card
 }
 

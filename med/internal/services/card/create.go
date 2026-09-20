@@ -26,7 +26,7 @@ func (s *service) CreateCard(ctx context.Context, card domain.Card) (domain.Card
 		return domain.Card{}, domain.ErrBadRequest
 	}
 
-	id, err := s.dao.NewCardQuery(ctx).InsertCard(centity.Card{}.FromDomain(card))
+	id, cardUUID, err := s.dao.NewCardQuery(ctx).InsertCard(centity.Card{}.FromDomain(card))
 	if err != nil {
 		var dbErr *entity.DBConflictError
 		if errors.As(err, &dbErr) {
@@ -39,7 +39,8 @@ func (s *service) CreateCard(ctx context.Context, card domain.Card) (domain.Card
 		return domain.Card{}, fmt.Errorf("insert card: %w", err)
 	}
 
-	// Возвращаем созданную карту с ID
+	// Возвращаем созданную карту с ID и UUID
 	card.ID = &id
+	card.UUID = cardUUID
 	return card, nil
 }

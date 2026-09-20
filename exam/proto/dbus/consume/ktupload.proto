@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+option go_package = "internal/generated/dbus/consume/ktupload";
+
+message KtUpload {
+  string kt_id = 100;
+}
