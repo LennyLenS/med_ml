@@ -7,6 +7,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 
+	"cytology/internal/domain"
 	daoEntity "cytology/internal/repository/entity"
 	"cytology/internal/repository/segmentation_group/entity"
 )
@@ -38,7 +39,7 @@ func (q *repo) GetSegmentationGroupByID(id int) (entity.SegmentationGroup, error
 	return group, nil
 }
 
-func (q *repo) GetSegmentationGroupsByCytologyID(cytologyID uuid.UUID) ([]entity.SegmentationGroup, error) {
+func (q *repo) GetSegmentationGroupsByCytologyID(cytologyID uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]entity.SegmentationGroup, error) {
 	query := q.QueryBuilder().
 		Select(
 			columnID,
@@ -53,6 +54,15 @@ func (q *repo) GetSegmentationGroupsByCytologyID(cytologyID uuid.UUID) ([]entity
 		Where(sq.Eq{
 			columnCytologyID: cytologyID,
 		})
+	if segType != nil {
+		query = query.Where(sq.Eq{columnSegType: *segType})
+	}
+	if groupType != nil {
+		query = query.Where(sq.Eq{columnGroupType: *groupType})
+	}
+	if isAI != nil {
+		query = query.Where(sq.Eq{columnIsAI: *isAI})
+	}
 
 	var groups []entity.SegmentationGroup
 	if err := q.Runner().Selectx(q.Context(), &groups, query); err != nil {

@@ -79,30 +79,40 @@ func TestGetSegmentationGroupsByCytologyId_EmptyOnError(t *testing.T) {
 
 func TestGetSegmentationGroupsByCytologyId_Success(t *testing.T) {
 	cytologyID := uuid.New()
-	h := newHandler(&mockSegmentationGroupService{
+	isAI := true
+	service := &mockSegmentationGroupService{
 		groups: []domain.SegmentationGroup{
 			{
 				Id:         1,
 				CytologyID: cytologyID,
-				SegType:    domain.SegTypeNIR,
+				SegType:    domain.SegTypeNIM,
 				GroupType:  domain.GroupTypeCE,
 				IsAI:       true,
-				Details:    []byte(`{"classification":{"name":"Клетка Гюртле"}}`),
+				Details:    []byte(`{"classification":{"name":"Макрофаг"}}`),
 				CreateAt:   time.Now().UTC(),
 			},
 		},
-	})
+	}
+	h := newHandler(service)
+	segType := pb.SegType_SEG_TYPE_NIM
+	groupType := pb.GroupType_GROUP_TYPE_CE
 
 	resp, err := h.GetSegmentationGroupsByCytologyId(context.Background(), &pb.GetSegmentationGroupsByCytologyIdIn{
 		CytologyId: cytologyID.String(),
+		SegType:    &segType,
+		GroupType:  &groupType,
+		IsAi:       &isAI,
 	})
 
 	require.NoError(t, err)
 	require.Len(t, resp.SegmentationGroups, 1)
 	require.Equal(t, int32(1), resp.SegmentationGroups[0].Id)
-	require.Equal(t, pb.SegType_SEG_TYPE_NIR, resp.SegmentationGroups[0].SegType)
+	require.Equal(t, pb.SegType_SEG_TYPE_NIM, resp.SegmentationGroups[0].SegType)
 	require.True(t, resp.SegmentationGroups[0].IsAi)
-	require.JSONEq(t, `{"classification":{"name":"Клетка Гюртле"}}`, resp.SegmentationGroups[0].GetDetails())
+	require.JSONEq(t, `{"classification":{"name":"Макрофаг"}}`, resp.SegmentationGroups[0].GetDetails())
+	require.Equal(t, domain.SegTypeNIM, *service.segType)
+	require.Equal(t, domain.GroupTypeCE, *service.groupType)
+	require.True(t, *service.isAI)
 }
 
 func TestUpdateSegmentationGroup_Success(t *testing.T) {

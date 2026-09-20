@@ -15,7 +15,7 @@ import (
 type Service interface {
 	CreateSegmentationGroup(ctx context.Context, arg CreateSegmentationGroupArg) (int, error)
 	GetSegmentationGroupByID(ctx context.Context, id int) (domain.SegmentationGroup, error)
-	GetSegmentationGroupsByCytologyID(ctx context.Context, cytologyID uuid.UUID) ([]domain.SegmentationGroup, error)
+	GetSegmentationGroupsByCytologyID(ctx context.Context, cytologyID uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]domain.SegmentationGroup, error)
 	UpdateSegmentationGroup(ctx context.Context, arg UpdateSegmentationGroupArg) (domain.SegmentationGroup, error)
 	DeleteSegmentationGroup(ctx context.Context, id int) error
 }
@@ -80,8 +80,8 @@ func (s *service) GetSegmentationGroupByID(ctx context.Context, id int) (domain.
 	return group.ToDomain(), nil
 }
 
-func (s *service) GetSegmentationGroupsByCytologyID(ctx context.Context, cytologyID uuid.UUID) ([]domain.SegmentationGroup, error) {
-	groups, err := s.dao.NewSegmentationGroupQuery(ctx).GetSegmentationGroupsByCytologyID(cytologyID)
+func (s *service) GetSegmentationGroupsByCytologyID(ctx context.Context, cytologyID uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]domain.SegmentationGroup, error) {
+	groups, err := s.dao.NewSegmentationGroupQuery(ctx).GetSegmentationGroupsByCytologyID(cytologyID, segType, groupType, isAI)
 	if err != nil {
 		return nil, err
 	}

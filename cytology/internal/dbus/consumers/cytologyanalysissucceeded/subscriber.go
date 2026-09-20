@@ -60,7 +60,7 @@ func (a serviceAdapter) CommitTx(ctx context.Context) error {
 }
 
 func (a serviceAdapter) GetSegmentationGroups(ctx context.Context, id uuid.UUID) ([]domain.SegmentationGroup, error) {
-	return a.services.SegmentationGroup.GetSegmentationGroupsByCytologyID(ctx, id)
+	return a.services.SegmentationGroup.GetSegmentationGroupsByCytologyID(ctx, id, nil, nil, nil)
 }
 
 func (a serviceAdapter) DeleteSegmentationGroup(ctx context.Context, id int) error {
