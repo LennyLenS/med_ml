@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "internal/generated/dbus/consume/mriprocessed";
+
+message MriProcessed {
+    // из-за коллизии имен с grpc, пришлось использовать вложенные сообщения
+    message Node {
+        bool ai = 100;
+        double knosp_012 = 400;
+        double knosp_3 = 500;
+        double knosp_4 = 600;
+    }
+    
+    message Segment {
+        string image_id = 100;
+        bytes contor = 200;
+        double knosp_012 = 300;
+        double knosp_3 = 400;
+        double knosp_4 = 500;
+    }
+    
+    message NodeWithSegments {
+        Node node = 100;
+        repeated Segment segments = 200;
+    }
+
+    string mri_id = 100;
+    repeated NodeWithSegments nodes_with_segments = 200;
+}

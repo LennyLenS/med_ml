@@ -30,6 +30,7 @@ func TestParseCytologyShotDetails(t *testing.T) {
 	imageID := uuid.New()
 	originalID := uuid.New()
 	diagnosis := "диагноз"
+	cardUUID := uuid.New()
 
 	shot := mappers.CytologyImage{}.ToCytologyPatientShot(
 		cytology_domain.CytologyImage{
@@ -44,7 +45,7 @@ func TestParseCytologyShotDetails(t *testing.T) {
 			Thyroglobulin:     &calcitonin,
 			Details:           func() *string { s := details; return &s }(),
 		},
-		med_domain.Card{Diagnosis: &diagnosis},
+		med_domain.Card{UUID: cardUUID, Diagnosis: &diagnosis},
 		&originalID,
 	)
 
@@ -58,6 +59,6 @@ func TestParseCytologyShotDetails(t *testing.T) {
 	require.False(t, shot.OriginalImage.Null)
 	require.Equal(t, originalID, shot.OriginalImage.Value)
 	require.True(t, shot.Prev.Null)
-	require.True(t, shot.PatientCard.Diagnosis.Set)
-	require.Equal(t, "диагноз", shot.PatientCard.Diagnosis.Value)
+	require.True(t, shot.PatientCard.Set)
+	require.Equal(t, cardUUID, shot.PatientCard.Value)
 }

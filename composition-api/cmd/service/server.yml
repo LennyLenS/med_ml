@@ -242,6 +242,7 @@ components:
 
     contor:
       type: array
+      minItems: 1
       description: контур сегмента в формате json
       items:
         type: object
@@ -449,33 +450,19 @@ components:
           type: string
           format: uuid
           description: id врача
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+          description: UUID карты пациента
         diagnosis:
           type: string
           description: диагноз
       example:
         patient_id: "123e4567-e89b-12d3-a456-426614174000"
         doctor_id: "123e4567-e89b-12d3-a456-426614174000"
+        uuid: "123e4567-e89b-12d3-a456-426614174000"
         diagnosis: "опухоль"
-
-    patientCard:
-      type: object
-      description: карта пациента
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        acceptance_datetime:
-          type: string
-          format: date-time
-          readOnly: true
-        diagnosis:
-          type: string
-        patient:
-          type: integer
-          x-nullable: true
-        med_worker:
-          type: integer
-          x-nullable: true
 
     simpleUuid:
       type: object
@@ -871,15 +858,6 @@ components:
         email: "iii@medml.med"
         is_active: true
 
-    cytologyShotPatientCard:
-      type: object
-      properties:
-        acceptance_datetime:
-          type: string
-          format: date-time
-        diagnosis:
-          type: string
-
     cytologyShotDetails:
       type: object
       properties:
@@ -895,7 +873,6 @@ components:
       type: object
       required:
         - id
-        - patient_card
         - is_last
         - diagnos_date
         - details
@@ -905,7 +882,10 @@ components:
           type: string
           format: uuid
         patient_card:
-          $ref: '#/components/schemas/cytologyShotPatientCard'
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
         is_last:
           type: boolean
         diagnos_date:
@@ -948,9 +928,7 @@ components:
           nullable: true
       example:
         id: "550e8400-e29b-41d4-a716-446655440001"
-        patient_card:
-          acceptance_datetime: "2026-05-06T23:08:03.827479Z"
-          diagnosis: ""
+        patient_card: "123e4567-e89b-12d3-a456-426614174000"
         is_last: true
         diagnos_date: "2026-05-17T19:51:14.436969Z"
         details:
@@ -1133,6 +1111,360 @@ components:
       required:
         - message
 
+    exam_device:
+      type: object
+      description: мрт аппарат
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          description: id устройства
+        name:
+          type: string
+          maxLength: 255
+          description: название устройства
+      example:
+        id: 1
+        name: ульпанатор 3000
+    kt:
+      type: object
+      description: кт
+      required:
+      - id
+      - checked
+      - author_id
+      - device_id
+      - status
+      - create_at
+      - class_probabilities
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id кт
+        create_at:
+          type: string
+          format: date-time
+          description: дата создания в формате RFC3339
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        create_at: '2021-01-01T00:00:00Z'
+    mri:
+      type: object
+      description: мрт
+      required:
+      - id
+      - projection
+      - checked
+      - external_id
+      - author_id
+      - device_id
+      - status
+      - create_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id мрт
+        projection:
+          type: string
+          enum:
+          - cross
+          - long
+          description: проекция мрт
+          maxLength: 255
+        checked:
+          type: boolean
+          description: проверенно ли врачем
+        external_id:
+          type: string
+          format: uuid
+          description: id пациента/организации etc. Внешняя связсь
+        author_id:
+          type: string
+          format: uuid
+          description: id аккаунта, загрузившего мрт
+        device_id:
+          type: integer
+          description: id устройства
+        status:
+          type: string
+          enum:
+          - new
+          - pending
+          - completed
+          description: 'Статус мрт **new** - новое мрт **pending** - в обработке нейронкой
+            **completed** - обработано
+
+    '
+        create_at:
+          type: string
+          format: date-time
+          description: дата создания в формате RFC3339
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        projection: cross
+        checked: false
+        external_id: 123e4567-e89b-12d3-a456-426614174000
+        author_id: 123e4567-e89b-12d3-a456-426614174000
+        device_id: 1
+        status: pending
+        create_at: '2021-01-01T00:00:00Z'
+    exam_echographics:
+      type: object
+      description: эхографическая информация
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id мрт
+        contors:
+          type: string
+          description: контуры
+          maxLength: 255
+        left_lobe_length:
+          type: number
+          description: длина левого доли
+        left_lobe_width:
+          type: number
+          description: ширина левого доли
+        left_lobe_thick:
+          type: number
+          description: толщина левого доли
+        left_lobe_volum:
+          type: number
+          description: объем левого доли
+        right_lobe_length:
+          type: number
+          description: длина правого доли
+        right_lobe_width:
+          type: number
+          description: ширина правого доли
+        right_lobe_thick:
+          type: number
+          description: толщина правого доли
+        right_lobe_volum:
+          type: number
+          description: объем правого доли
+        gland_volum:
+          type: number
+          description: объем железы
+        isthmus:
+          type: number
+          description: перешеек
+        struct:
+          type: string
+          description: структура
+          maxLength: 255
+        echogenicity:
+          type: string
+          description: эхогенность
+          maxLength: 255
+        regional_lymph:
+          type: string
+          description: регионарные лимфоузлы
+          maxLength: 255
+        vascularization:
+          type: string
+          description: васкуляризация по ЦДК
+          maxLength: 255
+        location:
+          type: string
+          description: расположение
+          maxLength: 255
+        additional:
+          type: string
+          description: дополнительная информация
+          maxLength: 255
+        conclusion:
+          type: string
+          description: заключение
+          maxLength: 255
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        contors: контуры
+        left_lobe_length: 100
+        left_lobe_width: 100
+        left_lobe_thick: 100
+        left_lobe_volum: 100
+        right_lobe_length: 100
+        right_lobe_width: 100
+        right_lobe_thick: 100
+        right_lobe_volum: 100
+        gland_volum: 100
+        isthmus: 100
+        struct: квадрат
+        echogenicity: эхогенность
+        regional_lymph: в правой части
+        vascularization: выраженная
+        location: в правой части
+        additional: видны последстввия нездорового образа жизни
+        conclusion: требуется лечение
+    exam_node:
+      type: object
+      description: узел
+      required:
+      - id
+      - ai
+      - mri_id
+      - knosp_012
+      - knosp_3
+      - knosp_4
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id узла
+        ai:
+          type: boolean
+          description: признак того, что узел был создан нейронкой
+        mri_id:
+          type: string
+          format: uuid
+          description: id мрт, к которому относится узел
+        validation:
+          type: string
+          enum:
+          -
+          - invalid
+          - valid
+          description: валидация нейроночного узла врачем
+        knosp_012:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: вероятность наличия опухоли в 23-й группе
+        knosp_3:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: вероятность наличия опухоли в 4-й группе
+        knosp_4:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: вероятность наличия опухоли в 5-й группе
+        description:
+          type: string
+          description: описание узла
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        ai: true
+        mri_id: 123e4567-e89b-12d3-a456-426614174000
+        validation: invalid
+        knosp_012: 0.67
+        knosp_3: 0.23
+        knosp_4: 0.89
+        description: узел явно неправильный
+    exam_contor:
+      type: array
+      minItems: 1
+      description: контур сегмента в формате json
+      items:
+        type: object
+        required:
+        - x
+        - y
+        properties:
+          x:
+            type: integer
+            minimum: 0
+            description: x координата точки
+          y:
+            type: integer
+            minimum: 0
+            description: y координата точки
+      example:
+      - x: 100
+        y: 100
+      - x: 200
+        y: 200
+    exam_segment:
+      type: object
+      description: сегмент узла на изображении
+      required:
+      - id
+      - image_id
+      - node_id
+      - contor
+      - ai
+      - knosp_012
+      - knosp_3
+      - knosp_4
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id сегмента
+        image_id:
+          type: string
+          format: uuid
+          description: id изображения, к которому относится сегмент
+        node_id:
+          type: string
+          format: uuid
+          description: id узла, к которому относится сегмент
+        contor:
+          "$ref": "#/components/schemas/exam_contor"
+          description: контур сегмента
+        ai:
+          type: boolean
+          description: признак того, что сегмент был создан нейронкой
+        knosp_012:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: вероятность наличия опухоли в 23-й группе
+        knosp_3:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: вероятность наличия опухоли в 4-й группе
+        knosp_4:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          description: вероятность наличия опухоли в 5-й группе
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        image_id: 123e4567-e89b-12d3-a456-426614174000
+        node_id: 123e4567-e89b-12d3-a456-426614174000
+        contor:
+        - x: 100
+          y: 100
+        - x: 200
+          y: 200
+        ai: false
+        knosp_012: 0.45
+        knosp_3: 0.78
+        knosp_4: 0.12
+    exam_image:
+      type: object
+      description: изображение
+      required:
+      - id
+      - mri_id
+      - page
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id изображения
+        mri_id:
+          type: string
+          format: uuid
+          description: id мрт, к которому относится изображение
+        page:
+          type: integer
+          description: номер страницы
+      example:
+        id: 123e4567-e89b-12d3-a456-426614174000
+        mri_id: 123e4567-e89b-12d3-a456-426614174000
+        page: 1
   responses:
     error:
       description: Ошибка
@@ -2997,19 +3329,21 @@ paths:
                   type: string
                   format: uuid
                   readOnly: true
-                  x-nullable: true
+                  nullable: true
                 parent_prev:
                   type: string
                   format: uuid
                   readOnly: true
-                  x-nullable: true
+                  nullable: true
                 patient_card:
-                  type: integer
-                  x-nullable: true
+                  type: string
+                  format: uuid
+                  description: UUID карточки пациента
+                  nullable: true
                 details:
                   type: string
                   description: Детали диагностики в формате JSON
-                  x-nullable: true
+                  nullable: true
                 is_last:
                   type: boolean
                   readOnly: true
@@ -3045,7 +3379,7 @@ paths:
                     readOnly: true
                   details:
                     type: object
-                    x-nullable: true
+                    nullable: true
                   diagnostic_marking:
                     type: string
                     enum:
@@ -3071,15 +3405,16 @@ paths:
                     type: string
                     format: uuid
                     readOnly: true
-                    x-nullable: true
+                    nullable: true
                   parent_prev:
                     type: string
                     format: uuid
                     readOnly: true
-                    x-nullable: true
+                    nullable: true
                   patient_card:
-                    type: integer
-                    x-nullable: true
+                    type: string
+                    format: uuid
+                    nullable: true
         '400':
           description: Неверный формат запроса
           $ref: "#/components/responses/error"
@@ -3142,9 +3477,7 @@ paths:
                       is_active: true
                     shots:
                       - id: "550e8400-e29b-41d4-a716-446655440001"
-                        patient_card:
-                          acceptance_datetime: "2026-05-06T23:08:03.827479Z"
-                          diagnosis: ""
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         is_last: true
                         diagnos_date: "2026-05-17T19:51:14.436969Z"
                         details:
@@ -3223,13 +3556,15 @@ paths:
                     type: object
                     required:
                       - patient
-                      - patient_card
                       - image_group
                     properties:
                       patient:
                         $ref: '#/components/schemas/patient'
                       patient_card:
-                        $ref: '#/components/schemas/patientCard'
+                        type: string
+                        format: uuid
+                        readOnly: true
+                        nullable: true
                       image_group:
                         type: object
                         required:
@@ -3246,7 +3581,7 @@ paths:
                             readOnly: true
                           details:
                             type: object
-                            x-nullable: true
+                            nullable: true
                           diagnostic_marking:
                             type: string
                             enum:
@@ -3271,14 +3606,14 @@ paths:
                           prev:
                             type: string
                             format: uuid
-                            x-nullable: true
+                            nullable: true
                           parent_prev:
                             type: string
                             format: uuid
-                            x-nullable: true
+                            nullable: true
                           original_image:
                             type: integer
-                            x-nullable: true
+                            nullable: true
         '404':
           description: Цитологическое исследование не найдено
           $ref: "#/components/responses/error"
@@ -3368,11 +3703,11 @@ paths:
                   next:
                     type: string
                     format: uri
-                    x-nullable: true
+                    nullable: true
                   previous:
                     type: string
                     format: uri
-                    x-nullable: true
+                    nullable: true
                   results:
                     type: array
                     items:
@@ -3441,7 +3776,22 @@ paths:
                             - STM
                         details:
                           type: object
-                          x-nullable: true
+                          nullable: true
+                          properties:
+                            classification:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                color:
+                                  type: object
+                                  properties:
+                                    r:
+                                      type: integer
+                                    g:
+                                      type: integer
+                                    b:
+                                      type: integer
                         is_ai:
                           type: boolean
         '404':
@@ -3473,23 +3823,15 @@ paths:
             schema:
               type: object
               required:
-                - patient_card
                 - diagnostic_number
               properties:
                 id:
                   type: integer
                   readOnly: true
                 patient_card:
-                  type: object
-                  properties:
-                    patient:
-                      type: integer
-                    acceptance_datetime:
-                      type: string
-                      format: date-time
-                      readOnly: true
-                    diagnosis:
-                      type: string
+                  type: string
+                  format: uuid
+                  nullable: true
                 details:
                   type: object
                   required:
@@ -3528,17 +3870,18 @@ paths:
                     prev:
                       type: string
                       format: uuid
-                      x-nullable: true
+                      nullable: true
                     parent_prev:
                       type: string
                       format: uuid
-                      x-nullable: true
+                      nullable: true
                     patient_card:
-                      type: integer
-                      x-nullable: true
+                      type: string
+                      format: uuid
+                      nullable: true
                     original_image:
                       type: integer
-                      x-nullable: true
+                      nullable: true
                 is_last:
                   type: boolean
                 diagnos_date:
@@ -3569,11 +3912,11 @@ paths:
                 prev:
                   type: string
                   format: uuid
-                  x-nullable: true
+                  nullable: true
                 parent_prev:
                   type: string
                   format: uuid
-                  x-nullable: true
+                  nullable: true
                 original_image:
                   type: integer
       responses:
@@ -3584,14 +3927,15 @@ paths:
               schema:
                 type: object
                 required:
-                  - patient_card
                   - diagnostic_number
                 properties:
                   id:
                     type: integer
                     readOnly: true
                   patient_card:
-                    type: object
+                    type: string
+                    format: uuid
+                    nullable: true
                   details:
                     type: object
                   is_last:
@@ -3615,11 +3959,11 @@ paths:
                   prev:
                     type: string
                     format: uuid
-                    x-nullable: true
+                    nullable: true
                   parent_prev:
                     type: string
                     format: uuid
-                    x-nullable: true
+                    nullable: true
                   original_image:
                     type: integer
         '404':
@@ -3655,23 +3999,15 @@ paths:
             schema:
               type: object
               required:
-                - patient_card
                 - diagnostic_number
               properties:
                 id:
                   type: integer
                   readOnly: true
                 patient_card:
-                  type: object
-                  properties:
-                    patient:
-                      type: integer
-                    acceptance_datetime:
-                      type: string
-                      format: date-time
-                      readOnly: true
-                    diagnosis:
-                      type: string
+                  type: string
+                  format: uuid
+                  nullable: true
                 details:
                   type: object
                 is_last:
@@ -3704,11 +4040,11 @@ paths:
                 prev:
                   type: string
                   format: uuid
-                  x-nullable: true
+                  nullable: true
                 parent_prev:
                   type: string
                   format: uuid
-                  x-nullable: true
+                  nullable: true
                 original_image:
                   type: integer
       responses:
@@ -3719,14 +4055,15 @@ paths:
               schema:
                 type: object
                 required:
-                  - patient_card
                   - diagnostic_number
                 properties:
                   id:
                     type: integer
                     readOnly: true
                   patient_card:
-                    type: object
+                    type: string
+                    format: uuid
+                    nullable: true
                   details:
                     type: object
                   is_last:
@@ -3750,11 +4087,11 @@ paths:
                   prev:
                     type: string
                     format: uuid
-                    x-nullable: true
+                    nullable: true
                   parent_prev:
                     type: string
                     format: uuid
-                    x-nullable: true
+                    nullable: true
                   original_image:
                     type: integer
         '404':
@@ -3800,11 +4137,11 @@ paths:
                   format: uuid
                   description: UUID существующего цитологического исследования для копирования
               example:
-                id: 123
+                id: "123e4567-e89b-12d3-a456-426614174000"
             examples:
               example1:
                 summary: Копирование исследования по ID
-                description: Пример запроса для копирования исследования с ID 123
+                description: Пример запроса для копирования исследования по UUID
                 value:
                   id: "123e4567-e89b-12d3-a456-426614174000"
       responses:
@@ -3893,11 +4230,11 @@ paths:
                   next:
                     type: string
                     format: uri
-                    x-nullable: true
+                    nullable: true
                   previous:
                     type: string
                     format: uri
-                    x-nullable: true
+                    nullable: true
                   results:
                     type: array
                     items:
@@ -3916,7 +4253,7 @@ paths:
                           readOnly: true
                         details:
                           type: object
-                          x-nullable: true
+                          nullable: true
                         diagnostic_marking:
                           type: string
                           enum:
@@ -3941,17 +4278,18 @@ paths:
                         prev:
                           type: string
                           format: uuid
-                          x-nullable: true
+                          nullable: true
                         parent_prev:
                           type: string
                           format: uuid
-                          x-nullable: true
+                          nullable: true
                         patient_card:
-                          type: integer
-                          x-nullable: true
+                          type: string
+                          format: uuid
+                          nullable: true
                         original_image:
                           type: integer
-                          x-nullable: true
+                          nullable: true
               examples:
                 example1:
                   summary: Пример успешного ответа с историей исследований
@@ -3971,7 +4309,7 @@ paths:
                         thyroglobulin: 10
                         prev: null
                         parent_prev: null
-                        patient_card: 100
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         original_image: 200
                         details:
                           note: "Первичное исследование"
@@ -3986,7 +4324,7 @@ paths:
                         thyroglobulin: 8
                         prev: "123e4567-e89b-12d3-a456-426614174000"
                         parent_prev: null
-                        patient_card: 100
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         original_image: 199
                         details:
                           note: "Повторное исследование"
@@ -4001,9 +4339,8 @@ paths:
                         thyroglobulin: 9
                         prev: "123e4567-e89b-12d3-a456-426614174001"
                         parent_prev: null
-                        patient_card: 100
+                        patient_card: "123e4567-e89b-12d3-a456-426614174000"
                         original_image: 198
-                        details: null
         '404':
           description: Цитологическое исследование не найдено
           $ref: "#/components/responses/error"
@@ -4332,3 +4669,824 @@ paths:
           $ref: "#/components/responses/error"
         default:
           $ref: "#/components/responses/error"
+  "/kt":
+    post:
+      summary: загрузить кт на обработку
+      tags:
+      - kt
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: файл кт. **обязательно с .mp4**
+                device_id:
+                  type: integer
+                  description: id мрт аппарата
+                description:
+                  type: string
+                  description: описание мрт
+              required:
+              - file
+              - device_id
+      responses:
+        '200':
+          description: id кт
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/simpleUuid"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/kt/{id}":
+    get:
+      summary: получить кт
+      tags:
+      - kt
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id кт
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: кт
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/kt"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    patch:
+      summary: обновить КТ
+      tags:
+      - kt
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id КТ
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                checked:
+                  type: boolean
+                  description: признак того, что КТ проверено врачом
+                class_probabilities:
+                  type: object
+                  additionalProperties:
+                    type: number
+                    format: double
+                  description: Таблица вероятностей отнесения к определенному классу
+              example:
+                checked: true
+                class_probabilities:
+                  class1: 0.95
+                  class2: 0.05
+      responses:
+        '200':
+          description: КТ
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/kt"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    delete:
+      summary: удалить КТ
+      tags:
+      - kt
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id КТ
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: КТ удалено
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri":
+    post:
+      summary: загрузить мрт на обработку
+      tags:
+      - mri
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: файл мрт. **обязательно с .tiff/.png**
+                projection:
+                  type: string
+                  enum:
+                  - cross
+                  - long
+                  description: проекция мрт
+                external_id:
+                  type: string
+                  format: uuid
+                  description: внешний id пациента/организации etc.
+                device_id:
+                  type: integer
+                  description: id мрт аппарата
+                description:
+                  type: string
+                  description: описание мрт
+              required:
+              - file
+              - projection
+              - external_id
+              - device_id
+      responses:
+        '200':
+          description: id мрт
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/simpleUuid"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/{id}":
+    get:
+      summary: получить мрт
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: мрт
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/mri"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    patch:
+      summary: обновить мрт
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projection:
+                  type: string
+                  enum:
+                  - cross
+                  - long
+                  description: проекция мрт
+                checked:
+                  type: boolean
+                  description: признак того, что мрт проверено врачом
+              example:
+                projection: cross
+                checked: true
+      responses:
+        '200':
+          description: мрт
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/mri"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    delete:
+      summary: удалить мрт
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: мрт удалено
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mris/external/{id}":
+    get:
+      summary: получить мрт по внешнему id
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: внешний id пациента/организации etc.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: мрт
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/mri"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mris/author/{id}":
+    get:
+      summary: получить мрт по id автора
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id аккаунта, загрузившего мрт
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: мрт
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/mri"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/{id}/echographics":
+    get:
+      summary: получить эхографику mri
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: echographics
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/exam_echographics"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    patch:
+      summary: обновить эхографику
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/exam_echographics"
+      responses:
+        '200':
+          description: echographic
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/exam_echographics"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/device":
+    post:
+      summary: добавить mri аппарат
+      tags:
+      - mri
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  description: именование модели мрт аппарата
+              example:
+                name: Siemens
+      responses:
+        '200':
+          description: id mri аппарата
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    type: integer
+                    description: id mri аппарата
+              example:
+                id: 1
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/devices":
+    get:
+      summary: получит список mri апппапапратов
+      tags:
+      - mri
+      responses:
+        '200':
+          description: mri аппараты
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/exam_device"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/{id}/images":
+    get:
+      summary: получает списк изображений mri
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: images
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/exam_image"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/image/{id}/nodes-segments":
+    get:
+      summary: получит узлы и сегменты на указанном изображении
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id изображения
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: узлы и сегменты
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodes:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/exam_node"
+                  segments:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/exam_segment"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/{id}/nodes-segments":
+    post:
+      summary: добавить узел с сегментами
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id мрт
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - node
+              - segments
+              properties:
+                node:
+                  type: object
+                  required:
+                  - knosp_012
+                  - knosp_3
+                  - knosp_4
+                  properties:
+                    knosp_012:
+                      type: number
+                      maximum: 1.0
+                      minimum: 0.0
+                    knosp_3:
+                      type: number
+                      maximum: 1.0
+                      minimum: 0.0
+                    knosp_4:
+                      type: number
+                      maximum: 1.0
+                      minimum: 0.0
+                    description:
+                      type: string
+                      description: описание узла
+                segments:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - image_id
+                    - contor
+                    - knosp_012
+                    - knosp_3
+                    - knosp_4
+                    properties:
+                      image_id:
+                        type: string
+                        format: uuid
+                      contor:
+                        "$ref": "#/components/schemas/exam_contor"
+                      knosp_012:
+                        type: number
+                        maximum: 1.0
+                        minimum: 0.0
+                      knosp_3:
+                        type: number
+                        maximum: 1.0
+                        minimum: 0.0
+                      knosp_4:
+                        type: number
+                        maximum: 1.0
+                        minimum: 0.0
+      responses:
+        '200':
+          description: id узла
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - node_id
+                - segment_ids
+                properties:
+                  node_id:
+                    type: string
+                    format: uuid
+                  segment_ids:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/{id}/nodes":
+    get:
+      summary: получить все узлы мрт
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: mri_id
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: id узла
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/exam_node"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/nodes/{id}":
+    patch:
+      summary: обновить узел
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id узла
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                validation:
+                  type: string
+                  enum:
+                  -
+                  - invalid
+                  - valid
+                knosp_012:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+                knosp_3:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+                knosp_4:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+              example:
+                validation: invalid
+                knosp_012: 0.67
+                knosp_3: 0.23
+                knosp_4: 0.89
+      responses:
+        '200':
+          description: обновленный узел
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/exam_node"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    delete:
+      summary: удалить узел
+      description: сегменты узла будут также удалены
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: узел удален
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/nodes/{id}/segments":
+    get:
+      summary: получить сегменты узла
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id узла
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: сегменты узла
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/exam_segment"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/segment":
+    post:
+      summary: добавить новый сегмент
+      tags:
+      - mri
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - image_id
+              - node_id
+              - contor
+              - knosp_012
+              - knosp_3
+              - knosp_4
+              properties:
+                image_id:
+                  type: string
+                  format: uuid
+                node_id:
+                  type: string
+                  format: uuid
+                contor:
+                  "$ref": "#/components/schemas/exam_contor"
+                knosp_012:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+                knosp_3:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+                knosp_4:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+      responses:
+        '200':
+          description: id сегмента
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/simpleUuid"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+  "/mri/segment/{id}":
+    patch:
+      summary: обновить сегмент
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: id сегмента
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contor:
+                  "$ref": "#/components/schemas/exam_contor"
+                knosp_012:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+                knosp_3:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+                knosp_4:
+                  type: number
+                  maximum: 1.0
+                  minimum: 0.0
+              example:
+                contor:
+                - x: 100
+                  y: 100
+                - x: 200
+                  y: 200
+                knosp_012: 0.67
+                knosp_3: 0.23
+                knosp_4: 0.89
+      responses:
+        '200':
+          description: обновленный узел
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/exam_segment"
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"
+    delete:
+      summary: удалить сегмент
+      description: если у узла не останется сегментов, он будет **удален**
+      tags:
+      - mri
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: сегмент удален
+        '500':
+          "$ref": "#/components/responses/error"
+        default:
+          "$ref": "#/components/responses/error"

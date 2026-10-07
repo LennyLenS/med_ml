@@ -14,6 +14,7 @@ func (r *repo) GetCardByID(id int) (entity.Card, error) {
 	query := r.QueryBuilder().
 		Select(
 			columnID,
+			columnUUID,
 			columnDoctorID,
 			columnPatientID,
 			columnDiagnosis,

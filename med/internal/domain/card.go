@@ -4,6 +4,7 @@ import "github.com/google/uuid"
 
 type Card struct {
 	ID        *int
+	UUID      uuid.UUID
 	DoctorID  uuid.UUID
 	PatientID uuid.UUID
 	Diagnosis *string

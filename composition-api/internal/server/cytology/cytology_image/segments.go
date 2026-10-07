@@ -69,8 +69,8 @@ func (h *handler) CytologySegmentsList(ctx context.Context, params api.CytologyS
 	// TODO: Реализовать правильную пагинацию с limit и offset
 	result := api.CytologySegmentsListOK{
 		Count:    len(results),
-		Next:     api.OptURI{Set: false},
-		Previous: api.OptURI{Set: false},
+		Next:     api.OptNilURI{Set: false},
+		Previous: api.OptNilURI{Set: false},
 		Results:  results,
 	}
 

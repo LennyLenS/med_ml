@@ -3,9 +3,11 @@ package card
 import (
 	"med/internal/repository/card/entity"
 	repoEntity "med/internal/repository/entity"
+
+	"github.com/google/uuid"
 )
 
-func (r *repo) InsertCard(card entity.Card) (int, error) {
+func (r *repo) InsertCard(card entity.Card) (int, uuid.UUID, error) {
 	query := r.QueryBuilder().
 		Insert(table).
 		Columns(
@@ -18,13 +20,16 @@ func (r *repo) InsertCard(card entity.Card) (int, error) {
 			card.PatientID,
 			card.Diagnosis,
 		).
-		Suffix("RETURNING id")
+		Suffix("RETURNING id, uuid")
 
-	var id int
-	err := r.Runner().Getx(r.Context(), &id, query)
+	var res struct {
+		ID   int       `db:"id"`
+		UUID uuid.UUID `db:"uuid"`
+	}
+	err := r.Runner().Getx(r.Context(), &res, query)
 	if err != nil {
-		return 0, repoEntity.WrapDBError(err)
+		return 0, uuid.Nil, repoEntity.WrapDBError(err)
 	}
 
-	return id, nil
+	return res.ID, res.UUID, nil
 }

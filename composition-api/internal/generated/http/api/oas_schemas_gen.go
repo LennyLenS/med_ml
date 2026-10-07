@@ -40,6 +40,8 @@ type Card struct {
 	PatientID uuid.UUID `json:"patient_id"`
 	// Id врача.
 	DoctorID uuid.UUID `json:"doctor_id"`
+	// UUID карты пациента.
+	UUID OptUUID `json:"uuid"`
 	// Диагноз.
 	Diagnosis OptString `json:"diagnosis"`
 }
@@ -52,6 +54,11 @@ func (s *Card) GetPatientID() uuid.UUID {
 // GetDoctorID returns the value of DoctorID.
 func (s *Card) GetDoctorID() uuid.UUID {
 	return s.DoctorID
+}
+
+// GetUUID returns the value of UUID.
+func (s *Card) GetUUID() OptUUID {
+	return s.UUID
 }
 
 // GetDiagnosis returns the value of Diagnosis.
@@ -67,6 +74,11 @@ func (s *Card) SetPatientID(val uuid.UUID) {
 // SetDoctorID sets the value of DoctorID.
 func (s *Card) SetDoctorID(val uuid.UUID) {
 	s.DoctorID = val
+}
+
+// SetUUID sets the value of UUID.
+func (s *Card) SetUUID(val OptUUID) {
+	s.UUID = val
 }
 
 // SetDiagnosis sets the value of Diagnosis.
@@ -188,16 +200,16 @@ type CytologyCreateCreateCreated struct {
 	Image             OptURI                                          `json:"image"`
 	IsLast            OptBool                                         `json:"is_last"`
 	DiagnosDate       OptDateTime                                     `json:"diagnos_date"`
-	Details           *CytologyCreateCreateCreatedDetails             `json:"details"`
+	Details           OptCytologyCreateCreateCreatedDetails           `json:"details"`
 	DiagnosticMarking OptCytologyCreateCreateCreatedDiagnosticMarking `json:"diagnostic_marking"`
 	DiagnosticNumber  int                                             `json:"diagnostic_number"`
 	MaterialType      OptCytologyCreateCreateCreatedMaterialType      `json:"material_type"`
 	Calcitonin        OptInt                                          `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                          `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                          `json:"thyroglobulin"`
-	Prev              OptUUID                                         `json:"prev"`
-	ParentPrev        OptUUID                                         `json:"parent_prev"`
-	PatientCard       OptInt                                          `json:"patient_card"`
+	Prev              OptNilUUID                                      `json:"prev"`
+	ParentPrev        OptNilUUID                                      `json:"parent_prev"`
+	PatientCard       OptNilUUID                                      `json:"patient_card"`
 }
 
 // GetID returns the value of ID.
@@ -221,7 +233,7 @@ func (s *CytologyCreateCreateCreated) GetDiagnosDate() OptDateTime {
 }
 
 // GetDetails returns the value of Details.
-func (s *CytologyCreateCreateCreated) GetDetails() *CytologyCreateCreateCreatedDetails {
+func (s *CytologyCreateCreateCreated) GetDetails() OptCytologyCreateCreateCreatedDetails {
 	return s.Details
 }
 
@@ -256,17 +268,17 @@ func (s *CytologyCreateCreateCreated) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyCreateCreateCreated) GetPrev() OptUUID {
+func (s *CytologyCreateCreateCreated) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyCreateCreateCreated) GetParentPrev() OptUUID {
+func (s *CytologyCreateCreateCreated) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyCreateCreateCreated) GetPatientCard() OptInt {
+func (s *CytologyCreateCreateCreated) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -291,7 +303,7 @@ func (s *CytologyCreateCreateCreated) SetDiagnosDate(val OptDateTime) {
 }
 
 // SetDetails sets the value of Details.
-func (s *CytologyCreateCreateCreated) SetDetails(val *CytologyCreateCreateCreatedDetails) {
+func (s *CytologyCreateCreateCreated) SetDetails(val OptCytologyCreateCreateCreatedDetails) {
 	s.Details = val
 }
 
@@ -326,17 +338,17 @@ func (s *CytologyCreateCreateCreated) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyCreateCreateCreated) SetPrev(val OptUUID) {
+func (s *CytologyCreateCreateCreated) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyCreateCreateCreated) SetParentPrev(val OptUUID) {
+func (s *CytologyCreateCreateCreated) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyCreateCreateCreated) SetPatientCard(val OptInt) {
+func (s *CytologyCreateCreateCreated) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -462,11 +474,12 @@ type CytologyCreateCreateReq struct {
 	Calcitonin        OptInt                                      `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                      `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                      `json:"thyroglobulin"`
-	Prev              OptUUID                                     `json:"prev"`
-	ParentPrev        OptUUID                                     `json:"parent_prev"`
-	PatientCard       OptInt                                      `json:"patient_card"`
+	Prev              OptNilUUID                                  `json:"prev"`
+	ParentPrev        OptNilUUID                                  `json:"parent_prev"`
+	// UUID карточки пациента.
+	PatientCard OptNilUUID `json:"patient_card"`
 	// Детали диагностики в формате JSON.
-	Details OptString `json:"details"`
+	Details OptNilString `json:"details"`
 	// Является ли данная версия измениний последней?.
 	IsLast      OptBool     `json:"is_last"`
 	DiagnosDate OptDateTime `json:"diagnos_date"`
@@ -508,22 +521,22 @@ func (s *CytologyCreateCreateReq) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyCreateCreateReq) GetPrev() OptUUID {
+func (s *CytologyCreateCreateReq) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyCreateCreateReq) GetParentPrev() OptUUID {
+func (s *CytologyCreateCreateReq) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyCreateCreateReq) GetPatientCard() OptInt {
+func (s *CytologyCreateCreateReq) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
 // GetDetails returns the value of Details.
-func (s *CytologyCreateCreateReq) GetDetails() OptString {
+func (s *CytologyCreateCreateReq) GetDetails() OptNilString {
 	return s.Details
 }
 
@@ -573,22 +586,22 @@ func (s *CytologyCreateCreateReq) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyCreateCreateReq) SetPrev(val OptUUID) {
+func (s *CytologyCreateCreateReq) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyCreateCreateReq) SetParentPrev(val OptUUID) {
+func (s *CytologyCreateCreateReq) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyCreateCreateReq) SetPatientCard(val OptInt) {
+func (s *CytologyCreateCreateReq) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
 // SetDetails sets the value of Details.
-func (s *CytologyCreateCreateReq) SetDetails(val OptString) {
+func (s *CytologyCreateCreateReq) SetDetails(val OptNilString) {
 	s.Details = val
 }
 
@@ -720,8 +733,8 @@ func (*CytologyHistoryReadNotFound) cytologyHistoryReadRes() {}
 
 type CytologyHistoryReadOK struct {
 	Count    int                                `json:"count"`
-	Next     OptURI                             `json:"next"`
-	Previous OptURI                             `json:"previous"`
+	Next     OptNilURI                          `json:"next"`
+	Previous OptNilURI                          `json:"previous"`
 	Results  []CytologyHistoryReadOKResultsItem `json:"results"`
 }
 
@@ -731,12 +744,12 @@ func (s *CytologyHistoryReadOK) GetCount() int {
 }
 
 // GetNext returns the value of Next.
-func (s *CytologyHistoryReadOK) GetNext() OptURI {
+func (s *CytologyHistoryReadOK) GetNext() OptNilURI {
 	return s.Next
 }
 
 // GetPrevious returns the value of Previous.
-func (s *CytologyHistoryReadOK) GetPrevious() OptURI {
+func (s *CytologyHistoryReadOK) GetPrevious() OptNilURI {
 	return s.Previous
 }
 
@@ -751,12 +764,12 @@ func (s *CytologyHistoryReadOK) SetCount(val int) {
 }
 
 // SetNext sets the value of Next.
-func (s *CytologyHistoryReadOK) SetNext(val OptURI) {
+func (s *CytologyHistoryReadOK) SetNext(val OptNilURI) {
 	s.Next = val
 }
 
 // SetPrevious sets the value of Previous.
-func (s *CytologyHistoryReadOK) SetPrevious(val OptURI) {
+func (s *CytologyHistoryReadOK) SetPrevious(val OptNilURI) {
 	s.Previous = val
 }
 
@@ -771,17 +784,17 @@ type CytologyHistoryReadOKResultsItem struct {
 	ID                OptInt                                               `json:"id"`
 	IsLast            OptBool                                              `json:"is_last"`
 	DiagnosDate       OptDateTime                                          `json:"diagnos_date"`
-	Details           *CytologyHistoryReadOKResultsItemDetails             `json:"details"`
+	Details           OptCytologyHistoryReadOKResultsItemDetails           `json:"details"`
 	DiagnosticMarking OptCytologyHistoryReadOKResultsItemDiagnosticMarking `json:"diagnostic_marking"`
 	DiagnosticNumber  int                                                  `json:"diagnostic_number"`
 	MaterialType      OptCytologyHistoryReadOKResultsItemMaterialType      `json:"material_type"`
 	Calcitonin        OptInt                                               `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                               `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                               `json:"thyroglobulin"`
-	Prev              OptUUID                                              `json:"prev"`
-	ParentPrev        OptUUID                                              `json:"parent_prev"`
-	PatientCard       OptInt                                               `json:"patient_card"`
-	OriginalImage     OptInt                                               `json:"original_image"`
+	Prev              OptNilUUID                                           `json:"prev"`
+	ParentPrev        OptNilUUID                                           `json:"parent_prev"`
+	PatientCard       OptNilUUID                                           `json:"patient_card"`
+	OriginalImage     OptNilInt                                            `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -800,7 +813,7 @@ func (s *CytologyHistoryReadOKResultsItem) GetDiagnosDate() OptDateTime {
 }
 
 // GetDetails returns the value of Details.
-func (s *CytologyHistoryReadOKResultsItem) GetDetails() *CytologyHistoryReadOKResultsItemDetails {
+func (s *CytologyHistoryReadOKResultsItem) GetDetails() OptCytologyHistoryReadOKResultsItemDetails {
 	return s.Details
 }
 
@@ -835,22 +848,22 @@ func (s *CytologyHistoryReadOKResultsItem) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyHistoryReadOKResultsItem) GetPrev() OptUUID {
+func (s *CytologyHistoryReadOKResultsItem) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyHistoryReadOKResultsItem) GetParentPrev() OptUUID {
+func (s *CytologyHistoryReadOKResultsItem) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyHistoryReadOKResultsItem) GetPatientCard() OptInt {
+func (s *CytologyHistoryReadOKResultsItem) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
 // GetOriginalImage returns the value of OriginalImage.
-func (s *CytologyHistoryReadOKResultsItem) GetOriginalImage() OptInt {
+func (s *CytologyHistoryReadOKResultsItem) GetOriginalImage() OptNilInt {
 	return s.OriginalImage
 }
 
@@ -870,7 +883,7 @@ func (s *CytologyHistoryReadOKResultsItem) SetDiagnosDate(val OptDateTime) {
 }
 
 // SetDetails sets the value of Details.
-func (s *CytologyHistoryReadOKResultsItem) SetDetails(val *CytologyHistoryReadOKResultsItemDetails) {
+func (s *CytologyHistoryReadOKResultsItem) SetDetails(val OptCytologyHistoryReadOKResultsItemDetails) {
 	s.Details = val
 }
 
@@ -905,22 +918,22 @@ func (s *CytologyHistoryReadOKResultsItem) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyHistoryReadOKResultsItem) SetPrev(val OptUUID) {
+func (s *CytologyHistoryReadOKResultsItem) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyHistoryReadOKResultsItem) SetParentPrev(val OptUUID) {
+func (s *CytologyHistoryReadOKResultsItem) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyHistoryReadOKResultsItem) SetPatientCard(val OptInt) {
+func (s *CytologyHistoryReadOKResultsItem) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
 // SetOriginalImage sets the value of OriginalImage.
-func (s *CytologyHistoryReadOKResultsItem) SetOriginalImage(val OptInt) {
+func (s *CytologyHistoryReadOKResultsItem) SetOriginalImage(val OptNilInt) {
 	s.OriginalImage = val
 }
 
@@ -1032,7 +1045,7 @@ func (s *CytologyHistoryReadOKResultsItemMaterialType) UnmarshalText(data []byte
 // Ref: #/components/schemas/cytologyPatientShot
 type CytologyPatientShot struct {
 	ID                uuid.UUID                               `json:"id"`
-	PatientCard       CytologyShotPatientCard                 `json:"patient_card"`
+	PatientCard       OptNilUUID                              `json:"patient_card"`
 	IsLast            bool                                    `json:"is_last"`
 	DiagnosDate       time.Time                               `json:"diagnos_date"`
 	Details           CytologyShotDetails                     `json:"details"`
@@ -1053,7 +1066,7 @@ func (s *CytologyPatientShot) GetID() uuid.UUID {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyPatientShot) GetPatientCard() CytologyShotPatientCard {
+func (s *CytologyPatientShot) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -1123,7 +1136,7 @@ func (s *CytologyPatientShot) SetID(val uuid.UUID) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyPatientShot) SetPatientCard(val CytologyShotPatientCard) {
+func (s *CytologyPatientShot) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -1366,7 +1379,7 @@ func (*CytologyReadOK) cytologyReadRes() {}
 
 type CytologyReadOKInfo struct {
 	Patient     Patient                      `json:"patient"`
-	PatientCard PatientCard                  `json:"patient_card"`
+	PatientCard OptNilUUID                   `json:"patient_card"`
 	ImageGroup  CytologyReadOKInfoImageGroup `json:"image_group"`
 }
 
@@ -1376,7 +1389,7 @@ func (s *CytologyReadOKInfo) GetPatient() Patient {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyReadOKInfo) GetPatientCard() PatientCard {
+func (s *CytologyReadOKInfo) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -1391,7 +1404,7 @@ func (s *CytologyReadOKInfo) SetPatient(val Patient) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyReadOKInfo) SetPatientCard(val PatientCard) {
+func (s *CytologyReadOKInfo) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -1404,16 +1417,16 @@ type CytologyReadOKInfoImageGroup struct {
 	ID                OptInt                                           `json:"id"`
 	IsLast            OptBool                                          `json:"is_last"`
 	DiagnosDate       OptDateTime                                      `json:"diagnos_date"`
-	Details           *CytologyReadOKInfoImageGroupDetails             `json:"details"`
+	Details           OptCytologyReadOKInfoImageGroupDetails           `json:"details"`
 	DiagnosticMarking OptCytologyReadOKInfoImageGroupDiagnosticMarking `json:"diagnostic_marking"`
 	DiagnosticNumber  int                                              `json:"diagnostic_number"`
 	MaterialType      OptCytologyReadOKInfoImageGroupMaterialType      `json:"material_type"`
 	Calcitonin        OptInt                                           `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                           `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                           `json:"thyroglobulin"`
-	Prev              OptUUID                                          `json:"prev"`
-	ParentPrev        OptUUID                                          `json:"parent_prev"`
-	OriginalImage     OptInt                                           `json:"original_image"`
+	Prev              OptNilUUID                                       `json:"prev"`
+	ParentPrev        OptNilUUID                                       `json:"parent_prev"`
+	OriginalImage     OptNilInt                                        `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -1432,7 +1445,7 @@ func (s *CytologyReadOKInfoImageGroup) GetDiagnosDate() OptDateTime {
 }
 
 // GetDetails returns the value of Details.
-func (s *CytologyReadOKInfoImageGroup) GetDetails() *CytologyReadOKInfoImageGroupDetails {
+func (s *CytologyReadOKInfoImageGroup) GetDetails() OptCytologyReadOKInfoImageGroupDetails {
 	return s.Details
 }
 
@@ -1467,17 +1480,17 @@ func (s *CytologyReadOKInfoImageGroup) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyReadOKInfoImageGroup) GetPrev() OptUUID {
+func (s *CytologyReadOKInfoImageGroup) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyReadOKInfoImageGroup) GetParentPrev() OptUUID {
+func (s *CytologyReadOKInfoImageGroup) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
 // GetOriginalImage returns the value of OriginalImage.
-func (s *CytologyReadOKInfoImageGroup) GetOriginalImage() OptInt {
+func (s *CytologyReadOKInfoImageGroup) GetOriginalImage() OptNilInt {
 	return s.OriginalImage
 }
 
@@ -1497,7 +1510,7 @@ func (s *CytologyReadOKInfoImageGroup) SetDiagnosDate(val OptDateTime) {
 }
 
 // SetDetails sets the value of Details.
-func (s *CytologyReadOKInfoImageGroup) SetDetails(val *CytologyReadOKInfoImageGroupDetails) {
+func (s *CytologyReadOKInfoImageGroup) SetDetails(val OptCytologyReadOKInfoImageGroupDetails) {
 	s.Details = val
 }
 
@@ -1532,17 +1545,17 @@ func (s *CytologyReadOKInfoImageGroup) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyReadOKInfoImageGroup) SetPrev(val OptUUID) {
+func (s *CytologyReadOKInfoImageGroup) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyReadOKInfoImageGroup) SetParentPrev(val OptUUID) {
+func (s *CytologyReadOKInfoImageGroup) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
 // SetOriginalImage sets the value of OriginalImage.
-func (s *CytologyReadOKInfoImageGroup) SetOriginalImage(val OptInt) {
+func (s *CytologyReadOKInfoImageGroup) SetOriginalImage(val OptNilInt) {
 	s.OriginalImage = val
 }
 
@@ -2377,8 +2390,8 @@ func (*CytologySegmentsListNotFound) cytologySegmentsListRes() {}
 
 type CytologySegmentsListOK struct {
 	Count    int                                 `json:"count"`
-	Next     OptURI                              `json:"next"`
-	Previous OptURI                              `json:"previous"`
+	Next     OptNilURI                           `json:"next"`
+	Previous OptNilURI                           `json:"previous"`
 	Results  []CytologySegmentsListOKResultsItem `json:"results"`
 }
 
@@ -2388,12 +2401,12 @@ func (s *CytologySegmentsListOK) GetCount() int {
 }
 
 // GetNext returns the value of Next.
-func (s *CytologySegmentsListOK) GetNext() OptURI {
+func (s *CytologySegmentsListOK) GetNext() OptNilURI {
 	return s.Next
 }
 
 // GetPrevious returns the value of Previous.
-func (s *CytologySegmentsListOK) GetPrevious() OptURI {
+func (s *CytologySegmentsListOK) GetPrevious() OptNilURI {
 	return s.Previous
 }
 
@@ -2408,12 +2421,12 @@ func (s *CytologySegmentsListOK) SetCount(val int) {
 }
 
 // SetNext sets the value of Next.
-func (s *CytologySegmentsListOK) SetNext(val OptURI) {
+func (s *CytologySegmentsListOK) SetNext(val OptNilURI) {
 	s.Next = val
 }
 
 // SetPrevious sets the value of Previous.
-func (s *CytologySegmentsListOK) SetPrevious(val OptURI) {
+func (s *CytologySegmentsListOK) SetPrevious(val OptNilURI) {
 	s.Previous = val
 }
 
@@ -2425,12 +2438,12 @@ func (s *CytologySegmentsListOK) SetResults(val []CytologySegmentsListOKResultsI
 func (*CytologySegmentsListOK) cytologySegmentsListRes() {}
 
 type CytologySegmentsListOKResultsItem struct {
-	ID        OptInt                                        `json:"id"`
-	Data      []CytologySegmentsListOKResultsItemDataItem   `json:"data"`
-	GroupType OptCytologySegmentsListOKResultsItemGroupType `json:"group_type"`
-	SegType   OptCytologySegmentsListOKResultsItemSegType   `json:"seg_type"`
-	Details   *CytologySegmentsListOKResultsItemDetails     `json:"details"`
-	IsAi      OptBool                                       `json:"is_ai"`
+	ID        OptInt                                         `json:"id"`
+	Data      []CytologySegmentsListOKResultsItemDataItem    `json:"data"`
+	GroupType OptCytologySegmentsListOKResultsItemGroupType  `json:"group_type"`
+	SegType   OptCytologySegmentsListOKResultsItemSegType    `json:"seg_type"`
+	Details   OptNilCytologySegmentsListOKResultsItemDetails `json:"details"`
+	IsAi      OptBool                                        `json:"is_ai"`
 }
 
 // GetID returns the value of ID.
@@ -2454,7 +2467,7 @@ func (s *CytologySegmentsListOKResultsItem) GetSegType() OptCytologySegmentsList
 }
 
 // GetDetails returns the value of Details.
-func (s *CytologySegmentsListOKResultsItem) GetDetails() *CytologySegmentsListOKResultsItemDetails {
+func (s *CytologySegmentsListOKResultsItem) GetDetails() OptNilCytologySegmentsListOKResultsItemDetails {
 	return s.Details
 }
 
@@ -2484,7 +2497,7 @@ func (s *CytologySegmentsListOKResultsItem) SetSegType(val OptCytologySegmentsLi
 }
 
 // SetDetails sets the value of Details.
-func (s *CytologySegmentsListOKResultsItem) SetDetails(val *CytologySegmentsListOKResultsItemDetails) {
+func (s *CytologySegmentsListOKResultsItem) SetDetails(val OptNilCytologySegmentsListOKResultsItemDetails) {
 	s.Details = val
 }
 
@@ -2576,7 +2589,80 @@ func (s *CytologySegmentsListOKResultsItemDataItemPointsItem) SetY(val int) {
 	s.Y = val
 }
 
-type CytologySegmentsListOKResultsItemDetails struct{}
+type CytologySegmentsListOKResultsItemDetails struct {
+	Classification OptCytologySegmentsListOKResultsItemDetailsClassification `json:"classification"`
+}
+
+// GetClassification returns the value of Classification.
+func (s *CytologySegmentsListOKResultsItemDetails) GetClassification() OptCytologySegmentsListOKResultsItemDetailsClassification {
+	return s.Classification
+}
+
+// SetClassification sets the value of Classification.
+func (s *CytologySegmentsListOKResultsItemDetails) SetClassification(val OptCytologySegmentsListOKResultsItemDetailsClassification) {
+	s.Classification = val
+}
+
+type CytologySegmentsListOKResultsItemDetailsClassification struct {
+	Name  OptString                                                      `json:"name"`
+	Color OptCytologySegmentsListOKResultsItemDetailsClassificationColor `json:"color"`
+}
+
+// GetName returns the value of Name.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) GetName() OptString {
+	return s.Name
+}
+
+// GetColor returns the value of Color.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) GetColor() OptCytologySegmentsListOKResultsItemDetailsClassificationColor {
+	return s.Color
+}
+
+// SetName sets the value of Name.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) SetName(val OptString) {
+	s.Name = val
+}
+
+// SetColor sets the value of Color.
+func (s *CytologySegmentsListOKResultsItemDetailsClassification) SetColor(val OptCytologySegmentsListOKResultsItemDetailsClassificationColor) {
+	s.Color = val
+}
+
+type CytologySegmentsListOKResultsItemDetailsClassificationColor struct {
+	R OptInt `json:"r"`
+	G OptInt `json:"g"`
+	B OptInt `json:"b"`
+}
+
+// GetR returns the value of R.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) GetR() OptInt {
+	return s.R
+}
+
+// GetG returns the value of G.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) GetG() OptInt {
+	return s.G
+}
+
+// GetB returns the value of B.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) GetB() OptInt {
+	return s.B
+}
+
+// SetR sets the value of R.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetR(val OptInt) {
+	s.R = val
+}
+
+// SetG sets the value of G.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetG(val OptInt) {
+	s.G = val
+}
+
+// SetB sets the value of B.
+func (s *CytologySegmentsListOKResultsItemDetailsClassificationColor) SetB(val OptInt) {
+	s.B = val
+}
 
 type CytologySegmentsListOKResultsItemGroupType string
 
@@ -3023,32 +3109,6 @@ func (s *CytologyShotPatient) SetIsActive(val bool) {
 	s.IsActive = val
 }
 
-// Ref: #/components/schemas/cytologyShotPatientCard
-type CytologyShotPatientCard struct {
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *CytologyShotPatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *CytologyShotPatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *CytologyShotPatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *CytologyShotPatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
-}
-
 type CytologyUpdatePartialUpdateBadRequest ErrorStatusCode
 
 func (*CytologyUpdatePartialUpdateBadRequest) cytologyUpdatePartialUpdateRes() {}
@@ -3062,20 +3122,20 @@ type CytologyUpdatePartialUpdateNotFound ErrorStatusCode
 func (*CytologyUpdatePartialUpdateNotFound) cytologyUpdatePartialUpdateRes() {}
 
 type CytologyUpdatePartialUpdateOK struct {
-	ID                OptInt                                   `json:"id"`
-	PatientCard       CytologyUpdatePartialUpdateOKPatientCard `json:"patient_card"`
-	Details           *CytologyUpdatePartialUpdateOKDetails    `json:"details"`
-	IsLast            OptBool                                  `json:"is_last"`
-	DiagnosDate       OptDateTime                              `json:"diagnos_date"`
-	DiagnosticMarking OptString                                `json:"diagnostic_marking"`
-	DiagnosticNumber  int                                      `json:"diagnostic_number"`
-	MaterialType      OptString                                `json:"material_type"`
-	Calcitonin        OptInt                                   `json:"calcitonin"`
-	CalcitoninInFlush OptInt                                   `json:"calcitonin_in_flush"`
-	Thyroglobulin     OptInt                                   `json:"thyroglobulin"`
-	Prev              OptUUID                                  `json:"prev"`
-	ParentPrev        OptUUID                                  `json:"parent_prev"`
-	OriginalImage     OptInt                                   `json:"original_image"`
+	ID                OptInt                                `json:"id"`
+	PatientCard       OptNilUUID                            `json:"patient_card"`
+	Details           *CytologyUpdatePartialUpdateOKDetails `json:"details"`
+	IsLast            OptBool                               `json:"is_last"`
+	DiagnosDate       OptDateTime                           `json:"diagnos_date"`
+	DiagnosticMarking OptString                             `json:"diagnostic_marking"`
+	DiagnosticNumber  int                                   `json:"diagnostic_number"`
+	MaterialType      OptString                             `json:"material_type"`
+	Calcitonin        OptInt                                `json:"calcitonin"`
+	CalcitoninInFlush OptInt                                `json:"calcitonin_in_flush"`
+	Thyroglobulin     OptInt                                `json:"thyroglobulin"`
+	Prev              OptNilUUID                            `json:"prev"`
+	ParentPrev        OptNilUUID                            `json:"parent_prev"`
+	OriginalImage     OptInt                                `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -3084,7 +3144,7 @@ func (s *CytologyUpdatePartialUpdateOK) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateOK) GetPatientCard() CytologyUpdatePartialUpdateOKPatientCard {
+func (s *CytologyUpdatePartialUpdateOK) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -3134,12 +3194,12 @@ func (s *CytologyUpdatePartialUpdateOK) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdatePartialUpdateOK) GetPrev() OptUUID {
+func (s *CytologyUpdatePartialUpdateOK) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateOK) GetParentPrev() OptUUID {
+func (s *CytologyUpdatePartialUpdateOK) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
@@ -3154,7 +3214,7 @@ func (s *CytologyUpdatePartialUpdateOK) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateOK) SetPatientCard(val CytologyUpdatePartialUpdateOKPatientCard) {
+func (s *CytologyUpdatePartialUpdateOK) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -3204,12 +3264,12 @@ func (s *CytologyUpdatePartialUpdateOK) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdatePartialUpdateOK) SetPrev(val OptUUID) {
+func (s *CytologyUpdatePartialUpdateOK) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateOK) SetParentPrev(val OptUUID) {
+func (s *CytologyUpdatePartialUpdateOK) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
@@ -3222,11 +3282,9 @@ func (*CytologyUpdatePartialUpdateOK) cytologyUpdatePartialUpdateRes() {}
 
 type CytologyUpdatePartialUpdateOKDetails struct{}
 
-type CytologyUpdatePartialUpdateOKPatientCard struct{}
-
 type CytologyUpdatePartialUpdateReq struct {
 	ID                OptInt                                             `json:"id"`
-	PatientCard       CytologyUpdatePartialUpdateReqPatientCard          `json:"patient_card"`
+	PatientCard       OptNilUUID                                         `json:"patient_card"`
 	Details           *CytologyUpdatePartialUpdateReqDetails             `json:"details"`
 	IsLast            OptBool                                            `json:"is_last"`
 	DiagnosDate       OptDateTime                                        `json:"diagnos_date"`
@@ -3236,8 +3294,8 @@ type CytologyUpdatePartialUpdateReq struct {
 	Calcitonin        OptInt                                             `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                             `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                             `json:"thyroglobulin"`
-	Prev              OptUUID                                            `json:"prev"`
-	ParentPrev        OptUUID                                            `json:"parent_prev"`
+	Prev              OptNilUUID                                         `json:"prev"`
+	ParentPrev        OptNilUUID                                         `json:"parent_prev"`
 	OriginalImage     OptInt                                             `json:"original_image"`
 }
 
@@ -3247,7 +3305,7 @@ func (s *CytologyUpdatePartialUpdateReq) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateReq) GetPatientCard() CytologyUpdatePartialUpdateReqPatientCard {
+func (s *CytologyUpdatePartialUpdateReq) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -3297,12 +3355,12 @@ func (s *CytologyUpdatePartialUpdateReq) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdatePartialUpdateReq) GetPrev() OptUUID {
+func (s *CytologyUpdatePartialUpdateReq) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateReq) GetParentPrev() OptUUID {
+func (s *CytologyUpdatePartialUpdateReq) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
@@ -3317,7 +3375,7 @@ func (s *CytologyUpdatePartialUpdateReq) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdatePartialUpdateReq) SetPatientCard(val CytologyUpdatePartialUpdateReqPatientCard) {
+func (s *CytologyUpdatePartialUpdateReq) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -3367,12 +3425,12 @@ func (s *CytologyUpdatePartialUpdateReq) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdatePartialUpdateReq) SetPrev(val OptUUID) {
+func (s *CytologyUpdatePartialUpdateReq) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdatePartialUpdateReq) SetParentPrev(val OptUUID) {
+func (s *CytologyUpdatePartialUpdateReq) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
@@ -3486,42 +3544,6 @@ func (s *CytologyUpdatePartialUpdateReqMaterialType) UnmarshalText(data []byte) 
 	}
 }
 
-type CytologyUpdatePartialUpdateReqPatientCard struct {
-	Patient            OptInt      `json:"patient"`
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-}
-
-// GetPatient returns the value of Patient.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) GetPatient() OptInt {
-	return s.Patient
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// SetPatient sets the value of Patient.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetPatient(val OptInt) {
-	s.Patient = val
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *CytologyUpdatePartialUpdateReqPatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
-}
-
 type CytologyUpdatePartialUpdateUnprocessableEntity ErrorStatusCode
 
 func (*CytologyUpdatePartialUpdateUnprocessableEntity) cytologyUpdatePartialUpdateRes() {}
@@ -3539,20 +3561,20 @@ type CytologyUpdateUpdateNotFound ErrorStatusCode
 func (*CytologyUpdateUpdateNotFound) cytologyUpdateUpdateRes() {}
 
 type CytologyUpdateUpdateOK struct {
-	ID                OptInt                            `json:"id"`
-	PatientCard       CytologyUpdateUpdateOKPatientCard `json:"patient_card"`
-	Details           *CytologyUpdateUpdateOKDetails    `json:"details"`
-	IsLast            OptBool                           `json:"is_last"`
-	DiagnosDate       OptDateTime                       `json:"diagnos_date"`
-	DiagnosticMarking OptString                         `json:"diagnostic_marking"`
-	DiagnosticNumber  int                               `json:"diagnostic_number"`
-	MaterialType      OptString                         `json:"material_type"`
-	Calcitonin        OptInt                            `json:"calcitonin"`
-	CalcitoninInFlush OptInt                            `json:"calcitonin_in_flush"`
-	Thyroglobulin     OptInt                            `json:"thyroglobulin"`
-	Prev              OptUUID                           `json:"prev"`
-	ParentPrev        OptUUID                           `json:"parent_prev"`
-	OriginalImage     OptInt                            `json:"original_image"`
+	ID                OptInt                         `json:"id"`
+	PatientCard       OptNilUUID                     `json:"patient_card"`
+	Details           *CytologyUpdateUpdateOKDetails `json:"details"`
+	IsLast            OptBool                        `json:"is_last"`
+	DiagnosDate       OptDateTime                    `json:"diagnos_date"`
+	DiagnosticMarking OptString                      `json:"diagnostic_marking"`
+	DiagnosticNumber  int                            `json:"diagnostic_number"`
+	MaterialType      OptString                      `json:"material_type"`
+	Calcitonin        OptInt                         `json:"calcitonin"`
+	CalcitoninInFlush OptInt                         `json:"calcitonin_in_flush"`
+	Thyroglobulin     OptInt                         `json:"thyroglobulin"`
+	Prev              OptNilUUID                     `json:"prev"`
+	ParentPrev        OptNilUUID                     `json:"parent_prev"`
+	OriginalImage     OptInt                         `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -3561,7 +3583,7 @@ func (s *CytologyUpdateUpdateOK) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdateUpdateOK) GetPatientCard() CytologyUpdateUpdateOKPatientCard {
+func (s *CytologyUpdateUpdateOK) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -3611,12 +3633,12 @@ func (s *CytologyUpdateUpdateOK) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdateUpdateOK) GetPrev() OptUUID {
+func (s *CytologyUpdateUpdateOK) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdateUpdateOK) GetParentPrev() OptUUID {
+func (s *CytologyUpdateUpdateOK) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
@@ -3631,7 +3653,7 @@ func (s *CytologyUpdateUpdateOK) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdateUpdateOK) SetPatientCard(val CytologyUpdateUpdateOKPatientCard) {
+func (s *CytologyUpdateUpdateOK) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -3681,12 +3703,12 @@ func (s *CytologyUpdateUpdateOK) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdateUpdateOK) SetPrev(val OptUUID) {
+func (s *CytologyUpdateUpdateOK) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdateUpdateOK) SetParentPrev(val OptUUID) {
+func (s *CytologyUpdateUpdateOK) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
@@ -3699,11 +3721,9 @@ func (*CytologyUpdateUpdateOK) cytologyUpdateUpdateRes() {}
 
 type CytologyUpdateUpdateOKDetails struct{}
 
-type CytologyUpdateUpdateOKPatientCard struct{}
-
 type CytologyUpdateUpdateReq struct {
 	ID                OptInt                                      `json:"id"`
-	PatientCard       CytologyUpdateUpdateReqPatientCard          `json:"patient_card"`
+	PatientCard       OptNilUUID                                  `json:"patient_card"`
 	Details           OptCytologyUpdateUpdateReqDetails           `json:"details"`
 	IsLast            OptBool                                     `json:"is_last"`
 	DiagnosDate       OptDateTime                                 `json:"diagnos_date"`
@@ -3713,8 +3733,8 @@ type CytologyUpdateUpdateReq struct {
 	Calcitonin        OptInt                                      `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                      `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                      `json:"thyroglobulin"`
-	Prev              OptUUID                                     `json:"prev"`
-	ParentPrev        OptUUID                                     `json:"parent_prev"`
+	Prev              OptNilUUID                                  `json:"prev"`
+	ParentPrev        OptNilUUID                                  `json:"parent_prev"`
 	OriginalImage     OptInt                                      `json:"original_image"`
 }
 
@@ -3724,7 +3744,7 @@ func (s *CytologyUpdateUpdateReq) GetID() OptInt {
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdateUpdateReq) GetPatientCard() CytologyUpdateUpdateReqPatientCard {
+func (s *CytologyUpdateUpdateReq) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
@@ -3774,12 +3794,12 @@ func (s *CytologyUpdateUpdateReq) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdateUpdateReq) GetPrev() OptUUID {
+func (s *CytologyUpdateUpdateReq) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdateUpdateReq) GetParentPrev() OptUUID {
+func (s *CytologyUpdateUpdateReq) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
@@ -3794,7 +3814,7 @@ func (s *CytologyUpdateUpdateReq) SetID(val OptInt) {
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdateUpdateReq) SetPatientCard(val CytologyUpdateUpdateReqPatientCard) {
+func (s *CytologyUpdateUpdateReq) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
@@ -3844,12 +3864,12 @@ func (s *CytologyUpdateUpdateReq) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdateUpdateReq) SetPrev(val OptUUID) {
+func (s *CytologyUpdateUpdateReq) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdateUpdateReq) SetParentPrev(val OptUUID) {
+func (s *CytologyUpdateUpdateReq) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
@@ -3868,10 +3888,10 @@ type CytologyUpdateUpdateReqDetails struct {
 	Calcitonin        OptInt                                             `json:"calcitonin"`
 	CalcitoninInFlush OptInt                                             `json:"calcitonin_in_flush"`
 	Thyroglobulin     OptInt                                             `json:"thyroglobulin"`
-	Prev              OptUUID                                            `json:"prev"`
-	ParentPrev        OptUUID                                            `json:"parent_prev"`
-	PatientCard       OptInt                                             `json:"patient_card"`
-	OriginalImage     OptInt                                             `json:"original_image"`
+	Prev              OptNilUUID                                         `json:"prev"`
+	ParentPrev        OptNilUUID                                         `json:"parent_prev"`
+	PatientCard       OptNilUUID                                         `json:"patient_card"`
+	OriginalImage     OptNilInt                                          `json:"original_image"`
 }
 
 // GetID returns the value of ID.
@@ -3920,22 +3940,22 @@ func (s *CytologyUpdateUpdateReqDetails) GetThyroglobulin() OptInt {
 }
 
 // GetPrev returns the value of Prev.
-func (s *CytologyUpdateUpdateReqDetails) GetPrev() OptUUID {
+func (s *CytologyUpdateUpdateReqDetails) GetPrev() OptNilUUID {
 	return s.Prev
 }
 
 // GetParentPrev returns the value of ParentPrev.
-func (s *CytologyUpdateUpdateReqDetails) GetParentPrev() OptUUID {
+func (s *CytologyUpdateUpdateReqDetails) GetParentPrev() OptNilUUID {
 	return s.ParentPrev
 }
 
 // GetPatientCard returns the value of PatientCard.
-func (s *CytologyUpdateUpdateReqDetails) GetPatientCard() OptInt {
+func (s *CytologyUpdateUpdateReqDetails) GetPatientCard() OptNilUUID {
 	return s.PatientCard
 }
 
 // GetOriginalImage returns the value of OriginalImage.
-func (s *CytologyUpdateUpdateReqDetails) GetOriginalImage() OptInt {
+func (s *CytologyUpdateUpdateReqDetails) GetOriginalImage() OptNilInt {
 	return s.OriginalImage
 }
 
@@ -3985,22 +4005,22 @@ func (s *CytologyUpdateUpdateReqDetails) SetThyroglobulin(val OptInt) {
 }
 
 // SetPrev sets the value of Prev.
-func (s *CytologyUpdateUpdateReqDetails) SetPrev(val OptUUID) {
+func (s *CytologyUpdateUpdateReqDetails) SetPrev(val OptNilUUID) {
 	s.Prev = val
 }
 
 // SetParentPrev sets the value of ParentPrev.
-func (s *CytologyUpdateUpdateReqDetails) SetParentPrev(val OptUUID) {
+func (s *CytologyUpdateUpdateReqDetails) SetParentPrev(val OptNilUUID) {
 	s.ParentPrev = val
 }
 
 // SetPatientCard sets the value of PatientCard.
-func (s *CytologyUpdateUpdateReqDetails) SetPatientCard(val OptInt) {
+func (s *CytologyUpdateUpdateReqDetails) SetPatientCard(val OptNilUUID) {
 	s.PatientCard = val
 }
 
 // SetOriginalImage sets the value of OriginalImage.
-func (s *CytologyUpdateUpdateReqDetails) SetOriginalImage(val OptInt) {
+func (s *CytologyUpdateUpdateReqDetails) SetOriginalImage(val OptNilInt) {
 	s.OriginalImage = val
 }
 
@@ -4208,42 +4228,6 @@ func (s *CytologyUpdateUpdateReqMaterialType) UnmarshalText(data []byte) error {
 	default:
 		return errors.Errorf("invalid value: %q", data)
 	}
-}
-
-type CytologyUpdateUpdateReqPatientCard struct {
-	Patient            OptInt      `json:"patient"`
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-}
-
-// GetPatient returns the value of Patient.
-func (s *CytologyUpdateUpdateReqPatientCard) GetPatient() OptInt {
-	return s.Patient
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *CytologyUpdateUpdateReqPatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *CytologyUpdateUpdateReqPatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// SetPatient sets the value of Patient.
-func (s *CytologyUpdateUpdateReqPatientCard) SetPatient(val OptInt) {
-	s.Patient = val
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *CytologyUpdateUpdateReqPatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *CytologyUpdateUpdateReqPatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
 }
 
 type CytologyUpdateUpdateUnprocessableEntity ErrorStatusCode
@@ -4702,6 +4686,30 @@ func (s *ErrorStatusCode) SetResponse(val Error) {
 }
 
 func (*ErrorStatusCode) downloadUziIDImageIDGetRes()     {}
+func (*ErrorStatusCode) ktIDDeleteRes()                  {}
+func (*ErrorStatusCode) ktIDGetRes()                     {}
+func (*ErrorStatusCode) ktIDPatchRes()                   {}
+func (*ErrorStatusCode) ktPostRes()                      {}
+func (*ErrorStatusCode) mriDevicePostRes()               {}
+func (*ErrorStatusCode) mriDevicesGetRes()               {}
+func (*ErrorStatusCode) mriIDDeleteRes()                 {}
+func (*ErrorStatusCode) mriIDEchographicsGetRes()        {}
+func (*ErrorStatusCode) mriIDEchographicsPatchRes()      {}
+func (*ErrorStatusCode) mriIDGetRes()                    {}
+func (*ErrorStatusCode) mriIDImagesGetRes()              {}
+func (*ErrorStatusCode) mriIDNodesGetRes()               {}
+func (*ErrorStatusCode) mriIDNodesSegmentsPostRes()      {}
+func (*ErrorStatusCode) mriIDPatchRes()                  {}
+func (*ErrorStatusCode) mriImageIDNodesSegmentsGetRes()  {}
+func (*ErrorStatusCode) mriNodesIDDeleteRes()            {}
+func (*ErrorStatusCode) mriNodesIDPatchRes()             {}
+func (*ErrorStatusCode) mriNodesIDSegmentsGetRes()       {}
+func (*ErrorStatusCode) mriPostRes()                     {}
+func (*ErrorStatusCode) mriSegmentIDDeleteRes()          {}
+func (*ErrorStatusCode) mriSegmentIDPatchRes()           {}
+func (*ErrorStatusCode) mriSegmentPostRes()              {}
+func (*ErrorStatusCode) mrisAuthorIDGetRes()             {}
+func (*ErrorStatusCode) mrisExternalIDGetRes()           {}
 func (*ErrorStatusCode) paymentProvidersGetRes()         {}
 func (*ErrorStatusCode) subscriptionsCheckActiveGetRes() {}
 func (*ErrorStatusCode) subscriptionsPurchasePostRes()   {}
@@ -4709,6 +4717,589 @@ func (*ErrorStatusCode) tariffPlansGetRes()              {}
 func (*ErrorStatusCode) tariffPlansIDGetRes()            {}
 func (*ErrorStatusCode) uziDevicesGetRes()               {}
 func (*ErrorStatusCode) yookassaWebhooksPostRes()        {}
+
+type ExamContor []ExamContorItem
+
+type ExamContorItem struct {
+	// X координата точки.
+	X int `json:"x"`
+	// Y координата точки.
+	Y int `json:"y"`
+}
+
+// GetX returns the value of X.
+func (s *ExamContorItem) GetX() int {
+	return s.X
+}
+
+// GetY returns the value of Y.
+func (s *ExamContorItem) GetY() int {
+	return s.Y
+}
+
+// SetX sets the value of X.
+func (s *ExamContorItem) SetX(val int) {
+	s.X = val
+}
+
+// SetY sets the value of Y.
+func (s *ExamContorItem) SetY(val int) {
+	s.Y = val
+}
+
+// Мрт аппарат.
+// Ref: #/components/schemas/exam_device
+type ExamDevice struct {
+	// Id устройства.
+	ID int `json:"id"`
+	// Название устройства.
+	Name string `json:"name"`
+}
+
+// GetID returns the value of ID.
+func (s *ExamDevice) GetID() int {
+	return s.ID
+}
+
+// GetName returns the value of Name.
+func (s *ExamDevice) GetName() string {
+	return s.Name
+}
+
+// SetID sets the value of ID.
+func (s *ExamDevice) SetID(val int) {
+	s.ID = val
+}
+
+// SetName sets the value of Name.
+func (s *ExamDevice) SetName(val string) {
+	s.Name = val
+}
+
+// Эхографическая информация.
+// Ref: #/components/schemas/exam_echographics
+type ExamEchographics struct {
+	// Id мрт.
+	ID uuid.UUID `json:"id"`
+	// Контуры.
+	Contors OptString `json:"contors"`
+	// Длина левого доли.
+	LeftLobeLength OptFloat64 `json:"left_lobe_length"`
+	// Ширина левого доли.
+	LeftLobeWidth OptFloat64 `json:"left_lobe_width"`
+	// Толщина левого доли.
+	LeftLobeThick OptFloat64 `json:"left_lobe_thick"`
+	// Объем левого доли.
+	LeftLobeVolum OptFloat64 `json:"left_lobe_volum"`
+	// Длина правого доли.
+	RightLobeLength OptFloat64 `json:"right_lobe_length"`
+	// Ширина правого доли.
+	RightLobeWidth OptFloat64 `json:"right_lobe_width"`
+	// Толщина правого доли.
+	RightLobeThick OptFloat64 `json:"right_lobe_thick"`
+	// Объем правого доли.
+	RightLobeVolum OptFloat64 `json:"right_lobe_volum"`
+	// Объем железы.
+	GlandVolum OptFloat64 `json:"gland_volum"`
+	// Перешеек.
+	Isthmus OptFloat64 `json:"isthmus"`
+	// Структура.
+	Struct OptString `json:"struct"`
+	// Эхогенность.
+	Echogenicity OptString `json:"echogenicity"`
+	// Регионарные лимфоузлы.
+	RegionalLymph OptString `json:"regional_lymph"`
+	// Васкуляризация по ЦДК.
+	Vascularization OptString `json:"vascularization"`
+	// Расположение.
+	Location OptString `json:"location"`
+	// Дополнительная информация.
+	Additional OptString `json:"additional"`
+	// Заключение.
+	Conclusion OptString `json:"conclusion"`
+}
+
+// GetID returns the value of ID.
+func (s *ExamEchographics) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetContors returns the value of Contors.
+func (s *ExamEchographics) GetContors() OptString {
+	return s.Contors
+}
+
+// GetLeftLobeLength returns the value of LeftLobeLength.
+func (s *ExamEchographics) GetLeftLobeLength() OptFloat64 {
+	return s.LeftLobeLength
+}
+
+// GetLeftLobeWidth returns the value of LeftLobeWidth.
+func (s *ExamEchographics) GetLeftLobeWidth() OptFloat64 {
+	return s.LeftLobeWidth
+}
+
+// GetLeftLobeThick returns the value of LeftLobeThick.
+func (s *ExamEchographics) GetLeftLobeThick() OptFloat64 {
+	return s.LeftLobeThick
+}
+
+// GetLeftLobeVolum returns the value of LeftLobeVolum.
+func (s *ExamEchographics) GetLeftLobeVolum() OptFloat64 {
+	return s.LeftLobeVolum
+}
+
+// GetRightLobeLength returns the value of RightLobeLength.
+func (s *ExamEchographics) GetRightLobeLength() OptFloat64 {
+	return s.RightLobeLength
+}
+
+// GetRightLobeWidth returns the value of RightLobeWidth.
+func (s *ExamEchographics) GetRightLobeWidth() OptFloat64 {
+	return s.RightLobeWidth
+}
+
+// GetRightLobeThick returns the value of RightLobeThick.
+func (s *ExamEchographics) GetRightLobeThick() OptFloat64 {
+	return s.RightLobeThick
+}
+
+// GetRightLobeVolum returns the value of RightLobeVolum.
+func (s *ExamEchographics) GetRightLobeVolum() OptFloat64 {
+	return s.RightLobeVolum
+}
+
+// GetGlandVolum returns the value of GlandVolum.
+func (s *ExamEchographics) GetGlandVolum() OptFloat64 {
+	return s.GlandVolum
+}
+
+// GetIsthmus returns the value of Isthmus.
+func (s *ExamEchographics) GetIsthmus() OptFloat64 {
+	return s.Isthmus
+}
+
+// GetStruct returns the value of Struct.
+func (s *ExamEchographics) GetStruct() OptString {
+	return s.Struct
+}
+
+// GetEchogenicity returns the value of Echogenicity.
+func (s *ExamEchographics) GetEchogenicity() OptString {
+	return s.Echogenicity
+}
+
+// GetRegionalLymph returns the value of RegionalLymph.
+func (s *ExamEchographics) GetRegionalLymph() OptString {
+	return s.RegionalLymph
+}
+
+// GetVascularization returns the value of Vascularization.
+func (s *ExamEchographics) GetVascularization() OptString {
+	return s.Vascularization
+}
+
+// GetLocation returns the value of Location.
+func (s *ExamEchographics) GetLocation() OptString {
+	return s.Location
+}
+
+// GetAdditional returns the value of Additional.
+func (s *ExamEchographics) GetAdditional() OptString {
+	return s.Additional
+}
+
+// GetConclusion returns the value of Conclusion.
+func (s *ExamEchographics) GetConclusion() OptString {
+	return s.Conclusion
+}
+
+// SetID sets the value of ID.
+func (s *ExamEchographics) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetContors sets the value of Contors.
+func (s *ExamEchographics) SetContors(val OptString) {
+	s.Contors = val
+}
+
+// SetLeftLobeLength sets the value of LeftLobeLength.
+func (s *ExamEchographics) SetLeftLobeLength(val OptFloat64) {
+	s.LeftLobeLength = val
+}
+
+// SetLeftLobeWidth sets the value of LeftLobeWidth.
+func (s *ExamEchographics) SetLeftLobeWidth(val OptFloat64) {
+	s.LeftLobeWidth = val
+}
+
+// SetLeftLobeThick sets the value of LeftLobeThick.
+func (s *ExamEchographics) SetLeftLobeThick(val OptFloat64) {
+	s.LeftLobeThick = val
+}
+
+// SetLeftLobeVolum sets the value of LeftLobeVolum.
+func (s *ExamEchographics) SetLeftLobeVolum(val OptFloat64) {
+	s.LeftLobeVolum = val
+}
+
+// SetRightLobeLength sets the value of RightLobeLength.
+func (s *ExamEchographics) SetRightLobeLength(val OptFloat64) {
+	s.RightLobeLength = val
+}
+
+// SetRightLobeWidth sets the value of RightLobeWidth.
+func (s *ExamEchographics) SetRightLobeWidth(val OptFloat64) {
+	s.RightLobeWidth = val
+}
+
+// SetRightLobeThick sets the value of RightLobeThick.
+func (s *ExamEchographics) SetRightLobeThick(val OptFloat64) {
+	s.RightLobeThick = val
+}
+
+// SetRightLobeVolum sets the value of RightLobeVolum.
+func (s *ExamEchographics) SetRightLobeVolum(val OptFloat64) {
+	s.RightLobeVolum = val
+}
+
+// SetGlandVolum sets the value of GlandVolum.
+func (s *ExamEchographics) SetGlandVolum(val OptFloat64) {
+	s.GlandVolum = val
+}
+
+// SetIsthmus sets the value of Isthmus.
+func (s *ExamEchographics) SetIsthmus(val OptFloat64) {
+	s.Isthmus = val
+}
+
+// SetStruct sets the value of Struct.
+func (s *ExamEchographics) SetStruct(val OptString) {
+	s.Struct = val
+}
+
+// SetEchogenicity sets the value of Echogenicity.
+func (s *ExamEchographics) SetEchogenicity(val OptString) {
+	s.Echogenicity = val
+}
+
+// SetRegionalLymph sets the value of RegionalLymph.
+func (s *ExamEchographics) SetRegionalLymph(val OptString) {
+	s.RegionalLymph = val
+}
+
+// SetVascularization sets the value of Vascularization.
+func (s *ExamEchographics) SetVascularization(val OptString) {
+	s.Vascularization = val
+}
+
+// SetLocation sets the value of Location.
+func (s *ExamEchographics) SetLocation(val OptString) {
+	s.Location = val
+}
+
+// SetAdditional sets the value of Additional.
+func (s *ExamEchographics) SetAdditional(val OptString) {
+	s.Additional = val
+}
+
+// SetConclusion sets the value of Conclusion.
+func (s *ExamEchographics) SetConclusion(val OptString) {
+	s.Conclusion = val
+}
+
+func (*ExamEchographics) mriIDEchographicsGetRes()   {}
+func (*ExamEchographics) mriIDEchographicsPatchRes() {}
+
+// Изображение.
+// Ref: #/components/schemas/exam_image
+type ExamImage struct {
+	// Id изображения.
+	ID uuid.UUID `json:"id"`
+	// Id мрт, к которому относится изображение.
+	MriID uuid.UUID `json:"mri_id"`
+	// Номер страницы.
+	Page int `json:"page"`
+}
+
+// GetID returns the value of ID.
+func (s *ExamImage) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetMriID returns the value of MriID.
+func (s *ExamImage) GetMriID() uuid.UUID {
+	return s.MriID
+}
+
+// GetPage returns the value of Page.
+func (s *ExamImage) GetPage() int {
+	return s.Page
+}
+
+// SetID sets the value of ID.
+func (s *ExamImage) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetMriID sets the value of MriID.
+func (s *ExamImage) SetMriID(val uuid.UUID) {
+	s.MriID = val
+}
+
+// SetPage sets the value of Page.
+func (s *ExamImage) SetPage(val int) {
+	s.Page = val
+}
+
+// Узел.
+// Ref: #/components/schemas/exam_node
+type ExamNode struct {
+	// Id узла.
+	ID uuid.UUID `json:"id"`
+	// Признак того, что узел был создан нейронкой.
+	Ai bool `json:"ai"`
+	// Id мрт, к которому относится узел.
+	MriID uuid.UUID `json:"mri_id"`
+	// Валидация нейроночного узла врачем.
+	Validation OptNilExamNodeValidation `json:"validation"`
+	// Вероятность наличия опухоли в 23-й группе.
+	Knosp012 float64 `json:"knosp_012"`
+	// Вероятность наличия опухоли в 4-й группе.
+	Knosp3 float64 `json:"knosp_3"`
+	// Вероятность наличия опухоли в 5-й группе.
+	Knosp4 float64 `json:"knosp_4"`
+	// Описание узла.
+	Description OptString `json:"description"`
+}
+
+// GetID returns the value of ID.
+func (s *ExamNode) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetAi returns the value of Ai.
+func (s *ExamNode) GetAi() bool {
+	return s.Ai
+}
+
+// GetMriID returns the value of MriID.
+func (s *ExamNode) GetMriID() uuid.UUID {
+	return s.MriID
+}
+
+// GetValidation returns the value of Validation.
+func (s *ExamNode) GetValidation() OptNilExamNodeValidation {
+	return s.Validation
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *ExamNode) GetKnosp012() float64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *ExamNode) GetKnosp3() float64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *ExamNode) GetKnosp4() float64 {
+	return s.Knosp4
+}
+
+// GetDescription returns the value of Description.
+func (s *ExamNode) GetDescription() OptString {
+	return s.Description
+}
+
+// SetID sets the value of ID.
+func (s *ExamNode) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetAi sets the value of Ai.
+func (s *ExamNode) SetAi(val bool) {
+	s.Ai = val
+}
+
+// SetMriID sets the value of MriID.
+func (s *ExamNode) SetMriID(val uuid.UUID) {
+	s.MriID = val
+}
+
+// SetValidation sets the value of Validation.
+func (s *ExamNode) SetValidation(val OptNilExamNodeValidation) {
+	s.Validation = val
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *ExamNode) SetKnosp012(val float64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *ExamNode) SetKnosp3(val float64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *ExamNode) SetKnosp4(val float64) {
+	s.Knosp4 = val
+}
+
+// SetDescription sets the value of Description.
+func (s *ExamNode) SetDescription(val OptString) {
+	s.Description = val
+}
+
+func (*ExamNode) mriNodesIDPatchRes() {}
+
+// Валидация нейроночного узла врачем.
+type ExamNodeValidation string
+
+const (
+	ExamNodeValidationInvalid ExamNodeValidation = "invalid"
+	ExamNodeValidationValid   ExamNodeValidation = "valid"
+)
+
+// AllValues returns all ExamNodeValidation values.
+func (ExamNodeValidation) AllValues() []ExamNodeValidation {
+	return []ExamNodeValidation{
+		ExamNodeValidationInvalid,
+		ExamNodeValidationValid,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s ExamNodeValidation) MarshalText() ([]byte, error) {
+	switch s {
+	case ExamNodeValidationInvalid:
+		return []byte(s), nil
+	case ExamNodeValidationValid:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *ExamNodeValidation) UnmarshalText(data []byte) error {
+	switch ExamNodeValidation(data) {
+	case ExamNodeValidationInvalid:
+		*s = ExamNodeValidationInvalid
+		return nil
+	case ExamNodeValidationValid:
+		*s = ExamNodeValidationValid
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// Сегмент узла на изображении.
+// Ref: #/components/schemas/exam_segment
+type ExamSegment struct {
+	// Id сегмента.
+	ID uuid.UUID `json:"id"`
+	// Id изображения, к которому относится сегмент.
+	ImageID uuid.UUID `json:"image_id"`
+	// Id узла, к которому относится сегмент.
+	NodeID uuid.UUID `json:"node_id"`
+	// Контур сегмента.
+	Contor ExamContor `json:"contor"`
+	// Признак того, что сегмент был создан нейронкой.
+	Ai bool `json:"ai"`
+	// Вероятность наличия опухоли в 23-й группе.
+	Knosp012 float64 `json:"knosp_012"`
+	// Вероятность наличия опухоли в 4-й группе.
+	Knosp3 float64 `json:"knosp_3"`
+	// Вероятность наличия опухоли в 5-й группе.
+	Knosp4 float64 `json:"knosp_4"`
+}
+
+// GetID returns the value of ID.
+func (s *ExamSegment) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetImageID returns the value of ImageID.
+func (s *ExamSegment) GetImageID() uuid.UUID {
+	return s.ImageID
+}
+
+// GetNodeID returns the value of NodeID.
+func (s *ExamSegment) GetNodeID() uuid.UUID {
+	return s.NodeID
+}
+
+// GetContor returns the value of Contor.
+func (s *ExamSegment) GetContor() ExamContor {
+	return s.Contor
+}
+
+// GetAi returns the value of Ai.
+func (s *ExamSegment) GetAi() bool {
+	return s.Ai
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *ExamSegment) GetKnosp012() float64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *ExamSegment) GetKnosp3() float64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *ExamSegment) GetKnosp4() float64 {
+	return s.Knosp4
+}
+
+// SetID sets the value of ID.
+func (s *ExamSegment) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetImageID sets the value of ImageID.
+func (s *ExamSegment) SetImageID(val uuid.UUID) {
+	s.ImageID = val
+}
+
+// SetNodeID sets the value of NodeID.
+func (s *ExamSegment) SetNodeID(val uuid.UUID) {
+	s.NodeID = val
+}
+
+// SetContor sets the value of Contor.
+func (s *ExamSegment) SetContor(val ExamContor) {
+	s.Contor = val
+}
+
+// SetAi sets the value of Ai.
+func (s *ExamSegment) SetAi(val bool) {
+	s.Ai = val
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *ExamSegment) SetKnosp012(val float64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *ExamSegment) SetKnosp3(val float64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *ExamSegment) SetKnosp4(val float64) {
+	s.Knosp4 = val
+}
+
+func (*ExamSegment) mriSegmentIDPatchRes() {}
 
 // Изображение.
 // Ref: #/components/schemas/image
@@ -4749,6 +5340,123 @@ func (s *Image) SetUziID(val uuid.UUID) {
 // SetPage sets the value of Page.
 func (s *Image) SetPage(val int) {
 	s.Page = val
+}
+
+// Кт.
+// Ref: #/components/schemas/kt
+type Kt struct {
+	// Id кт.
+	ID uuid.UUID `json:"id"`
+	// Дата создания в формате RFC3339.
+	CreateAt time.Time `json:"create_at"`
+}
+
+// GetID returns the value of ID.
+func (s *Kt) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetCreateAt returns the value of CreateAt.
+func (s *Kt) GetCreateAt() time.Time {
+	return s.CreateAt
+}
+
+// SetID sets the value of ID.
+func (s *Kt) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetCreateAt sets the value of CreateAt.
+func (s *Kt) SetCreateAt(val time.Time) {
+	s.CreateAt = val
+}
+
+func (*Kt) ktIDGetRes()   {}
+func (*Kt) ktIDPatchRes() {}
+
+// KtIDDeleteOK is response for KtIDDelete operation.
+type KtIDDeleteOK struct{}
+
+func (*KtIDDeleteOK) ktIDDeleteRes() {}
+
+type KtIDPatchReq struct {
+	// Признак того, что КТ проверено врачом.
+	Checked OptBool `json:"checked"`
+	// Таблица вероятностей отнесения к определенному
+	// классу.
+	ClassProbabilities OptKtIDPatchReqClassProbabilities `json:"class_probabilities"`
+}
+
+// GetChecked returns the value of Checked.
+func (s *KtIDPatchReq) GetChecked() OptBool {
+	return s.Checked
+}
+
+// GetClassProbabilities returns the value of ClassProbabilities.
+func (s *KtIDPatchReq) GetClassProbabilities() OptKtIDPatchReqClassProbabilities {
+	return s.ClassProbabilities
+}
+
+// SetChecked sets the value of Checked.
+func (s *KtIDPatchReq) SetChecked(val OptBool) {
+	s.Checked = val
+}
+
+// SetClassProbabilities sets the value of ClassProbabilities.
+func (s *KtIDPatchReq) SetClassProbabilities(val OptKtIDPatchReqClassProbabilities) {
+	s.ClassProbabilities = val
+}
+
+// Таблица вероятностей отнесения к определенному
+// классу.
+type KtIDPatchReqClassProbabilities map[string]float64
+
+func (s *KtIDPatchReqClassProbabilities) init() KtIDPatchReqClassProbabilities {
+	m := *s
+	if m == nil {
+		m = map[string]float64{}
+		*s = m
+	}
+	return m
+}
+
+type KtPostReq struct {
+	// Файл кт. **обязательно с .mp4**.
+	File ht.MultipartFile `json:"file"`
+	// Id мрт аппарата.
+	DeviceID int `json:"device_id"`
+	// Описание мрт.
+	Description OptString `json:"description"`
+}
+
+// GetFile returns the value of File.
+func (s *KtPostReq) GetFile() ht.MultipartFile {
+	return s.File
+}
+
+// GetDeviceID returns the value of DeviceID.
+func (s *KtPostReq) GetDeviceID() int {
+	return s.DeviceID
+}
+
+// GetDescription returns the value of Description.
+func (s *KtPostReq) GetDescription() OptString {
+	return s.Description
+}
+
+// SetFile sets the value of File.
+func (s *KtPostReq) SetFile(val ht.MultipartFile) {
+	s.File = val
+}
+
+// SetDeviceID sets the value of DeviceID.
+func (s *KtPostReq) SetDeviceID(val int) {
+	s.DeviceID = val
+}
+
+// SetDescription sets the value of Description.
+func (s *KtPostReq) SetDescription(val OptString) {
+	s.Description = val
 }
 
 type LoginPostBadRequest ErrorStatusCode
@@ -5035,6 +5743,837 @@ type MedPatientPostUnprocessableEntity ErrorStatusCode
 
 func (*MedPatientPostUnprocessableEntity) medPatientPostRes() {}
 
+// Мрт.
+// Ref: #/components/schemas/mri
+type Mri struct {
+	// Id мрт.
+	ID uuid.UUID `json:"id"`
+	// Проекция мрт.
+	Projection MriProjection `json:"projection"`
+	// Проверенно ли врачем.
+	Checked bool `json:"checked"`
+	// Id пациента/организации etc. Внешняя связсь.
+	ExternalID uuid.UUID `json:"external_id"`
+	// Id аккаунта, загрузившего мрт.
+	AuthorID uuid.UUID `json:"author_id"`
+	// Id устройства.
+	DeviceID int `json:"device_id"`
+	// Статус мрт **new** - новое мрт **pending** - в обработке
+	// нейронкой **completed** - обработано.
+	Status MriStatus `json:"status"`
+	// Дата создания в формате RFC3339.
+	CreateAt time.Time `json:"create_at"`
+}
+
+// GetID returns the value of ID.
+func (s *Mri) GetID() uuid.UUID {
+	return s.ID
+}
+
+// GetProjection returns the value of Projection.
+func (s *Mri) GetProjection() MriProjection {
+	return s.Projection
+}
+
+// GetChecked returns the value of Checked.
+func (s *Mri) GetChecked() bool {
+	return s.Checked
+}
+
+// GetExternalID returns the value of ExternalID.
+func (s *Mri) GetExternalID() uuid.UUID {
+	return s.ExternalID
+}
+
+// GetAuthorID returns the value of AuthorID.
+func (s *Mri) GetAuthorID() uuid.UUID {
+	return s.AuthorID
+}
+
+// GetDeviceID returns the value of DeviceID.
+func (s *Mri) GetDeviceID() int {
+	return s.DeviceID
+}
+
+// GetStatus returns the value of Status.
+func (s *Mri) GetStatus() MriStatus {
+	return s.Status
+}
+
+// GetCreateAt returns the value of CreateAt.
+func (s *Mri) GetCreateAt() time.Time {
+	return s.CreateAt
+}
+
+// SetID sets the value of ID.
+func (s *Mri) SetID(val uuid.UUID) {
+	s.ID = val
+}
+
+// SetProjection sets the value of Projection.
+func (s *Mri) SetProjection(val MriProjection) {
+	s.Projection = val
+}
+
+// SetChecked sets the value of Checked.
+func (s *Mri) SetChecked(val bool) {
+	s.Checked = val
+}
+
+// SetExternalID sets the value of ExternalID.
+func (s *Mri) SetExternalID(val uuid.UUID) {
+	s.ExternalID = val
+}
+
+// SetAuthorID sets the value of AuthorID.
+func (s *Mri) SetAuthorID(val uuid.UUID) {
+	s.AuthorID = val
+}
+
+// SetDeviceID sets the value of DeviceID.
+func (s *Mri) SetDeviceID(val int) {
+	s.DeviceID = val
+}
+
+// SetStatus sets the value of Status.
+func (s *Mri) SetStatus(val MriStatus) {
+	s.Status = val
+}
+
+// SetCreateAt sets the value of CreateAt.
+func (s *Mri) SetCreateAt(val time.Time) {
+	s.CreateAt = val
+}
+
+func (*Mri) mriIDGetRes()   {}
+func (*Mri) mriIDPatchRes() {}
+
+type MriDevicePostOK struct {
+	// Id mri аппарата.
+	ID int `json:"id"`
+}
+
+// GetID returns the value of ID.
+func (s *MriDevicePostOK) GetID() int {
+	return s.ID
+}
+
+// SetID sets the value of ID.
+func (s *MriDevicePostOK) SetID(val int) {
+	s.ID = val
+}
+
+func (*MriDevicePostOK) mriDevicePostRes() {}
+
+type MriDevicePostReq struct {
+	// Именование модели мрт аппарата.
+	Name string `json:"name"`
+}
+
+// GetName returns the value of Name.
+func (s *MriDevicePostReq) GetName() string {
+	return s.Name
+}
+
+// SetName sets the value of Name.
+func (s *MriDevicePostReq) SetName(val string) {
+	s.Name = val
+}
+
+type MriDevicesGetOKApplicationJSON []ExamDevice
+
+func (*MriDevicesGetOKApplicationJSON) mriDevicesGetRes() {}
+
+// MriIDDeleteOK is response for MriIDDelete operation.
+type MriIDDeleteOK struct{}
+
+func (*MriIDDeleteOK) mriIDDeleteRes() {}
+
+type MriIDImagesGetOKApplicationJSON []ExamImage
+
+func (*MriIDImagesGetOKApplicationJSON) mriIDImagesGetRes() {}
+
+type MriIDNodesGetOKApplicationJSON []ExamNode
+
+func (*MriIDNodesGetOKApplicationJSON) mriIDNodesGetRes() {}
+
+type MriIDNodesSegmentsPostOK struct {
+	NodeID     uuid.UUID   `json:"node_id"`
+	SegmentIds []uuid.UUID `json:"segment_ids"`
+}
+
+// GetNodeID returns the value of NodeID.
+func (s *MriIDNodesSegmentsPostOK) GetNodeID() uuid.UUID {
+	return s.NodeID
+}
+
+// GetSegmentIds returns the value of SegmentIds.
+func (s *MriIDNodesSegmentsPostOK) GetSegmentIds() []uuid.UUID {
+	return s.SegmentIds
+}
+
+// SetNodeID sets the value of NodeID.
+func (s *MriIDNodesSegmentsPostOK) SetNodeID(val uuid.UUID) {
+	s.NodeID = val
+}
+
+// SetSegmentIds sets the value of SegmentIds.
+func (s *MriIDNodesSegmentsPostOK) SetSegmentIds(val []uuid.UUID) {
+	s.SegmentIds = val
+}
+
+func (*MriIDNodesSegmentsPostOK) mriIDNodesSegmentsPostRes() {}
+
+type MriIDNodesSegmentsPostReq struct {
+	Node     MriIDNodesSegmentsPostReqNode           `json:"node"`
+	Segments []MriIDNodesSegmentsPostReqSegmentsItem `json:"segments"`
+}
+
+// GetNode returns the value of Node.
+func (s *MriIDNodesSegmentsPostReq) GetNode() MriIDNodesSegmentsPostReqNode {
+	return s.Node
+}
+
+// GetSegments returns the value of Segments.
+func (s *MriIDNodesSegmentsPostReq) GetSegments() []MriIDNodesSegmentsPostReqSegmentsItem {
+	return s.Segments
+}
+
+// SetNode sets the value of Node.
+func (s *MriIDNodesSegmentsPostReq) SetNode(val MriIDNodesSegmentsPostReqNode) {
+	s.Node = val
+}
+
+// SetSegments sets the value of Segments.
+func (s *MriIDNodesSegmentsPostReq) SetSegments(val []MriIDNodesSegmentsPostReqSegmentsItem) {
+	s.Segments = val
+}
+
+type MriIDNodesSegmentsPostReqNode struct {
+	Knosp012 float64 `json:"knosp_012"`
+	Knosp3   float64 `json:"knosp_3"`
+	Knosp4   float64 `json:"knosp_4"`
+	// Описание узла.
+	Description OptString `json:"description"`
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *MriIDNodesSegmentsPostReqNode) GetKnosp012() float64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *MriIDNodesSegmentsPostReqNode) GetKnosp3() float64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *MriIDNodesSegmentsPostReqNode) GetKnosp4() float64 {
+	return s.Knosp4
+}
+
+// GetDescription returns the value of Description.
+func (s *MriIDNodesSegmentsPostReqNode) GetDescription() OptString {
+	return s.Description
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *MriIDNodesSegmentsPostReqNode) SetKnosp012(val float64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *MriIDNodesSegmentsPostReqNode) SetKnosp3(val float64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *MriIDNodesSegmentsPostReqNode) SetKnosp4(val float64) {
+	s.Knosp4 = val
+}
+
+// SetDescription sets the value of Description.
+func (s *MriIDNodesSegmentsPostReqNode) SetDescription(val OptString) {
+	s.Description = val
+}
+
+type MriIDNodesSegmentsPostReqSegmentsItem struct {
+	ImageID  uuid.UUID  `json:"image_id"`
+	Contor   ExamContor `json:"contor"`
+	Knosp012 float64    `json:"knosp_012"`
+	Knosp3   float64    `json:"knosp_3"`
+	Knosp4   float64    `json:"knosp_4"`
+}
+
+// GetImageID returns the value of ImageID.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) GetImageID() uuid.UUID {
+	return s.ImageID
+}
+
+// GetContor returns the value of Contor.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) GetContor() ExamContor {
+	return s.Contor
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) GetKnosp012() float64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) GetKnosp3() float64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) GetKnosp4() float64 {
+	return s.Knosp4
+}
+
+// SetImageID sets the value of ImageID.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) SetImageID(val uuid.UUID) {
+	s.ImageID = val
+}
+
+// SetContor sets the value of Contor.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) SetContor(val ExamContor) {
+	s.Contor = val
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) SetKnosp012(val float64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) SetKnosp3(val float64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *MriIDNodesSegmentsPostReqSegmentsItem) SetKnosp4(val float64) {
+	s.Knosp4 = val
+}
+
+type MriIDPatchReq struct {
+	// Проекция мрт.
+	Projection OptMriIDPatchReqProjection `json:"projection"`
+	// Признак того, что мрт проверено врачом.
+	Checked OptBool `json:"checked"`
+}
+
+// GetProjection returns the value of Projection.
+func (s *MriIDPatchReq) GetProjection() OptMriIDPatchReqProjection {
+	return s.Projection
+}
+
+// GetChecked returns the value of Checked.
+func (s *MriIDPatchReq) GetChecked() OptBool {
+	return s.Checked
+}
+
+// SetProjection sets the value of Projection.
+func (s *MriIDPatchReq) SetProjection(val OptMriIDPatchReqProjection) {
+	s.Projection = val
+}
+
+// SetChecked sets the value of Checked.
+func (s *MriIDPatchReq) SetChecked(val OptBool) {
+	s.Checked = val
+}
+
+// Проекция мрт.
+type MriIDPatchReqProjection string
+
+const (
+	MriIDPatchReqProjectionCross MriIDPatchReqProjection = "cross"
+	MriIDPatchReqProjectionLong  MriIDPatchReqProjection = "long"
+)
+
+// AllValues returns all MriIDPatchReqProjection values.
+func (MriIDPatchReqProjection) AllValues() []MriIDPatchReqProjection {
+	return []MriIDPatchReqProjection{
+		MriIDPatchReqProjectionCross,
+		MriIDPatchReqProjectionLong,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s MriIDPatchReqProjection) MarshalText() ([]byte, error) {
+	switch s {
+	case MriIDPatchReqProjectionCross:
+		return []byte(s), nil
+	case MriIDPatchReqProjectionLong:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *MriIDPatchReqProjection) UnmarshalText(data []byte) error {
+	switch MriIDPatchReqProjection(data) {
+	case MriIDPatchReqProjectionCross:
+		*s = MriIDPatchReqProjectionCross
+		return nil
+	case MriIDPatchReqProjectionLong:
+		*s = MriIDPatchReqProjectionLong
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+type MriImageIDNodesSegmentsGetOK struct {
+	Nodes    []ExamNode    `json:"nodes"`
+	Segments []ExamSegment `json:"segments"`
+}
+
+// GetNodes returns the value of Nodes.
+func (s *MriImageIDNodesSegmentsGetOK) GetNodes() []ExamNode {
+	return s.Nodes
+}
+
+// GetSegments returns the value of Segments.
+func (s *MriImageIDNodesSegmentsGetOK) GetSegments() []ExamSegment {
+	return s.Segments
+}
+
+// SetNodes sets the value of Nodes.
+func (s *MriImageIDNodesSegmentsGetOK) SetNodes(val []ExamNode) {
+	s.Nodes = val
+}
+
+// SetSegments sets the value of Segments.
+func (s *MriImageIDNodesSegmentsGetOK) SetSegments(val []ExamSegment) {
+	s.Segments = val
+}
+
+func (*MriImageIDNodesSegmentsGetOK) mriImageIDNodesSegmentsGetRes() {}
+
+// MriNodesIDDeleteOK is response for MriNodesIDDelete operation.
+type MriNodesIDDeleteOK struct{}
+
+func (*MriNodesIDDeleteOK) mriNodesIDDeleteRes() {}
+
+type MriNodesIDPatchReq struct {
+	Validation OptNilMriNodesIDPatchReqValidation `json:"validation"`
+	Knosp012   OptFloat64                         `json:"knosp_012"`
+	Knosp3     OptFloat64                         `json:"knosp_3"`
+	Knosp4     OptFloat64                         `json:"knosp_4"`
+}
+
+// GetValidation returns the value of Validation.
+func (s *MriNodesIDPatchReq) GetValidation() OptNilMriNodesIDPatchReqValidation {
+	return s.Validation
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *MriNodesIDPatchReq) GetKnosp012() OptFloat64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *MriNodesIDPatchReq) GetKnosp3() OptFloat64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *MriNodesIDPatchReq) GetKnosp4() OptFloat64 {
+	return s.Knosp4
+}
+
+// SetValidation sets the value of Validation.
+func (s *MriNodesIDPatchReq) SetValidation(val OptNilMriNodesIDPatchReqValidation) {
+	s.Validation = val
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *MriNodesIDPatchReq) SetKnosp012(val OptFloat64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *MriNodesIDPatchReq) SetKnosp3(val OptFloat64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *MriNodesIDPatchReq) SetKnosp4(val OptFloat64) {
+	s.Knosp4 = val
+}
+
+type MriNodesIDPatchReqValidation string
+
+const (
+	MriNodesIDPatchReqValidationInvalid MriNodesIDPatchReqValidation = "invalid"
+	MriNodesIDPatchReqValidationValid   MriNodesIDPatchReqValidation = "valid"
+)
+
+// AllValues returns all MriNodesIDPatchReqValidation values.
+func (MriNodesIDPatchReqValidation) AllValues() []MriNodesIDPatchReqValidation {
+	return []MriNodesIDPatchReqValidation{
+		MriNodesIDPatchReqValidationInvalid,
+		MriNodesIDPatchReqValidationValid,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s MriNodesIDPatchReqValidation) MarshalText() ([]byte, error) {
+	switch s {
+	case MriNodesIDPatchReqValidationInvalid:
+		return []byte(s), nil
+	case MriNodesIDPatchReqValidationValid:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *MriNodesIDPatchReqValidation) UnmarshalText(data []byte) error {
+	switch MriNodesIDPatchReqValidation(data) {
+	case MriNodesIDPatchReqValidationInvalid:
+		*s = MriNodesIDPatchReqValidationInvalid
+		return nil
+	case MriNodesIDPatchReqValidationValid:
+		*s = MriNodesIDPatchReqValidationValid
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+type MriNodesIDSegmentsGetOKApplicationJSON []ExamSegment
+
+func (*MriNodesIDSegmentsGetOKApplicationJSON) mriNodesIDSegmentsGetRes() {}
+
+type MriPostReq struct {
+	// Файл мрт. **обязательно с .tiff/.png**.
+	File ht.MultipartFile `json:"file"`
+	// Проекция мрт.
+	Projection MriPostReqProjection `json:"projection"`
+	// Внешний id пациента/организации etc.
+	ExternalID uuid.UUID `json:"external_id"`
+	// Id мрт аппарата.
+	DeviceID int `json:"device_id"`
+	// Описание мрт.
+	Description OptString `json:"description"`
+}
+
+// GetFile returns the value of File.
+func (s *MriPostReq) GetFile() ht.MultipartFile {
+	return s.File
+}
+
+// GetProjection returns the value of Projection.
+func (s *MriPostReq) GetProjection() MriPostReqProjection {
+	return s.Projection
+}
+
+// GetExternalID returns the value of ExternalID.
+func (s *MriPostReq) GetExternalID() uuid.UUID {
+	return s.ExternalID
+}
+
+// GetDeviceID returns the value of DeviceID.
+func (s *MriPostReq) GetDeviceID() int {
+	return s.DeviceID
+}
+
+// GetDescription returns the value of Description.
+func (s *MriPostReq) GetDescription() OptString {
+	return s.Description
+}
+
+// SetFile sets the value of File.
+func (s *MriPostReq) SetFile(val ht.MultipartFile) {
+	s.File = val
+}
+
+// SetProjection sets the value of Projection.
+func (s *MriPostReq) SetProjection(val MriPostReqProjection) {
+	s.Projection = val
+}
+
+// SetExternalID sets the value of ExternalID.
+func (s *MriPostReq) SetExternalID(val uuid.UUID) {
+	s.ExternalID = val
+}
+
+// SetDeviceID sets the value of DeviceID.
+func (s *MriPostReq) SetDeviceID(val int) {
+	s.DeviceID = val
+}
+
+// SetDescription sets the value of Description.
+func (s *MriPostReq) SetDescription(val OptString) {
+	s.Description = val
+}
+
+// Проекция мрт.
+type MriPostReqProjection string
+
+const (
+	MriPostReqProjectionCross MriPostReqProjection = "cross"
+	MriPostReqProjectionLong  MriPostReqProjection = "long"
+)
+
+// AllValues returns all MriPostReqProjection values.
+func (MriPostReqProjection) AllValues() []MriPostReqProjection {
+	return []MriPostReqProjection{
+		MriPostReqProjectionCross,
+		MriPostReqProjectionLong,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s MriPostReqProjection) MarshalText() ([]byte, error) {
+	switch s {
+	case MriPostReqProjectionCross:
+		return []byte(s), nil
+	case MriPostReqProjectionLong:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *MriPostReqProjection) UnmarshalText(data []byte) error {
+	switch MriPostReqProjection(data) {
+	case MriPostReqProjectionCross:
+		*s = MriPostReqProjectionCross
+		return nil
+	case MriPostReqProjectionLong:
+		*s = MriPostReqProjectionLong
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// Проекция мрт.
+type MriProjection string
+
+const (
+	MriProjectionCross MriProjection = "cross"
+	MriProjectionLong  MriProjection = "long"
+)
+
+// AllValues returns all MriProjection values.
+func (MriProjection) AllValues() []MriProjection {
+	return []MriProjection{
+		MriProjectionCross,
+		MriProjectionLong,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s MriProjection) MarshalText() ([]byte, error) {
+	switch s {
+	case MriProjectionCross:
+		return []byte(s), nil
+	case MriProjectionLong:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *MriProjection) UnmarshalText(data []byte) error {
+	switch MriProjection(data) {
+	case MriProjectionCross:
+		*s = MriProjectionCross
+		return nil
+	case MriProjectionLong:
+		*s = MriProjectionLong
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// MriSegmentIDDeleteOK is response for MriSegmentIDDelete operation.
+type MriSegmentIDDeleteOK struct{}
+
+func (*MriSegmentIDDeleteOK) mriSegmentIDDeleteRes() {}
+
+type MriSegmentIDPatchReq struct {
+	Contor   ExamContor `json:"contor"`
+	Knosp012 OptFloat64 `json:"knosp_012"`
+	Knosp3   OptFloat64 `json:"knosp_3"`
+	Knosp4   OptFloat64 `json:"knosp_4"`
+}
+
+// GetContor returns the value of Contor.
+func (s *MriSegmentIDPatchReq) GetContor() ExamContor {
+	return s.Contor
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *MriSegmentIDPatchReq) GetKnosp012() OptFloat64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *MriSegmentIDPatchReq) GetKnosp3() OptFloat64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *MriSegmentIDPatchReq) GetKnosp4() OptFloat64 {
+	return s.Knosp4
+}
+
+// SetContor sets the value of Contor.
+func (s *MriSegmentIDPatchReq) SetContor(val ExamContor) {
+	s.Contor = val
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *MriSegmentIDPatchReq) SetKnosp012(val OptFloat64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *MriSegmentIDPatchReq) SetKnosp3(val OptFloat64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *MriSegmentIDPatchReq) SetKnosp4(val OptFloat64) {
+	s.Knosp4 = val
+}
+
+type MriSegmentPostReq struct {
+	ImageID  uuid.UUID  `json:"image_id"`
+	NodeID   uuid.UUID  `json:"node_id"`
+	Contor   ExamContor `json:"contor"`
+	Knosp012 float64    `json:"knosp_012"`
+	Knosp3   float64    `json:"knosp_3"`
+	Knosp4   float64    `json:"knosp_4"`
+}
+
+// GetImageID returns the value of ImageID.
+func (s *MriSegmentPostReq) GetImageID() uuid.UUID {
+	return s.ImageID
+}
+
+// GetNodeID returns the value of NodeID.
+func (s *MriSegmentPostReq) GetNodeID() uuid.UUID {
+	return s.NodeID
+}
+
+// GetContor returns the value of Contor.
+func (s *MriSegmentPostReq) GetContor() ExamContor {
+	return s.Contor
+}
+
+// GetKnosp012 returns the value of Knosp012.
+func (s *MriSegmentPostReq) GetKnosp012() float64 {
+	return s.Knosp012
+}
+
+// GetKnosp3 returns the value of Knosp3.
+func (s *MriSegmentPostReq) GetKnosp3() float64 {
+	return s.Knosp3
+}
+
+// GetKnosp4 returns the value of Knosp4.
+func (s *MriSegmentPostReq) GetKnosp4() float64 {
+	return s.Knosp4
+}
+
+// SetImageID sets the value of ImageID.
+func (s *MriSegmentPostReq) SetImageID(val uuid.UUID) {
+	s.ImageID = val
+}
+
+// SetNodeID sets the value of NodeID.
+func (s *MriSegmentPostReq) SetNodeID(val uuid.UUID) {
+	s.NodeID = val
+}
+
+// SetContor sets the value of Contor.
+func (s *MriSegmentPostReq) SetContor(val ExamContor) {
+	s.Contor = val
+}
+
+// SetKnosp012 sets the value of Knosp012.
+func (s *MriSegmentPostReq) SetKnosp012(val float64) {
+	s.Knosp012 = val
+}
+
+// SetKnosp3 sets the value of Knosp3.
+func (s *MriSegmentPostReq) SetKnosp3(val float64) {
+	s.Knosp3 = val
+}
+
+// SetKnosp4 sets the value of Knosp4.
+func (s *MriSegmentPostReq) SetKnosp4(val float64) {
+	s.Knosp4 = val
+}
+
+// Статус мрт **new** - новое мрт **pending** - в обработке
+// нейронкой **completed** - обработано.
+type MriStatus string
+
+const (
+	MriStatusNew       MriStatus = "new"
+	MriStatusPending   MriStatus = "pending"
+	MriStatusCompleted MriStatus = "completed"
+)
+
+// AllValues returns all MriStatus values.
+func (MriStatus) AllValues() []MriStatus {
+	return []MriStatus{
+		MriStatusNew,
+		MriStatusPending,
+		MriStatusCompleted,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s MriStatus) MarshalText() ([]byte, error) {
+	switch s {
+	case MriStatusNew:
+		return []byte(s), nil
+	case MriStatusPending:
+		return []byte(s), nil
+	case MriStatusCompleted:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *MriStatus) UnmarshalText(data []byte) error {
+	switch MriStatus(data) {
+	case MriStatusNew:
+		*s = MriStatusNew
+		return nil
+	case MriStatusPending:
+		*s = MriStatusPending
+		return nil
+	case MriStatusCompleted:
+		*s = MriStatusCompleted
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+type MrisAuthorIDGetOKApplicationJSON []Mri
+
+func (*MrisAuthorIDGetOKApplicationJSON) mrisAuthorIDGetRes() {}
+
+type MrisExternalIDGetOKApplicationJSON []Mri
+
+func (*MrisExternalIDGetOKApplicationJSON) mrisExternalIDGetRes() {}
+
 // Узел.
 // Ref: #/components/schemas/node
 type Node struct {
@@ -5226,6 +6765,52 @@ func (o OptBool) Or(d bool) bool {
 	return d
 }
 
+// NewOptCytologyCreateCreateCreatedDetails returns new OptCytologyCreateCreateCreatedDetails with value set to v.
+func NewOptCytologyCreateCreateCreatedDetails(v *CytologyCreateCreateCreatedDetails) OptCytologyCreateCreateCreatedDetails {
+	return OptCytologyCreateCreateCreatedDetails{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCytologyCreateCreateCreatedDetails is optional *CytologyCreateCreateCreatedDetails.
+type OptCytologyCreateCreateCreatedDetails struct {
+	Value *CytologyCreateCreateCreatedDetails
+	Set   bool
+}
+
+// IsSet returns true if OptCytologyCreateCreateCreatedDetails was set.
+func (o OptCytologyCreateCreateCreatedDetails) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCytologyCreateCreateCreatedDetails) Reset() {
+	var v *CytologyCreateCreateCreatedDetails
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCytologyCreateCreateCreatedDetails) SetTo(v *CytologyCreateCreateCreatedDetails) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCytologyCreateCreateCreatedDetails) Get() (v *CytologyCreateCreateCreatedDetails, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCytologyCreateCreateCreatedDetails) Or(d *CytologyCreateCreateCreatedDetails) *CytologyCreateCreateCreatedDetails {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptCytologyCreateCreateCreatedDiagnosticMarking returns new OptCytologyCreateCreateCreatedDiagnosticMarking with value set to v.
 func NewOptCytologyCreateCreateCreatedDiagnosticMarking(v CytologyCreateCreateCreatedDiagnosticMarking) OptCytologyCreateCreateCreatedDiagnosticMarking {
 	return OptCytologyCreateCreateCreatedDiagnosticMarking{
@@ -5404,6 +6989,52 @@ func (o OptCytologyCreateCreateReqMaterialType) Get() (v CytologyCreateCreateReq
 
 // Or returns value if set, or given parameter if does not.
 func (o OptCytologyCreateCreateReqMaterialType) Or(d CytologyCreateCreateReqMaterialType) CytologyCreateCreateReqMaterialType {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptCytologyHistoryReadOKResultsItemDetails returns new OptCytologyHistoryReadOKResultsItemDetails with value set to v.
+func NewOptCytologyHistoryReadOKResultsItemDetails(v *CytologyHistoryReadOKResultsItemDetails) OptCytologyHistoryReadOKResultsItemDetails {
+	return OptCytologyHistoryReadOKResultsItemDetails{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCytologyHistoryReadOKResultsItemDetails is optional *CytologyHistoryReadOKResultsItemDetails.
+type OptCytologyHistoryReadOKResultsItemDetails struct {
+	Value *CytologyHistoryReadOKResultsItemDetails
+	Set   bool
+}
+
+// IsSet returns true if OptCytologyHistoryReadOKResultsItemDetails was set.
+func (o OptCytologyHistoryReadOKResultsItemDetails) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCytologyHistoryReadOKResultsItemDetails) Reset() {
+	var v *CytologyHistoryReadOKResultsItemDetails
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCytologyHistoryReadOKResultsItemDetails) SetTo(v *CytologyHistoryReadOKResultsItemDetails) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCytologyHistoryReadOKResultsItemDetails) Get() (v *CytologyHistoryReadOKResultsItemDetails, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCytologyHistoryReadOKResultsItemDetails) Or(d *CytologyHistoryReadOKResultsItemDetails) *CytologyHistoryReadOKResultsItemDetails {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -5594,6 +7225,52 @@ func (o OptCytologyPatientShotMaterialType) Or(d CytologyPatientShotMaterialType
 	return d
 }
 
+// NewOptCytologyReadOKInfoImageGroupDetails returns new OptCytologyReadOKInfoImageGroupDetails with value set to v.
+func NewOptCytologyReadOKInfoImageGroupDetails(v *CytologyReadOKInfoImageGroupDetails) OptCytologyReadOKInfoImageGroupDetails {
+	return OptCytologyReadOKInfoImageGroupDetails{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCytologyReadOKInfoImageGroupDetails is optional *CytologyReadOKInfoImageGroupDetails.
+type OptCytologyReadOKInfoImageGroupDetails struct {
+	Value *CytologyReadOKInfoImageGroupDetails
+	Set   bool
+}
+
+// IsSet returns true if OptCytologyReadOKInfoImageGroupDetails was set.
+func (o OptCytologyReadOKInfoImageGroupDetails) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCytologyReadOKInfoImageGroupDetails) Reset() {
+	var v *CytologyReadOKInfoImageGroupDetails
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCytologyReadOKInfoImageGroupDetails) SetTo(v *CytologyReadOKInfoImageGroupDetails) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCytologyReadOKInfoImageGroupDetails) Get() (v *CytologyReadOKInfoImageGroupDetails, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCytologyReadOKInfoImageGroupDetails) Or(d *CytologyReadOKInfoImageGroupDetails) *CytologyReadOKInfoImageGroupDetails {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptCytologyReadOKInfoImageGroupDiagnosticMarking returns new OptCytologyReadOKInfoImageGroupDiagnosticMarking with value set to v.
 func NewOptCytologyReadOKInfoImageGroupDiagnosticMarking(v CytologyReadOKInfoImageGroupDiagnosticMarking) OptCytologyReadOKInfoImageGroupDiagnosticMarking {
 	return OptCytologyReadOKInfoImageGroupDiagnosticMarking{
@@ -5772,6 +7449,98 @@ func (o OptCytologySegmentsListGroupType) Get() (v CytologySegmentsListGroupType
 
 // Or returns value if set, or given parameter if does not.
 func (o OptCytologySegmentsListGroupType) Or(d CytologySegmentsListGroupType) CytologySegmentsListGroupType {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptCytologySegmentsListOKResultsItemDetailsClassification returns new OptCytologySegmentsListOKResultsItemDetailsClassification with value set to v.
+func NewOptCytologySegmentsListOKResultsItemDetailsClassification(v CytologySegmentsListOKResultsItemDetailsClassification) OptCytologySegmentsListOKResultsItemDetailsClassification {
+	return OptCytologySegmentsListOKResultsItemDetailsClassification{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCytologySegmentsListOKResultsItemDetailsClassification is optional CytologySegmentsListOKResultsItemDetailsClassification.
+type OptCytologySegmentsListOKResultsItemDetailsClassification struct {
+	Value CytologySegmentsListOKResultsItemDetailsClassification
+	Set   bool
+}
+
+// IsSet returns true if OptCytologySegmentsListOKResultsItemDetailsClassification was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassification) Reset() {
+	var v CytologySegmentsListOKResultsItemDetailsClassification
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassification) SetTo(v CytologySegmentsListOKResultsItemDetailsClassification) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) Get() (v CytologySegmentsListOKResultsItemDetailsClassification, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassification) Or(d CytologySegmentsListOKResultsItemDetailsClassification) CytologySegmentsListOKResultsItemDetailsClassification {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptCytologySegmentsListOKResultsItemDetailsClassificationColor returns new OptCytologySegmentsListOKResultsItemDetailsClassificationColor with value set to v.
+func NewOptCytologySegmentsListOKResultsItemDetailsClassificationColor(v CytologySegmentsListOKResultsItemDetailsClassificationColor) OptCytologySegmentsListOKResultsItemDetailsClassificationColor {
+	return OptCytologySegmentsListOKResultsItemDetailsClassificationColor{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptCytologySegmentsListOKResultsItemDetailsClassificationColor is optional CytologySegmentsListOKResultsItemDetailsClassificationColor.
+type OptCytologySegmentsListOKResultsItemDetailsClassificationColor struct {
+	Value CytologySegmentsListOKResultsItemDetailsClassificationColor
+	Set   bool
+}
+
+// IsSet returns true if OptCytologySegmentsListOKResultsItemDetailsClassificationColor was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Reset() {
+	var v CytologySegmentsListOKResultsItemDetailsClassificationColor
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptCytologySegmentsListOKResultsItemDetailsClassificationColor) SetTo(v CytologySegmentsListOKResultsItemDetailsClassificationColor) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Get() (v CytologySegmentsListOKResultsItemDetailsClassificationColor, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptCytologySegmentsListOKResultsItemDetailsClassificationColor) Or(d CytologySegmentsListOKResultsItemDetailsClassificationColor) CytologySegmentsListOKResultsItemDetailsClassificationColor {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -6422,6 +8191,98 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
+// NewOptKtIDPatchReqClassProbabilities returns new OptKtIDPatchReqClassProbabilities with value set to v.
+func NewOptKtIDPatchReqClassProbabilities(v KtIDPatchReqClassProbabilities) OptKtIDPatchReqClassProbabilities {
+	return OptKtIDPatchReqClassProbabilities{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptKtIDPatchReqClassProbabilities is optional KtIDPatchReqClassProbabilities.
+type OptKtIDPatchReqClassProbabilities struct {
+	Value KtIDPatchReqClassProbabilities
+	Set   bool
+}
+
+// IsSet returns true if OptKtIDPatchReqClassProbabilities was set.
+func (o OptKtIDPatchReqClassProbabilities) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptKtIDPatchReqClassProbabilities) Reset() {
+	var v KtIDPatchReqClassProbabilities
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptKtIDPatchReqClassProbabilities) SetTo(v KtIDPatchReqClassProbabilities) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptKtIDPatchReqClassProbabilities) Get() (v KtIDPatchReqClassProbabilities, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptKtIDPatchReqClassProbabilities) Or(d KtIDPatchReqClassProbabilities) KtIDPatchReqClassProbabilities {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptMriIDPatchReqProjection returns new OptMriIDPatchReqProjection with value set to v.
+func NewOptMriIDPatchReqProjection(v MriIDPatchReqProjection) OptMriIDPatchReqProjection {
+	return OptMriIDPatchReqProjection{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptMriIDPatchReqProjection is optional MriIDPatchReqProjection.
+type OptMriIDPatchReqProjection struct {
+	Value MriIDPatchReqProjection
+	Set   bool
+}
+
+// IsSet returns true if OptMriIDPatchReqProjection was set.
+func (o OptMriIDPatchReqProjection) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptMriIDPatchReqProjection) Reset() {
+	var v MriIDPatchReqProjection
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptMriIDPatchReqProjection) SetTo(v MriIDPatchReqProjection) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptMriIDPatchReqProjection) Get() (v MriIDPatchReqProjection, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptMriIDPatchReqProjection) Or(d MriIDPatchReqProjection) MriIDPatchReqProjection {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptMultipartFile returns new OptMultipartFile with value set to v.
 func NewOptMultipartFile(v ht.MultipartFile) OptMultipartFile {
 	return OptMultipartFile{
@@ -6462,6 +8323,258 @@ func (o OptMultipartFile) Get() (v ht.MultipartFile, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptMultipartFile) Or(d ht.MultipartFile) ht.MultipartFile {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilCytologySegmentsListOKResultsItemDetails returns new OptNilCytologySegmentsListOKResultsItemDetails with value set to v.
+func NewOptNilCytologySegmentsListOKResultsItemDetails(v CytologySegmentsListOKResultsItemDetails) OptNilCytologySegmentsListOKResultsItemDetails {
+	return OptNilCytologySegmentsListOKResultsItemDetails{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilCytologySegmentsListOKResultsItemDetails is optional nullable CytologySegmentsListOKResultsItemDetails.
+type OptNilCytologySegmentsListOKResultsItemDetails struct {
+	Value CytologySegmentsListOKResultsItemDetails
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilCytologySegmentsListOKResultsItemDetails was set.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) Reset() {
+	var v CytologySegmentsListOKResultsItemDetails
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) SetTo(v CytologySegmentsListOKResultsItemDetails) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilCytologySegmentsListOKResultsItemDetails) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v CytologySegmentsListOKResultsItemDetails
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) Get() (v CytologySegmentsListOKResultsItemDetails, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilCytologySegmentsListOKResultsItemDetails) Or(d CytologySegmentsListOKResultsItemDetails) CytologySegmentsListOKResultsItemDetails {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilExamNodeValidation returns new OptNilExamNodeValidation with value set to v.
+func NewOptNilExamNodeValidation(v ExamNodeValidation) OptNilExamNodeValidation {
+	return OptNilExamNodeValidation{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilExamNodeValidation is optional nullable ExamNodeValidation.
+type OptNilExamNodeValidation struct {
+	Value ExamNodeValidation
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilExamNodeValidation was set.
+func (o OptNilExamNodeValidation) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilExamNodeValidation) Reset() {
+	var v ExamNodeValidation
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilExamNodeValidation) SetTo(v ExamNodeValidation) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilExamNodeValidation) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilExamNodeValidation) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v ExamNodeValidation
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilExamNodeValidation) Get() (v ExamNodeValidation, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilExamNodeValidation) Or(d ExamNodeValidation) ExamNodeValidation {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilInt returns new OptNilInt with value set to v.
+func NewOptNilInt(v int) OptNilInt {
+	return OptNilInt{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilInt is optional nullable int.
+type OptNilInt struct {
+	Value int
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilInt was set.
+func (o OptNilInt) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilInt) Reset() {
+	var v int
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilInt) SetTo(v int) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilInt) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilInt) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v int
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilInt) Get() (v int, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilInt) Or(d int) int {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilMriNodesIDPatchReqValidation returns new OptNilMriNodesIDPatchReqValidation with value set to v.
+func NewOptNilMriNodesIDPatchReqValidation(v MriNodesIDPatchReqValidation) OptNilMriNodesIDPatchReqValidation {
+	return OptNilMriNodesIDPatchReqValidation{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilMriNodesIDPatchReqValidation is optional nullable MriNodesIDPatchReqValidation.
+type OptNilMriNodesIDPatchReqValidation struct {
+	Value MriNodesIDPatchReqValidation
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilMriNodesIDPatchReqValidation was set.
+func (o OptNilMriNodesIDPatchReqValidation) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilMriNodesIDPatchReqValidation) Reset() {
+	var v MriNodesIDPatchReqValidation
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilMriNodesIDPatchReqValidation) SetTo(v MriNodesIDPatchReqValidation) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilMriNodesIDPatchReqValidation) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilMriNodesIDPatchReqValidation) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v MriNodesIDPatchReqValidation
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilMriNodesIDPatchReqValidation) Get() (v MriNodesIDPatchReqValidation, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilMriNodesIDPatchReqValidation) Or(d MriNodesIDPatchReqValidation) MriNodesIDPatchReqValidation {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -6525,6 +8638,132 @@ func (o OptNilNodeValidation) Get() (v NodeValidation, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptNilNodeValidation) Or(d NodeValidation) NodeValidation {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilString returns new OptNilString with value set to v.
+func NewOptNilString(v string) OptNilString {
+	return OptNilString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilString is optional nullable string.
+type OptNilString struct {
+	Value string
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilString was set.
+func (o OptNilString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilString) SetTo(v string) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilString) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilString) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v string
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilString) Get() (v string, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptNilURI returns new OptNilURI with value set to v.
+func NewOptNilURI(v url.URL) OptNilURI {
+	return OptNilURI{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptNilURI is optional nullable url.URL.
+type OptNilURI struct {
+	Value url.URL
+	Set   bool
+	Null  bool
+}
+
+// IsSet returns true if OptNilURI was set.
+func (o OptNilURI) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptNilURI) Reset() {
+	var v url.URL
+	o.Value = v
+	o.Set = false
+	o.Null = false
+}
+
+// SetTo sets value to v.
+func (o *OptNilURI) SetTo(v url.URL) {
+	o.Set = true
+	o.Null = false
+	o.Value = v
+}
+
+// IsNull returns true if value is Null.
+func (o OptNilURI) IsNull() bool { return o.Null }
+
+// SetToNull sets value to null.
+func (o *OptNilURI) SetToNull() {
+	o.Set = true
+	o.Null = true
+	var v url.URL
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptNilURI) Get() (v url.URL, ok bool) {
+	if o.Null {
+		return v, false
+	}
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptNilURI) Or(d url.URL) url.URL {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -7130,66 +9369,6 @@ func (s *Patient) SetLastUziDate(val OptDate) {
 func (*Patient) medPatientIDGetRes()   {}
 func (*Patient) medPatientIDPatchRes() {}
 
-// Карта пациента.
-// Ref: #/components/schemas/patientCard
-type PatientCard struct {
-	ID                 OptInt      `json:"id"`
-	AcceptanceDatetime OptDateTime `json:"acceptance_datetime"`
-	Diagnosis          OptString   `json:"diagnosis"`
-	Patient            OptInt      `json:"patient"`
-	MedWorker          OptInt      `json:"med_worker"`
-}
-
-// GetID returns the value of ID.
-func (s *PatientCard) GetID() OptInt {
-	return s.ID
-}
-
-// GetAcceptanceDatetime returns the value of AcceptanceDatetime.
-func (s *PatientCard) GetAcceptanceDatetime() OptDateTime {
-	return s.AcceptanceDatetime
-}
-
-// GetDiagnosis returns the value of Diagnosis.
-func (s *PatientCard) GetDiagnosis() OptString {
-	return s.Diagnosis
-}
-
-// GetPatient returns the value of Patient.
-func (s *PatientCard) GetPatient() OptInt {
-	return s.Patient
-}
-
-// GetMedWorker returns the value of MedWorker.
-func (s *PatientCard) GetMedWorker() OptInt {
-	return s.MedWorker
-}
-
-// SetID sets the value of ID.
-func (s *PatientCard) SetID(val OptInt) {
-	s.ID = val
-}
-
-// SetAcceptanceDatetime sets the value of AcceptanceDatetime.
-func (s *PatientCard) SetAcceptanceDatetime(val OptDateTime) {
-	s.AcceptanceDatetime = val
-}
-
-// SetDiagnosis sets the value of Diagnosis.
-func (s *PatientCard) SetDiagnosis(val OptString) {
-	s.Diagnosis = val
-}
-
-// SetPatient sets the value of Patient.
-func (s *PatientCard) SetPatient(val OptInt) {
-	s.Patient = val
-}
-
-// SetMedWorker sets the value of MedWorker.
-func (s *PatientCard) SetMedWorker(val OptInt) {
-	s.MedWorker = val
-}
-
 // Платежный провайдер.
 // Ref: #/components/schemas/PaymentProvider
 type PaymentProvider struct {
@@ -7640,7 +9819,10 @@ func (s *SimpleUuid) SetID(val uuid.UUID) {
 	s.ID = val
 }
 
+func (*SimpleUuid) ktPostRes()         {}
 func (*SimpleUuid) medPatientPostRes() {}
+func (*SimpleUuid) mriPostRes()        {}
+func (*SimpleUuid) mriSegmentPostRes() {}
 func (*SimpleUuid) regDoctorPostRes()  {}
 func (*SimpleUuid) regPatientPostRes() {}
 func (*SimpleUuid) uziPostRes()        {}

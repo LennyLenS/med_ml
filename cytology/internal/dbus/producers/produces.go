@@ -3,27 +3,27 @@ package dbus
 import (
 	"context"
 
-	cytologysplittedpb "cytology/internal/generated/dbus/produce/cytologysplitted"
+	cytologyanalysisrequestedpb "cytology/internal/generated/dbus/produce/cytologyanalysisrequested"
 
 	dbuslib "github.com/WantBeASleep/med_ml_lib/dbus"
 )
 
 type Producer interface {
-	SendCytologySplitted(ctx context.Context, msg *cytologysplittedpb.CytologySplitted) error
+	SendCytologyAnalysisRequested(ctx context.Context, msg *cytologyanalysisrequestedpb.AnalysisRequested) error
 }
 
 type producer struct {
-	producerCytologySplitted dbuslib.Producer[*cytologysplittedpb.CytologySplitted]
+	producerCytologyAnalysisRequested dbuslib.Producer[*cytologyanalysisrequestedpb.AnalysisRequested]
 }
 
 func New(
-	producerCytologySplitted dbuslib.Producer[*cytologysplittedpb.CytologySplitted],
+	producerCytologyAnalysisRequested dbuslib.Producer[*cytologyanalysisrequestedpb.AnalysisRequested],
 ) Producer {
 	return &producer{
-		producerCytologySplitted: producerCytologySplitted,
+		producerCytologyAnalysisRequested: producerCytologyAnalysisRequested,
 	}
 }
 
-func (a *producer) SendCytologySplitted(ctx context.Context, msg *cytologysplittedpb.CytologySplitted) error {
-	return a.producerCytologySplitted.Send(ctx, msg)
+func (a *producer) SendCytologyAnalysisRequested(ctx context.Context, msg *cytologyanalysisrequestedpb.AnalysisRequested) error {
+	return a.producerCytologyAnalysisRequested.Send(ctx, msg)
 }

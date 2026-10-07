@@ -90,7 +90,7 @@ func (s *service) CopyCytologyImage(ctx context.Context, id uuid.UUID) (domain.C
 
 func (s *service) copySegments(ctx context.Context, oldCytologyID, newCytologyID uuid.UUID) error {
 	// Получаем все группы сегментов для старого исследования
-	oldGroups, err := s.dao.NewSegmentationGroupQuery(ctx).GetSegmentationGroupsByCytologyID(oldCytologyID)
+	oldGroups, err := s.dao.NewSegmentationGroupQuery(ctx).GetSegmentationGroupsByCytologyID(oldCytologyID, nil, nil, nil)
 	if err != nil && !errors.Is(err, repoentity.ErrNotFound) {
 		return fmt.Errorf("get segmentation groups: %w", err)
 	}

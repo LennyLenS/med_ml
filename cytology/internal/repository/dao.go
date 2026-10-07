@@ -7,6 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	minio "github.com/minio/minio-go/v7"
 
+	"cytology/internal/repository/cytology_analysis"
 	"cytology/internal/repository/cytology_image"
 	"cytology/internal/repository/original_image"
 	"cytology/internal/repository/segmentation"
@@ -17,6 +18,7 @@ type DAO interface {
 	daolib.DAO
 	NewFileRepo() FileRepo
 	NewCytologyImageQuery(ctx context.Context) cytology_image.Repository
+	NewCytologyAnalysisQuery(ctx context.Context) cytology_analysis.Repository
 	NewOriginalImageQuery(ctx context.Context) original_image.Repository
 	NewSegmentationGroupQuery(ctx context.Context) segmentation_group.Repository
 	NewSegmentationQuery(ctx context.Context) segmentation.Repository
@@ -48,6 +50,12 @@ func (d *dao) NewFileRepo() FileRepo {
 // POSTGRES
 func (d *dao) NewCytologyImageQuery(ctx context.Context) cytology_image.Repository {
 	query := cytology_image.NewR()
+	d.NewRepo(ctx, query)
+	return query
+}
+
+func (d *dao) NewCytologyAnalysisQuery(ctx context.Context) cytology_analysis.Repository {
+	query := cytology_analysis.NewR()
 	d.NewRepo(ctx, query)
 	return query
 }

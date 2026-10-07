@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package med_ml.cytology.analysis_requested.v1;
+
+option go_package = "internal/generated/dbus/produce/cytologyanalysisrequested";
+
+enum MaterialType {
+  MATERIAL_TYPE_UNSPECIFIED = 0;
+  MATERIAL_TYPE_GS = 1;
+  MATERIAL_TYPE_BP = 2;
+  MATERIAL_TYPE_TP = 3;
+  MATERIAL_TYPE_PTP = 4;
+  MATERIAL_TYPE_LNP = 5;
+}
+
+message AnalysisRequested {
+  string analysis_id = 100;
+  string input_artifact_uri = 200;
+  MaterialType material_type = 300;
+  optional int32 calcitonin_in_flush = 400;
+  optional int32 thyroglobulin_in_flush = 500;
+}

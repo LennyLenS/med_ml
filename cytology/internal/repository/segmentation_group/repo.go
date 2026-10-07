@@ -4,6 +4,7 @@ import (
 	daolib "github.com/WantBeASleep/med_ml_lib/dao"
 	"github.com/google/uuid"
 
+	"cytology/internal/domain"
 	"cytology/internal/repository/segmentation_group/entity"
 )
 
@@ -22,7 +23,7 @@ const (
 type Repository interface {
 	InsertSegmentationGroup(group entity.SegmentationGroup) (int, error)
 	GetSegmentationGroupByID(id int) (entity.SegmentationGroup, error)
-	GetSegmentationGroupsByCytologyID(cytologyID uuid.UUID) ([]entity.SegmentationGroup, error)
+	GetSegmentationGroupsByCytologyID(cytologyID uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]entity.SegmentationGroup, error)
 	UpdateSegmentationGroup(group entity.SegmentationGroup) error
 	DeleteSegmentationGroup(id int) error
 }

@@ -86,6 +86,14 @@ func run() (exitCode int) {
 	}()
 
 	// adapters
+	examConn, err := grpc.NewClient(
+		cfg.Adapters.ExamUrl,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		slog.Error("init examConn", slog.Any("err", err))
+		return failExitCode
+	}
 	uziConn, err := grpc.NewClient(
 		cfg.Adapters.UziUrl,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -154,7 +162,7 @@ func run() (exitCode int) {
 		}
 	}
 
-	adapters := adapters.NewAdapters(uziConn, authConn, medConn, billingConn, cytologyConn, cfg.Adapters.TilerUrl)
+	adapters := adapters.NewAdapters(examConn, uziConn, authConn, medConn, billingConn, cytologyConn, cfg.Adapters.TilerUrl)
 
 	// infra
 	s3Client, err := minio.New(cfg.S3.Endpoint, &minio.Options{
@@ -167,6 +175,7 @@ func run() (exitCode int) {
 	}
 
 	dao := repository.NewRepository(s3Client, "uzi")
+	examDAO := repository.NewRepository(s3Client, "mri")
 
 	dbusClient, err := sarama.NewSyncProducer(cfg.Dbus.Addrs, nil)
 	if err != nil {
@@ -177,7 +186,7 @@ func run() (exitCode int) {
 	producer := producers.New(dbusClient)
 
 	// services
-	services := services.New(adapters, producer, dao)
+	services := services.New(adapters, producer, dao, examDAO)
 
 	// server
 	handlers := server.New(services)

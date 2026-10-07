@@ -7,6 +7,7 @@ import (
 
 func CardFromDomain(domain domain.Card) *pb.Card {
 	card := &pb.Card{
+		Uuid:      domain.UUID.String(),
 		DoctorId:  domain.DoctorID.String(),
 		PatientId: domain.PatientID.String(),
 		Diagnosis: domain.Diagnosis,

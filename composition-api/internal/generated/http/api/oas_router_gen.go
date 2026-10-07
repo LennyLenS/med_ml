@@ -498,6 +498,66 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 				}
 
+			case 'k': // Prefix: "kt"
+
+				if l := len("kt"); len(elem) >= l && elem[0:l] == "kt" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					switch r.Method {
+					case "POST":
+						s.handleKtPostRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter, slashes are prohibited
+					idx := strings.IndexByte(elem, '/')
+					if idx >= 0 {
+						break
+					}
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "DELETE":
+							s.handleKtIDDeleteRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						case "GET":
+							s.handleKtIDGetRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						case "PATCH":
+							s.handleKtIDPatchRequest([1]string{
+								args[0],
+							}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "DELETE,GET,PATCH")
+						}
+
+						return
+					}
+
+				}
+
 			case 'l': // Prefix: "login"
 
 				if l := len("login"); len(elem) >= l && elem[0:l] == "login" {
@@ -518,9 +578,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-			case 'm': // Prefix: "med/"
+			case 'm': // Prefix: "m"
 
-				if l := len("med/"); len(elem) >= l && elem[0:l] == "med/" {
+				if l := len("m"); len(elem) >= l && elem[0:l] == "m" {
 					elem = elem[l:]
 				} else {
 					break
@@ -530,44 +590,35 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
-				case 'c': // Prefix: "card"
+				case 'e': // Prefix: "ed/"
 
-					if l := len("card"); len(elem) >= l && elem[0:l] == "card" {
+					if l := len("ed/"); len(elem) >= l && elem[0:l] == "ed/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch r.Method {
-						case "POST":
-							s.handleMedCardPostRequest([0]string{}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "POST")
-						}
-
-						return
+						break
 					}
 					switch elem[0] {
-					case '/': // Prefix: "/"
+					case 'c': // Prefix: "card"
 
-						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						if l := len("card"); len(elem) >= l && elem[0:l] == "card" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
-						// Param: "doctor_id"
-						// Match until "/"
-						idx := strings.IndexByte(elem, '/')
-						if idx < 0 {
-							idx = len(elem)
-						}
-						args[0] = elem[:idx]
-						elem = elem[idx:]
-
 						if len(elem) == 0 {
-							break
+							switch r.Method {
+							case "POST":
+								s.handleMedCardPostRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
 						}
 						switch elem[0] {
 						case '/': // Prefix: "/"
@@ -578,27 +629,160 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								break
 							}
 
-							// Param: "patient_id"
+							// Param: "doctor_id"
+							// Match until "/"
+							idx := strings.IndexByte(elem, '/')
+							if idx < 0 {
+								idx = len(elem)
+							}
+							args[0] = elem[:idx]
+							elem = elem[idx:]
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/"
+
+								if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								// Param: "patient_id"
+								// Leaf parameter, slashes are prohibited
+								idx := strings.IndexByte(elem, '/')
+								if idx >= 0 {
+									break
+								}
+								args[1] = elem
+								elem = ""
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleMedCardDoctorIDPatientIDGetRequest([2]string{
+											args[0],
+											args[1],
+										}, elemIsEscaped, w, r)
+									case "PATCH":
+										s.handleMedCardDoctorIDPatientIDPatchRequest([2]string{
+											args[0],
+											args[1],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET,PATCH")
+									}
+
+									return
+								}
+
+							}
+
+						}
+
+					case 'd': // Prefix: "doctor/"
+
+						if l := len("doctor/"); len(elem) >= l && elem[0:l] == "doctor/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "id"
+						// Match until "/"
+						idx := strings.IndexByte(elem, '/')
+						if idx < 0 {
+							idx = len(elem)
+						}
+						args[0] = elem[:idx]
+						elem = elem[idx:]
+
+						if len(elem) == 0 {
+							switch r.Method {
+							case "GET":
+								s.handleMedDoctorIDGetRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
+							}
+
+							return
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/patients"
+
+							if l := len("/patients"); len(elem) >= l && elem[0:l] == "/patients" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleMedDoctorIDPatientsGetRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
+
+						}
+
+					case 'p': // Prefix: "patient"
+
+						if l := len("patient"); len(elem) >= l && elem[0:l] == "patient" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch r.Method {
+							case "POST":
+								s.handleMedPatientPostRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/"
+
+							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
 							// Leaf parameter, slashes are prohibited
 							idx := strings.IndexByte(elem, '/')
 							if idx >= 0 {
 								break
 							}
-							args[1] = elem
+							args[0] = elem
 							elem = ""
 
 							if len(elem) == 0 {
 								// Leaf node.
 								switch r.Method {
 								case "GET":
-									s.handleMedCardDoctorIDPatientIDGetRequest([2]string{
+									s.handleMedPatientIDGetRequest([1]string{
 										args[0],
-										args[1],
 									}, elemIsEscaped, w, r)
 								case "PATCH":
-									s.handleMedCardDoctorIDPatientIDPatchRequest([2]string{
+									s.handleMedPatientIDPatchRequest([1]string{
 										args[0],
-										args[1],
 									}, elemIsEscaped, w, r)
 								default:
 									s.notAllowed(w, r, "GET,PATCH")
@@ -611,63 +795,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 					}
 
-				case 'd': // Prefix: "doctor/"
+				case 'r': // Prefix: "ri"
 
-					if l := len("doctor/"); len(elem) >= l && elem[0:l] == "doctor/" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					// Param: "id"
-					// Match until "/"
-					idx := strings.IndexByte(elem, '/')
-					if idx < 0 {
-						idx = len(elem)
-					}
-					args[0] = elem[:idx]
-					elem = elem[idx:]
-
-					if len(elem) == 0 {
-						switch r.Method {
-						case "GET":
-							s.handleMedDoctorIDGetRequest([1]string{
-								args[0],
-							}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "GET")
-						}
-
-						return
-					}
-					switch elem[0] {
-					case '/': // Prefix: "/patients"
-
-						if l := len("/patients"); len(elem) >= l && elem[0:l] == "/patients" {
-							elem = elem[l:]
-						} else {
-							break
-						}
-
-						if len(elem) == 0 {
-							// Leaf node.
-							switch r.Method {
-							case "GET":
-								s.handleMedDoctorIDPatientsGetRequest([1]string{
-									args[0],
-								}, elemIsEscaped, w, r)
-							default:
-								s.notAllowed(w, r, "GET")
-							}
-
-							return
-						}
-
-					}
-
-				case 'p': // Prefix: "patient"
-
-					if l := len("patient"); len(elem) >= l && elem[0:l] == "patient" {
+					if l := len("ri"); len(elem) >= l && elem[0:l] == "ri" {
 						elem = elem[l:]
 					} else {
 						break
@@ -676,7 +806,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					if len(elem) == 0 {
 						switch r.Method {
 						case "POST":
-							s.handleMedPatientPostRequest([0]string{}, elemIsEscaped, w, r)
+							s.handleMriPostRequest([0]string{}, elemIsEscaped, w, r)
 						default:
 							s.notAllowed(w, r, "POST")
 						}
@@ -692,31 +822,428 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							break
 						}
 
-						// Param: "id"
-						// Leaf parameter, slashes are prohibited
-						idx := strings.IndexByte(elem, '/')
-						if idx >= 0 {
+						if len(elem) == 0 {
 							break
 						}
-						args[0] = elem
-						elem = ""
+						switch elem[0] {
+						case 'd': // Prefix: "device"
+							origElem := elem
+							if l := len("device"); len(elem) >= l && elem[0:l] == "device" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch r.Method {
+								case "POST":
+									s.handleMriDevicePostRequest([0]string{}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
+							switch elem[0] {
+							case 's': // Prefix: "s"
+
+								if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleMriDevicesGetRequest([0]string{}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+							}
+
+							elem = origElem
+						case 'i': // Prefix: "image/"
+							origElem := elem
+							if l := len("image/"); len(elem) >= l && elem[0:l] == "image/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Match until "/"
+							idx := strings.IndexByte(elem, '/')
+							if idx < 0 {
+								idx = len(elem)
+							}
+							args[0] = elem[:idx]
+							elem = elem[idx:]
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/nodes-segments"
+
+								if l := len("/nodes-segments"); len(elem) >= l && elem[0:l] == "/nodes-segments" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleMriImageIDNodesSegmentsGetRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+							}
+
+							elem = origElem
+						case 'n': // Prefix: "nodes/"
+							origElem := elem
+							if l := len("nodes/"); len(elem) >= l && elem[0:l] == "nodes/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Match until "/"
+							idx := strings.IndexByte(elem, '/')
+							if idx < 0 {
+								idx = len(elem)
+							}
+							args[0] = elem[:idx]
+							elem = elem[idx:]
+
+							if len(elem) == 0 {
+								switch r.Method {
+								case "DELETE":
+									s.handleMriNodesIDDeleteRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								case "PATCH":
+									s.handleMriNodesIDPatchRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "DELETE,PATCH")
+								}
+
+								return
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/segments"
+
+								if l := len("/segments"); len(elem) >= l && elem[0:l] == "/segments" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleMriNodesIDSegmentsGetRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+							}
+
+							elem = origElem
+						case 's': // Prefix: "segment"
+							origElem := elem
+							if l := len("segment"); len(elem) >= l && elem[0:l] == "segment" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch r.Method {
+								case "POST":
+									s.handleMriSegmentPostRequest([0]string{}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "POST")
+								}
+
+								return
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/"
+
+								if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								// Param: "id"
+								// Leaf parameter, slashes are prohibited
+								idx := strings.IndexByte(elem, '/')
+								if idx >= 0 {
+									break
+								}
+								args[0] = elem
+								elem = ""
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "DELETE":
+										s.handleMriSegmentIDDeleteRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									case "PATCH":
+										s.handleMriSegmentIDPatchRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "DELETE,PATCH")
+									}
+
+									return
+								}
+
+							}
+
+							elem = origElem
+						}
+						// Param: "id"
+						// Match until "/"
+						idx := strings.IndexByte(elem, '/')
+						if idx < 0 {
+							idx = len(elem)
+						}
+						args[0] = elem[:idx]
+						elem = elem[idx:]
 
 						if len(elem) == 0 {
-							// Leaf node.
 							switch r.Method {
+							case "DELETE":
+								s.handleMriIDDeleteRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
 							case "GET":
-								s.handleMedPatientIDGetRequest([1]string{
+								s.handleMriIDGetRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							case "PATCH":
-								s.handleMedPatientIDPatchRequest([1]string{
+								s.handleMriIDPatchRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							default:
-								s.notAllowed(w, r, "GET,PATCH")
+								s.notAllowed(w, r, "DELETE,GET,PATCH")
 							}
 
 							return
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/"
+
+							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'e': // Prefix: "echographics"
+
+								if l := len("echographics"); len(elem) >= l && elem[0:l] == "echographics" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleMriIDEchographicsGetRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									case "PATCH":
+										s.handleMriIDEchographicsPatchRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET,PATCH")
+									}
+
+									return
+								}
+
+							case 'i': // Prefix: "images"
+
+								if l := len("images"); len(elem) >= l && elem[0:l] == "images" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleMriIDImagesGetRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+							case 'n': // Prefix: "nodes"
+
+								if l := len("nodes"); len(elem) >= l && elem[0:l] == "nodes" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch r.Method {
+									case "GET":
+										s.handleMriIDNodesGetRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+								switch elem[0] {
+								case '-': // Prefix: "-segments"
+
+									if l := len("-segments"); len(elem) >= l && elem[0:l] == "-segments" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch r.Method {
+										case "POST":
+											s.handleMriIDNodesSegmentsPostRequest([1]string{
+												args[0],
+											}, elemIsEscaped, w, r)
+										default:
+											s.notAllowed(w, r, "POST")
+										}
+
+										return
+									}
+
+								}
+
+							}
+
+						}
+
+					case 's': // Prefix: "s/"
+
+						if l := len("s/"); len(elem) >= l && elem[0:l] == "s/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case 'a': // Prefix: "author/"
+
+							if l := len("author/"); len(elem) >= l && elem[0:l] == "author/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Leaf parameter, slashes are prohibited
+							idx := strings.IndexByte(elem, '/')
+							if idx >= 0 {
+								break
+							}
+							args[0] = elem
+							elem = ""
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleMrisAuthorIDGetRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
+
+						case 'e': // Prefix: "external/"
+
+							if l := len("external/"); len(elem) >= l && elem[0:l] == "external/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Leaf parameter, slashes are prohibited
+							idx := strings.IndexByte(elem, '/')
+							if idx >= 0 {
+								break
+							}
+							args[0] = elem
+							elem = ""
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleMrisExternalIDGetRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
+
 						}
 
 					}
@@ -2151,6 +2678,80 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 
 				}
 
+			case 'k': // Prefix: "kt"
+
+				if l := len("kt"); len(elem) >= l && elem[0:l] == "kt" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					switch method {
+					case "POST":
+						r.name = KtPostOperation
+						r.summary = "загрузить кт на обработку"
+						r.operationID = ""
+						r.pathPattern = "/kt"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					// Param: "id"
+					// Leaf parameter, slashes are prohibited
+					idx := strings.IndexByte(elem, '/')
+					if idx >= 0 {
+						break
+					}
+					args[0] = elem
+					elem = ""
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "DELETE":
+							r.name = KtIDDeleteOperation
+							r.summary = "удалить КТ"
+							r.operationID = ""
+							r.pathPattern = "/kt/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						case "GET":
+							r.name = KtIDGetOperation
+							r.summary = "получить кт"
+							r.operationID = ""
+							r.pathPattern = "/kt/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						case "PATCH":
+							r.name = KtIDPatchOperation
+							r.summary = "обновить КТ"
+							r.operationID = ""
+							r.pathPattern = "/kt/{id}"
+							r.args = args
+							r.count = 1
+							return r, true
+						default:
+							return
+						}
+					}
+
+				}
+
 			case 'l': // Prefix: "login"
 
 				if l := len("login"); len(elem) >= l && elem[0:l] == "login" {
@@ -2175,9 +2776,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 				}
 
-			case 'm': // Prefix: "med/"
+			case 'm': // Prefix: "m"
 
-				if l := len("med/"); len(elem) >= l && elem[0:l] == "med/" {
+				if l := len("m"); len(elem) >= l && elem[0:l] == "m" {
 					elem = elem[l:]
 				} else {
 					break
@@ -2187,48 +2788,39 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
-				case 'c': // Prefix: "card"
+				case 'e': // Prefix: "ed/"
 
-					if l := len("card"); len(elem) >= l && elem[0:l] == "card" {
+					if l := len("ed/"); len(elem) >= l && elem[0:l] == "ed/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						switch method {
-						case "POST":
-							r.name = MedCardPostOperation
-							r.summary = "создать карту пациента"
-							r.operationID = ""
-							r.pathPattern = "/med/card"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
-						}
+						break
 					}
 					switch elem[0] {
-					case '/': // Prefix: "/"
+					case 'c': // Prefix: "card"
 
-						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						if l := len("card"); len(elem) >= l && elem[0:l] == "card" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
-						// Param: "doctor_id"
-						// Match until "/"
-						idx := strings.IndexByte(elem, '/')
-						if idx < 0 {
-							idx = len(elem)
-						}
-						args[0] = elem[:idx]
-						elem = elem[idx:]
-
 						if len(elem) == 0 {
-							break
+							switch method {
+							case "POST":
+								r.name = MedCardPostOperation
+								r.summary = "создать карту пациента"
+								r.operationID = ""
+								r.pathPattern = "/med/card"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
 						}
 						switch elem[0] {
 						case '/': // Prefix: "/"
@@ -2239,33 +2831,180 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								break
 							}
 
-							// Param: "patient_id"
+							// Param: "doctor_id"
+							// Match until "/"
+							idx := strings.IndexByte(elem, '/')
+							if idx < 0 {
+								idx = len(elem)
+							}
+							args[0] = elem[:idx]
+							elem = elem[idx:]
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/"
+
+								if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								// Param: "patient_id"
+								// Leaf parameter, slashes are prohibited
+								idx := strings.IndexByte(elem, '/')
+								if idx >= 0 {
+									break
+								}
+								args[1] = elem
+								elem = ""
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = MedCardDoctorIDPatientIDGetOperation
+										r.summary = "получить карту пациента"
+										r.operationID = ""
+										r.pathPattern = "/med/card/{doctor_id}/{patient_id}"
+										r.args = args
+										r.count = 2
+										return r, true
+									case "PATCH":
+										r.name = MedCardDoctorIDPatientIDPatchOperation
+										r.summary = "обновить карту пациента"
+										r.operationID = ""
+										r.pathPattern = "/med/card/{doctor_id}/{patient_id}"
+										r.args = args
+										r.count = 2
+										return r, true
+									default:
+										return
+									}
+								}
+
+							}
+
+						}
+
+					case 'd': // Prefix: "doctor/"
+
+						if l := len("doctor/"); len(elem) >= l && elem[0:l] == "doctor/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "id"
+						// Match until "/"
+						idx := strings.IndexByte(elem, '/')
+						if idx < 0 {
+							idx = len(elem)
+						}
+						args[0] = elem[:idx]
+						elem = elem[idx:]
+
+						if len(elem) == 0 {
+							switch method {
+							case "GET":
+								r.name = MedDoctorIDGetOperation
+								r.summary = "получить врача"
+								r.operationID = ""
+								r.pathPattern = "/med/doctor/{id}"
+								r.args = args
+								r.count = 1
+								return r, true
+							default:
+								return
+							}
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/patients"
+
+							if l := len("/patients"); len(elem) >= l && elem[0:l] == "/patients" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "GET":
+									r.name = MedDoctorIDPatientsGetOperation
+									r.summary = "получить пациентов врача"
+									r.operationID = ""
+									r.pathPattern = "/med/doctor/{id}/patients"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+
+						}
+
+					case 'p': // Prefix: "patient"
+
+						if l := len("patient"); len(elem) >= l && elem[0:l] == "patient" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								r.name = MedPatientPostOperation
+								r.summary = "зарегистрировать пациента"
+								r.operationID = ""
+								r.pathPattern = "/med/patient"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/"
+
+							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
 							// Leaf parameter, slashes are prohibited
 							idx := strings.IndexByte(elem, '/')
 							if idx >= 0 {
 								break
 							}
-							args[1] = elem
+							args[0] = elem
 							elem = ""
 
 							if len(elem) == 0 {
 								// Leaf node.
 								switch method {
 								case "GET":
-									r.name = MedCardDoctorIDPatientIDGetOperation
-									r.summary = "получить карту пациента"
+									r.name = MedPatientIDGetOperation
+									r.summary = "получить пациента"
 									r.operationID = ""
-									r.pathPattern = "/med/card/{doctor_id}/{patient_id}"
+									r.pathPattern = "/med/patient/{id}"
 									r.args = args
-									r.count = 2
+									r.count = 1
 									return r, true
 								case "PATCH":
-									r.name = MedCardDoctorIDPatientIDPatchOperation
-									r.summary = "обновить карту пациента"
+									r.name = MedPatientIDPatchOperation
+									r.summary = "обновить пациента"
 									r.operationID = ""
-									r.pathPattern = "/med/card/{doctor_id}/{patient_id}"
+									r.pathPattern = "/med/patient/{id}"
 									r.args = args
-									r.count = 2
+									r.count = 1
 									return r, true
 								default:
 									return
@@ -2276,67 +3015,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 
 					}
 
-				case 'd': // Prefix: "doctor/"
+				case 'r': // Prefix: "ri"
 
-					if l := len("doctor/"); len(elem) >= l && elem[0:l] == "doctor/" {
-						elem = elem[l:]
-					} else {
-						break
-					}
-
-					// Param: "id"
-					// Match until "/"
-					idx := strings.IndexByte(elem, '/')
-					if idx < 0 {
-						idx = len(elem)
-					}
-					args[0] = elem[:idx]
-					elem = elem[idx:]
-
-					if len(elem) == 0 {
-						switch method {
-						case "GET":
-							r.name = MedDoctorIDGetOperation
-							r.summary = "получить врача"
-							r.operationID = ""
-							r.pathPattern = "/med/doctor/{id}"
-							r.args = args
-							r.count = 1
-							return r, true
-						default:
-							return
-						}
-					}
-					switch elem[0] {
-					case '/': // Prefix: "/patients"
-
-						if l := len("/patients"); len(elem) >= l && elem[0:l] == "/patients" {
-							elem = elem[l:]
-						} else {
-							break
-						}
-
-						if len(elem) == 0 {
-							// Leaf node.
-							switch method {
-							case "GET":
-								r.name = MedDoctorIDPatientsGetOperation
-								r.summary = "получить пациентов врача"
-								r.operationID = ""
-								r.pathPattern = "/med/doctor/{id}/patients"
-								r.args = args
-								r.count = 1
-								return r, true
-							default:
-								return
-							}
-						}
-
-					}
-
-				case 'p': // Prefix: "patient"
-
-					if l := len("patient"); len(elem) >= l && elem[0:l] == "patient" {
+					if l := len("ri"); len(elem) >= l && elem[0:l] == "ri" {
 						elem = elem[l:]
 					} else {
 						break
@@ -2345,10 +3026,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "POST":
-							r.name = MedPatientPostOperation
-							r.summary = "зарегистрировать пациента"
+							r.name = MriPostOperation
+							r.summary = "загрузить мрт на обработку"
 							r.operationID = ""
-							r.pathPattern = "/med/patient"
+							r.pathPattern = "/mri"
 							r.args = args
 							r.count = 0
 							return r, true
@@ -2365,37 +3046,482 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							break
 						}
 
-						// Param: "id"
-						// Leaf parameter, slashes are prohibited
-						idx := strings.IndexByte(elem, '/')
-						if idx >= 0 {
+						if len(elem) == 0 {
 							break
 						}
-						args[0] = elem
-						elem = ""
+						switch elem[0] {
+						case 'd': // Prefix: "device"
+							origElem := elem
+							if l := len("device"); len(elem) >= l && elem[0:l] == "device" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch method {
+								case "POST":
+									r.name = MriDevicePostOperation
+									r.summary = "добавить mri аппарат"
+									r.operationID = ""
+									r.pathPattern = "/mri/device"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
+							}
+							switch elem[0] {
+							case 's': // Prefix: "s"
+
+								if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = MriDevicesGetOperation
+										r.summary = "получит список mri апппапапратов"
+										r.operationID = ""
+										r.pathPattern = "/mri/devices"
+										r.args = args
+										r.count = 0
+										return r, true
+									default:
+										return
+									}
+								}
+
+							}
+
+							elem = origElem
+						case 'i': // Prefix: "image/"
+							origElem := elem
+							if l := len("image/"); len(elem) >= l && elem[0:l] == "image/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Match until "/"
+							idx := strings.IndexByte(elem, '/')
+							if idx < 0 {
+								idx = len(elem)
+							}
+							args[0] = elem[:idx]
+							elem = elem[idx:]
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/nodes-segments"
+
+								if l := len("/nodes-segments"); len(elem) >= l && elem[0:l] == "/nodes-segments" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = MriImageIDNodesSegmentsGetOperation
+										r.summary = "получит узлы и сегменты на указанном изображении"
+										r.operationID = ""
+										r.pathPattern = "/mri/image/{id}/nodes-segments"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+							}
+
+							elem = origElem
+						case 'n': // Prefix: "nodes/"
+							origElem := elem
+							if l := len("nodes/"); len(elem) >= l && elem[0:l] == "nodes/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Match until "/"
+							idx := strings.IndexByte(elem, '/')
+							if idx < 0 {
+								idx = len(elem)
+							}
+							args[0] = elem[:idx]
+							elem = elem[idx:]
+
+							if len(elem) == 0 {
+								switch method {
+								case "DELETE":
+									r.name = MriNodesIDDeleteOperation
+									r.summary = "удалить узел"
+									r.operationID = ""
+									r.pathPattern = "/mri/nodes/{id}"
+									r.args = args
+									r.count = 1
+									return r, true
+								case "PATCH":
+									r.name = MriNodesIDPatchOperation
+									r.summary = "обновить узел"
+									r.operationID = ""
+									r.pathPattern = "/mri/nodes/{id}"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/segments"
+
+								if l := len("/segments"); len(elem) >= l && elem[0:l] == "/segments" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = MriNodesIDSegmentsGetOperation
+										r.summary = "получить сегменты узла"
+										r.operationID = ""
+										r.pathPattern = "/mri/nodes/{id}/segments"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+							}
+
+							elem = origElem
+						case 's': // Prefix: "segment"
+							origElem := elem
+							if l := len("segment"); len(elem) >= l && elem[0:l] == "segment" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								switch method {
+								case "POST":
+									r.name = MriSegmentPostOperation
+									r.summary = "добавить новый сегмент"
+									r.operationID = ""
+									r.pathPattern = "/mri/segment"
+									r.args = args
+									r.count = 0
+									return r, true
+								default:
+									return
+								}
+							}
+							switch elem[0] {
+							case '/': // Prefix: "/"
+
+								if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								// Param: "id"
+								// Leaf parameter, slashes are prohibited
+								idx := strings.IndexByte(elem, '/')
+								if idx >= 0 {
+									break
+								}
+								args[0] = elem
+								elem = ""
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "DELETE":
+										r.name = MriSegmentIDDeleteOperation
+										r.summary = "удалить сегмент"
+										r.operationID = ""
+										r.pathPattern = "/mri/segment/{id}"
+										r.args = args
+										r.count = 1
+										return r, true
+									case "PATCH":
+										r.name = MriSegmentIDPatchOperation
+										r.summary = "обновить сегмент"
+										r.operationID = ""
+										r.pathPattern = "/mri/segment/{id}"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+							}
+
+							elem = origElem
+						}
+						// Param: "id"
+						// Match until "/"
+						idx := strings.IndexByte(elem, '/')
+						if idx < 0 {
+							idx = len(elem)
+						}
+						args[0] = elem[:idx]
+						elem = elem[idx:]
 
 						if len(elem) == 0 {
-							// Leaf node.
 							switch method {
-							case "GET":
-								r.name = MedPatientIDGetOperation
-								r.summary = "получить пациента"
+							case "DELETE":
+								r.name = MriIDDeleteOperation
+								r.summary = "удалить мрт"
 								r.operationID = ""
-								r.pathPattern = "/med/patient/{id}"
+								r.pathPattern = "/mri/{id}"
+								r.args = args
+								r.count = 1
+								return r, true
+							case "GET":
+								r.name = MriIDGetOperation
+								r.summary = "получить мрт"
+								r.operationID = ""
+								r.pathPattern = "/mri/{id}"
 								r.args = args
 								r.count = 1
 								return r, true
 							case "PATCH":
-								r.name = MedPatientIDPatchOperation
-								r.summary = "обновить пациента"
+								r.name = MriIDPatchOperation
+								r.summary = "обновить мрт"
 								r.operationID = ""
-								r.pathPattern = "/med/patient/{id}"
+								r.pathPattern = "/mri/{id}"
 								r.args = args
 								r.count = 1
 								return r, true
 							default:
 								return
 							}
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/"
+
+							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'e': // Prefix: "echographics"
+
+								if l := len("echographics"); len(elem) >= l && elem[0:l] == "echographics" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = MriIDEchographicsGetOperation
+										r.summary = "получить эхографику mri"
+										r.operationID = ""
+										r.pathPattern = "/mri/{id}/echographics"
+										r.args = args
+										r.count = 1
+										return r, true
+									case "PATCH":
+										r.name = MriIDEchographicsPatchOperation
+										r.summary = "обновить эхографику"
+										r.operationID = ""
+										r.pathPattern = "/mri/{id}/echographics"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+							case 'i': // Prefix: "images"
+
+								if l := len("images"); len(elem) >= l && elem[0:l] == "images" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = MriIDImagesGetOperation
+										r.summary = "получает списк изображений mri"
+										r.operationID = ""
+										r.pathPattern = "/mri/{id}/images"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+							case 'n': // Prefix: "nodes"
+
+								if l := len("nodes"); len(elem) >= l && elem[0:l] == "nodes" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									switch method {
+									case "GET":
+										r.name = MriIDNodesGetOperation
+										r.summary = "получить все узлы мрт"
+										r.operationID = ""
+										r.pathPattern = "/mri/{id}/nodes"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+								switch elem[0] {
+								case '-': // Prefix: "-segments"
+
+									if l := len("-segments"); len(elem) >= l && elem[0:l] == "-segments" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										// Leaf node.
+										switch method {
+										case "POST":
+											r.name = MriIDNodesSegmentsPostOperation
+											r.summary = "добавить узел с сегментами"
+											r.operationID = ""
+											r.pathPattern = "/mri/{id}/nodes-segments"
+											r.args = args
+											r.count = 1
+											return r, true
+										default:
+											return
+										}
+									}
+
+								}
+
+							}
+
+						}
+
+					case 's': // Prefix: "s/"
+
+						if l := len("s/"); len(elem) >= l && elem[0:l] == "s/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case 'a': // Prefix: "author/"
+
+							if l := len("author/"); len(elem) >= l && elem[0:l] == "author/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Leaf parameter, slashes are prohibited
+							idx := strings.IndexByte(elem, '/')
+							if idx >= 0 {
+								break
+							}
+							args[0] = elem
+							elem = ""
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "GET":
+									r.name = MrisAuthorIDGetOperation
+									r.summary = "получить мрт по id автора"
+									r.operationID = ""
+									r.pathPattern = "/mris/author/{id}"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+
+						case 'e': // Prefix: "external/"
+
+							if l := len("external/"); len(elem) >= l && elem[0:l] == "external/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							// Param: "id"
+							// Leaf parameter, slashes are prohibited
+							idx := strings.IndexByte(elem, '/')
+							if idx >= 0 {
+								break
+							}
+							args[0] = elem
+							elem = ""
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "GET":
+									r.name = MrisExternalIDGetOperation
+									r.summary = "получить мрт по внешнему id"
+									r.operationID = ""
+									r.pathPattern = "/mris/external/{id}"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+
 						}
 
 					}

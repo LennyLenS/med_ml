@@ -104,6 +104,30 @@ type Handler interface {
 	//
 	// GET /download/{uzi_id}/{image_id}
 	DownloadUziIDImageIDGet(ctx context.Context, params DownloadUziIDImageIDGetParams) (DownloadUziIDImageIDGetRes, error)
+	// KtIDDelete implements DELETE /kt/{id} operation.
+	//
+	// Удалить КТ.
+	//
+	// DELETE /kt/{id}
+	KtIDDelete(ctx context.Context, params KtIDDeleteParams) (KtIDDeleteRes, error)
+	// KtIDGet implements GET /kt/{id} operation.
+	//
+	// Получить кт.
+	//
+	// GET /kt/{id}
+	KtIDGet(ctx context.Context, params KtIDGetParams) (KtIDGetRes, error)
+	// KtIDPatch implements PATCH /kt/{id} operation.
+	//
+	// Обновить КТ.
+	//
+	// PATCH /kt/{id}
+	KtIDPatch(ctx context.Context, req *KtIDPatchReq, params KtIDPatchParams) (KtIDPatchRes, error)
+	// KtPost implements POST /kt operation.
+	//
+	// Загрузить кт на обработку.
+	//
+	// POST /kt
+	KtPost(ctx context.Context, req *KtPostReq) (KtPostRes, error)
 	// LoginPost implements POST /login operation.
 	//
 	// Авторизация.
@@ -158,6 +182,126 @@ type Handler interface {
 	//
 	// POST /med/patient
 	MedPatientPost(ctx context.Context, req *MedPatientPostReq) (MedPatientPostRes, error)
+	// MriDevicePost implements POST /mri/device operation.
+	//
+	// Добавить mri аппарат.
+	//
+	// POST /mri/device
+	MriDevicePost(ctx context.Context, req *MriDevicePostReq) (MriDevicePostRes, error)
+	// MriDevicesGet implements GET /mri/devices operation.
+	//
+	// Получит список mri апппапапратов.
+	//
+	// GET /mri/devices
+	MriDevicesGet(ctx context.Context) (MriDevicesGetRes, error)
+	// MriIDDelete implements DELETE /mri/{id} operation.
+	//
+	// Удалить мрт.
+	//
+	// DELETE /mri/{id}
+	MriIDDelete(ctx context.Context, params MriIDDeleteParams) (MriIDDeleteRes, error)
+	// MriIDEchographicsGet implements GET /mri/{id}/echographics operation.
+	//
+	// Получить эхографику mri.
+	//
+	// GET /mri/{id}/echographics
+	MriIDEchographicsGet(ctx context.Context, params MriIDEchographicsGetParams) (MriIDEchographicsGetRes, error)
+	// MriIDEchographicsPatch implements PATCH /mri/{id}/echographics operation.
+	//
+	// Обновить эхографику.
+	//
+	// PATCH /mri/{id}/echographics
+	MriIDEchographicsPatch(ctx context.Context, req *ExamEchographics, params MriIDEchographicsPatchParams) (MriIDEchographicsPatchRes, error)
+	// MriIDGet implements GET /mri/{id} operation.
+	//
+	// Получить мрт.
+	//
+	// GET /mri/{id}
+	MriIDGet(ctx context.Context, params MriIDGetParams) (MriIDGetRes, error)
+	// MriIDImagesGet implements GET /mri/{id}/images operation.
+	//
+	// Получает списк изображений mri.
+	//
+	// GET /mri/{id}/images
+	MriIDImagesGet(ctx context.Context, params MriIDImagesGetParams) (MriIDImagesGetRes, error)
+	// MriIDNodesGet implements GET /mri/{id}/nodes operation.
+	//
+	// Получить все узлы мрт.
+	//
+	// GET /mri/{id}/nodes
+	MriIDNodesGet(ctx context.Context, params MriIDNodesGetParams) (MriIDNodesGetRes, error)
+	// MriIDNodesSegmentsPost implements POST /mri/{id}/nodes-segments operation.
+	//
+	// Добавить узел с сегментами.
+	//
+	// POST /mri/{id}/nodes-segments
+	MriIDNodesSegmentsPost(ctx context.Context, req *MriIDNodesSegmentsPostReq, params MriIDNodesSegmentsPostParams) (MriIDNodesSegmentsPostRes, error)
+	// MriIDPatch implements PATCH /mri/{id} operation.
+	//
+	// Обновить мрт.
+	//
+	// PATCH /mri/{id}
+	MriIDPatch(ctx context.Context, req *MriIDPatchReq, params MriIDPatchParams) (MriIDPatchRes, error)
+	// MriImageIDNodesSegmentsGet implements GET /mri/image/{id}/nodes-segments operation.
+	//
+	// Получит узлы и сегменты на указанном изображении.
+	//
+	// GET /mri/image/{id}/nodes-segments
+	MriImageIDNodesSegmentsGet(ctx context.Context, params MriImageIDNodesSegmentsGetParams) (MriImageIDNodesSegmentsGetRes, error)
+	// MriNodesIDDelete implements DELETE /mri/nodes/{id} operation.
+	//
+	// Сегменты узла будут также удалены.
+	//
+	// DELETE /mri/nodes/{id}
+	MriNodesIDDelete(ctx context.Context, params MriNodesIDDeleteParams) (MriNodesIDDeleteRes, error)
+	// MriNodesIDPatch implements PATCH /mri/nodes/{id} operation.
+	//
+	// Обновить узел.
+	//
+	// PATCH /mri/nodes/{id}
+	MriNodesIDPatch(ctx context.Context, req *MriNodesIDPatchReq, params MriNodesIDPatchParams) (MriNodesIDPatchRes, error)
+	// MriNodesIDSegmentsGet implements GET /mri/nodes/{id}/segments operation.
+	//
+	// Получить сегменты узла.
+	//
+	// GET /mri/nodes/{id}/segments
+	MriNodesIDSegmentsGet(ctx context.Context, params MriNodesIDSegmentsGetParams) (MriNodesIDSegmentsGetRes, error)
+	// MriPost implements POST /mri operation.
+	//
+	// Загрузить мрт на обработку.
+	//
+	// POST /mri
+	MriPost(ctx context.Context, req *MriPostReq) (MriPostRes, error)
+	// MriSegmentIDDelete implements DELETE /mri/segment/{id} operation.
+	//
+	// Если у узла не останется сегментов, он будет **удален**.
+	//
+	// DELETE /mri/segment/{id}
+	MriSegmentIDDelete(ctx context.Context, params MriSegmentIDDeleteParams) (MriSegmentIDDeleteRes, error)
+	// MriSegmentIDPatch implements PATCH /mri/segment/{id} operation.
+	//
+	// Обновить сегмент.
+	//
+	// PATCH /mri/segment/{id}
+	MriSegmentIDPatch(ctx context.Context, req *MriSegmentIDPatchReq, params MriSegmentIDPatchParams) (MriSegmentIDPatchRes, error)
+	// MriSegmentPost implements POST /mri/segment operation.
+	//
+	// Добавить новый сегмент.
+	//
+	// POST /mri/segment
+	MriSegmentPost(ctx context.Context, req *MriSegmentPostReq) (MriSegmentPostRes, error)
+	// MrisAuthorIDGet implements GET /mris/author/{id} operation.
+	//
+	// Получить мрт по id автора.
+	//
+	// GET /mris/author/{id}
+	MrisAuthorIDGet(ctx context.Context, params MrisAuthorIDGetParams) (MrisAuthorIDGetRes, error)
+	// MrisExternalIDGet implements GET /mris/external/{id} operation.
+	//
+	// Получить мрт по внешнему id.
+	//
+	// GET /mris/external/{id}
+	MrisExternalIDGet(ctx context.Context, params MrisExternalIDGetParams) (MrisExternalIDGetRes, error)
 	// PaymentProvidersGet implements GET /payment_providers operation.
 	//
 	// Получить список всех платежных провайдеров.

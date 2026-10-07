@@ -5,8 +5,8 @@ import (
 
 	"cytology/internal/domain"
 	"cytology/internal/server/segmentation_group"
-	segmentationgroupservice "cytology/internal/services/segmentation_group"
 	"cytology/internal/services"
+	segmentationgroupservice "cytology/internal/services/segmentation_group"
 
 	"github.com/google/uuid"
 )
@@ -16,6 +16,9 @@ type mockSegmentationGroupService struct {
 	createErr error
 	groups    []domain.SegmentationGroup
 	groupsErr error
+	segType   *domain.SegType
+	groupType *domain.GroupType
+	isAI      *bool
 	group     domain.SegmentationGroup
 	groupErr  error
 	updateErr error
@@ -30,7 +33,10 @@ func (m *mockSegmentationGroupService) GetSegmentationGroupByID(context.Context,
 	return m.group, m.groupErr
 }
 
-func (m *mockSegmentationGroupService) GetSegmentationGroupsByCytologyID(context.Context, uuid.UUID) ([]domain.SegmentationGroup, error) {
+func (m *mockSegmentationGroupService) GetSegmentationGroupsByCytologyID(_ context.Context, _ uuid.UUID, segType *domain.SegType, groupType *domain.GroupType, isAI *bool) ([]domain.SegmentationGroup, error) {
+	m.segType = segType
+	m.groupType = groupType
+	m.isAI = isAI
 	return m.groups, m.groupsErr
 }
 

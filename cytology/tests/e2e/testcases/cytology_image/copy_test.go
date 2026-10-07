@@ -10,7 +10,7 @@ import (
 )
 
 func (suite *TestSuite) TestCopyCytologyImage_Success() {
-	data, err := flow.New(suite.deps, flow.CytologyImageInit, flow.SegmentationGroupInit, flow.SegmentationInit).Do(suite.T().Context())
+	data, err := flow.New(suite.deps, flow.CytologyImageInit, flow.OriginalImageInit, flow.SegmentationGroupInit, flow.SegmentationInit).Do(suite.T().Context())
 	require.NoError(suite.T(), err)
 
 	copyResp, err := suite.deps.Adapter.CopyCytologyImage(
@@ -29,6 +29,15 @@ func (suite *TestSuite) TestCopyCytologyImage_Success() {
 	)
 	require.NoError(suite.T(), err)
 	require.False(suite.T(), oldResp.CytologyImage.IsLast)
+	require.NotNil(suite.T(), oldResp.OriginalImage)
+
+	newResp, err := suite.deps.Adapter.GetCytologyImageById(
+		suite.T().Context(),
+		&pb.GetCytologyImageByIdIn{Id: copyResp.CytologyImage.Id},
+	)
+	require.NoError(suite.T(), err)
+	require.NotNil(suite.T(), newResp.OriginalImage)
+	require.Equal(suite.T(), oldResp.OriginalImage, newResp.OriginalImage)
 
 	groupsResp, err := suite.deps.Adapter.GetSegmentationGroupsByCytologyId(
 		suite.T().Context(),
