@@ -128,18 +128,20 @@ services:
   #   env_file:
   #     - ./ml_service/.env-docker
 
-  # ml_exam_service:
-  #   container_name: ml_exam_service
-  #   build:
-  #     context: ./ml_exam_service/
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - redpanda-0
-  #     - minio
-  #   profiles:
-  #     - app
-  #   env_file:
-  #     - ./ml_exam_service/.env-docker
+  ml_exam_service:
+    container_name: ml_exam_service
+    build:
+      context: ./ml_exam_service/
+      dockerfile: Dockerfile
+    depends_on:
+      - redpanda-0
+      - minio
+    profiles:
+      - app
+    env_file:
+      - ./ml_exam_service/.env-docker
+    runtime: nvidia
+    restart: always
 
   auth_service:
     container_name: auth_service

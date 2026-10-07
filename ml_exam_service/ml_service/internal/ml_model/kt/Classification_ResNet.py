@@ -9,7 +9,7 @@ import tempfile
 class TemporalResNet(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
-        self.base_model = resnet50(pretrained=True)
+        self.base_model = resnet50(weights=None)
 
         # Заменяем первый сверточный слой для входных данных с 1 каналом
         self.base_model.conv1 = nn.Conv2d(
@@ -108,8 +108,7 @@ class ClassificationModel:
         model = self.load_model("./ml_service/internal/ml_model/models/kt/RESNET50AUG300.pth", num_classes=3)
 
         video_mask_tensor = torch.tensor(video_mask, dtype=torch.float32)
-        video_mask_tensor = video_mask_tensor.unsqueeze(0)
-        video_mask_tensor = video_mask_tensor.permute(0, 1, 4, 2, 3)
+        video_mask_tensor = video_mask_tensor.unsqueeze(0).unsqueeze(2)
 
         input_data = video_mask_tensor
         with torch.no_grad():
