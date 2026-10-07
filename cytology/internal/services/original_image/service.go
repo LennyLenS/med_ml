@@ -3,12 +3,14 @@ package original_image
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
 
 	"cytology/internal/domain"
 	"cytology/internal/repository"
+	repoentity "cytology/internal/repository/entity"
 	original_imageEntity "cytology/internal/repository/original_image/entity"
 
 	"github.com/google/uuid"
@@ -112,11 +114,30 @@ func (s *service) GetOriginalImageByID(ctx context.Context, id uuid.UUID) (domai
 }
 
 func (s *service) GetOriginalImagesByCytologyID(ctx context.Context, cytologyID uuid.UUID) ([]domain.OriginalImage, error) {
-	images, err := s.dao.NewOriginalImageQuery(ctx).GetOriginalImagesByCytologyID(cytologyID)
-	if err != nil {
-		return nil, err
+	visited := make(map[uuid.UUID]struct{})
+	for {
+		if _, ok := visited[cytologyID]; ok {
+			return nil, fmt.Errorf("cycle in cytology image history: %s", cytologyID)
+		}
+		visited[cytologyID] = struct{}{}
+
+		images, err := s.dao.NewOriginalImageQuery(ctx).GetOriginalImagesByCytologyID(cytologyID)
+		if err != nil && !errors.Is(err, repoentity.ErrNotFound) {
+			return nil, err
+		}
+		if len(images) > 0 {
+			return original_imageEntity.OriginalImage{}.SliceToDomain(images), nil
+		}
+
+		img, err := s.dao.NewCytologyImageQuery(ctx).GetCytologyImageByID(cytologyID)
+		if err != nil {
+			return nil, err
+		}
+		if !img.PrevID.Valid {
+			return nil, repoentity.ErrNotFound
+		}
+		cytologyID = img.PrevID.UUID
 	}
-	return original_imageEntity.OriginalImage{}.SliceToDomain(images), nil
 }
 
 func (s *service) UpdateOriginalImage(ctx context.Context, arg UpdateOriginalImageArg) (domain.OriginalImage, error) {
