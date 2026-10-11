@@ -2,6 +2,7 @@ package kt
 
 import (
 	"encoding/json"
+	"exam/internal/domain"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -39,6 +40,7 @@ func (q *repo) UpdateKtPrediction(id uuid.UUID, predictedClasses []byte) error {
 		Update(table).
 		SetMap(sq.Eq{
 			columnPredictedClasses: predictedClasses,
+			columnStatus:           string(domain.ExamStatusCompleted),
 		}).
 		Where(sq.Eq{
 			columnID: id,
@@ -50,6 +52,12 @@ func (q *repo) UpdateKtPrediction(id uuid.UUID, predictedClasses []byte) error {
 	}
 
 	return nil
+}
+
+func (q *repo) UpdateKtStatus(id uuid.UUID, status string) error {
+	query := q.QueryBuilder().Update(table).Set(columnStatus, status).Where(sq.Eq{columnID: id})
+	_, err := q.Runner().Execx(q.Context(), query)
+	return err
 }
 
 func serializeClassProbabilities(classProbabilities map[string]float64) ([]byte, error) {

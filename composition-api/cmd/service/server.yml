@@ -1148,6 +1148,20 @@ components:
           type: string
           format: date-time
           description: дата создания в формате RFC3339
+        checked:
+          type: boolean
+        author_id:
+          type: string
+          format: uuid
+        device_id:
+          type: integer
+        status:
+          type: string
+          enum: [new, pending, completed]
+        class_probabilities:
+          type: object
+          additionalProperties:
+            type: number
       example:
         id: 123e4567-e89b-12d3-a456-426614174000
         create_at: '2021-01-01T00:00:00Z'
@@ -2074,7 +2088,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: файл узи. **обязательно с .tiff/.png/.jpeg/.jpg**
+                  description: файл узи. **обязательно с .dcm/.tiff/.png/.jpeg/.jpg**
                 projection:
                   type: string
                   enum:

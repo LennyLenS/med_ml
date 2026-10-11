@@ -1481,6 +1481,20 @@ func TestKt_Examples(t *testing.T) {
 		})
 	}
 }
+func TestKtClassProbabilities_EncodeDecode(t *testing.T) {
+	var typ KtClassProbabilities
+	typ = make(KtClassProbabilities)
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 KtClassProbabilities
+	typ2 = make(KtClassProbabilities)
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
 func TestKtIDPatchReq_EncodeDecode(t *testing.T) {
 	var typ KtIDPatchReq
 	typ.SetFake()
@@ -1534,6 +1548,18 @@ func TestKtIDPatchReqClassProbabilities_EncodeDecode(t *testing.T) {
 
 	var typ2 KtIDPatchReqClassProbabilities
 	typ2 = make(KtIDPatchReqClassProbabilities)
+	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
+}
+func TestKtStatus_EncodeDecode(t *testing.T) {
+	var typ KtStatus
+	typ.SetFake()
+
+	e := jx.Encoder{}
+	typ.Encode(&e)
+	data := e.Bytes()
+	require.True(t, std.Valid(data), "Encoded: %s", data)
+
+	var typ2 KtStatus
 	require.NoError(t, typ2.Decode(jx.DecodeBytes(data)))
 }
 func TestLoginPostOK_EncodeDecode(t *testing.T) {

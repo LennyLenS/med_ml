@@ -2,6 +2,7 @@ package splitter
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"image"
 	"image/png"
@@ -11,6 +12,8 @@ import (
 
 type Service interface {
 	SplitToPng(file domain.File) ([]domain.File, error)
+	DicomToTiff(file domain.File) (domain.File, error)
+	DicomToMp4(ctx context.Context, file domain.File) (domain.File, error)
 }
 
 type splitter interface {
@@ -18,8 +21,10 @@ type splitter interface {
 }
 
 const (
-	Png  = "image/png"
-	Tiff = "image/tiff"
+	Png   = "image/png"
+	Tiff  = "image/tiff"
+	Dicom = "application/dicom"
+	Mp4   = "video/mp4"
 )
 
 var splitters = map[string]splitter{

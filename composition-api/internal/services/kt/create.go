@@ -22,7 +22,7 @@ func (s *service) Create(ctx context.Context, in CreateKtArg) (uuid.UUID, error)
 		return uuid.UUID{}, fmt.Errorf("create kt in microservice: %w", err)
 	}
 
-	err = s.dao.NewFileRepo().LoadFile(ctx, filepath.Join(ktID.String(), ktID.String()), in.File)
+	err = s.dao.NewFileRepoWithBucket("kt-b").LoadFile(ctx, filepath.Join(ktID.String(), ktID.String()), in.File)
 	if err != nil {
 		return uuid.UUID{}, fmt.Errorf("load kt file to s3: %w", err)
 	}

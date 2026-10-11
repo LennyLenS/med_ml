@@ -33,6 +33,10 @@ func (s *service) SplitMri(ctx context.Context, id uuid.UUID) error {
 		return fmt.Errorf("get file via temp: %w", err)
 	}
 	defer closer()
+	file, err = splitter.PrepareDicom(ctx, fileRepo, id, file, splitter.Tiff)
+	if err != nil {
+		return fmt.Errorf("prepare mri dicom: %w", err)
+	}
 
 	splitterSrv := splitter.New()
 	splitted, err := splitterSrv.SplitToPng(file)

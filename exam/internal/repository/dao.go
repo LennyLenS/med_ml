@@ -19,6 +19,7 @@ import (
 type DAO interface {
 	daolib.DAO
 	NewFileRepo() FileRepo
+	NewFileRepoWithBucket(bucket string) FileRepo
 	NewDeviceQuery(ctx context.Context) device.Repository
 	NewMriQuery(ctx context.Context) mri.Repository
 	NewKtQuery(ctx context.Context) kt.Repository
@@ -49,6 +50,10 @@ func (d *dao) NewFileRepo() FileRepo {
 		s3:     d.s3,
 		bucket: d.s3bucket,
 	}
+}
+
+func (d *dao) NewFileRepoWithBucket(bucket string) FileRepo {
+	return &fileRepo{s3: d.s3, bucket: bucket}
 }
 
 // POSTNIGRES

@@ -40,6 +40,6 @@ message MriProcessed {
 }
 
 message KtProcessed {
-  string kt_id = 1;
-  map<string, double> class_probabilities = 2;
+  string kt_id = 100;
+  map<string, double> class_probabilities = 200;
 }

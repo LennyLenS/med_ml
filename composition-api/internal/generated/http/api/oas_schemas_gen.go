@@ -5348,7 +5348,12 @@ type Kt struct {
 	// Id кт.
 	ID uuid.UUID `json:"id"`
 	// Дата создания в формате RFC3339.
-	CreateAt time.Time `json:"create_at"`
+	CreateAt           time.Time            `json:"create_at"`
+	Checked            bool                 `json:"checked"`
+	AuthorID           uuid.UUID            `json:"author_id"`
+	DeviceID           int                  `json:"device_id"`
+	Status             KtStatus             `json:"status"`
+	ClassProbabilities KtClassProbabilities `json:"class_probabilities"`
 }
 
 // GetID returns the value of ID.
@@ -5361,6 +5366,31 @@ func (s *Kt) GetCreateAt() time.Time {
 	return s.CreateAt
 }
 
+// GetChecked returns the value of Checked.
+func (s *Kt) GetChecked() bool {
+	return s.Checked
+}
+
+// GetAuthorID returns the value of AuthorID.
+func (s *Kt) GetAuthorID() uuid.UUID {
+	return s.AuthorID
+}
+
+// GetDeviceID returns the value of DeviceID.
+func (s *Kt) GetDeviceID() int {
+	return s.DeviceID
+}
+
+// GetStatus returns the value of Status.
+func (s *Kt) GetStatus() KtStatus {
+	return s.Status
+}
+
+// GetClassProbabilities returns the value of ClassProbabilities.
+func (s *Kt) GetClassProbabilities() KtClassProbabilities {
+	return s.ClassProbabilities
+}
+
 // SetID sets the value of ID.
 func (s *Kt) SetID(val uuid.UUID) {
 	s.ID = val
@@ -5371,8 +5401,44 @@ func (s *Kt) SetCreateAt(val time.Time) {
 	s.CreateAt = val
 }
 
+// SetChecked sets the value of Checked.
+func (s *Kt) SetChecked(val bool) {
+	s.Checked = val
+}
+
+// SetAuthorID sets the value of AuthorID.
+func (s *Kt) SetAuthorID(val uuid.UUID) {
+	s.AuthorID = val
+}
+
+// SetDeviceID sets the value of DeviceID.
+func (s *Kt) SetDeviceID(val int) {
+	s.DeviceID = val
+}
+
+// SetStatus sets the value of Status.
+func (s *Kt) SetStatus(val KtStatus) {
+	s.Status = val
+}
+
+// SetClassProbabilities sets the value of ClassProbabilities.
+func (s *Kt) SetClassProbabilities(val KtClassProbabilities) {
+	s.ClassProbabilities = val
+}
+
 func (*Kt) ktIDGetRes()   {}
 func (*Kt) ktIDPatchRes() {}
+
+type KtClassProbabilities map[string]float64
+
+func (s *KtClassProbabilities) init() KtClassProbabilities {
+	m := *s
+	if m == nil {
+		m = map[string]float64{}
+		*s = m
+	}
+	return m
+}
 
 // KtIDDeleteOK is response for KtIDDelete operation.
 type KtIDDeleteOK struct{}
@@ -5457,6 +5523,54 @@ func (s *KtPostReq) SetDeviceID(val int) {
 // SetDescription sets the value of Description.
 func (s *KtPostReq) SetDescription(val OptString) {
 	s.Description = val
+}
+
+type KtStatus string
+
+const (
+	KtStatusNew       KtStatus = "new"
+	KtStatusPending   KtStatus = "pending"
+	KtStatusCompleted KtStatus = "completed"
+)
+
+// AllValues returns all KtStatus values.
+func (KtStatus) AllValues() []KtStatus {
+	return []KtStatus{
+		KtStatusNew,
+		KtStatusPending,
+		KtStatusCompleted,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s KtStatus) MarshalText() ([]byte, error) {
+	switch s {
+	case KtStatusNew:
+		return []byte(s), nil
+	case KtStatusPending:
+		return []byte(s), nil
+	case KtStatusCompleted:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *KtStatus) UnmarshalText(data []byte) error {
+	switch KtStatus(data) {
+	case KtStatusNew:
+		*s = KtStatusNew
+		return nil
+	case KtStatusPending:
+		*s = KtStatusPending
+		return nil
+	case KtStatusCompleted:
+		*s = KtStatusCompleted
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
 }
 
 type LoginPostBadRequest ErrorStatusCode

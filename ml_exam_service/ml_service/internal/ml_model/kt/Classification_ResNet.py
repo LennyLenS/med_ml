@@ -108,6 +108,10 @@ class ClassificationModel:
         model = self.load_model("./ml_service/internal/ml_model/models/kt/RESNET50AUG300.pth", num_classes=3)
 
         video_mask_tensor = torch.tensor(video_mask, dtype=torch.float32)
+        if video_mask_tensor.ndim == 4 and video_mask_tensor.shape[-1] == 1:
+            video_mask_tensor = video_mask_tensor.squeeze(-1)
+        if video_mask_tensor.ndim != 3:
+            raise ValueError(f"Expected grayscale frames (N, H, W), got {tuple(video_mask_tensor.shape)}")
         video_mask_tensor = video_mask_tensor.unsqueeze(0).unsqueeze(2)
 
         input_data = video_mask_tensor

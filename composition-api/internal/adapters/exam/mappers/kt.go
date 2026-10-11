@@ -13,6 +13,10 @@ type Kt struct{}
 
 func (m Kt) Domain(pb *pb.Kt) domain.KT {
 	createAt, _ := time.Parse(time.RFC3339, pb.CreateAt)
+	var probabilities map[string]float64
+	if pb.ClassProbabilities != nil {
+		probabilities = pb.ClassProbabilities.ClassProbabilities
+	}
 
 	return domain.KT{
 		Id:               uuid.MustParse(pb.Id),
@@ -22,7 +26,7 @@ func (m Kt) Domain(pb *pb.Kt) domain.KT {
 		Status:           examStatusMap[pb.Status],
 		Description:      pb.Description,
 		CreateAt:         createAt,
-		PredictedClasses: pb.ClassProbabilities.ClassProbabilities,
+		PredictedClasses: probabilities,
 	}
 }
 
@@ -39,5 +43,3 @@ func MapToProbabilities(classes map[string]float64) *pb.ClassProbabilities {
 		ClassProbabilities: classes,
 	}
 }
-
-

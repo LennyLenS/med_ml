@@ -1918,6 +1918,42 @@ func (s *Kt) SetFake() {
 			s.CreateAt = time.Now()
 		}
 	}
+	{
+		{
+			s.Checked = true
+		}
+	}
+	{
+		{
+			s.AuthorID = uuid.New()
+		}
+	}
+	{
+		{
+			s.DeviceID = int(0)
+		}
+	}
+	{
+		{
+			s.Status.SetFake()
+		}
+	}
+	{
+		{
+			s.ClassProbabilities.SetFake()
+		}
+	}
+}
+
+// SetFake set fake values.
+func (s *KtClassProbabilities) SetFake() {
+	var (
+		elem float64
+		m    map[string]float64 = s.init()
+	)
+	for i := 0; i < 0; i++ {
+		m[fmt.Sprintf("fake%d", i)] = elem
+	}
 }
 
 // SetFake set fake values.
@@ -1943,6 +1979,11 @@ func (s *KtIDPatchReqClassProbabilities) SetFake() {
 	for i := 0; i < 0; i++ {
 		m[fmt.Sprintf("fake%d", i)] = elem
 	}
+}
+
+// SetFake set fake values.
+func (s *KtStatus) SetFake() {
+	*s = KtStatusNew
 }
 
 // SetFake set fake values.

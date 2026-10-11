@@ -8,6 +8,7 @@ import (
 
 	domain "composition-api/internal/domain/exam"
 	api "composition-api/internal/generated/http/api"
+	"composition-api/internal/server/exam/upload"
 	mappers "composition-api/internal/server/mappers"
 	"composition-api/internal/server/security"
 	mriSrv "composition-api/internal/services/mri"
@@ -24,9 +25,9 @@ func (h *handler) MriPost(ctx context.Context, req *api.MriPostReq) (api.MriPost
 		return nil, err
 	}
 
-	contentType := req.File.Header.Get("Content-Type")
-	if contentType != "image/tiff" {
-		return nil, fmt.Errorf("wrong file type, expected: image/tiff, got: %s", contentType)
+	contentType := upload.NormalizeFormat(&req.File)
+	if contentType != "image/tiff" && contentType != "application/dicom" {
+		return nil, fmt.Errorf("wrong file type, expected: image/tiff or application/dicom, got: %s", contentType)
 	}
 
 	mriID, err := h.services.MriService.Create(ctx, mriSrv.CreateMriArg{

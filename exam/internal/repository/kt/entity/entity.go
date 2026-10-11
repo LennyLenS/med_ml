@@ -2,6 +2,8 @@ package entity
 
 import (
 	"database/sql"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"exam/internal/domain"
@@ -18,7 +20,26 @@ type KT struct {
 	Status           string             `db:"status"`
 	Description      sql.NullString     `db:"description"`
 	CreateAt         time.Time          `db:"create_at"`
-	PredictedClasses map[string]float64 `db:"predicted_classes"`
+	PredictedClasses ClassProbabilities `db:"predicted_classes"`
+}
+
+type ClassProbabilities map[string]float64
+
+func (p *ClassProbabilities) Scan(value any) error {
+	*p = nil
+	if value == nil {
+		return nil
+	}
+	var data []byte
+	switch value := value.(type) {
+	case []byte:
+		data = value
+	case string:
+		data = []byte(value)
+	default:
+		return fmt.Errorf("unsupported class probabilities type %T", value)
+	}
+	return json.Unmarshal(data, p)
 }
 
 func (KT) FromDomain(d domain.KT) KT {

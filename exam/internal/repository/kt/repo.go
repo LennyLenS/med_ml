@@ -34,6 +34,7 @@ type Repository interface {
 	DeleteKt(id uuid.UUID) error
 
 	UpdateKtPrediction(id uuid.UUID, predictedClasses []byte) error
+	UpdateKtStatus(id uuid.UUID, status string) error
 }
 
 type repo struct {
