@@ -12,6 +12,17 @@ import (
 )
 
 func (s *service) CreateCard(ctx context.Context, card domain.Card) (domain.Card, error) {
+	if err := card.Validate(); err != nil {
+		return domain.Card{}, err
+	}
+
+	if _, err := s.dao.NewDoctorQuery(ctx).GetDoctorByID(card.DoctorID); err != nil {
+		if errors.Is(err, entity.ErrNotFound) {
+			return domain.Card{}, domain.ErrNotFound
+		}
+		return domain.Card{}, fmt.Errorf("get doctor: %w", err)
+	}
+
 	// Проверяем, что пациент существует и имеет валидный ОМС
 	patient, err := s.dao.NewPatientQuery(ctx).GetPatientByID(card.PatientID)
 	if err != nil {

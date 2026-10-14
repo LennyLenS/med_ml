@@ -10,13 +10,16 @@ import (
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 )
 
 func (suite *TestSuite) TestCreatePatient_Success() {
 	id := uuid.New()
 	fullname := gofakeit.Name()
 	email := gofakeit.Email()
-	policy := gofakeit.MinecraftAnimal()
+	policy := gofakeit.Numerify("################")
 	active := gofakeit.Bool()
 	malignancy := gofakeit.Bool()
 	birthDate := gofakeit.Date()
@@ -47,4 +50,38 @@ func (suite *TestSuite) TestCreatePatient_Success() {
 	require.Equal(suite.T(), active, getResp.Patient.Active)
 	require.Equal(suite.T(), malignancy, getResp.Patient.Malignancy)
 	require.Equal(suite.T(), birthDate.Format(time.RFC3339), getResp.Patient.BirthDate)
+}
+
+func (suite *TestSuite) TestCreatePatient_RepeatedRequestPreservesData() {
+	ctx := suite.T().Context()
+	request := &pb.CreatePatientIn{
+		Id: uuid.NewString(), Fullname: "Original patient", Email: gofakeit.Email(),
+		Policy: "1234567890123456", Active: true, Malignancy: true,
+		BirthDate: "1990-01-01T00:00:00Z",
+	}
+	_, err := suite.deps.Adapter.CreatePatient(ctx, request)
+	require.NoError(suite.T(), err)
+	original, err := suite.deps.Adapter.GetPatient(ctx, &pb.GetPatientIn{Id: request.Id})
+	require.NoError(suite.T(), err)
+	repeated := proto.Clone(request).(*pb.CreatePatientIn)
+	repeated.Fullname = "Changed name"
+	repeated.Active = false
+	repeated.Malignancy = false
+	repeated.BirthDate = "2000-01-01T00:00:00Z"
+	_, err = suite.deps.Adapter.CreatePatient(ctx, repeated)
+	require.NoError(suite.T(), err)
+	after, err := suite.deps.Adapter.GetPatient(ctx, &pb.GetPatientIn{Id: request.Id})
+	require.NoError(suite.T(), err)
+	require.True(suite.T(), proto.Equal(original.Patient, after.Patient))
+
+	repeated.Policy = "6543210987654321"
+	_, err = suite.deps.Adapter.CreatePatient(ctx, repeated)
+	require.Equal(suite.T(), codes.AlreadyExists, status.Code(err))
+	repeated.Policy = request.Policy
+	repeated.Email = gofakeit.Email()
+	_, err = suite.deps.Adapter.CreatePatient(ctx, repeated)
+	require.Equal(suite.T(), codes.AlreadyExists, status.Code(err))
+	after, err = suite.deps.Adapter.GetPatient(ctx, &pb.GetPatientIn{Id: request.Id})
+	require.NoError(suite.T(), err)
+	require.True(suite.T(), proto.Equal(original.Patient, after.Patient))
 }

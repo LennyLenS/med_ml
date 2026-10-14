@@ -9,3 +9,10 @@ type Card struct {
 	PatientID uuid.UUID
 	Diagnosis *string
 }
+
+func (c Card) Validate() error {
+	if c.DoctorID == uuid.Nil || c.PatientID == uuid.Nil {
+		return ErrBadRequest
+	}
+	return nil
+}

@@ -80,10 +80,23 @@ func (s *service) CreateUnRegisteredUser(
 		Role:  domain.RolePatient,
 	}
 
-	if err := s.dao.NewUserRepo(ctx).InsertUser(uentity.User{}.FromDomain(user)); err != nil {
+	userRepo := s.dao.NewUserRepo(ctx)
+	if err := userRepo.InsertUser(uentity.User{}.FromDomain(user)); err != nil {
 		var dbErr *entity.DBConflictError
 		if errors.As(err, &dbErr) {
-			return uuid.Nil, domain.ErrConflict
+			// Повторный запрос использует аккаунт пациента, не меняя его роль и пароль.
+			// Чтение после конфликта также учитывает параллельное создание аккаунта.
+			existing, getErr := userRepo.GetUserByEmail(email)
+			if errors.Is(getErr, entity.ErrNotFound) {
+				return uuid.Nil, domain.ErrConflict
+			}
+			if getErr != nil {
+				return uuid.Nil, fmt.Errorf("get existing user: %w", getErr)
+			}
+			if existing.Role != domain.RolePatient.String() {
+				return uuid.Nil, domain.ErrConflict
+			}
+			return existing.Id, nil
 		}
 		return uuid.Nil, fmt.Errorf("create user: %w", err)
 	}

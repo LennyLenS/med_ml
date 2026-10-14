@@ -14,6 +14,9 @@ import (
 )
 
 func (h *handler) CreateCard(ctx context.Context, in *pb.CreateCardIn) (*pb.CreateCardOut, error) {
+	if in == nil || in.Card == nil {
+		return nil, status.Error(codes.InvalidArgument, "Карта не указана")
+	}
 	if _, err := uuid.Parse(in.Card.DoctorId); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "Неверный ID врача: %s", err.Error())
 	}
@@ -29,9 +32,9 @@ func (h *handler) CreateCard(ctx context.Context, in *pb.CreateCardIn) (*pb.Crea
 	if err != nil {
 		switch {
 		case errors.Is(err, domain.ErrNotFound):
-			return nil, status.Errorf(codes.NotFound, "Пациент не найден")
+			return nil, status.Errorf(codes.NotFound, "Врач или пациент не найден")
 		case errors.Is(err, domain.ErrBadRequest):
-			return nil, status.Errorf(codes.InvalidArgument, "Неверный формат ОМС пациента")
+			return nil, status.Errorf(codes.InvalidArgument, "Неверный ID участника или формат ОМС пациента")
 		case errors.Is(err, domain.ErrConflict):
 			return nil, status.Errorf(codes.AlreadyExists, "Конфликт данных")
 		case errors.Is(err, domain.ErrUnprocessableEntity):

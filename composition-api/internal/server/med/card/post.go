@@ -19,11 +19,16 @@ func (h *handler) MedCardPost(ctx context.Context, req *api.Card) (api.MedCardPo
 	})
 	if err != nil {
 		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return &api.MedCardPostNotFound{
+				StatusCode: http.StatusNotFound,
+				Response:   api.Error{Message: "Врач или пациент не найден"},
+			}, nil
 		case errors.Is(err, domain.ErrBadRequest):
 			return &api.MedCardPostBadRequest{
 				StatusCode: http.StatusBadRequest,
 				Response: api.Error{
-					Message: "Неверный формат ОМС пациента",
+					Message: "Неверный ID участника или формат ОМС пациента",
 				},
 			}, nil
 		case errors.Is(err, domain.ErrUnprocessableEntity):
