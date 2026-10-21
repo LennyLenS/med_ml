@@ -72,10 +72,11 @@ func (suite *TestSuite) TestRegisterUser_ReUnregisterUser() {
 	data, err := flow.New(suite.deps, flow.CreateUnRegisterUser).Do(suite.T().Context())
 	require.NoError(suite.T(), err)
 
-	_, err = suite.deps.Adapter.CreateUnRegisteredUser(suite.T().Context(), &pb.CreateUnRegisteredUserIn{
+	resp, err := suite.deps.Adapter.CreateUnRegisteredUser(suite.T().Context(), &pb.CreateUnRegisteredUserIn{
 		Email: data.UnRegisterUser.Email,
 	})
-	require.Error(suite.T(), err)
+	require.NoError(suite.T(), err)
+	require.Equal(suite.T(), data.UnRegisterUser.Id.String(), resp.Id)
 }
 
 func (suite *TestSuite) TestRegisterUser_ReUnregisterUserOnRegisteredUser() {
@@ -86,4 +87,19 @@ func (suite *TestSuite) TestRegisterUser_ReUnregisterUserOnRegisteredUser() {
 		Email: data.RegisterUser.Email,
 	})
 	require.Error(suite.T(), err)
+}
+
+func (suite *TestSuite) TestCreateUnRegisteredUser_RegisteredPatientKeepsPassword() {
+	ctx := suite.T().Context()
+	email := gofakeit.Email()
+	password := "patient-test-password"
+	registered, err := suite.deps.Adapter.RegisterUser(ctx, &pb.RegisterUserIn{
+		Email: email, Password: password, Role: pb.Role_ROLE_PATIENT,
+	})
+	require.NoError(suite.T(), err)
+	repeated, err := suite.deps.Adapter.CreateUnRegisteredUser(ctx, &pb.CreateUnRegisteredUserIn{Email: email})
+	require.NoError(suite.T(), err)
+	require.Equal(suite.T(), registered.Id, repeated.Id)
+	_, err = suite.deps.Adapter.Login(ctx, &pb.LoginIn{Email: email, Password: password})
+	require.NoError(suite.T(), err)
 }
